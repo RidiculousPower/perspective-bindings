@@ -1,21 +1,10 @@
 
-#-----------------------------------------------------------------------------------------------------------#
-#-------------------------------------------  Rmagnets Bindings  -------------------------------------------#
-#-----------------------------------------------------------------------------------------------------------#
+module ::Rmagnets::Bindings
 
-module Rmagnets::Bindings
+  extend ::ModuleCluster
+
+	include ::Rmagnets::Bindings::ObjectInstance
 	
-	###################
-	#  self.included  #
-	###################
-
-	def self.included( class_or_module )
-
-		class_or_module.instance_eval do
-			include Rmagnets::Bindings::ObjectInstance
-			extend 	Rmagnets::Bindings::ClassInstance
-		end
-		
-	end
-
+	include_cascades_extends_to_class( ::Rmagnets::Bindings::ClassInstance )
+	
 end
