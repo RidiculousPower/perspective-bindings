@@ -1,25 +1,32 @@
 
-require 'module-cluster'
 require 'accessor-utilities'
 require 'cascading-configuration-array'
 require 'cascading-configuration-hash'
+require 'cascading-configuration-setting'
 
-class Rmagnets
+class ::Rmagnets
 	module Bindings
+    class Binding
+      class Router
+      end
+    end
 		module ClassInstance
 		end
 		module ObjectInstance
 		end
 		module Exception
-		  class BindingAlreadyDefinedError < ::Exception
+		  class BindingAlreadyDefinedError < ::ArgumentError
 	    end
-		  class NoBindingError < ::Exception
+		  class NoBindingError < ::ArgumentError
 	    end
 	  end
 	end
 end
 
-require_relative 'rmagnets-bindings/Rmagnets/Bindings.rb'
+require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding/Router/Instance.rb'
+require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding/Router.rb'
+require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding.rb'
+
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ObjectInstance.rb'
 

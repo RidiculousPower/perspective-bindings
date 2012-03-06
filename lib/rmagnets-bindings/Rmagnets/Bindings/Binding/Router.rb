@@ -1,0 +1,104 @@
+
+class ::Rmagnets::Bindings::Binding::Router
+
+  attr_reader :__binding_instance__, :__binding_path__, :__sub_routers__, :__shared_sub_routers__
+
+  include ::CascadingConfiguration::Setting
+
+  ################
+  #  initialize  #
+  ################
+
+  def initialize( binding_configuration_instance, base_path = nil )
+    
+    @__binding_instance__ = binding_configuration_instance
+    
+    @__binding_is_alias__ = false
+    
+    @__sub_routers__ = { }
+    @__shared_sub_routers__ = { }
+    
+    if base_path
+      @__binding_path__ = base_path
+      @__binding_path__.push( @__binding_instance__.name )
+    else
+      @__binding_path__ = [ @__binding_instance__.name ]
+		end
+		
+	  # Define a method for each binding defined in default view for this binding
+	  # we can only do this if we have a default view class
+	  # If we have a default view class and are given a view instance then the instance is expected
+	  # to respond to any methods that have values defined in the enclosing view.
+	  # In other words, if we have class Document containing HTML, which has Head and Body, and if
+	  # Document.Title = Document.HTML.Title, then if instance document.title is set to 'title'
+	  # we expect instance document to answer to :html and the result to answer to :title=, 
+	  # or in other words: document.html.title = 'title'.
+	  #
+		if view_class = @__binding_instance__.view_class
+  		  		
+      # for each method defined in the default view class for this binding
+  		view_class.binding_routers.each do |this_binding_name, this_binding_router|
+	  
+        # Any view that can access a binding (ie in another view) has its own binding router
+        # So if View.some_binding is aliased to View.other_binding.some_binding, both View
+        # and OtherView (the default view class for View.other_binding) have binding routers.
+        sub_binding_router_instance = view_class.binding_router( this_binding_name, @__binding_path__ )
+
+        @__sub_routers__[ this_binding_name ] = sub_binding_router_instance
+
+  	    initialize_binding_route_methods( view_class, this_binding_name )
+        
+  	  end
+  	  
+  	  view_class.shared_binding_routers.each do |this_binding_name, this_shared_binding_router|
+  	    
+  		  shared_router_instance = self
+
+  		  path.each do |this_binding_path_name|
+  		    shared_router_instance = shared_router_instance.binding_router( this_binding_path_name )
+  	    end
+  	    
+  	    @__shared_sub_routers__[ binding_name ] = shared_router_instance
+        
+  	    initialize_binding_route_methods( view_class, this_binding_name )
+  	    
+  		end
+		  
+		end
+		
+  end
+
+  ######################################
+  #  initialize_binding_route_methods  #
+  ######################################
+
+  def initialize_binding_route_methods( view_class, binding_name )
+  
+    ######################
+    #  sub_binding_name  #
+    ######################
+    
+  	eigenclass = class << self ; self ; end	
+	  eigenclass.instance_eval do
+
+	    define_method( binding_name ) do
+    
+		    return binding_router( binding_name )
+
+      end
+    
+    end
+    
+  end
+  
+  ########################
+  #  binding_router  #
+  ########################
+  
+  def binding_router( binding_name )
+    
+    return @__sub_routers__[ binding_name ]
+    
+  end
+  
+end

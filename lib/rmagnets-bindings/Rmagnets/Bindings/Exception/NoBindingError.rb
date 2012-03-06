@@ -1,4 +1,4 @@
 
-class ::Rmagnets::Bindings::Exception::NoBindingError < ::Exception
+class ::Rmagnets::Bindings::Exception::NoBindingError < ::ArgumentError
   
 end
