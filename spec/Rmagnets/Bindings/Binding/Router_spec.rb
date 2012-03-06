@@ -33,6 +33,9 @@ describe ::Rmagnets::Bindings::Binding::Router do
           def self.binding_routers
             return { :yet_another_binding => MockBinding.new }
           end
+          def self.binding_configurations
+            return binding_routers
+          end
         end
         class MockBinding
           def name
@@ -47,6 +50,9 @@ describe ::Rmagnets::Bindings::Binding::Router do
         end
         def self.shared_binding_routers
           return []
+        end
+        def self.binding_configurations
+          return binding_routers
         end
         def self.binding_routers
           return { :some_other_binding => MockBinding.new }

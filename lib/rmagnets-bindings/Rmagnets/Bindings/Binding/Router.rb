@@ -1,7 +1,7 @@
 
 class ::Rmagnets::Bindings::Binding::Router
 
-  attr_reader :__binding_instance__, :__binding_path__, :__sub_routers__, :__shared_sub_routers__
+  attr_reader :__binding_instance__, :__binding_route__, :__sub_routers__, :__shared_sub_routers__
 
   include ::CascadingConfiguration::Setting
 
@@ -18,12 +18,7 @@ class ::Rmagnets::Bindings::Binding::Router
     @__sub_routers__ = { }
     @__shared_sub_routers__ = { }
     
-    if base_path
-      @__binding_path__ = base_path
-      @__binding_path__.push( @__binding_instance__.name )
-    else
-      @__binding_path__ = [ @__binding_instance__.name ]
-		end
+    @__binding_route__ = base_path
 		
 	  # Define a method for each binding defined in default view for this binding
 	  # we can only do this if we have a default view class
@@ -35,14 +30,28 @@ class ::Rmagnets::Bindings::Binding::Router
 	  # or in other words: document.html.title = 'title'.
 	  #
 		if view_class = @__binding_instance__.view_class
-  		  		
+  		
+  		binding_route = nil
+  		
+  		unless view_class.binding_configurations.empty?
+  		
+    		if @__binding_route__
+    		  binding_route = @__binding_route__.dup
+    		else
+    		  binding_route = [ ]
+    		end
+
+		    binding_route.push( @__binding_instance__.name )
+
+		  end
+  		
       # for each method defined in the default view class for this binding
   		view_class.binding_routers.each do |this_binding_name, this_binding_router|
 	  
         # Any view that can access a binding (ie in another view) has its own binding router
         # So if View.some_binding is aliased to View.other_binding.some_binding, both View
         # and OtherView (the default view class for View.other_binding) have binding routers.
-        sub_binding_router_instance = view_class.binding_router( this_binding_name, @__binding_path__ )
+        sub_binding_router_instance = view_class.binding_router( this_binding_name, binding_route )
 
         @__sub_routers__[ this_binding_name ] = sub_binding_router_instance
 
@@ -74,9 +83,9 @@ class ::Rmagnets::Bindings::Binding::Router
 
   def initialize_binding_route_methods( view_class, binding_name )
   
-    ######################
+    #====================#
     #  sub_binding_name  #
-    ######################
+    #====================#
     
   	eigenclass = class << self ; self ; end	
 	  eigenclass.instance_eval do
@@ -91,9 +100,9 @@ class ::Rmagnets::Bindings::Binding::Router
     
   end
   
-  ########################
+  ####################
   #  binding_router  #
-  ########################
+  ####################
   
   def binding_router( binding_name )
     

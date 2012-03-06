@@ -8,10 +8,10 @@ module ::Rmagnets::Bindings::ClassInstance
   ###############
 
   # attr_view :name, ... 
-  # attr_view :name => DefaultViewClass, ...
+  # attr_view :name => ViewClass, ...
   # attr_view :name, ... { ... configuration proc ... }
-  # attr_view :name => DefaultViewClass, ... { ... configuration proc ... }
-  # attr_view *binding_names, DefaultViewClass, ... { ... configuration proc ... }
+  # attr_view :name => ViewClass, ... { ... configuration proc ... }
+  # attr_view *binding_names, ViewClass, ... { ... configuration proc ... }
   # 
 	def attr_view( *args, & configuration_proc )
 
@@ -20,21 +20,18 @@ module ::Rmagnets::Bindings::ClassInstance
 		return self
 
 	end
-	alias_method :attr_binding, :attr_view
 
   ###############
   #  attr_text  #
   ###############
 
-  # attr_text :name, ... 
-  # attr_text :name => DefaultViewClass, ...
-  # attr_text :name, ... { ... configuration proc ... }
-  # attr_text :name => DefaultViewClass, ... { ... configuration proc ... }
-  # attr_text *binding_names, DefaultViewClass, ... { ... configuration proc ... }
+  # attr_text *binding_names, ... { ... configuration proc ... }
   # 
-	def attr_text( *args, & configuration_proc )
+	def attr_text( *binding_names, & configuration_proc )
 
-    create_bindings_for_args( args, false, true, & configuration_proc )
+    binding_names.each do |this_binding_name|
+      create_binding( this_binding_name, nil, false, true, & configuration_proc )
+		end
 		
 		return self
 
@@ -45,9 +42,9 @@ module ::Rmagnets::Bindings::ClassInstance
   ########################
 
   # attr_required_view :name, ... 
-  # attr_required_view :name => DefaultViewClass, ...
+  # attr_required_view :name => ViewClass, ...
   # attr_required_view :name, ... { ... configuration proc ... }
-  # attr_required_view :name => DefaultViewClass, ... { ... configuration proc ... }
+  # attr_required_view :name => ViewClass, ... { ... configuration proc ... }
   # 
 	def attr_required_view( *args, & configuration_proc )
 		
@@ -62,14 +59,13 @@ module ::Rmagnets::Bindings::ClassInstance
   #  attr_required_text  #
   ########################
 
-  # attr_required_text :name, ... 
-  # attr_required_text :name => DefaultViewClass, ...
-  # attr_required_text :name, ... { ... configuration proc ... }
-  # attr_required_text :name => DefaultViewClass, ... { ... configuration proc ... }
+  # attr_required_text *binding_names, ... { ... configuration proc ... }
   # 
-	def attr_required_text( *args, & configuration_proc )
+	def attr_required_text( *binding_names, & configuration_proc )
 		
-    create_bindings_for_args( args, true, true, & configuration_proc )
+    binding_names.each do |this_binding_name|
+      create_binding( this_binding_name, nil, false, true, & configuration_proc )
+		end
 		
 		return self
 		
@@ -289,7 +285,8 @@ module ::Rmagnets::Bindings::ClassInstance
   	    end
 	  	  
 	  	  if binding_order.include?( this_binding_name )
-	  	    raise ArgumentError, 'Order already includes binding ' + this_binding_name.to_s
+	  	    raise ::Rmagnets::Bindings::Exception::BindingAlreadyDefinedError, 
+	  	            'Order already includes binding ' + this_binding_name.to_s
   	    end
 	  	  
 				binding_order.push( this_binding_name )
@@ -400,8 +397,9 @@ module ::Rmagnets::Bindings::ClassInstance
 	  
 	  binding_routers[ binding_name ] = ::Rmagnets::Bindings::Binding::Router.new( new_binding )
 	  
-		declare_binding_setter( binding_name )
-		declare_binding_getter( binding_name )
+    declare_class_binding_getter( binding_name )
+		declare_binding_setter( binding_name, new_binding )
+		declare_binding_getter( binding_name, new_binding )
 
 	end
 
@@ -419,45 +417,38 @@ module ::Rmagnets::Bindings::ClassInstance
       		raise ::Rmagnets::Bindings::Exception::NoBindingError,
       		      'No binding defined for :' + existing_binding_or_name.to_s + '.'
         end
+        
+        binding_name = existing_binding_or_name
+    		binding_aliases[ binding_alias ] = binding_name
 
-    		binding_aliases[ binding_alias ] = existing_binding_or_name
+        declare_aliased_class_binding_getter( binding_alias, binding_name )
+    		declare_aliased_binding_setter( binding_alias, binding_name )
+    		declare_aliased_binding_getter( binding_alias, binding_name )
         
       else
 
-        shared_binding_routers[ binding_alias ] = existing_binding_or_name
+        shared_binding_router_instance = existing_binding_or_name
+        shared_binding_routers[ binding_alias ] = shared_binding_router_instance
+
+        declare_class_shared_binding_getter( shared_binding_router_instance )
+    		declare_shared_binding_setter( shared_binding_router_instance )
+    		declare_shared_binding_getter( shared_binding_router_instance )
         
     end
-
-		declare_binding_setter( binding_alias )
-		declare_binding_getter( binding_alias )
     
   end
   
-  ############################
-  #  declare_binding_setter  #
-  ############################
+  ##################################
+  #  declare_class_binding_getter  #
+  ##################################
 
-	def declare_binding_setter( binding_name )
+  def declare_class_binding_getter( binding_name )
 
-    method_name = binding_name.write_accessor_name
+  	#-------------------------------------  Class Methods  ----------------------------------------#
 
-		# instance method: return the bound instance
-    ::CascadingConfiguration::Variable.define_instance_method( self, method_name ) do |object|
-		  
-			binding_router( binding_name ).object = object
-		
-		end
-
-	end
-
-  ############################
-  #  declare_binding_getter  #
-  ############################
-
-	def declare_binding_getter( binding_name )
-
-    accessor_write_name = binding_name.write_accessor_name
-    accessor_is_set_name = binding_name.is_set_accessor_name
+    #=====================#
+    #  self.binding_name  #
+    #=====================#
 
 		# class method: return the binding instance
 		::CascadingConfiguration::Variable.define_module_method( self, binding_name ) do
@@ -465,41 +456,231 @@ module ::Rmagnets::Bindings::ClassInstance
 			return binding_router( binding_name )
 		  
 		end
+		    
+  end
 
-    ##################
+  ##########################################
+  #  declare_aliased_class_binding_getter  #
+  ##########################################
+
+  def declare_aliased_class_binding_getter( binding_alias, binding_name )
+    
+  	#-----------------------------------  Instance Methods  ---------------------------------------#
+
+    #================#
     #  binding_name  #
-    ##################
+    #================#
+
+		# instance method: return the bound instance
+		::CascadingConfiguration::Variable.define_module_method( self, binding_alias ) do
+		  
+      return __send__( binding_name )
+		
+		end
+    
+  end
+
+  #########################################
+  #  declare_class_shared_binding_getter  #
+  #########################################
+
+  def declare_class_shared_binding_getter( shared_binding_router_instance )
+    
+    declare_class_binding_getter( shared_binding_router_instance.__binding_instance__.name )
+    
+  end
+
+  ############################
+  #  declare_binding_setter  #
+  ############################
+
+	def declare_binding_setter( binding_name, binding_instance )
+
+    variable_name = binding_name.variable_name
+    write_accessor = binding_name.write_accessor_name
+		
+		#-----------------------------------  Instance Methods  ---------------------------------------#
+  	
+		#=================#
+    #  binding_name=  #
+    #=================#
+    
+		::CascadingConfiguration::Variable.define_instance_method( self, write_accessor ) do |object|
+      
+      if binding_instance.text_only?
+        unless object.is_a?( String )
+      		raise ::Rmagnets::Bindings::Exception::TextBindingExpectsString,
+      		      'Binding ' + binding_name.to_s + ' is defined as a text-only binding, ' +
+      		      'which expects a string.'
+        end
+      end
+      
+      return instance_variable_set( variable_name, object )
+
+    end
+
+	end
+
+	####################################
+  #  declare_aliased_binding_setter  #
+  ####################################
+
+	def declare_aliased_binding_setter( binding_alias, binding_name )
+
+    write_accessor = binding_alias.write_accessor_name
+    aliased_write_accessor = binding_name.write_accessor_name
+
+		#-----------------------------------  Instance Methods  ---------------------------------------#
+  	
+		#=================#
+    #  binding_name=  #
+    #=================#
+    
+		::CascadingConfiguration::Variable.define_instance_method( self, write_accessor ) do |object|
+      
+      __send__( aliased_write_accessor, object )
+      
+    end
+
+	end
+
+	###################################
+  #  declare_shared_binding_setter  #
+  ###################################
+
+	def declare_shared_binding_setter( shared_binding_router_instance )
+
+    write_accessor = shared_binding_router_instance.__binding_instance__.name.write_accessor_name
+		
+		binding_route = shared_binding_router_instance.__binding_route__
+		binding_name = shared_binding_router_instance.__binding_instance__.name
+
+		#-----------------------------------  Instance Methods  ---------------------------------------#
+  	
+		#=================#
+    #  binding_name=  #
+    #=================#
+    
+		::CascadingConfiguration::Variable.define_instance_method( self, write_accessor ) do |object|
+      
+      instance_binding = self
+            
+      binding_route.each do |this_binding_route_part|
+        
+        unless instance_binding.respond_to?( this_binding_route_part )
+      		raise ::Rmagnets::Bindings::Exception::NoBindingError,
+        		      'Shared binding :' + binding_name.to_s + ' was inaccessible in ' + 
+          	      instance_binding.to_s + '. No binding :' + binding_name.to_s + ' defined ' +
+        		      'in ' + ( [ instance_binding.to_s ] + 
+        		      binding_route.slice( 0, index ) ).join( '.' ) + '.'
+        end
+        
+        instance_binding = instance_binding.__send__( this_binding_route_part )
+      
+      end
+
+      unless instance_binding.respond_to?( binding_name )
+    		raise ::Rmagnets::Bindings::Exception::NoBindingError,
+        	      'Shared binding :' + binding_name.to_s + ' was inaccessible in ' + 
+        	      instance_binding.to_s + '. No binding :' + binding_name.to_s + ' defined ' +
+      		      'in ' + ( [ instance_binding.to_s ] + binding_route ).join( '.' ) + '.'
+      end
+      
+      instance_binding.__send__( write_accessor, object )
+      
+    end
+
+	end
+
+  ############################
+  #  declare_binding_getter  #
+  ############################
+
+	def declare_binding_getter( binding_name, binding_instance )
+
+    variable_name = binding_name.variable_name
+
+  	#-----------------------------------  Instance Methods  ---------------------------------------#
+
+    #================#
+    #  binding_name  #
+    #================#
 
 		# instance method: return the bound instance
 		::CascadingConfiguration::Variable.define_instance_method( self, binding_name ) do
 		  
-			return binding_router( binding_name )
+      return instance_variable_get( variable_name )
 		
 		end
-		
-		###################
-    #  binding_name=  #
-    ###################
-    
-		::CascadingConfiguration::Variable.
-		  define_instance_method( self, accessor_write_name ) do |object_to_bind|
+        
+	end
 
-      # set binding to object instance
-      binding_router( binding_name ).object = object_to_bind
-    
-    end
-    
-    ###################
-    #  binding_name?  #
-    ###################
-    
-		::CascadingConfiguration::Variable.define_instance_method( self, accessor_is_set_name ) do
-    
-      # return whether binding has been assigned object instance
-      binding_router( binding_name ).bound?
-    
-    end
-    
+	####################################
+  #  declare_aliased_binding_getter  #
+  ####################################
+
+	def declare_aliased_binding_getter( binding_alias, binding_name )
+
+  	#-----------------------------------  Instance Methods  ---------------------------------------#
+
+    #================#
+    #  binding_name  #
+    #================#
+
+		# instance method: return the bound instance
+		::CascadingConfiguration::Variable.define_instance_method( self, binding_alias ) do
+      
+      __send__( binding_name )
+		
+		end
+
+	end
+	
+	###################################
+  #  declare_shared_binding_getter  #
+  ###################################
+
+	def declare_shared_binding_getter( shared_binding_router_instance )
+
+		binding_route = shared_binding_router_instance.__binding_route__
+		binding_name = shared_binding_router_instance.__binding_instance__.name
+
+  	#-----------------------------------  Instance Methods  ---------------------------------------#
+
+    #================#
+    #  binding_name  #
+    #================#
+
+		# instance method: return the bound instance
+		::CascadingConfiguration::Variable.define_instance_method( self, binding_name ) do
+		  
+      instance_binding = self
+      
+      binding_route.each_with_index do |this_binding_route_part, index|
+
+        unless instance_binding.respond_to?( this_binding_route_part )
+      		raise ::Rmagnets::Bindings::Exception::NoBindingError,
+        		      'Shared binding :' + binding_name.to_s + ' was inaccessible in ' + 
+          	      instance_binding.to_s + '. No binding :' + binding_name.to_s + ' defined ' +
+        		      'in ' + ( [ instance_binding.to_s ] + 
+        		      binding_route.slice( 0, index ) ).join( '.' ) + '.'
+        end
+
+        instance_binding = instance_binding.__send__( this_binding_route_part )
+
+      end
+
+      unless instance_binding.respond_to?( binding_name )
+    		raise ::Rmagnets::Bindings::Exception::NoBindingError,
+        	      'Shared binding :' + binding_name.to_s + ' was inaccessible in ' + 
+        	      instance_binding.to_s + '. No binding :' + binding_name.to_s + ' defined ' +
+      		      'in ' + ( [ instance_binding.to_s ] + binding_route ).join( '.' ) + '.'
+      end
+      
+      instance_binding.__send__( binding_name )
+		
+		end
+
 	end
 	
 end

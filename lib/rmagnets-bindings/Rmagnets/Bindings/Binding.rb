@@ -3,9 +3,7 @@ class ::Rmagnets::Bindings::Binding
 
   include ::CascadingConfiguration::Setting
   
-  attr_configuration :view_class, :configuration_proc, :required?, :text_only?
-
-  attr_reader :name, :bound_instance
+  attr_configuration :name, :view_class, :configuration_proc, :required?, :text_only?
 
   ################
   #  initialize  #
@@ -18,8 +16,7 @@ class ::Rmagnets::Bindings::Binding
                   is_text_only = nil,
                   & configuration_proc )
     
-    @bound_instance = bound_instance
-    @name = binding_name
+    self.name = binding_name
     
     # check to see if binding_instance has parent with bindings
     # if so we want to chain our bindings with them

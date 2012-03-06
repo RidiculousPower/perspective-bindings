@@ -19,11 +19,16 @@ class ::Rmagnets
 	    end
 		  class NoBindingError < ::ArgumentError
 	    end
+	    class OrderAlreadyIncludesBinding < ::ArgumentError
+      end
+	    class TextBindingExpectsString < ::ArgumentError
+      end
+      class BindingNameExpected < ::ArgumentError
+      end
 	  end
 	end
 end
 
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding/Router/Instance.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding/Router.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding.rb'
 
@@ -31,4 +36,7 @@ require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ObjectInstance.rb'
 
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/BindingAlreadyDefinedError.rb'
+require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/BindingNameExpected.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/NoBindingError.rb'
+require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/OrderAlreadyIncludesBinding.rb'
+require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/TextBindingExpectsString.rb'

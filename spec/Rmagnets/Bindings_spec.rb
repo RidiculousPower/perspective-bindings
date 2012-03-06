@@ -13,6 +13,14 @@ describe ::Rmagnets::Bindings do
       class View
         include ::Rmagnets::Bindings::ObjectInstance
         extend ::Rmagnets::Bindings::ClassInstance
+        class SubView
+          include ::Rmagnets::Bindings::ObjectInstance
+          extend ::Rmagnets::Bindings::ClassInstance
+          class SubSubView
+            include ::Rmagnets::Bindings::ObjectInstance
+            extend ::Rmagnets::Bindings::ClassInstance
+          end
+        end
       end
       class OtherView
         include ::Rmagnets::Bindings::ObjectInstance
@@ -180,7 +188,8 @@ describe ::Rmagnets::Bindings do
   ##################################################################################################
 
   ###########################
-  #  attr_binding           #
+  #  attr_view              #
+  #  attr_text              #
   #  has_binding?           #
   #  binding_instance       #
   #  attr_unbind            #
@@ -194,7 +203,7 @@ describe ::Rmagnets::Bindings do
         puts 'do some live configuration here'
       end
       
-      attr_binding :some_binding => ::Rmagnets::Bindings::Mock::View, & config_proc
+      attr_view :some_binding => ::Rmagnets::Bindings::Mock::View, & config_proc
       
       has_binding?( :some_binding ).should == true
       binding_required?( :some_binding ).should == false
@@ -209,10 +218,15 @@ describe ::Rmagnets::Bindings do
       config.configuration_proc.should == config_proc
       config.view_class.should == ::Rmagnets::Bindings::Mock::View
       
-      attr_unbind :some_binding
-      has_binding?( :some_binding ).should == false
-      has_binding?( :some_other_binding ).should == false
+      attr_text :some_text_binding
       
+      has_binding?( :some_text_binding ).should == true
+      
+      attr_unbind :some_binding, :some_text_binding
+      has_binding?( :some_binding ).should == false
+      has_binding?( :some_text_binding ).should == false
+      has_binding?( :some_other_binding ).should == false
+
     end
     
   end
@@ -246,7 +260,7 @@ describe ::Rmagnets::Bindings do
     
     class ::Rmagnets::Bindings::Mock
       
-      attr_binding :yet_another_binding
+      attr_view :yet_another_binding
 
     end
     
@@ -254,7 +268,7 @@ describe ::Rmagnets::Bindings do
 
     class ::Rmagnets::Bindings::OtherMock
       
-      attr_binding :some_other_binding
+      attr_view :some_other_binding
 
       has_binding?( :some_other_binding ).should == true
       respond_to?( :some_other_binding ).should == true
@@ -265,7 +279,7 @@ describe ::Rmagnets::Bindings do
     class ::Rmagnets::Bindings::Mock
       
       attr_alias :aliased_binding_name, :yet_another_binding
-      attr_binding :another_binding, ::Rmagnets::Bindings::OtherMock
+      attr_view :another_binding, ::Rmagnets::Bindings::OtherMock
       attr_alias :some_other_binding, another_binding.some_other_binding
       
       has_binding?( :aliased_binding_name ).should == true
@@ -300,19 +314,19 @@ describe ::Rmagnets::Bindings do
     
     class ::Rmagnets::Bindings::Mock
     
-      attr_binding :first_binding, :second_binding
+      attr_view :first_binding, :second_binding
 
     end
     
-    Proc.new { ::Rmagnets::Bindings::Mock.attr_order :first_binding, :third_binding }.should raise_error
+    Proc.new { ::Rmagnets::Bindings::Mock.attr_order :first_binding, :third_binding }.should raise_error( ::Rmagnets::Bindings::Exception::NoBindingError )
 
     class ::Rmagnets::Bindings::Mock
 
-      attr_binding :third_binding
+      attr_view :third_binding
       
     end
 
-    Proc.new { ::Rmagnets::Bindings::Mock.attr_order :first_binding, :third_binding }.should raise_error
+    Proc.new { ::Rmagnets::Bindings::Mock.attr_order :first_binding, :third_binding }.should raise_error( ::Rmagnets::Bindings::Exception::BindingAlreadyDefinedError )
 
     class ::Rmagnets::Bindings::Mock
 
@@ -340,41 +354,78 @@ describe ::Rmagnets::Bindings do
     class ::Rmagnets::Bindings::Mock
 
       class View
+        
+        class SubView
+          
+          class SubSubView
+          end
+          
+          attr_view :sub_sub_binding, ::Rmagnets::Bindings::Mock::View::SubView::SubSubView
 
-        attr_binding :sub_binding
+        end
+        
+        attr_view :sub_binding, ::Rmagnets::Bindings::Mock::View::SubView
         
       end
     
-      attr_binding :some_binding
-      attr_binding :sub_view, ::Rmagnets::Bindings::Mock::View
+      attr_view :some_binding
+      attr_view :sub_view, ::Rmagnets::Bindings::Mock::View
       attr_alias   :sub_binding, sub_view.sub_binding
+      attr_alias   :sub_sub_binding, sub_view.sub_binding.sub_sub_binding
+      
+      attr_text :text_only_binding
       
     end
     
     instance = Rmagnets::Bindings::Mock.new
-    instance.sub_view.sub_binding.__id__.should == instance.sub_binding.__id__
 
-    instance.bound?( :some_binding ).should == false
-    
-    some_object = Object.new
-    instance.some_binding = some_object
-    instance.bound?( :some_binding ).should == true
-    some_other_object = Object.new
-    instance.sub_view.sub_binding.__id__.should == instance.sub_binding.__id__
-    instance.sub_binding = some_other_object
+    instance.sub_view.is_a?( ::Rmagnets::Bindings::Mock::View ).should == true
+    instance.sub_view.sub_binding.is_a?( ::Rmagnets::Bindings::Mock::View::SubView ).should == true
+    instance.sub_view.sub_binding.sub_sub_binding.is_a?( ::Rmagnets::Bindings::Mock::View::SubView::SubSubView ).should == true
+
+    instance.sub_binding.is_a?( ::Rmagnets::Bindings::Mock::View::SubView ).should == true
+    instance.sub_sub_binding.is_a?( ::Rmagnets::Bindings::Mock::View::SubView::SubSubView ).should == true
+
+
     instance.sub_view.sub_binding.should == instance.sub_binding
-    instance.sub_view.sub_binding.object.should == instance.sub_binding.object
 
-    instance.bound?( :sub_binding ).should == true
-    instance.sub_binding?.should == instance.bound?( :sub_binding )
-    instance.unbind( :sub_binding )
-    instance.bound?( :sub_binding ).should == false
+    instance.some_binding.should == nil
     
+    instance.respond_to?( :some_binding ).should == true
+
+    instance.respond_to?( :sub_view ).should == true
+    instance.respond_to?( :sub_binding ).should == true
+    instance.sub_view.sub_binding.should == instance.sub_binding
+
+    instance.respond_to?( :sub_sub_binding ).should == true
+    instance.sub_view.sub_binding.sub_sub_binding.should == instance.sub_sub_binding
+
+    some_object = Object.new
+    some_other_object = Object.new
+    some_third_object = Object.new
+
+    instance.some_binding = some_object
+    instance.some_binding.should == some_object
+
+    instance.sub_sub_binding = some_third_object
+    instance.sub_view.sub_binding.sub_sub_binding.should == instance.sub_sub_binding
+
     instance.sub_binding = some_other_object
-    instance.bound?( :sub_binding ).should == true
-    instance.sub_binding?.should == instance.bound?( :sub_binding )
-    instance.sub_view.unbind( :sub_binding )
-    instance.bound?( :sub_binding ).should == false
+    instance.sub_binding.should == some_other_object
+    instance.sub_view.sub_binding.should == instance.sub_binding
+
+    Proc.new { instance.sub_sub_binding = nil }.should raise_error( ::Rmagnets::Bindings::Exception::NoBindingError )
+    instance.sub_binding = nil
+    instance.sub_binding.should == nil
+    instance.sub_view.sub_binding.should == nil
+
+    instance.sub_view = nil
+    instance.sub_view.should == nil
+
+    instance.text_only_binding = 'some text'
+    instance.text_only_binding.should == 'some text'
+
+    Proc.new { instance.text_only_binding = some_object }.should raise_error( ::Rmagnets::Bindings::Exception::TextBindingExpectsString )
 
     class ::Rmagnets::Bindings::Mock
     
