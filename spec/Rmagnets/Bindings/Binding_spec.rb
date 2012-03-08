@@ -15,13 +15,15 @@ describe ::Rmagnets::Bindings::Binding do
   it 'can initialize and report configuration in a hierarchical fashion' do
     class ::Rmagnets::Bindings::Binding::Mock
       include ::CascadingConfiguration::Array
+      include ::Rmagnets::Bindings::ObjectInstance
+      extend ::Rmagnets::Bindings::ClassInstance
       class << self
         attr_accessor :binding_instance
       end
       class View
       end
       # mock
-      def self.binding_instance( name )
+      def self.binding_configuration( name )
         return @binding_instance
       end
       def self.some_binding

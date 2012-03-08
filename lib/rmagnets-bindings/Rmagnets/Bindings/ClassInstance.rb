@@ -30,6 +30,16 @@ module ::Rmagnets::Bindings::ClassInstance
 	def attr_text( *binding_names, & configuration_proc )
 
     binding_names.each do |this_binding_name|
+      
+      unless this_binding_name.is_a?( Symbol ) or
+             this_binding_name.is_a?( String )
+        
+     		raise ::Rmagnets::Bindings::Exception::TextBindingExpectsString,
+     		        'Binding ' + binding_name.to_s + ' is defined as a text-only binding, ' +
+     		        'which expects a string, but ' + this_binding_name.to_s + ' was not a string.'
+        
+      end
+    
       create_binding( this_binding_name, nil, false, true, & configuration_proc )
 		end
 		
@@ -53,7 +63,7 @@ module ::Rmagnets::Bindings::ClassInstance
 		return self
 		
 	end
-	alias_method :attr_required_binding, :attr_required_view
+	alias_method :attr_required_view, :attr_required_view
 
   ########################
   #  attr_required_text  #
@@ -72,6 +82,45 @@ module ::Rmagnets::Bindings::ClassInstance
 	end
 
 	#################
+  #  attr_rename  #
+  #################
+
+  def attr_rename( existing_name, new_name )
+    
+    unless has_binding?( existing_name )
+  		raise ::Rmagnets::Bindings::Exception::NoBindingError,
+  		      'No binding defined for :' + existing_name.to_s + '.'
+    end
+	  
+    if existing_alias_for_existing_name = binding_aliases.delete( existing_name )
+      
+      remove_binding_methods( existing_name )
+      binding_aliases.each do |key, value|
+        if value == existing_name
+          binding_aliases[ key ] = new_name
+        end
+      end
+      create_binding_alias( new_name, existing_alias_for_existing_name )
+      
+    elsif shared_binding_router = shared_binding_routers.delete( existing_name )
+      
+      remove_binding_methods( existing_name )
+      shared_binding_routers[ new_name ] = new_name
+      create_binding_alias( new_name, shared_binding_router )
+      
+    else
+    
+      binding_instance = binding_configurations.delete( existing_name )
+      binding_instance.name = new_name
+      binding_routers.delete( existing_name )
+      remove_binding_methods( existing_name )
+      create_binding_from_configuration( new_name, binding_instance )
+      
+    end
+            
+  end
+
+	#################
   #  attr_unbind  #
   #################
 
@@ -81,11 +130,16 @@ module ::Rmagnets::Bindings::ClassInstance
   	
 		binding_names.each do |this_binding_name|
 
+      unless has_binding?( this_binding_name )
+    		raise ::Rmagnets::Bindings::Exception::NoBindingError,
+    		      'No binding defined for :' + this_binding_name.to_s + '.'
+      end
+
   		# delete this alias if it is one
   		if aliased_binding = binding_aliases.delete( this_binding_name )
-
-        # if it was an alias, delete its binding
-        attr_unbind( aliased_binding )
+  		  
+  		  # we don't automatically delete associated bindings
+  		  # nothing else to do
         
       elsif shared_binding_routers.delete( this_binding_name )
         
@@ -102,16 +156,14 @@ module ::Rmagnets::Bindings::ClassInstance
   		# delete any aliases for this one
       binding_aliases.delete_if { |key, value| value == this_binding_name }
 
-      ::CascadingConfiguration::Variable.remove_module_method( self, this_binding_name )
-      ::CascadingConfiguration::Variable.remove_instance_method( self, this_binding_name )
-      ::CascadingConfiguration::Variable.remove_instance_method( self, this_binding_name.write_accessor_name )
+      remove_binding_methods( this_binding_name )
       
 		end
 		
 		return self
 		
 	end
-
+	
   ##################
   #  has_binding?  #
   ##################
@@ -143,7 +195,7 @@ module ::Rmagnets::Bindings::ClassInstance
 	  
 	  binding_required = false
 	  
-	  if binding_instance = binding_instance( binding_name )
+	  if binding_instance = binding_configuration( binding_name )
 	    binding_required = binding_instance.required?
     end
 	  
@@ -197,7 +249,7 @@ module ::Rmagnets::Bindings::ClassInstance
   #  binding_instance  #
   ######################
 
-	def binding_instance( binding_name )
+	def binding_configuration( binding_name )
 		
 		binding_instance = nil
 	
@@ -278,21 +330,20 @@ module ::Rmagnets::Bindings::ClassInstance
 		else
 
 	  	binding_order_array.each do |this_binding_name|
+
+	  	  if this_binding_name.is_a?( Array )
+	  	    this_binding_name = this_binding_name[ 0 ]
+  	    end
 	  	  
 	  	  unless has_binding?( this_binding_name )
       		raise ::Rmagnets::Bindings::Exception::NoBindingError,
       		      'No binding defined for :' + this_binding_name.to_s + '.'
   	    end
 	  	  
-	  	  if binding_order.include?( this_binding_name )
-	  	    raise ::Rmagnets::Bindings::Exception::BindingAlreadyDefinedError, 
-	  	            'Order already includes binding ' + this_binding_name.to_s
-  	    end
-	  	  
-				binding_order.push( this_binding_name )
-				
 			end
 
+			binding_order.replace( binding_order_array )
+			
 		end
 		
 		return return_value
@@ -383,7 +434,7 @@ module ::Rmagnets::Bindings::ClassInstance
 
     if has_binding?( binding_name )
 		  raise ::Rmagnets::Bindings::Exception::BindingAlreadyDefinedError,
-		        'Binding already defined for :' + binding_name.to_s + '; use attr_rebind to redefine.'
+		        'Binding already defined for :' + binding_name.to_s + '.'
     end
     
 		new_binding = ::Rmagnets::Bindings::Binding.new( self,
@@ -393,13 +444,23 @@ module ::Rmagnets::Bindings::ClassInstance
 		                                                 text_only,
 		                                                 & configuration_proc )
 		
-		binding_configurations[ binding_name ] = new_binding
+	  create_binding_from_configuration( binding_name, new_binding )
+
+	end
+
+  #######################################
+  #  create_binding_from_configuration  #
+  #######################################
+
+  def create_binding_from_configuration( binding_name, binding_configuration )
+
+		binding_configurations[ binding_name ] = binding_configuration
 	  
-	  binding_routers[ binding_name ] = ::Rmagnets::Bindings::Binding::Router.new( new_binding )
+	  binding_routers[ binding_name ] = ::Rmagnets::Bindings::Binding::Router.new( binding_configuration )
 	  
     declare_class_binding_getter( binding_name )
-		declare_binding_setter( binding_name, new_binding )
-		declare_binding_getter( binding_name, new_binding )
+		declare_binding_setter( binding_name, binding_configuration )
+		declare_binding_getter( binding_name, binding_configuration )
 
 	end
 
@@ -430,9 +491,9 @@ module ::Rmagnets::Bindings::ClassInstance
         shared_binding_router_instance = existing_binding_or_name
         shared_binding_routers[ binding_alias ] = shared_binding_router_instance
 
-        declare_class_shared_binding_getter( shared_binding_router_instance )
-    		declare_shared_binding_setter( shared_binding_router_instance )
-    		declare_shared_binding_getter( shared_binding_router_instance )
+        declare_class_shared_binding_getter( binding_alias )
+    		declare_shared_binding_setter( binding_alias, shared_binding_router_instance )
+    		declare_shared_binding_getter( binding_alias, shared_binding_router_instance )
         
     end
     
@@ -484,9 +545,9 @@ module ::Rmagnets::Bindings::ClassInstance
   #  declare_class_shared_binding_getter  #
   #########################################
 
-  def declare_class_shared_binding_getter( shared_binding_router_instance )
+  def declare_class_shared_binding_getter( binding_name )
     
-    declare_class_binding_getter( shared_binding_router_instance.__binding_instance__.name )
+    declare_class_binding_getter( binding_name )
     
   end
 
@@ -548,12 +609,11 @@ module ::Rmagnets::Bindings::ClassInstance
   #  declare_shared_binding_setter  #
   ###################################
 
-	def declare_shared_binding_setter( shared_binding_router_instance )
+	def declare_shared_binding_setter( binding_name, shared_binding_router_instance )
 
-    write_accessor = shared_binding_router_instance.__binding_instance__.name.write_accessor_name
+    write_accessor = binding_name.write_accessor_name
 		
 		binding_route = shared_binding_router_instance.__binding_route__
-		binding_name = shared_binding_router_instance.__binding_instance__.name
 
 		#-----------------------------------  Instance Methods  ---------------------------------------#
   	
@@ -640,10 +700,9 @@ module ::Rmagnets::Bindings::ClassInstance
   #  declare_shared_binding_getter  #
   ###################################
 
-	def declare_shared_binding_getter( shared_binding_router_instance )
+	def declare_shared_binding_getter( binding_name, shared_binding_router_instance )
 
 		binding_route = shared_binding_router_instance.__binding_route__
-		binding_name = shared_binding_router_instance.__binding_instance__.name
 
   	#-----------------------------------  Instance Methods  ---------------------------------------#
 
@@ -683,4 +742,29 @@ module ::Rmagnets::Bindings::ClassInstance
 
 	end
 	
+	############################
+	#  remove_binding_methods  #
+	############################
+	
+	def remove_binding_methods( binding_name )
+
+    write_accessor = binding_name.write_accessor_name
+    
+    unless ::CascadingConfiguration::Variable.undef_module_method( self, binding_name )
+      eigenclass = class << self ; self ; end
+      eigenclass.instance_eval do
+        undef_method( binding_name )
+      end
+    end
+    
+    unless ::CascadingConfiguration::Variable.undef_instance_method( self, binding_name )
+      undef_method( binding_name )
+    end
+
+    unless ::CascadingConfiguration::Variable.undef_instance_method( self, write_accessor )
+      undef_method( write_accessor )
+    end
+
+  end
+
 end

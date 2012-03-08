@@ -33,6 +33,12 @@ class ::Rmagnets::Bindings::Binding::Router
   		
   		binding_route = nil
   		
+  		unless view_class.respond_to?( :binding_configurations )
+    		raise ::Rmagnets::Bindings::Exception::ViewClassLacksBindings,
+    		      'Class ' + view_class.to_s + ' was declared as a view class, ' +
+    		      'but does not respond to :' + :binding_configurations.to_s + '.'
+		  end
+  		
   		unless view_class.binding_configurations.empty?
   		
     		if @__binding_route__
@@ -63,11 +69,13 @@ class ::Rmagnets::Bindings::Binding::Router
   	    
   		  shared_router_instance = self
 
-  		  path.each do |this_binding_path_name|
-  		    shared_router_instance = shared_router_instance.binding_router( this_binding_path_name )
+        route = this_shared_binding_router.__binding_route__
+
+  		  route.each do |this_binding_route_part|
+  		    shared_router_instance = shared_router_instance.binding_router( this_binding_route_part )
   	    end
   	    
-  	    @__shared_sub_routers__[ binding_name ] = shared_router_instance
+  	    @__shared_sub_routers__[ this_binding_name ] = shared_router_instance
         
   	    initialize_binding_route_methods( view_class, this_binding_name )
   	    

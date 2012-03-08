@@ -36,7 +36,11 @@ require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ObjectInstance.rb'
 
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/BindingAlreadyDefinedError.rb'
+require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/BindingDoesNotExpectMultiple.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/BindingNameExpected.rb'
+require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/BindingRequired.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/NoBindingError.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/OrderAlreadyIncludesBinding.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/TextBindingExpectsString.rb'
+require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/ViewClassLacksBindings.rb'
+

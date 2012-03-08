@@ -73,8 +73,8 @@ describe ::Rmagnets::Bindings do
       binding_required?( :some_binding ).should == false
       binding_required?( :some_other_binding ).should == true
       
-      binding_instance( :some_binding ).configuration_proc.should == configuration_proc_one
-      binding_instance( :some_other_binding ).configuration_proc.should == configuration_proc_two
+      binding_configuration( :some_binding ).configuration_proc.should == configuration_proc_one
+      binding_configuration( :some_other_binding ).configuration_proc.should == configuration_proc_two
       
       ::CascadingConfiguration::Variable.define_module_method( self, :some_binding ) { puts '' }
       ::CascadingConfiguration::Variable.define_instance_method( self, :some_binding ) { puts '' }
@@ -96,7 +96,7 @@ describe ::Rmagnets::Bindings do
   it 'can create bindings from a hash' do
     
     class ::Rmagnets::Bindings::Mock
-      
+     
       view_class = ::Rmagnets::Bindings::Mock::View
       
       configuration_proc_one = Proc.new { puts 'one' }
@@ -111,8 +111,8 @@ describe ::Rmagnets::Bindings do
       binding_required?( :some_binding ).should == false
       binding_required?( :some_other_binding ).should == true
       
-      binding_instance( :some_binding ).configuration_proc.should == configuration_proc_one
-      binding_instance( :some_other_binding ).configuration_proc.should == configuration_proc_two
+      binding_configuration( :some_binding ).configuration_proc.should == configuration_proc_one
+      binding_configuration( :some_other_binding ).configuration_proc.should == configuration_proc_two
       
       ::CascadingConfiguration::Variable.define_module_method( self, :some_binding ) { puts '' }
       ::CascadingConfiguration::Variable.define_instance_method( self, :some_binding ) { puts '' }
@@ -155,15 +155,15 @@ describe ::Rmagnets::Bindings do
       binding_required?( :yet_another_binding ).should == false
       binding_required?( :some_other_binding ).should == false
       
-      binding_instance( :some_binding ).configuration_proc.should == configuration_proc_one
-      binding_instance( :another_binding ).configuration_proc.should == configuration_proc_one
-      binding_instance( :yet_another_binding ).configuration_proc.should == configuration_proc_one
-      binding_instance( :some_other_binding ).configuration_proc.should == configuration_proc_one
+      binding_configuration( :some_binding ).configuration_proc.should == configuration_proc_one
+      binding_configuration( :another_binding ).configuration_proc.should == configuration_proc_one
+      binding_configuration( :yet_another_binding ).configuration_proc.should == configuration_proc_one
+      binding_configuration( :some_other_binding ).configuration_proc.should == configuration_proc_one
 
-      binding_instance( :some_binding ).view_class.should == view_class
-      binding_instance( :another_binding ).view_class.should == view_class
-      binding_instance( :yet_another_binding ).view_class.should == view_class
-      binding_instance( :some_other_binding ).view_class.should == other_view_class
+      binding_configuration( :some_binding ).view_class.should == view_class
+      binding_configuration( :another_binding ).view_class.should == view_class
+      binding_configuration( :yet_another_binding ).view_class.should == view_class
+      binding_configuration( :some_other_binding ).view_class.should == other_view_class
       
       ::CascadingConfiguration::Variable.define_module_method( self, :some_binding ) { puts '' }
       ::CascadingConfiguration::Variable.define_instance_method( self, :some_binding ) { puts '' }
@@ -190,6 +190,7 @@ describe ::Rmagnets::Bindings do
   ###########################
   #  attr_view              #
   #  attr_text              #
+  #  attr_rename            #
   #  has_binding?           #
   #  binding_instance       #
   #  attr_unbind            #
@@ -212,7 +213,7 @@ describe ::Rmagnets::Bindings do
 
       has_binding?( :some_other_binding ).should == false      
 
-      config = binding_instance( :some_binding )
+      config = binding_configuration( :some_binding )
       config.is_a?( ::Rmagnets::Bindings::Binding ).should == true
       config.required?.should == false
       config.configuration_proc.should == config_proc
@@ -222,9 +223,17 @@ describe ::Rmagnets::Bindings do
       
       has_binding?( :some_text_binding ).should == true
       
-      attr_unbind :some_binding, :some_text_binding
-      has_binding?( :some_binding ).should == false
+      attr_rename :some_text_binding, :some_renamed_text_binding
+      attr_rename :some_binding, :some_renamed_binding
+
       has_binding?( :some_text_binding ).should == false
+      has_binding?( :some_binding ).should == false
+      has_binding?( :some_renamed_binding ).should == true
+      has_binding?( :some_renamed_text_binding ).should == true
+      
+      attr_unbind :some_renamed_binding, :some_renamed_text_binding
+      has_binding?( :some_renamed_binding ).should == false
+      has_binding?( :some_renamed_text_binding ).should == false
       has_binding?( :some_other_binding ).should == false
 
     end
@@ -232,14 +241,14 @@ describe ::Rmagnets::Bindings do
   end
 
   ###########################
-  #  attr_required_binding  #
+  #  attr_required_view  #
   ###########################
   
   it 'can define required bindings' do
     
     class ::Rmagnets::Bindings::Mock
       
-      attr_required_binding :some_required_binding
+      attr_required_view :some_required_binding
       
       has_binding?( :some_required_binding ).should == true
       binding_required?( :some_required_binding ).should == true
@@ -294,9 +303,11 @@ describe ::Rmagnets::Bindings do
       some_other_binding.is_a?( ::Rmagnets::Bindings::Binding::Router ).should == true
       some_other_binding.should == another_binding.some_other_binding
 
-      attr_unbind :yet_another_binding, :some_other_binding
+      attr_unbind :yet_another_binding, :some_other_binding, :another_binding
       
     end
+    
+    Proc.new { ::Rmagnets::Bindings::OtherMock.attr_unbind :another_binding }.should raise_error( ::Rmagnets::Bindings::Exception::NoBindingError )
     
     class ::Rmagnets::Bindings::OtherMock
       
@@ -326,16 +337,21 @@ describe ::Rmagnets::Bindings do
       
     end
 
-    Proc.new { ::Rmagnets::Bindings::Mock.attr_order :first_binding, :third_binding }.should raise_error( ::Rmagnets::Bindings::Exception::BindingAlreadyDefinedError )
-
     class ::Rmagnets::Bindings::Mock
-
-      attr_order :third_binding
+      
+      attr_order :first_binding, :third_binding
       
       attr_order.should == [ :first_binding, :third_binding ]
 
-      attr_order.insert( 1, :second_binding ) == [ :first_binding, :second_binding, :third_binding ]
-    
+      attr_order.insert( 1, :second_binding )
+
+      attr_order.should == [ :first_binding, :second_binding, :third_binding ]
+
+      attr_order :third_binding
+
+      attr_order.should == [ :third_binding ]
+      
+      attr_order.clear
       attr_unbind :first_binding, :second_binding, :third_binding
     
     end
@@ -367,17 +383,33 @@ describe ::Rmagnets::Bindings do
         attr_view :sub_binding, ::Rmagnets::Bindings::Mock::View::SubView
         
       end
+      
     
       attr_view :some_binding
-      attr_view :sub_view, ::Rmagnets::Bindings::Mock::View
-      attr_alias   :sub_binding, sub_view.sub_binding
+
+      attr_view :renamable_sub_view, ::Rmagnets::Bindings::Mock::View
+      attr_rename :renamable_sub_view, :sub_view
+      binding_configurations.include?( :renamable_sub_view ).should == false
+      
+      attr_alias   :renamable_sub_binding, sub_view.sub_binding
+      has_binding?( :renamable_sub_binding ).should == true
+      respond_to?( :renamable_sub_binding ).should == true
+      attr_rename  :renamable_sub_binding, :sub_binding
+
+      attr_alias   :renamable_alias, :sub_view
+      renamable_alias.should == sub_view
+      attr_rename  :renamable_alias, :renamed_alias
+      has_binding?( :renamable_alias ).should == false
+      has_binding?( :renamed_alias ).should == true
+      renamed_alias.should == sub_view
+
       attr_alias   :sub_sub_binding, sub_view.sub_binding.sub_sub_binding
       
       attr_text :text_only_binding
       
     end
     
-    instance = Rmagnets::Bindings::Mock.new
+    instance = ::Rmagnets::Bindings::Mock.new
 
     instance.sub_view.is_a?( ::Rmagnets::Bindings::Mock::View ).should == true
     instance.sub_view.sub_binding.is_a?( ::Rmagnets::Bindings::Mock::View::SubView ).should == true
@@ -429,14 +461,105 @@ describe ::Rmagnets::Bindings do
 
     class ::Rmagnets::Bindings::Mock
     
-      attr_unbind :some_binding
+      attr_unbind :some_binding, :sub_view, :text_only_binding
       
       class View
         
+        class SubView
+          
+          attr_unbind :sub_sub_binding
+
+        end
         attr_unbind :sub_binding
         
       end
       
+    end
+    
+  end
+
+  ##################################################################################################
+  #    private #####################################################################################
+  ##################################################################################################
+
+	##############################
+  #  ensure_required_bindings  #
+  ##############################
+
+  it 'can ensure required bindings exist' do
+    
+    class ::Rmagnets::Bindings::Mock
+    
+      attr_required_view :some_required_view
+      attr_view :non_required_view
+
+    end
+
+    Proc.new do
+      ::Rmagnets::Bindings::Mock.new.instance_eval do
+        ensure_required_bindings
+      end
+    end#.should raise_error( ::Rmagnets::Bindings::Exception::BindingRequired )
+
+    instance = ::Rmagnets::Bindings::Mock.new
+    instance.some_required_view = 'not nothing'
+    Proc.new do
+      instance.instance_eval do
+        ensure_required_bindings
+      end
+    end.should_not raise_error
+    
+    class ::Rmagnets::Bindings::Mock
+    
+      attr_order :some_required_view
+      
+    end
+    
+    instance = ::Rmagnets::Bindings::Mock.new
+    instance.some_required_view = 'not nothing'
+    Proc.new do
+      instance.instance_eval do
+        ensure_required_bindings
+      end
+    end.should_not raise_error( ::Rmagnets::Bindings::Exception::BindingRequired )
+
+    class ::Rmagnets::Bindings::Mock
+    
+      attr_order :non_required_view
+
+    end
+
+    Proc.new do
+      ::Rmagnets::Bindings::Mock.new.instance_eval do
+        ensure_required_bindings
+      end
+    end.should_not raise_error
+
+    Proc.new do
+      ::Rmagnets::Bindings::Mock.new.instance_eval do
+        self.non_required_view = [ :illegal_array, :with_multiple_items, :although_any_array_is_illegal ]
+        ensure_required_bindings
+      end
+    end.should raise_error( ::Rmagnets::Bindings::Exception::BindingDoesNotExpectMultiple )
+    
+    class ::Rmagnets::Bindings::Mock
+    
+      attr_order [ :non_required_view ]
+
+    end
+    
+    Proc.new do
+      ::Rmagnets::Bindings::Mock.new.instance_eval do
+        self.non_required_view = [ :some_items, :in_array ]
+        ensure_required_bindings
+      end
+    end.should_not raise_error
+    
+    class ::Rmagnets::Bindings::Mock
+      
+      attr_order.clear
+      attr_unbind :some_required_view, :non_required_view
+    
     end
     
   end

@@ -59,7 +59,7 @@ describe ::Rmagnets::Bindings::Binding::Router do
         end
       end
       # mock
-      def self.binding_instance( name )
+      def self.binding_configuration( name )
         return @binding_instance
       end
       def self.some_binding

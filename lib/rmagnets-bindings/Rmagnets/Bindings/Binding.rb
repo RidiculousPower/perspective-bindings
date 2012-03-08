@@ -22,12 +22,13 @@ class ::Rmagnets::Bindings::Binding
     # if so we want to chain our bindings with them
     # this insures that binding instances inherit properly while not actually being ancestors
     if binding_ancestor = ::CascadingConfiguration::Variable.ancestor( bound_instance, 
-                                                                       binding_name )
-
-      ancestor_binding = binding_ancestor.binding_instance( binding_name )
-
-      ::CascadingConfiguration::Variable.register_child_for_parent( self, ancestor_binding )
-
+                                                                       binding_name ) and
+       binding_ancestor.is_a?( ::Rmagnets::Bindings::ClassInstance )
+        
+        ancestor_binding = binding_ancestor.binding_configuration( binding_name )
+        
+        ::CascadingConfiguration::Variable.register_child_for_parent( self, ancestor_binding )
+      
     else
       
       # init default to false
