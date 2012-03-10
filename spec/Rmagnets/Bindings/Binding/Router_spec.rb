@@ -27,8 +27,7 @@ describe ::Rmagnets::Bindings::Binding::Router do
           def self.binding_router( binding_name, path )
             return ::Rmagnets::Bindings::Binding::Router.new( ::Rmagnets::Bindings::Binding.new( self,
                                                                                                  :yet_another_binding,
-                                                                                                 nil,
-                                                                                                 false ) )
+                                                                                                 nil ) )
           end
           def self.binding_routers
             return { :yet_another_binding => MockBinding.new }
@@ -45,8 +44,7 @@ describe ::Rmagnets::Bindings::Binding::Router do
         def self.binding_router( binding_name, path )
           return ::Rmagnets::Bindings::Binding::Router.new( ::Rmagnets::Bindings::Binding.new( self,
                                                                                                :some_other_binding,
-                                                                                               ::Rmagnets::Bindings::Binding::Mock::View::OtherView,
-                                                                                               false ) )
+                                                                                               ::Rmagnets::Bindings::Binding::Mock::View::OtherView ) )
         end
         def self.shared_binding_routers
           return []
@@ -75,7 +73,6 @@ describe ::Rmagnets::Bindings::Binding::Router do
     first_binding = ::Rmagnets::Bindings::Binding.new( configuration_instance,
                                                        :some_binding,
                                                        ::Rmagnets::Bindings::Binding::Mock::View,
-                                                       false,
                                                        & configuration_proc )
 
     binding_router = ::Rmagnets::Bindings::Binding::Router.new( first_binding )

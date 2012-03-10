@@ -57,9 +57,9 @@ class ::Rmagnets::Bindings::Binding::Router
         # Any view that can access a binding (ie in another view) has its own binding router
         # So if View.some_binding is aliased to View.other_binding.some_binding, both View
         # and OtherView (the default view class for View.other_binding) have binding routers.
-        sub_binding_router_instance = view_class.binding_router( this_binding_name, binding_route )
+        sub_binding_router = view_class.binding_router( this_binding_name, binding_route )
 
-        @__sub_routers__[ this_binding_name ] = sub_binding_router_instance
+        @__sub_routers__[ this_binding_name ] = sub_binding_router
 
   	    initialize_binding_route_methods( view_class, this_binding_name )
         
@@ -108,9 +108,9 @@ class ::Rmagnets::Bindings::Binding::Router
     
   end
   
-  ####################
+  ##################################
   #  binding_router  #
-  ####################
+  ##################################
   
   def binding_router( binding_name )
     
