@@ -240,9 +240,9 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
   #  create_binding  #
   ####################
 
-  def create_binding( binding_name, view_class, & configuration_proc )
+  def create_binding( binding_name, view_class, check_for_existing_binding = true, & configuration_proc )
 
-    if has_binding?( binding_name )
+    if check_for_existing_binding and has_binding?( binding_name )
 		  raise ::Rmagnets::Bindings::Exception::BindingAlreadyDefinedError,
 		          'Binding already defined for :' + binding_name.to_s + '.'
     end
@@ -257,7 +257,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
     return new_binding
     
 	end
-
+  
   #######################################
   #  create_binding_from_configuration  #
   #######################################

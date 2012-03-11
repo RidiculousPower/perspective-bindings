@@ -28,8 +28,9 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::File do
     
     class ::Rmagnets::Bindings::ClassInstance::Bindings::File::Mock
       
+      proc_ran = false
       config_proc = Proc.new do
-        puts 'do some live configuration here'
+        proc_ran = true
       end
       
       attr_file :some_file => ::Rmagnets::Bindings::ClassInstance::Bindings::File::Mock::View, & config_proc
@@ -40,7 +41,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::File do
       respond_to?( :some_file ).should == true
       instance_methods.include?( :some_file ).should == true
 
-      binding_instance.configuration_procs.should == [ config_proc ]
+      binding_instance.configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == config_proc
       binding_instance.view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::File::Mock::View
             
       has_binding?( :some_file ).should == true

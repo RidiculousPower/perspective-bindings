@@ -1,7 +1,8 @@
 
 class ::Rmagnets::Bindings::Binding::Router
 
-  attr_reader :__binding_instance__, :__binding_route__, :__sub_routers__, :__shared_sub_routers__
+  attr_reader :__binding_instance__, :__binding_name__, :__binding_route__, 
+              :__sub_routers__, :__shared_sub_routers__
 
   include ::CascadingConfiguration::Setting
 
@@ -12,6 +13,8 @@ class ::Rmagnets::Bindings::Binding::Router
   def initialize( binding_configuration_instance, base_path = nil )
     
     @__binding_instance__ = binding_configuration_instance
+    
+    @__binding_name__ = @__binding_instance__.__binding_name__
     
     @__binding_is_alias__ = false
     
@@ -47,7 +50,7 @@ class ::Rmagnets::Bindings::Binding::Router
     		  binding_route = [ ]
     		end
 
-		    binding_route.push( @__binding_instance__.name )
+		    binding_route.push( @__binding_instance__.__binding_name__ )
 
 		  end
   		

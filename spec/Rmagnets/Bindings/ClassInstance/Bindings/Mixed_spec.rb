@@ -28,13 +28,14 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed do
 
     class ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed::Mock
 
+      proc_ran = false
       config_proc = Proc.new do
-        puts 'do some live configuration here'
+        proc_ran = true
       end
 
       attr_mixed :some_mixed, ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed::Mock::View, :text, :number, & config_proc
       binding_instance = binding_configuration( :some_mixed )
-      binding_instance.name.should == :some_mixed
+      binding_instance.__binding_name__.should == :some_mixed
       binding_instance.text_permitted?.should == true
       binding_instance.number_permitted?.should == true
 
@@ -54,7 +55,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed do
       respond_to?( :some_mixed ).should == true
       instance_methods.include?( :some_mixed ).should == true
 
-      binding_instance.configuration_procs.should == [ config_proc ]
+      binding_instance.configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == config_proc
       binding_instance.view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed::Mock::View
 
       has_binding?( :some_mixed ).should == true
@@ -62,7 +63,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed do
       attr_mixed :some_mixed_no_view, :text, :number, & config_proc
 
       binding_instance = binding_configuration( :some_mixed_no_view )
-      binding_instance.name.should == :some_mixed_no_view
+      binding_instance.__binding_name__.should == :some_mixed_no_view
       binding_instance.text_permitted?.should == true
       binding_instance.number_permitted?.should == true
 
@@ -82,7 +83,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed do
       respond_to?( :some_mixed_no_view ).should == true
       instance_methods.include?( :some_mixed_no_view ).should == true
 
-      binding_instance.configuration_procs.should == [ config_proc ]
+      binding_instance.configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == config_proc
       binding_instance.view_class.should == nil
 
       has_binding?( :some_mixed_no_view ).should == true

@@ -53,7 +53,7 @@ describe ::Rmagnets::Bindings::Binding do
     first_binding.required?.should == false
     first_binding.optional?.should == true
     first_binding.view_class.should == ::Rmagnets::Bindings::Binding::Mock::View
-    first_binding.configuration_procs[0].should == configuration_proc
+    first_binding.configuration_procs[0].instance_variable_get( :@configuration_proc ).should == configuration_proc
 
     sub_configuration_instance = ::Rmagnets::Bindings::Binding::MockSub
     second_binding = ::Rmagnets::Bindings::Binding.new( sub_configuration_instance, :some_binding )
@@ -62,10 +62,8 @@ describe ::Rmagnets::Bindings::Binding do
     second_binding.required?.should == false
     second_binding.optional?.should == true
     second_binding.view_class.should == ::Rmagnets::Bindings::Binding::Mock::View
-    second_binding.configuration_procs[0].should == configuration_proc
+    second_binding.configuration_procs[0].instance_variable_get( :@configuration_proc ).should == configuration_proc
     second_binding.configuration_procs.push( sub_configuration_proc )
-    second_binding.configuration_procs.should == [ configuration_proc, sub_configuration_proc ]
-    first_binding.configuration_procs.should == [ configuration_proc ]
     second_binding.view_class = ::Rmagnets::Bindings::Binding::MockSub::View
     second_binding.view_class.should == ::Rmagnets::Bindings::Binding::MockSub::View
     first_binding.view_class.should == ::Rmagnets::Bindings::Binding::Mock::View

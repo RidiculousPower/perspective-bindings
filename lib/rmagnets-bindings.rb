@@ -74,6 +74,7 @@ class ::Rmagnets
 end
 
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding/Router.rb'
+require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding/Proxy.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding.rb'
 
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/Declare.rb'

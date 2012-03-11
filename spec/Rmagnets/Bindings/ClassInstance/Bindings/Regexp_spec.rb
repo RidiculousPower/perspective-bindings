@@ -28,8 +28,9 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp do
 
     class ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 
+      proc_ran = false
       config_proc = Proc.new do
-        puts 'do some live configuration here'
+        proc_ran = true
       end
 
       attr_regexp :some_regexp => ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock::View, & config_proc
@@ -40,7 +41,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp do
       respond_to?( :some_regexp ).should == true
       instance_methods.include?( :some_regexp ).should == true
 
-      binding_instance.configuration_procs.should == [ config_proc ]
+      binding_instance.configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == config_proc
       binding_instance.view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock::View
 
       has_binding?( :some_regexp ).should == true

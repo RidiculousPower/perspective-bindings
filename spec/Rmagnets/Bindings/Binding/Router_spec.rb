@@ -60,6 +60,12 @@ describe ::Rmagnets::Bindings::Binding::Router do
       def self.binding_configuration( name )
         return @binding_instance
       end
+      def self.binding_configurations
+        return binding_routers
+      end
+      def self.binding_routers
+        return { :some_binding => View::OtherView::MockBinding.new }
+      end
       def self.some_binding
       end
     end

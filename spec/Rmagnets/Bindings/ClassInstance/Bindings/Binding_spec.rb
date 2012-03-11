@@ -30,8 +30,9 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Binding do
     
     class ::Rmagnets::Bindings::ClassInstance::Bindings::Binding::Mock
       
+      proc_ran = false
       config_proc = Proc.new do
-        puts 'do some live configuration here'
+        proc_ran = true
       end
       
       attr_binding :some_binding => ::Rmagnets::Bindings::ClassInstance::Bindings::Binding::Mock::View, & config_proc
@@ -46,7 +47,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Binding do
       config = binding_configuration( :some_binding )
       config.is_a?( ::Rmagnets::Bindings::Binding ).should == true
       config.required?.should == false
-      config.configuration_procs.should == [ config_proc ]
+      config.configuration_procs[0].instance_variable_get( :@configuration_proc ).should == config_proc
       config.view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Binding::Mock::View
             
       has_binding?( :some_binding ).should == true

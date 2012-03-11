@@ -33,7 +33,7 @@ module ::Rmagnets::Bindings::ClassInstance::Rename
     else
     
       binding_instance = binding_configurations.delete( existing_name )
-      binding_instance.name = new_name
+      binding_instance.__binding_name__ = new_name
       binding_routers.delete( existing_name )
       remove_binding_methods( existing_name )
       create_binding_from_configuration( new_name, binding_instance )
