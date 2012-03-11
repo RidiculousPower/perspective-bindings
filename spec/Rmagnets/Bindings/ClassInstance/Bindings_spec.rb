@@ -45,8 +45,8 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings do
       binding_configuration( :some_binding ).required?.should == false
       binding_configuration( :some_other_binding ).required?.should == true
       
-      binding_configuration( :some_binding ).configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == configuration_proc_one
-      binding_configuration( :some_other_binding ).configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == configuration_proc_two
+      binding_configuration( :some_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
+      binding_configuration( :some_other_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_two
       
       ::CascadingConfiguration::Variable.define_module_method( self, :some_binding ) { puts '' }
       ::CascadingConfiguration::Variable.define_instance_method( self, :some_binding ) { puts '' }
@@ -84,8 +84,8 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings do
       binding_configuration( :some_binding ).required?.should == false
       binding_configuration( :some_other_binding ).required?.should == true
       
-      binding_configuration( :some_binding ).configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == configuration_proc_one
-      binding_configuration( :some_other_binding ).configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == configuration_proc_two
+      binding_configuration( :some_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
+      binding_configuration( :some_other_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_two
       
       ::CascadingConfiguration::Variable.define_module_method( self, :some_binding ) { puts '' }
       ::CascadingConfiguration::Variable.define_instance_method( self, :some_binding ) { puts '' }
@@ -128,10 +128,10 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings do
       binding_configuration( :yet_another_binding ).required?.should == false
       binding_configuration( :some_other_binding ).required?.should == false
       
-      binding_configuration( :some_binding ).configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == configuration_proc_one
-      binding_configuration( :another_binding ).configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == configuration_proc_one
-      binding_configuration( :yet_another_binding ).configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == configuration_proc_one
-      binding_configuration( :some_other_binding ).configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == configuration_proc_one
+      binding_configuration( :some_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
+      binding_configuration( :another_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
+      binding_configuration( :yet_another_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
+      binding_configuration( :some_other_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
 
       binding_configuration( :some_binding ).view_class.should == view_class
       binding_configuration( :another_binding ).view_class.should == view_class

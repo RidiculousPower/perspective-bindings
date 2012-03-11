@@ -229,9 +229,7 @@ class ::Rmagnets::Bindings::Binding
 
   def configuration( & configuration_proc )
         
-    binding_proxy = Rmagnets::Bindings::Binding::Proxy.new( configuration_proc, @bound_module.binding_configurations )
-
-    configuration_procs.push( binding_proxy )
+    configuration_procs.push( [ configuration_proc, @bound_module.binding_configurations ] )
     
   end
 

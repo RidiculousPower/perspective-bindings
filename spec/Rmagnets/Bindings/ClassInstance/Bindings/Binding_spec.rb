@@ -47,7 +47,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Binding do
       config = binding_configuration( :some_binding )
       config.is_a?( ::Rmagnets::Bindings::Binding ).should == true
       config.required?.should == false
-      config.configuration_procs[0].instance_variable_get( :@configuration_proc ).should == config_proc
+      config.configuration_procs[ 0 ][ 0 ].should == config_proc
       config.view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Binding::Mock::View
             
       has_binding?( :some_binding ).should == true

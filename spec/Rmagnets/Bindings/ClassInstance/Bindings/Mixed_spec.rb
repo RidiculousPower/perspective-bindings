@@ -55,7 +55,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed do
       respond_to?( :some_mixed ).should == true
       instance_methods.include?( :some_mixed ).should == true
 
-      binding_instance.configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == config_proc
+      binding_instance.configuration_procs[ 0 ][ 0 ].should == config_proc
       binding_instance.view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed::Mock::View
 
       has_binding?( :some_mixed ).should == true
@@ -83,7 +83,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed do
       respond_to?( :some_mixed_no_view ).should == true
       instance_methods.include?( :some_mixed_no_view ).should == true
 
-      binding_instance.configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == config_proc
+      binding_instance.configuration_procs[ 0 ][ 0 ].should == config_proc
       binding_instance.view_class.should == nil
 
       has_binding?( :some_mixed_no_view ).should == true

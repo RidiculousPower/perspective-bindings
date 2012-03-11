@@ -43,7 +43,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::View do
       respond_to?( :some_view ).should == true
       instance_methods.include?( :some_view ).should == true
 
-      binding_instance.configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == config_proc
+      binding_instance.configuration_procs[ 0 ][ 0 ].should == config_proc
       binding_instance.view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View
 
       has_binding?( :some_view ).should == true

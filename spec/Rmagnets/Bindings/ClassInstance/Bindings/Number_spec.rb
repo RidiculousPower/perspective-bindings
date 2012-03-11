@@ -41,7 +41,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Number do
       respond_to?( :some_number ).should == true
       instance_methods.include?( :some_number ).should == true
 
-      binding_instance.configuration_procs[ 0 ].instance_variable_get( :@configuration_proc ).should == config_proc
+      binding_instance.configuration_procs[ 0 ][ 0 ].should == config_proc
       binding_instance.view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Number::Mock::View
 
       has_binding?( :some_number ).should == true

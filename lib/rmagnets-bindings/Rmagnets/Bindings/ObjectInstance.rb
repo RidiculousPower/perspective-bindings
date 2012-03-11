@@ -50,12 +50,53 @@ module ::Rmagnets::Bindings::ObjectInstance
       end
       
       # run configuration proc for each binding instance
-  		this_binding_instance.configuration_procs.each do |this_configuration_proxy|
-  		  this_configuration_proxy.proxy_bindings_for_configuration_proc( self, bound_instance )
+  		this_binding_instance.configuration_procs.each do |this_configuration_proc, this_binding_map|
+  		  @__binding_redirection_map_for_proc = this_binding_map
+        instance_exec( bound_instance, & this_configuration_proc )
   	  end
+		  @__binding_redirection_map_for_proc = nil
       
 	  end
 
+  end
+
+  ####################
+  #  method_missing  #
+  ####################
+  
+  def method_missing( method_name, *args )
+    
+    return_value = nil
+    
+    if @__binding_redirection_map_for_proc
+      
+      binding_name = method_name.accessor_name
+
+      # if our method names a binding, route to the binding
+      if binding_instance = @__binding_redirection_map_for_proc[ binding_name ]
+    
+        # for a given name we need to know the current path to its equivalent instance
+    
+        case method_name
+
+          when binding_name
+
+            binding_accessor_name = binding_instance.__binding_name__.accessor_name
+            return_value = __send__( binding_accessor_name, *args )
+
+          when binding_name.write_accessor_name
+
+            binding_write_accessor_name = binding_instance.__binding_name__.write_accessor_name
+            return_value = __send__( binding_write_accessor_name, *args )
+
+        end
+      
+      end
+    
+    end
+    
+    return return_value
+    
   end
 
   ##################################################################################################

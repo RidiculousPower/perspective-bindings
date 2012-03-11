@@ -74,7 +74,6 @@ class ::Rmagnets
 end
 
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding/Router.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding/Proxy.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding.rb'
 
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/Declare.rb'
@@ -83,6 +82,7 @@ require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/Alia
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/SharedBinding.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/Remove.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods.rb'
+
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Binding.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Class.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Complex.rb'
