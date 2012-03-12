@@ -93,6 +93,11 @@ module ::Rmagnets::Bindings::ObjectInstance
       
       end
     
+    else
+    
+      no_method_error_message = "undefined method \`" + method_name.to_s + "` for " + self.inspect
+      raise NoMethodError.new( no_method_error_message, method_name, *args )
+      
     end
     
     return return_value

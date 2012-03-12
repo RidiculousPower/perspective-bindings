@@ -76,7 +76,6 @@ end
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding/Router.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding.rb'
 
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/Declare.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/Binding.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/Alias.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/SharedBinding.rb'
