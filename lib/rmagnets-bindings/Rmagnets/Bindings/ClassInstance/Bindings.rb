@@ -119,8 +119,14 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
         
       else
 
-    		binding_configurations.delete( this_binding_name )
-
+    		binding_instance = binding_configurations.delete( this_binding_name )
+        
+        # if we defined a corresponding view at the same time as our binding (we probably did)
+        # then remove it as well
+        if corresponding_binding_name = binding_instance.corresponding_view_binding
+          attr_unbind( corresponding_binding_name )
+        end
+        
       end
       
       binding_routers.delete( this_binding_name )
@@ -146,8 +152,8 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
   #  create_bindings_for_args  #
   ##############################
 
-	def create_bindings_for_args( args, & configuration_proc )
-	  
+	def create_bindings_for_args( args, also_create_view_methods = true, & configuration_proc )
+
 	  bindings = [ ]
 	  
 	  until args.empty?
@@ -158,7 +164,9 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
         
         when Hash
         
-          these_bindings = create_bindings_for_hash( next_arg, & configuration_proc )
+          these_bindings = create_bindings_for_hash( next_arg, 
+                                                     also_create_view_methods, 
+                                                     & configuration_proc )
           bindings.concat( these_bindings )
         
         when Symbol, String
@@ -175,7 +183,9 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
             
               when Hash
             
-                these_bindings = create_bindings_for_hash( next_arg, & configuration_proc )
+                these_bindings = create_bindings_for_hash( next_arg, 
+                                                           also_create_view_methods,
+                                                           & configuration_proc )
                 bindings.concat( these_bindings )
                 break
             
@@ -193,7 +203,11 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
           end
           
           binding_names.each do |this_binding_name|
-            this_binding = create_binding( this_binding_name, view_class, & configuration_proc )
+            this_binding = create_binding( this_binding_name, 
+                                           view_class,
+                                           true, 
+                                           also_create_view_methods, 
+                                           & configuration_proc )
             bindings.push( this_binding )
           end
                 
@@ -213,12 +227,18 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
   #  create_bindings_for_hash  #
   ##############################
 
-  def create_bindings_for_hash( hash_instance, & configuration_proc )
+  def create_bindings_for_hash( hash_instance, 
+                                also_create_view_methods = true, 
+                                & configuration_proc )
     
     bindings = [ ]
     
     hash_instance.each do |this_binding_name, this_view_class|
-      binding = create_binding( this_binding_name, this_view_class, & configuration_proc )
+      binding = create_binding( this_binding_name, 
+                                this_view_class, 
+                                true, 
+                                also_create_view_methods, 
+                                & configuration_proc )
       bindings.push( binding )
     end
     
@@ -230,7 +250,11 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
   #  create_binding  #
   ####################
 
-  def create_binding( binding_name, view_class, check_for_existing_binding = true, & configuration_proc )
+  def create_binding( binding_name, 
+                      view_class, 
+                      check_for_existing_binding = true, 
+                      also_create_view_methods = true, 
+                      & configuration_proc )
 
     if check_for_existing_binding and has_binding?( binding_name )
 		  raise ::Rmagnets::Bindings::Exception::BindingAlreadyDefinedError,
@@ -242,7 +266,10 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
 		                                                 view_class, 
 		                                                 & configuration_proc )
 		
-	  create_binding_from_configuration( binding_name, new_binding )
+	  create_binding_from_configuration( binding_name, 
+	                                     new_binding, 
+	                                     also_create_view_methods, 
+	                                     view_class )
     
     return new_binding
     
@@ -252,7 +279,10 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
   #  create_binding_from_configuration  #
   #######################################
 
-  def create_binding_from_configuration( binding_name, binding_instance )
+  def create_binding_from_configuration( binding_name, 
+                                         binding_instance, 
+                                         also_create_view_methods = true,
+                                         view_class = nil )
 
 		binding_configurations[ binding_name ] = binding_instance
 	  
@@ -261,6 +291,12 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
     declare_class_binding_getter( binding_name )
 		declare_binding_setter( binding_name, binding_instance )
 		declare_binding_getter( binding_name, binding_instance )
+    
+    if also_create_view_methods
+      view_name = ( binding_name.to_s + '_view' ).to_sym
+      binding_instance.corresponding_view_binding = view_name
+      attr_view( view_name, view_class )
+    end
 
 	end
 	 

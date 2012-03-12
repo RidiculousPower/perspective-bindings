@@ -43,6 +43,10 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::View do
       respond_to?( :some_view ).should == true
       instance_methods.include?( :some_view ).should == true
 
+      has_binding?( :some_view_view ).should == false
+      respond_to?( :some_view_view ).should == false
+      instance_methods.include?( :some_view_view ).should == false
+
       binding_instance.configuration_procs[ 0 ][ 0 ].should == config_proc
       binding_instance.view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View
 
@@ -80,6 +84,10 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::View do
       binding_instance.required?.should == false
       binding_instance.multiple_values_permitted?.should == true
 
+      has_binding?( :some_views_view ).should == false
+      respond_to?( :some_views_view ).should == false
+      instance_methods.include?( :some_views_view ).should == false
+
     end
 
     instance = ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock.new
@@ -114,6 +122,10 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::View do
       binding_instance.required?.should == true
       binding_instance.multiple_values_permitted?.should == false
 
+      has_binding?( :some_required_view_view ).should == false
+      respond_to?( :some_required_view_view ).should == false
+      instance_methods.include?( :some_required_view_view ).should == false
+
     end
 
     instance = ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock.new
@@ -144,6 +156,10 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::View do
       binding_instance = binding_configuration( :some_required_views )
       binding_instance.required?.should == true
       binding_instance.multiple_values_permitted?.should == true
+
+      has_binding?( :some_required_views_view ).should == false
+      respond_to?( :some_required_views_view ).should == false
+      instance_methods.include?( :some_required_views_view ).should == false
 
     end
 

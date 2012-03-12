@@ -41,6 +41,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings do
       
       has_binding?( :some_binding ).should == true
       has_binding?( :some_other_binding ).should == true
+      has_binding?( :some_other_binding_view ).should == true
       
       binding_configuration( :some_binding ).required?.should == false
       binding_configuration( :some_other_binding ).required?.should == true
@@ -56,6 +57,8 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings do
       ::CascadingConfiguration::Variable.define_instance_method( self, :some_other_binding= ) { puts '' }
 
       attr_unbind( :some_binding, :some_other_binding )
+      
+      has_binding?( :some_other_binding_view ).should == false
       
     end
     

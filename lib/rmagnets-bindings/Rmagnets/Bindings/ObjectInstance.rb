@@ -106,5 +106,48 @@ module ::Rmagnets::Bindings::ObjectInstance
     return return_value
     
   end
+  
+  ########################################
+  #  ensure_binding_render_values_valid  #
+  ########################################
+  
+  def ensure_binding_render_values_valid
+  
+    # iterate bindings to fill in any corresponding values
+    binding_configurations.each do |this_binding_name, this_binding_instance|
+      
+      if this_corresponding_name = this_binding_instance.corresponding_view_binding
+
+        # if we have a corresponding view instance, fill in its content with our binding value
+        if this_corresponding_instance = __send__( this_corresponding_name )
+        
+          this_binding_value = __send__( this_binding_name )
+          this_corresponding_instance.content = this_binding_value
+        
+        end
+        
+      end
+      
+    end
+  
+    # if we are rendering an empty view we don't want to raise an error for empty required values
+    unless @__view_rendering_empty__
+      
+      binding_order.each do |this_binding_name|
+
+  			this_binding_instance = self.class.binding_configuration( this_binding_name )
+  			this_binding_value = __send__( this_binding_name )
+
+        this_binding_instance.ensure_binding_render_value_valid( this_binding_value )
+
+      end
+
+    else
+
+      @__view_rendering_empty__ = false
+
+	  end
     
+  end
+  
 end

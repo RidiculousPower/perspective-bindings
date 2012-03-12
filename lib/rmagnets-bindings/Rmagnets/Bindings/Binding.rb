@@ -9,7 +9,7 @@ class ::Rmagnets::Bindings::Binding
   # Inheritance is accomplished using CascadingConfiguration::Variable functionality;
   # for details, see #initialize.
   attr_configuration_array  :configuration_procs
-  attr_configuration        :__binding_name__, :view_class, :required?, 
+  attr_configuration        :__binding_name__, :view_class, :corresponding_view_binding, :required?, 
                             :multiple_values_permitted?, :text_permitted?, :number_permitted?, 
                             :integer_permitted?, :float_permitted?, :complex_permitted?,
                             :rational_permitted?, :regexp_permitted?, 

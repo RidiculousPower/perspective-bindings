@@ -13,10 +13,12 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::View
   # 
 	def attr_view( *args, & configuration_proc )
 
-    bindings = attr_text( *args, & configuration_proc )
+    # we don't create parallel view bindings for views
+    bindings = create_bindings_for_args( args, false, & configuration_proc )
 		
 		bindings.each do |this_binding|
 		  this_binding.view_permitted = true
+		  this_binding.text_permitted = true
 	  end
 		
 		return bindings
