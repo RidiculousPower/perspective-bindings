@@ -13,7 +13,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::View
   # 
 	def attr_view( *args, & configuration_proc )
 
-    bindings = create_bindings_for_args( args, & configuration_proc )
+    bindings = attr_text( *args, & configuration_proc )
 		
 		bindings.each do |this_binding|
 		  this_binding.view_permitted = true

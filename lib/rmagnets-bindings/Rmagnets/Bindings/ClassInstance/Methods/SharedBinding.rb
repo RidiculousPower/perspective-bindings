@@ -17,12 +17,12 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding
 
 	def declare_shared_binding_setter( shared_alias_name, shared_binding_router )
 
-		write_accessor = shared_alias_name.write_accessor_name
-		full_route = shared_binding_router.__binding_route__
-		last_index = full_route.length - 1
-		binding_route = full_route.slice( 0, last_index )
+		binding_route = shared_binding_router.__binding_route__
+    binding_name = shared_binding_router.__binding_name__
 
-    binding_name = full_route[ last_index ]
+    # our write accessor
+		write_accessor = shared_alias_name.write_accessor_name
+		# the write accessor our shared write accessor calls
     shared_alias_write_accessor = binding_name.write_accessor_name
 
 		#-----------------------------------  Instance Methods  ---------------------------------------#
@@ -69,12 +69,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding
 	def declare_shared_binding_getter( shared_alias_name, shared_binding_router )
 
 		binding_route = shared_binding_router.__binding_route__
-
-		full_route = shared_binding_router.__binding_route__
-		last_index = full_route.length - 1
-		binding_route = full_route.slice( 0, last_index )
-
-    binding_name = full_route[ last_index ]
+    binding_name = shared_binding_router.__binding_name__
 
   	#-----------------------------------  Instance Methods  ---------------------------------------#
 
@@ -107,7 +102,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding
         	      instance_binding.to_s + '. No binding :' + shared_alias_name.to_s + 
         	      ' defined ' + 'in ' + ( [ instance_binding.inspect ] + binding_route ).join( '.' ) + '.'
       end
-      
+
       instance_binding.__send__( binding_name )
 		
 		end

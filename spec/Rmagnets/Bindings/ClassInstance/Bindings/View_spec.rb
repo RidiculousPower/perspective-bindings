@@ -52,7 +52,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::View do
 
     instance = ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock.new
     Proc.new { instance.some_view = [ Object, ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View.new ] }.should raise_error
-    Proc.new { instance.some_view = :some_value }.should raise_error
+    Proc.new { instance.some_view = Class }.should raise_error
     instance.some_view = ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View.new
 
     instance.class.binding_configuration( :some_view ).ensure_binding_render_value_valid( instance.some_view )
@@ -83,8 +83,8 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::View do
     end
 
     instance = ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock.new
-    Proc.new { instance.some_views = [ :object ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_views = :object }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_views = [ Class ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_views = Object }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
     instance.some_views = ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View.new
     instance.some_views = [ ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View.new, ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View.new ]
     Proc.new { instance.some_views = [ Object, ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View.new ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
@@ -148,9 +148,9 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::View do
     end
 
     instance = ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock.new
-    Proc.new { instance.some_required_views = [ ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View.new, :other ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_views = [ ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View.new, Class ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
     Proc.new { instance.some_required_views = [ Object, ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View.new ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_views = :other }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_views = Object }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
     instance.some_required_views = [ ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View.new, ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View.new ]
     instance.some_required_views = ::Rmagnets::Bindings::ClassInstance::Bindings::View::Mock::View.new
     instance.some_required_views = nil

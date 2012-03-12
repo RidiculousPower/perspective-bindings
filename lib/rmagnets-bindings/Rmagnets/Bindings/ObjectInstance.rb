@@ -1,6 +1,7 @@
 
 module ::Rmagnets::Bindings::ObjectInstance
 	
+  include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Array
   include ::CascadingConfiguration::Hash
   
@@ -9,6 +10,8 @@ module ::Rmagnets::Bindings::ObjectInstance
   # We rely on inheritance structure provided by CascadingConfiguration for Binding configuration.
   # Binding instance uses configuration instance (instance including this module) for 
   # defining parallel hierarchy.
+  
+  attr_configuration        :__binding_order_declared_empty__?
   
 	attr_configuration_hash   :binding_configurations, :binding_aliases, :renamed_bindings,
 	                          :binding_routers, :shared_binding_routers
@@ -94,42 +97,14 @@ module ::Rmagnets::Bindings::ObjectInstance
       end
     
     else
-    
-      no_method_error_message = "undefined method \`" + method_name.to_s + "` for " + self.inspect
-      raise NoMethodError.new( no_method_error_message, method_name, *args )
+      
+      # we didn't capture method - handle as normal
+      super
       
     end
     
     return return_value
     
   end
-
-  ##################################################################################################
-      private ######################################################################################
-  ##################################################################################################
-
-	###########################
-  #  ensure_valid_bindings  #
-  ###########################
-  
-	def ensure_valid_bindings
-    
-    attribute_order = nil
-    
-    if binding_order.empty?
-      raise ::Rmagnets::Bindings::Exception::BindingOrderEmpty,
-              'Binding order was empty. Declare binding order using :attr_order.'
-    end
-
-		binding_order.each do |this_binding_name|
-      
-      binding_configuration = self.class.binding_configuration( this_binding_name )
-      binding_value = __send__( this_binding_name )
-
-      binding_configuration.ensure_binding_value_valid( binding_value )
-
-		end
-
-	end
     
 end

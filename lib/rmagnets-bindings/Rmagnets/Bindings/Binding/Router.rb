@@ -43,14 +43,16 @@ class ::Rmagnets::Bindings::Binding::Router
 		  end
   		
   		unless view_class.binding_configurations.empty?
-  		
+  		  
+  		  # set up binding route that local binding routers to view class bindings will use
     		if @__binding_route__
     		  binding_route = @__binding_route__.dup
     		else
     		  binding_route = [ ]
     		end
-
-		    binding_route.push( @__binding_instance__.__binding_name__ )
+        
+        # binding route is the name of our shared binding underneath the path to this router
+		    binding_route.push( @__binding_name__ )
 
 		  end
   		
@@ -60,7 +62,7 @@ class ::Rmagnets::Bindings::Binding::Router
         # Any view that can access a binding (ie in another view) has its own binding router
         # So if View.some_binding is aliased to View.other_binding.some_binding, both View
         # and OtherView (the default view class for View.other_binding) have binding routers.
-        sub_binding_router = view_class.binding_router( this_binding_name, binding_route )
+        sub_binding_router = this_binding_router.duplicate_for_shared_router( binding_route )
 
         @__sub_routers__[ this_binding_name ] = sub_binding_router
 
@@ -111,14 +113,24 @@ class ::Rmagnets::Bindings::Binding::Router
     
   end
   
-  ##################################
+  ####################
   #  binding_router  #
-  ##################################
+  ####################
   
   def binding_router( binding_name )
     
     return @__sub_routers__[ binding_name ]
     
+  end
+  
+  #################################
+  #  duplicate_for_shared_router  #
+  #################################
+  
+  def duplicate_for_shared_router( binding_base_route )
+    
+	  return ::Rmagnets::Bindings::Binding::Router.new( @__binding_instance__, binding_base_route )
+	  
   end
   
 end

@@ -36,17 +36,17 @@ describe ::Rmagnets::Bindings::ClassInstance::Order do
       
       attr_order :first_binding, :third_binding
       
-      attr_order.should == [ :first_binding, :third_binding ]
+      binding_order.should == [ :first_binding, :third_binding ]
 
-      attr_order.insert( 1, :second_binding )
+      binding_order.insert( 1, :second_binding )
 
-      attr_order.should == [ :first_binding, :second_binding, :third_binding ]
+      binding_order.should == [ :first_binding, :second_binding, :third_binding ]
 
       attr_order :third_binding
 
-      attr_order.should == [ :third_binding ]
+      binding_order.should == [ :third_binding ]
       
-      attr_order.clear
+      binding_order.clear
       attr_unbind :first_binding, :second_binding, :third_binding
     
     end

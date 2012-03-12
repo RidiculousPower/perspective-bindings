@@ -8,28 +8,25 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding d
       extend ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
       extend ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding
       class BindingViewMock
+        def self.binding_configuration( binding_name )
+          return @config ||= ::Rmagnets::Bindings::Binding.new( self,
+                                                                :binding_target,
+                                                                nil )
+        end
         def self.binding_configurations
-          return { :binding_target => Object.new }
+          return { :binding_target => binding_configuration( :binding_name ) }
         end
         def self.binding_routers
-          return { :binding_target => Object.new }
+          return { :binding_target => binding_router( :binding_target ) }
         end
         def self.shared_binding_routers
           return { }
         end
-        def self.binding_router( binding_name, path = nil )
-          if path
-            return @binding_route_mock_copy ||= ::Rmagnets::Bindings::Binding::Router.new( ::Rmagnets::Bindings::Binding.new( self,
-                                                                                                                              :binding_target,
-                                                                                                                              nil ), [ :binding_name, :binding_target ] )
-          else
-            return @binding_route_mock ||= ::Rmagnets::Bindings::Binding::Router.new( ::Rmagnets::Bindings::Binding.new( self,
-                                                                                                                         :binding_target,
-                                                                                                                         nil ) )
-          end
+        def self.binding_router( binding_name )
+          return @binding_route_mock ||= ::Rmagnets::Bindings::Binding::Router.new( binding_configuration( :binding_name ) )
         end
         def self.binding_target
-          return binding_router( :binding_target, [ :binding_name ] )
+          return binding_router( :binding_target ).duplicate_for_shared_router( [ :binding_name ] )
         end
         def binding_target
           @called_binding_target = true
@@ -45,17 +42,14 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding d
           return did_call_binding_target
         end
       end
-      def self.binding_router( binding_name, path = nil )
+      def self.binding_configuration( binding_name )
+        return @config ||= ::Rmagnets::Bindings::Binding.new( self,
+                                                              :binding_name,
+                                                              ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock::BindingViewMock )
+      end
+      def self.binding_router( binding_name )
         @called_binding_router = true
-        if path
-          return @binding_route_mock_copy ||= ::Rmagnets::Bindings::Binding::Router.new( ::Rmagnets::Bindings::Binding.new( self,
-                                                                                                                            :binding_name,
-                                                                                                                            ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock::BindingViewMock ), [ :binding_name ] )
-        else
-          return @binding_route_mock ||= ::Rmagnets::Bindings::Binding::Router.new( ::Rmagnets::Bindings::Binding.new( self,
-                                                                                                                       :binding_name,
-                                                                                                                       ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock::BindingViewMock ) )
-        end
+        return @binding_route_mock ||= ::Rmagnets::Bindings::Binding::Router.new( binding_configuration( :binding_name ) )
       end
       def self.called_binding_router
         did_call_binding_router = @called_binding_router
@@ -69,7 +63,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding d
         @called_binding_name = true
         return @binding_name_mock ||= BindingViewMock.new
       end
-      def binding_name=
+      def binding_name=( name )
         @called_binding_name = true
       end
       def called_binding_name

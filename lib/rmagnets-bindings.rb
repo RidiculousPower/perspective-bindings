@@ -4,7 +4,7 @@ require 'cascading-configuration-array'
 require 'cascading-configuration-hash'
 require 'cascading-configuration-setting'
 
-class ::Rmagnets
+module ::Rmagnets
 	module Bindings
     class Binding
       class Router

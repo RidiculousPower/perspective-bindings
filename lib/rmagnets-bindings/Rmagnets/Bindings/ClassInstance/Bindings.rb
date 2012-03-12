@@ -50,23 +50,13 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
   #  binding_router  #
   ####################
 
-	def binding_router( binding_name, binding_base_path = nil )
+	def binding_router( binding_name )
 		
 		binding_router = nil
     
     unless binding_router = shared_binding_routers[ binding_name ]
       binding_router = binding_routers[ binding_name ]
 		end
-		
-		# if we have a binding path then we are creating a new router for this binding to be used
-		# in another view class
-		if binding_base_path
-		  
-		  binding_instance = binding_router.__binding_instance__
-		  binding_router = ::Rmagnets::Bindings::Binding::Router.new( binding_instance, 
-		                                                                            binding_base_path )
-	    
-    end
 		
 		return binding_router
 		

@@ -11,11 +11,14 @@ module ::Rmagnets::Bindings::ClassInstance::Order
 
     return_value = self
 
-		if binding_order_array.empty?
+		if binding_order_array.empty? or 
+		   ( binding_order_array.count == 1 and binding_order_array[ 0 ].empty? )
 		
-			return_value = binding_order
+      self.__binding_order_declared_empty__ = true
 		
 		else
+
+      self.__binding_order_declared_empty__ = false
 
 	  	binding_order_array.each do |this_binding_name|
 	  	  

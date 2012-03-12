@@ -8,7 +8,7 @@ module ::Rmagnets::Bindings::ClassInstance::Rename
   #################
 
   def attr_rename( existing_name, new_name )
-    
+
     unless has_binding?( existing_name )
   		raise ::Rmagnets::Bindings::Exception::NoBindingError,
   		      'No binding defined for :' + existing_name.to_s + '.'

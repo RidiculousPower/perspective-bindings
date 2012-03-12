@@ -24,13 +24,13 @@ describe ::Rmagnets::Bindings::Binding::Router do
           def self.shared_binding_routers
             return []
           end
-          def self.binding_router( binding_name, path )
-            return ::Rmagnets::Bindings::Binding::Router.new( ::Rmagnets::Bindings::Binding.new( self,
-                                                                                                 :yet_another_binding,
-                                                                                                 nil ) )
+          def self.binding_router( binding_name )
+            return @router ||= ::Rmagnets::Bindings::Binding::Router.new( ::Rmagnets::Bindings::Binding.new( self,
+                                                                                                             :yet_another_binding,
+                                                                                                             nil ) )
           end
           def self.binding_routers
-            return { :yet_another_binding => MockBinding.new }
+            return { :yet_another_binding => binding_router( :yet_another_binding ) }
           end
           def self.binding_configurations
             return binding_routers
@@ -41,10 +41,10 @@ describe ::Rmagnets::Bindings::Binding::Router do
             return :some_other_binding
           end
         end
-        def self.binding_router( binding_name, path )
-          return ::Rmagnets::Bindings::Binding::Router.new( ::Rmagnets::Bindings::Binding.new( self,
-                                                                                               :some_other_binding,
-                                                                                               ::Rmagnets::Bindings::Binding::Mock::View::OtherView ) )
+        def self.binding_router( binding_name )
+          return @router ||= ::Rmagnets::Bindings::Binding::Router.new( ::Rmagnets::Bindings::Binding.new( self,
+                                                                                                           :some_other_binding,
+                                                                                                           ::Rmagnets::Bindings::Binding::Mock::View::OtherView ) )
         end
         def self.shared_binding_routers
           return []
@@ -53,7 +53,7 @@ describe ::Rmagnets::Bindings::Binding::Router do
           return binding_routers
         end
         def self.binding_routers
-          return { :some_other_binding => MockBinding.new }
+          return { :some_other_binding => binding_router( :some_other_binding ) }
         end
       end
       # mock
@@ -63,8 +63,13 @@ describe ::Rmagnets::Bindings::Binding::Router do
       def self.binding_configurations
         return binding_routers
       end
+      def self.binding_router( binding_name )
+        return @router ||= ::Rmagnets::Bindings::Binding::Router.new( ::Rmagnets::Bindings::Binding.new( self,
+                                                                                                         :some_binding,
+                                                                                                         ::Rmagnets::Bindings::Binding::Mock::View ) )
+      end
       def self.binding_routers
-        return { :some_binding => View::OtherView::MockBinding.new }
+        return { :some_binding => binding_router( :some_binding ) }
       end
       def self.some_binding
       end
