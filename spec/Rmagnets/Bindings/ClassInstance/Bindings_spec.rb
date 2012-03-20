@@ -49,12 +49,12 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings do
       binding_configuration( :some_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
       binding_configuration( :some_other_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_two
       
-      ::CascadingConfiguration::Variable.define_module_method( self, :some_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :some_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :some_binding= ) { puts '' }
-      ::CascadingConfiguration::Variable.define_module_method( self, :some_other_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :some_other_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :some_other_binding= ) { puts '' }
+      ::CascadingConfiguration::Methods.define_module_method( self, :some_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :some_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :some_binding= ) { puts '' }
+      ::CascadingConfiguration::Methods.define_module_method( self, :some_other_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :some_other_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :some_other_binding= ) { puts '' }
 
       attr_unbind( :some_binding, :some_other_binding )
       
@@ -90,12 +90,12 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings do
       binding_configuration( :some_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
       binding_configuration( :some_other_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_two
       
-      ::CascadingConfiguration::Variable.define_module_method( self, :some_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :some_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :some_binding= ) { puts '' }
-      ::CascadingConfiguration::Variable.define_module_method( self, :some_other_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :some_other_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :some_other_binding= ) { puts '' }
+      ::CascadingConfiguration::Methods.define_module_method( self, :some_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :some_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :some_binding= ) { puts '' }
+      ::CascadingConfiguration::Methods.define_module_method( self, :some_other_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :some_other_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :some_other_binding= ) { puts '' }
       attr_unbind( :some_binding, :some_other_binding )
       
     end
@@ -141,18 +141,18 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings do
       binding_configuration( :yet_another_binding ).view_class.should == view_class
       binding_configuration( :some_other_binding ).view_class.should == other_view_class
       
-      ::CascadingConfiguration::Variable.define_module_method( self, :some_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :some_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :some_binding= ) { puts '' }
-      ::CascadingConfiguration::Variable.define_module_method( self, :another_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :another_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :another_binding= ) { puts '' }
-      ::CascadingConfiguration::Variable.define_module_method( self, :yet_another_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :yet_another_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :yet_another_binding= ) { puts '' }
-      ::CascadingConfiguration::Variable.define_module_method( self, :some_other_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :some_other_binding ) { puts '' }
-      ::CascadingConfiguration::Variable.define_instance_method( self, :some_other_binding= ) { puts '' }
+      ::CascadingConfiguration::Methods.define_module_method( self, :some_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :some_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :some_binding= ) { puts '' }
+      ::CascadingConfiguration::Methods.define_module_method( self, :another_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :another_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :another_binding= ) { puts '' }
+      ::CascadingConfiguration::Methods.define_module_method( self, :yet_another_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :yet_another_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :yet_another_binding= ) { puts '' }
+      ::CascadingConfiguration::Methods.define_module_method( self, :some_other_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :some_other_binding ) { puts '' }
+      ::CascadingConfiguration::Methods.define_instance_method( self, :some_other_binding= ) { puts '' }
       attr_unbind( :some_binding, :another_binding, :yet_another_binding, :some_other_binding )
       
     end

@@ -31,7 +31,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding
     #  shared_alias_name=  #
     #======================#
     
-		::CascadingConfiguration::Variable.define_instance_method( self, write_accessor ) do |object|
+		::CascadingConfiguration::Methods.define_instance_method( self, write_accessor ) do |object|
       
       instance_binding = self
             
@@ -78,7 +78,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding
     #=====================#
 
 		# instance method: return the bound instance
-		::CascadingConfiguration::Variable.define_instance_method( self, shared_alias_name ) do
+		::CascadingConfiguration::Methods.define_instance_method( self, shared_alias_name ) do
 		  
       instance_binding = self
       

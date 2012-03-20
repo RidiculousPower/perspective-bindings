@@ -17,14 +17,18 @@ describe ::Rmagnets::Bindings::ObjectInstance do
       attr_binding :some_binding
       
       class MockClass
-        include ::Rmagnets::Bindings::ObjectInstance
         extend ::Rmagnets::Bindings::ClassInstance
         include ::Rmagnets::Bindings::ObjectInstance::Mock
+        binding_configurations[ :some_binding ].should_not == nil
+        binding_configurations[ :some_binding ].should_not == ::Rmagnets::Bindings::ObjectInstance::Mock.binding_configuration( :some_binding )
       end
-      
+
+      binding_configuration( :some_binding ).should_not == nil
+      MockClass.binding_configuration( :some_binding ).should_not == nil
       binding_configuration( :some_binding ).should_not == MockClass.binding_configuration( :some_binding )
 
       class MockClass2 < MockClass
+        binding_configuration( :some_binding ).should_not == nil
         binding_configuration( :some_binding ).should_not == MockClass.binding_configuration( :some_binding )
       end
 

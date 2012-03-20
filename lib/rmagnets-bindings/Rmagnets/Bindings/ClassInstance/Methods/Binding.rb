@@ -14,7 +14,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
     #=====================#
 
 		# class method: return the binding instance
-		::CascadingConfiguration::Variable.define_module_method( self, binding_name ) do
+		::CascadingConfiguration::Methods.define_module_method( self, binding_name ) do
 
 			return binding_router( binding_name )
 		  
@@ -37,9 +37,14 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
     #  binding_name=  #
     #=================#
     
-		::CascadingConfiguration::Variable.define_instance_method( self, write_accessor ) do |object|
+		::CascadingConfiguration::Methods.define_instance_method( self, write_accessor ) do |object|
 
       binding_instance.ensure_binding_value_valid( object )
+      
+      if this_corresponding_name = binding_instance.corresponding_view_binding
+        corresponding_view_binding_instance = __send__( this_corresponding_name )
+        corresponding_view_binding_instance.content = object
+      end
       
       return instance_variable_set( variable_name, object )
 
@@ -62,7 +67,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
     #================#
 
 		# instance method: return the bound instance
-		::CascadingConfiguration::Variable.define_instance_method( self, binding_name ) do
+		::CascadingConfiguration::Methods.define_instance_method( self, binding_name ) do
 		  
       return instance_variable_get( variable_name )
 		

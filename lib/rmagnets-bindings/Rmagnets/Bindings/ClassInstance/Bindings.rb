@@ -102,39 +102,43 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
   	
 		binding_names.each do |this_binding_name|
 
-      unless has_binding?( this_binding_name )
-    		raise ::Rmagnets::Bindings::Exception::NoBindingError,
-    		      'No binding defined for :' + this_binding_name.to_s + '.'
-      end
+      if has_binding?( this_binding_name )
 
-  		# delete this alias if it is one
-  		if aliased_binding = binding_aliases.delete( this_binding_name )
+    		# delete this alias if it is one
+    		if aliased_binding = binding_aliases.delete( this_binding_name )
   		  
-  		  # we don't automatically delete associated bindings
-  		  # nothing else to do
+    		  # we don't automatically delete associated bindings
+    		  # nothing else to do
         
-      elsif shared_binding_routers.delete( this_binding_name )
+        elsif shared_binding_routers.delete( this_binding_name )
         
-        # nothing else to do
+          # nothing else to do
         
-      else
+        else
 
-    		binding_instance = binding_configurations.delete( this_binding_name )
+      		binding_instance = binding_configurations.delete( this_binding_name )
         
-        # if we defined a corresponding view at the same time as our binding (we probably did)
-        # then remove it as well
-        if corresponding_binding_name = binding_instance.corresponding_view_binding
-          attr_unbind( corresponding_binding_name )
+          # if we defined a corresponding view at the same time as our binding (we probably did)
+          # then remove it as well
+          if corresponding_binding_name = binding_instance.corresponding_view_binding
+            attr_unbind( corresponding_binding_name )
+          end
+        
         end
-        
-      end
       
-      binding_routers.delete( this_binding_name )
+        binding_routers.delete( this_binding_name )
 
-  		# delete any aliases for this one
-      binding_aliases.delete_if { |key, value| value == this_binding_name }
+    		# delete any aliases for this one
+        binding_aliases.delete_if { |key, value| value == this_binding_name }
 
-      remove_binding_methods( this_binding_name )
+        remove_binding_methods( this_binding_name )
+
+        # now tell each child to remove the binding
+        ::CascadingConfiguration::Ancestors.children( self ).each do |this_child_bindings_module|
+          this_child_bindings_module.attr_unbind( this_binding_name )
+        end
+
+      end
       
 		end
 		
@@ -152,7 +156,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
   #  create_bindings_for_args  #
   ##############################
 
-	def create_bindings_for_args( args, also_create_view_methods = true, & configuration_proc )
+	def create_bindings_for_args( args, also_create_view_methods = nil, & configuration_proc )
 
 	  bindings = [ ]
 	  
@@ -196,6 +200,13 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
               else
             
                 view_class = next_arg
+                
+                unless view_class.nil?
+                  unless also_create_view_methods == false
+                    also_create_view_methods = true
+                  end
+                end
+                
                 break
             
             end
@@ -253,12 +264,13 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
   def create_binding( binding_name, 
                       view_class, 
                       check_for_existing_binding = true, 
-                      also_create_view_methods = true, 
+                      also_create_view_methods = false, 
                       & configuration_proc )
 
     if check_for_existing_binding and has_binding?( binding_name )
 		  raise ::Rmagnets::Bindings::Exception::BindingAlreadyDefinedError,
-		          'Binding already defined for :' + binding_name.to_s + '.'
+		          'Binding already defined for :' + binding_name.to_s + ' in instance ' +
+		          self.inspect + '.'
     end
     
 		new_binding = ::Rmagnets::Bindings::Binding.new( self,
@@ -268,8 +280,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
 		
 	  create_binding_from_configuration( binding_name, 
 	                                     new_binding, 
-	                                     also_create_view_methods, 
-	                                     view_class )
+	                                     also_create_view_methods )
     
     return new_binding
     
@@ -281,8 +292,8 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
 
   def create_binding_from_configuration( binding_name, 
                                          binding_instance, 
-                                         also_create_view_methods = true,
-                                         view_class = nil )
+                                         also_create_view_methods = false,
+                                         corresponding_view_binding_instance = nil )
 
 		binding_configurations[ binding_name ] = binding_instance
 	  
@@ -293,9 +304,27 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
 		declare_binding_getter( binding_name, binding_instance )
     
     if also_create_view_methods
-      view_name = ( binding_name.to_s + '_view' ).to_sym
-      binding_instance.corresponding_view_binding = view_name
-      attr_view( view_name, view_class )
+
+      new_corresponding_view_name = ( binding_name.to_s + '_view' ).to_sym
+
+      binding_instance.corresponding_view_binding = new_corresponding_view_name
+
+      if corresponding_view_binding_instance
+        
+        corresponding_view_binding_instance.__binding_name__ = new_corresponding_view_name
+        
+        create_binding_from_configuration( new_corresponding_view_name, 
+                                           corresponding_view_binding_instance, 
+                                           false )
+
+      else
+        
+        corresponding_view_class = binding_instance.view_class
+
+        attr_view( new_corresponding_view_name, corresponding_view_class )
+
+      end
+      
     end
 
 	end

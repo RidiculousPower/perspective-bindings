@@ -8,7 +8,6 @@ class ::Rmagnets::Bindings::Binding
   # in parallel with class/module inheritance tree (to which they are bound).
   # Inheritance is accomplished using CascadingConfiguration::Variable functionality;
   # for details, see #initialize.
-  attr_configuration_array  :configuration_procs
   attr_configuration        :__binding_name__, :view_class, :corresponding_view_binding, :required?, 
                             :multiple_values_permitted?, :text_permitted?, :number_permitted?, 
                             :integer_permitted?, :float_permitted?, :complex_permitted?,
@@ -32,16 +31,18 @@ class ::Rmagnets::Bindings::Binding
     # We already have this set up in parallel by way of the bound instances.
     # So we need to see if our bound instance has an ancestor; if it does, get our parallel
     # binding of the same name and register it as parent of self.
-    if binding_ancestor = ::CascadingConfiguration::Variable.ancestor( bound_module, 
-                                                                       binding_name ) and
-       binding_ancestor.is_a?( ::Rmagnets::Bindings::ClassInstance )
-        
+    ccv = ::CascadingConfiguration::Variable
+    ccv.register_configuration( self, binding_name )
+    ccv.register_configuration( bound_module, binding_name )
+
+    if binding_ancestor = ccv.ancestor_for_registered_instance( bound_module, binding_name )
+
         ancestor_binding = binding_ancestor.binding_configuration( binding_name )
-        
-        ::CascadingConfiguration::Variable.register_child_for_parent( self, ancestor_binding )
-      
+
+        ::CascadingConfiguration::Ancestors.register_child_for_parent( self, ancestor_binding )
+
     else
-      
+
       # init defaults to false
       # if specified explicitly in parameters then it will be set again below
 
@@ -65,10 +66,6 @@ class ::Rmagnets::Bindings::Binding
     
     unless view_class.nil?
       self.view_class = view_class
-    end
-    
-    if block_given?
-      configuration( & configuration_proc )
     end
     
   end
@@ -221,18 +218,44 @@ class ::Rmagnets::Bindings::Binding
 		
 	end
 	
-	#########################################  Options  ##############################################
+	##########################
+	#  render_binding_value  #
+	##########################
 	
-  ###################
-  #  configuration  #
-  ###################
+	def render_binding_value( binding_value )
+	  
+	  rendered_binding_value = nil
+	  
+	  case binding_value
+      
+      when nil
+      
+        # nothing required
+      
+      when String
 
-  def configuration( & configuration_proc )
+        rendered_binding_value = binding_value
         
-    configuration_procs.push( [ configuration_proc, @bound_module.binding_configurations ] )
+      when Symbol, Integer, Float, Complex, Rational, Regexp, Class, Module, TrueClass, FalseClass
+
+        rendered_binding_value = binding_value.to_s
+        
+      when File
+        
+        rendered_binding_value = File.readlines.join
+        
+      else
+        
+        rendered_binding_value = binding_value
+        
+    end
+    
+    return rendered_binding_value
     
   end
-
+	
+	#########################################  Options  ##############################################
+	
   ###############
   #  optional?  #
   ###############

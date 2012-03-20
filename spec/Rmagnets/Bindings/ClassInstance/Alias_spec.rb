@@ -64,8 +64,6 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias do
       
     end
     
-    Proc.new { ::Rmagnets::Bindings::ClassInstance::Order::OtherMock.attr_unbind :another_binding }.should raise_error( ::Rmagnets::Bindings::Exception::NoBindingError )
-    
     class ::Rmagnets::Bindings::ClassInstance::Order::OtherMock
       
       attr_unbind :some_other_binding

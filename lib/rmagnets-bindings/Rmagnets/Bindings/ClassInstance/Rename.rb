@@ -36,7 +36,23 @@ module ::Rmagnets::Bindings::ClassInstance::Rename
       binding_instance.__binding_name__ = new_name
       binding_routers.delete( existing_name )
       remove_binding_methods( existing_name )
-      create_binding_from_configuration( new_name, binding_instance )
+      
+      create_corresponding_view = false
+      
+      if corresponding_binding_name = binding_instance.corresponding_view_binding
+
+        corresponding_binding_instance = binding_configuration( corresponding_binding_name )
+
+        attr_unbind( corresponding_binding_name )
+
+        create_corresponding_view = true
+        
+      end
+
+      create_binding_from_configuration( new_name, 
+                                         binding_instance, 
+                                         create_corresponding_view, 
+                                         corresponding_binding_instance )
       
     end
             

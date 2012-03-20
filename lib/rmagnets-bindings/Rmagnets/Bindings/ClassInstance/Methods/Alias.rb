@@ -14,7 +14,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias
     #================#
 
 		# instance method: return the bound instance
-		::CascadingConfiguration::Variable.define_module_method( self, binding_alias ) do
+		::CascadingConfiguration::Methods.define_module_method( self, binding_alias ) do
 		  
       return __send__( binding_name )
 		
@@ -37,7 +37,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias
     #  binding_name=  #
     #=================#
     
-		::CascadingConfiguration::Variable.define_instance_method( self, write_accessor ) do |object|
+		::CascadingConfiguration::Methods.define_instance_method( self, write_accessor ) do |object|
       
       __send__( aliased_write_accessor, object )
       
@@ -58,7 +58,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias
     #================#
 
 		# instance method: return the bound instance
-		::CascadingConfiguration::Variable.define_instance_method( self, binding_alias ) do
+		::CascadingConfiguration::Methods.define_instance_method( self, binding_alias ) do
       
       __send__( binding_name )
 		

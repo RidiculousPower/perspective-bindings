@@ -1,10 +1,16 @@
 
 class ::Rmagnets::Bindings::Binding::Router
 
-  attr_reader :__binding_instance__, :__binding_name__, :__binding_route__, 
-              :__sub_routers__, :__shared_sub_routers__
+  #include ::CascadingConfiguration::Setting
+  #include ::CascadingConfiguration::Hash
 
-  include ::CascadingConfiguration::Setting
+  attr_reader :__binding_instance__, :__binding_name__, :__binding_route__, 
+              :__sub_routers__, :__shared_sub_routers__,
+              :__configuration_procs__, :__validation_procs__
+
+  #attr_configuration :__binding_instance__, :__binding_name__, :__binding_route__
+  #
+  #attr_configuration_hash :__sub_routers__, :__shared_sub_routers__
 
   ################
   #  initialize  #
@@ -12,16 +18,31 @@ class ::Rmagnets::Bindings::Binding::Router
 
   def initialize( binding_configuration_instance, base_path = nil )
     
+    ccv = ::CascadingConfiguration::Variable
+
+    ccv.register_configuration( self, binding_name )
+    ccv.register_configuration( bound_module, binding_name )
+    
+    if binding_ancestor = ccv.ancestor_for_registered_instance( bound_module, binding_name )
+
+        ancestor_binding = binding_ancestor.binding_configuration( binding_name )
+
+        ::CascadingConfiguration::Ancestors.register_child_for_parent( self, ancestor_binding )
+
+    else
+    
+    end
+    
     @__binding_instance__ = binding_configuration_instance
     
-    @__binding_name__ = @__binding_instance__.__binding_name__
+    @__binding_name__ = binding_configuration_instance.__binding_name__
     
     @__binding_is_alias__ = false
     
-    @__sub_routers__ = { }
-    @__shared_sub_routers__ = { }
-    
     @__binding_route__ = base_path
+		
+		@__sub_routers__ = { }
+		@__shared_sub_routers__ = { }
 		
 	  # Define a method for each binding defined in default view for this binding
 	  # we can only do this if we have a default view class
@@ -132,5 +153,25 @@ class ::Rmagnets::Bindings::Binding::Router
 	  return ::Rmagnets::Bindings::Binding::Router.new( @__binding_instance__, binding_base_route )
 	  
   end
-  
+
+  ###############
+  #  configure  #
+  ###############
+
+  def configure( & configuration_proc )
+        
+    configuration_procs.push( [ configuration_proc, @bound_module.binding_configurations ] )
+    
+  end
+
+  ##############
+  #  validate  #
+  ##############
+
+  def validate( & validation_proc )
+
+    validation_procs.push( [ configuration_proc, @bound_module.binding_configurations ] )
+
+  end
+    
 end

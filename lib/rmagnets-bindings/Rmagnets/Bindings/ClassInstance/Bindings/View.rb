@@ -19,6 +19,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::View
 		bindings.each do |this_binding|
 		  this_binding.view_permitted = true
 		  this_binding.text_permitted = true
+		  this_binding.number_permitted = true
 	  end
 		
 		return bindings
