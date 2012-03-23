@@ -16,7 +16,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp
     bindings = create_bindings_for_args( args, & configuration_proc )
 
     bindings.each do |this_binding|
-      this_binding.regexp_permitted = true      
+      this_binding.__regexp_permitted__ = true      
 		end
 		
 		return bindings
@@ -38,7 +38,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp
     bindings = attr_regexp( *args, & configuration_proc )
 		
 		bindings.each do |this_binding|
-		  this_binding.multiple_values_permitted = true
+		  this_binding.__multiple_values_permitted__ = true
 	  end
 		
 		return bindings
@@ -60,7 +60,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp
 		bindings = attr_regexp( *args, & configuration_proc )
 				
 		bindings.each do |this_binding|
-		  this_binding.required = true
+		  this_binding.__required__ = true
 	  end
 		
 		return bindings
@@ -82,7 +82,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp
 	  bindings = attr_required_regexp( *args, & configuration_proc )
 		
 		bindings.each do |this_binding|
-		  this_binding.multiple_values_permitted = true
+		  this_binding.__multiple_values_permitted__ = true
 	  end
 		
 		return bindings

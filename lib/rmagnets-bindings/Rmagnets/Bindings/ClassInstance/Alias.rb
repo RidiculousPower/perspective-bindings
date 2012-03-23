@@ -60,9 +60,7 @@ module ::Rmagnets::Bindings::ClassInstance::Alias
       		      'No binding defined for :' + existing_binding_or_name.to_s + '.'
         end
         
-        aliased_binding_instance = binding_configuration( existing_binding_or_name )
-        router_for_alias = ::Rmagnets::Bindings::Binding::Router.new( aliased_binding_instance )
-    		shared_binding_routers[ binding_alias ] = router_for_alias
+    		binding_aliases[ binding_alias ] = existing_binding_or_name
         
         declare_aliased_class_binding_getter( binding_alias, existing_binding_or_name )
     		declare_aliased_binding_setter( binding_alias, existing_binding_or_name )
@@ -70,15 +68,15 @@ module ::Rmagnets::Bindings::ClassInstance::Alias
         
       else
 
-        shared_binding_router = existing_binding_or_name
-        shared_binding_routers[ binding_alias ] = shared_binding_router
+        shared_binding_instance = existing_binding_or_name
+        shared_binding_configurations[ binding_alias ] = shared_binding_instance
 
         declare_class_shared_binding_getter( binding_alias )
-    		declare_shared_binding_setter( binding_alias, shared_binding_router )
-    		declare_shared_binding_getter( binding_alias, shared_binding_router )
+    		declare_shared_binding_setter( binding_alias, shared_binding_instance )
+    		declare_shared_binding_getter( binding_alias, shared_binding_instance )
         
     end
     
   end
-
+  
 end

@@ -16,7 +16,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
 		# class method: return the binding instance
 		::CascadingConfiguration::Methods.define_module_method( self, binding_name ) do
 
-			return binding_router( binding_name )
+			return binding_configurations[ binding_name ]
 		  
 		end
 		    
@@ -41,7 +41,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
 
       binding_instance.ensure_binding_value_valid( object )
       
-      if this_corresponding_name = binding_instance.corresponding_view_binding
+      if this_corresponding_name = binding_instance.__corresponding_view_binding__
         corresponding_view_binding_instance = __send__( this_corresponding_name )
         corresponding_view_binding_instance.content = object
       end

@@ -16,17 +16,14 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding d
         def self.binding_configurations
           return { :binding_target => binding_configuration( :binding_name ) }
         end
-        def self.binding_routers
-          return { :binding_target => binding_router( :binding_target ) }
-        end
-        def self.shared_binding_routers
+        def self.shared_binding_configurations
           return { }
         end
-        def self.binding_router( binding_name )
-          return @binding_route_mock ||= ::Rmagnets::Bindings::Binding::Router.new( binding_configuration( :binding_name ) )
+        def self.shared_binding_configurations
+          return { }
         end
         def self.binding_target
-          return binding_router( :binding_target ).duplicate_for_shared_router( [ :binding_name ] )
+          return binding_configuration( :binding_target ).duplicate_as_inheriting_sub_binding( [ :binding_name ] )
         end
         def binding_target
           @called_binding_target = true
@@ -47,17 +44,14 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding d
                                                               :binding_name,
                                                               ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock::BindingViewMock )
       end
-      def self.binding_router( binding_name )
-        @called_binding_router = true
-        return @binding_route_mock ||= ::Rmagnets::Bindings::Binding::Router.new( binding_configuration( :binding_name ) )
+      def self.binding_configurations
+        return { }
       end
-      def self.called_binding_router
-        did_call_binding_router = @called_binding_router
-        @called_binding_router = false
-        return did_call_binding_router
+      def self.shared_binding_configurations
+        return { :binding_name => binding_configuration( :binding_name ) }
       end
       def self.binding_name
-        return binding_router( :binding_name )
+        return binding_configuration( :binding_name )
       end
       def binding_name
         @called_binding_name = true
@@ -82,9 +76,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding d
     class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock
       declare_class_shared_binding_getter( :binding_alias )
       respond_to?( :binding_alias ).should == true
-      binding_alias.should == binding_router( :binding_alias )
-      called_binding_router.should == true
-      binding_alias.should == binding_router( :binding_alias )
+      binding_alias.should == shared_binding_configurations[ :binding_alias ]
     end
   end
   
@@ -100,7 +92,6 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding d
     ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock.new.instance_eval do
       self.binding_alias = :blah
       self.binding_name.called_binding_target.should == true
-      self.class.called_binding_router.should == true
       binding_name.binding_target.should == :blah
     end
   end

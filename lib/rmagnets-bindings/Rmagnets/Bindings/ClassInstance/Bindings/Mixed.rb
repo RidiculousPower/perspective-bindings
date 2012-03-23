@@ -27,7 +27,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed
 
     binding = attr_mixed( binding_name, *args, & configuration_proc )
 		
-	  binding.multiple_values_permitted = true
+	  binding.__multiple_values_permitted__ = true
 		
 		return binding
 
@@ -44,7 +44,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed
 		
 		binding = attr_mixed( binding_name, *args, & configuration_proc )
 
-	  binding.required = true
+	  binding.__required__ = true
 		
 		return binding
 		
@@ -61,7 +61,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed
 		
     binding = attr_required_mixed( binding_name, *args, & configuration_proc )
 		
-	  binding.multiple_values_permitted = true
+	  binding.__multiple_values_permitted__ = true
  		
 		return binding
 		
@@ -97,55 +97,55 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed
 
         when :multiple_values
         
-          binding.multiple_values_permitted = true
+          binding.__multiple_values_permitted__ = true
           
         when :text
 
-          binding.text_permitted = true
+          binding.__text_permitted__ = true
         
         when :number
           
-          binding.number_permitted = true
+          binding.__number_permitted__ = true
         
         when :integer
         
-          binding.integer_permitted = true
+          binding.__integer_permitted__ = true
         
         when :float
       
-          binding.float_permitted = true
+          binding.__float_permitted__ = true
       
         when :complex
         
-          binding.complex_permitted = true
+          binding.__complex_permitted__ = true
         
         when :rational
 
-          binding.rational_permitted = true
+          binding.__rational_permitted__ = true
         
         when :regexp
         
-          binding.regexp_permitted = true
+          binding.__regexp_permitted__ = true
         
         when :class
 
-          binding.class_permitted = true
+          binding.__class_permitted__ = true
         
         when :module
 
-          binding.module_permitted = true
+          binding.__module_permitted__ = true
         
         when :true_false
 
-          binding.true_false_permitted = true
+          binding.__true_false_permitted__ = true
         
         when :file
 
-          binding.file_permitted = true
+          binding.__file_permitted__ = true
         
         when :view
 
-          binding.view_permitted = true
+          binding.__view_permitted__ = true
       
       end
     

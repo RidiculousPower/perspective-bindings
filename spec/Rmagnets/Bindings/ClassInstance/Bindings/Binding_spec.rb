@@ -46,10 +46,9 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Binding do
       respond_to?( :some_binding ).should == true
       instance_methods.include?( :some_binding ).should == true
 
-      has_binding?( :some_binding_view ).should == true
-      binding_configuration( :some_binding_view ).required?.should == false
-      respond_to?( :some_binding_view ).should == true
-      instance_methods.include?( :some_binding_view ).should == true
+      has_binding?( :some_binding_view ).should == false
+      respond_to?( :some_binding_view ).should == false
+      instance_methods.include?( :some_binding_view ).should == false
 
       has_binding?( :some_other_binding ).should == true
       binding_configuration( :some_other_binding ).required?.should == false
@@ -60,19 +59,19 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Binding do
       binding_configuration( :some_other_binding_view ).required?.should == false
       respond_to?( :some_other_binding_view ).should == true
       instance_methods.include?( :some_other_binding_view ).should == true
-      binding_configuration( :some_other_binding_view ).view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Binding::Mock::View
+      binding_configuration( :some_other_binding_view ).__view_class__.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Binding::Mock::View
 
       has_binding?( :another_binding ).should == false      
 
       config = binding_configuration( :some_binding )
       config.is_a?( ::Rmagnets::Bindings::Binding ).should == true
       config.required?.should == false
-      config.configuration_procs[ 0 ][ 0 ].should == config_proc
-      config.view_class.should == nil
+      config.__configuration_procs__.should == [ config_proc ]
+      config.__view_class__.should == nil
 
       other_config = binding_configuration( :some_other_binding )
-      other_config.view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Binding::Mock::View
-      some_other_binding.__binding_instance__.view_class.should == other_config.view_class
+      other_config.__view_class__.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Binding::Mock::View
+      some_other_binding.__view_class__.should == other_config.__view_class__
       
       has_binding?( :some_binding ).should == true
 
@@ -109,10 +108,9 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Binding do
       
       attr_bindings :some_bindings
 
-      has_binding?( :some_bindings_view ).should == true
-      binding_configuration( :some_bindings_view ).required?.should == false
-      respond_to?( :some_bindings_view ).should == true
-      instance_methods.include?( :some_bindings_view ).should == true
+      has_binding?( :some_bindings_view ).should == false
+      respond_to?( :some_bindings_view ).should == false
+      instance_methods.include?( :some_bindings_view ).should == false
       
       has_binding?( :some_bindings ).should == true
       binding_instance = binding_configuration( :some_bindings )
@@ -145,10 +143,9 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Binding do
       
       attr_required_binding :some_required_binding
       
-      has_binding?( :some_required_binding_view ).should == true
-      binding_configuration( :some_required_binding_view ).required?.should == false
-      respond_to?( :some_required_binding_view ).should == true
-      instance_methods.include?( :some_required_binding_view ).should == true
+      has_binding?( :some_required_binding_view ).should == false
+      respond_to?( :some_required_binding_view ).should == false
+      instance_methods.include?( :some_required_binding_view ).should == false
       
       has_binding?( :some_required_binding ).should == true
       binding_instance = binding_configuration( :some_required_binding )
@@ -181,10 +178,9 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Binding do
       
       attr_required_bindings :some_required_bindings
 
-      has_binding?( :some_required_bindings_view ).should == true
-      binding_configuration( :some_required_bindings_view ).required?.should == false
-      respond_to?( :some_required_bindings_view ).should == true
-      instance_methods.include?( :some_required_bindings_view ).should == true
+      has_binding?( :some_required_bindings_view ).should == false
+      respond_to?( :some_required_bindings_view ).should == false
+      instance_methods.include?( :some_required_bindings_view ).should == false
       
       has_binding?( :some_required_bindings ).should == true
       binding_instance = binding_configuration( :some_required_bindings )

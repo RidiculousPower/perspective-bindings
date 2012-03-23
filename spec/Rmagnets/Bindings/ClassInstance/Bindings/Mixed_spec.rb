@@ -35,7 +35,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed do
 
       attr_mixed :some_mixed, ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed::Mock::View, :text, :number, & config_proc
       binding_instance = binding_configuration( :some_mixed )
-      binding_instance.__binding_name__.should == :some_mixed
+      binding_instance.__name__.should == :some_mixed
       binding_instance.text_permitted?.should == true
       binding_instance.number_permitted?.should == true
 
@@ -55,15 +55,15 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed do
       respond_to?( :some_mixed ).should == true
       instance_methods.include?( :some_mixed ).should == true
 
-      binding_instance.configuration_procs[ 0 ][ 0 ].should == config_proc
-      binding_instance.view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed::Mock::View
+      binding_instance.__configuration_procs__.should == [ config_proc ]
+      binding_instance.__view_class__.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed::Mock::View
 
       has_binding?( :some_mixed ).should == true
 
       attr_mixed :some_mixed_no_view, :text, :number, & config_proc
 
       binding_instance = binding_configuration( :some_mixed_no_view )
-      binding_instance.__binding_name__.should == :some_mixed_no_view
+      binding_instance.__name__.should == :some_mixed_no_view
       binding_instance.text_permitted?.should == true
       binding_instance.number_permitted?.should == true
 
@@ -83,8 +83,8 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed do
       respond_to?( :some_mixed_no_view ).should == true
       instance_methods.include?( :some_mixed_no_view ).should == true
 
-      binding_instance.configuration_procs[ 0 ][ 0 ].should == config_proc
-      binding_instance.view_class.should == nil
+      binding_instance.__configuration_procs__.should == [ config_proc ]
+      binding_instance.__view_class__.should == nil
 
       has_binding?( :some_mixed_no_view ).should == true
 

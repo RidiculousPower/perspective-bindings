@@ -16,6 +16,7 @@ describe ::Rmagnets::Bindings::ObjectInstance do
 
       attr_binding :some_binding
       
+      binding_configurations[ :some_binding ].should_not == nil
       class MockClass
         extend ::Rmagnets::Bindings::ClassInstance
         include ::Rmagnets::Bindings::ObjectInstance::Mock
@@ -46,8 +47,6 @@ describe ::Rmagnets::Bindings::ObjectInstance do
           self.other_binding = :another_value
         end
         
-        attr_rename :other_binding, :another_name
-
       end
 
       attr_unbind :some_binding

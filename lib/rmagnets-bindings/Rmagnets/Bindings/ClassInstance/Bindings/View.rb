@@ -17,9 +17,9 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::View
     bindings = create_bindings_for_args( args, false, & configuration_proc )
 		
 		bindings.each do |this_binding|
-		  this_binding.view_permitted = true
-		  this_binding.text_permitted = true
-		  this_binding.number_permitted = true
+		  this_binding.__view_permitted__ = true
+		  this_binding.__text_permitted__ = true
+		  this_binding.__number_permitted__ = true
 	  end
 		
 		return bindings
@@ -41,7 +41,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::View
     bindings = attr_view( *args, & configuration_proc )
 		
 		bindings.each do |this_binding|
-		  this_binding.multiple_values_permitted = true
+		  this_binding.__multiple_values_permitted__ = true
 	  end
 		
 		return bindings
@@ -62,7 +62,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::View
 		bindings = attr_view( *args, & configuration_proc )
 
 		bindings.each do |this_binding|
-		  this_binding.required = true
+		  this_binding.__required__ = true
 	  end
 		
 		return bindings
@@ -83,7 +83,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::View
 		bindings = attr_required_view( *args, & configuration_proc )
 		
 		bindings.each do |this_binding|
-		  this_binding.multiple_values_permitted = true
+		  this_binding.__multiple_values_permitted__ = true
 	  end
 		
 		return bindings

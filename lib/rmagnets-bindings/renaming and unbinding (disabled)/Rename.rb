@@ -24,35 +24,27 @@ module ::Rmagnets::Bindings::ClassInstance::Rename
       end
       create_binding_alias( new_name, existing_alias_for_existing_name )
       
-    elsif shared_binding_router = shared_binding_routers.delete( existing_name )
-      
-      remove_binding_methods( existing_name )
-      shared_binding_routers[ new_name ] = new_name
-      create_binding_alias( new_name, shared_binding_router )
-      
     else
     
-      binding_instance = binding_configurations.delete( existing_name )
-      binding_instance.__binding_name__ = new_name
-      binding_routers.delete( existing_name )
+      existing_binding_instance = binding_configurations.delete( existing_name )
+
       remove_binding_methods( existing_name )
       
       create_corresponding_view = false
       
-      if corresponding_binding_name = binding_instance.corresponding_view_binding
+      if corresponding_binding_name = existing_binding_instance.__corresponding_view_binding__
 
-        corresponding_binding_instance = binding_configuration( corresponding_binding_name )
+        existing_corresponding_instance = binding_configurations[ corresponding_binding_name ]
 
         attr_unbind( corresponding_binding_name )
-
+        
         create_corresponding_view = true
         
       end
 
-      create_binding_from_configuration( new_name, 
-                                         binding_instance, 
-                                         create_corresponding_view, 
-                                         corresponding_binding_instance )
+      create_binding_from_binding_instance( new_name, 
+                                            existing_binding_instance, 
+                                            create_corresponding_view )
       
     end
             

@@ -11,65 +11,70 @@ describe ::Rmagnets::Bindings::Binding do
   ##################
 
   it 'can initialize and report configuration in a hierarchical fashion' do
-    class ::Rmagnets::Bindings::Binding::Mock
-      include ::CascadingConfiguration::Array
-      include ::Rmagnets::Bindings::ObjectInstance
-      extend ::Rmagnets::Bindings::ClassInstance
-      class << self
-        attr_accessor :binding_instance
-      end
-      class View
-      end
-      # mock
-      def self.binding_configuration( name )
-        return @binding_instance
-      end
-      def self.some_binding
-      end
-    end
-    class ::Rmagnets::Bindings::Binding::MockSub < ::Rmagnets::Bindings::Binding::Mock
-      class View
-      end
-    end
-    configuration_instance = ::Rmagnets::Bindings::Binding::Mock
-    configuration_proc = Proc.new { puts 'something' }
-    first_binding = ::Rmagnets::Bindings::Binding.new( configuration_instance,
-                                                       :some_binding,
-                                                       ::Rmagnets::Bindings::Binding::Mock::View,
-                                                       & configuration_proc )
-    configuration_instance.binding_instance = first_binding
-    first_binding.required?.should == false
-    first_binding.optional?.should == true
-    first_binding.required = true
-    first_binding.required?.should == true
-    first_binding.optional?.should == false
-    first_binding.required = false
-    first_binding.required?.should == false
-    first_binding.optional?.should == true
-    first_binding.required = true
-    first_binding.required?.should == true
-    first_binding.optional?.should == false
-    first_binding.required = false
-    first_binding.required?.should == false
-    first_binding.optional?.should == true
-    first_binding.view_class.should == ::Rmagnets::Bindings::Binding::Mock::View
-    first_binding.configuration_procs[ 0 ][ 0 ].should == configuration_proc
+    
+    # we need to mock 3 levels of views
+    
+    # View A has a binding B of View B and a binding C to C in binding B of View C    
 
-    sub_configuration_instance = ::Rmagnets::Bindings::Binding::MockSub
-    second_binding = ::Rmagnets::Bindings::Binding.new( sub_configuration_instance, :some_binding )
-    sub_configuration_instance.binding_instance = second_binding
-    sub_configuration_proc = Proc.new { puts 'something' }
-    second_binding.required?.should == false
-    second_binding.optional?.should == true
-    second_binding.view_class.should == ::Rmagnets::Bindings::Binding::Mock::View
-    second_binding.configuration_procs[ 0 ][ 0 ].should == configuration_proc
-    second_binding.configuration_procs.push( sub_configuration_proc )
-    second_binding.view_class = ::Rmagnets::Bindings::Binding::MockSub::View
-    second_binding.view_class.should == ::Rmagnets::Bindings::Binding::MockSub::View
-    first_binding.view_class.should == ::Rmagnets::Bindings::Binding::Mock::View
-    second_binding.required = true
-    second_binding.required?.should == true
-    first_binding.required?.should == false
+    class ::Rmagnets::Bindings::Binding::MockViewC
+      @binding_instance = ::Rmagnets::Bindings::Binding.new( self, :binding_instance )
+      def self.binding_configurations
+        return { :binding_instance => @binding_instance }
+      end
+      def self.shared_binding_configurations
+        return { }
+      end
+    end
+    
+    class ::Rmagnets::Bindings::Binding::MockViewB
+      @binding_c = ::Rmagnets::Bindings::Binding.new( self,
+                                                      :binding_C,
+                                                      ::Rmagnets::Bindings::Binding::MockViewC )
+      @binding_instance = ::Rmagnets::Bindings::Binding.new( self, :binding_instance )
+      def self.binding_configurations
+        return { :binding_C => @binding_c,
+                 :binding_instance => @binding_instance }
+      end
+      def self.shared_binding_configurations
+        return { }
+      end
+    end
+    
+    class ::Rmagnets::Bindings::Binding::MockViewA
+      @binding_b = ::Rmagnets::Bindings::Binding.new( self,
+                                                      :binding_B,
+                                                      ::Rmagnets::Bindings::Binding::MockViewB )
+      @binding_instance = ::Rmagnets::Bindings::Binding.new( self, :binding_instance )
+      def self.binding_configurations
+        return { :binding_B => @binding_b,
+                 :binding_instance => @binding_instance }
+      end
+      def self.shared_binding_configurations
+        return { }
+      end
+    end
+
+    ::Rmagnets::Bindings::Binding::MockViewA.instance_eval do
+      
+      @binding_b.respond_to?( :binding_C ).should == true
+      
+      @binding_b.binding_C.should_not == nil
+      
+      @binding_b.binding_C.should_not == ::Rmagnets::Bindings::Binding::MockViewB.instance_variable_get( :@binding_c )
+      
+      ::CascadingConfiguration::Variable.ancestor( @binding_b.binding_C, :__name__ ).should == ::Rmagnets::Bindings::Binding::MockViewB.instance_variable_get( :@binding_c )
+      ::CascadingConfiguration::Variable.ancestor( @binding_b.binding_C, :required? ).should == ::Rmagnets::Bindings::Binding::MockViewB.instance_variable_get( :@binding_c )
+      
+      @binding_b.required?.should == false
+      @binding_b.optional?.should == true
+      
+      ::Rmagnets::Bindings::Binding::MockViewB.instance_variable_get( :@binding_c ).__required__ = true      
+
+      @binding_b.binding_C.required?.should == true
+      @binding_b.binding_C.optional?.should == false
+
+    end
+    
   end
-  
+      
 end

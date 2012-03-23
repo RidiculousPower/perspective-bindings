@@ -38,7 +38,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias do
 
       has_binding?( :some_other_binding ).should == true
       respond_to?( :some_other_binding ).should == true
-      some_other_binding.is_a?( ::Rmagnets::Bindings::Binding::Router ).should == true
+      some_other_binding.is_a?( ::Rmagnets::Bindings::Binding ).should == true
 
     end
     
@@ -47,7 +47,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias do
       attr_alias :aliased_binding_name, :yet_another_binding
       attr_binding :another_binding, ::Rmagnets::Bindings::ClassInstance::Order::OtherMock
       attr_alias :some_other_binding, another_binding.some_other_binding
-      
+
       has_binding?( :aliased_binding_name ).should == true
       binding_configuration( :aliased_binding_name ).required?.should == false
 
@@ -57,7 +57,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias do
       instance_methods.include?( :some_other_binding ).should == true
       instance_methods.include?( :some_other_binding= ).should == true
 
-      some_other_binding.is_a?( ::Rmagnets::Bindings::Binding::Router ).should == true
+      some_other_binding.is_a?( ::Rmagnets::Bindings::Binding ).should == true
       some_other_binding.should == another_binding.some_other_binding
 
       attr_unbind :yet_another_binding, :some_other_binding, :another_binding

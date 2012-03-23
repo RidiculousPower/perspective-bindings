@@ -32,8 +32,8 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
 		has_binding = false
 		
 		# if we have binding, alias, or re-binding
-		if 	binding_routers.has_key?( binding_name )        or 
-		    shared_binding_routers.has_key?( binding_name ) or
+		if 	binding_configurations.has_key?( binding_name )        or 
+		    shared_binding_configurations.has_key?( binding_name ) or
 		    binding_aliases.has_key?( binding_name )
 		
 			has_binding = true
@@ -46,44 +46,22 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
 
 	########################################  Bindings  ##############################################
 
-  ####################
-  #  binding_router  #
-  ####################
-
-	def binding_router( binding_name )
-		
-		binding_router = nil
-    
-    unless binding_router = shared_binding_routers[ binding_name ]
-      binding_router = binding_routers[ binding_name ]
-		end
-		
-		return binding_router
-		
-  end
-  
   ###########################
   #  binding_configuration  #
   ###########################
 
 	def binding_configuration( binding_name )
 		
-		binding_instance = nil
-	
-	  if binding_router = shared_binding_routers[ binding_name ]
+		if binding_aliases.has_key?( binding_name )
 
-      binding_instance = binding_router.__binding_instance__
+		  binding_name = binding_aliases[ binding_name ]
 
-    else
-
-  		if binding_aliases.has_key?( binding_name )
-
-  		  binding_name = binding_aliases[ binding_name ]
-
-  	  end
-
-  		binding_instance = binding_configurations[ binding_name ]
-    
+	  end
+	  
+	  unless binding_instance = binding_configurations[ binding_name ]
+      
+      binding_instance = shared_binding_configurations[ binding_name ]
+      
     end
     
 		return binding_instance
@@ -110,24 +88,22 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
     		  # we don't automatically delete associated bindings
     		  # nothing else to do
         
-        elsif shared_binding_routers.delete( this_binding_name )
-        
-          # nothing else to do
-        
+        elsif binding_instance = shared_binding_configurations.delete( this_binding_name )
+          
+          # nothing else to do here
+          
         else
 
       		binding_instance = binding_configurations.delete( this_binding_name )
         
           # if we defined a corresponding view at the same time as our binding (we probably did)
           # then remove it as well
-          if corresponding_binding_name = binding_instance.corresponding_view_binding
+          if corresponding_binding_name = binding_instance.__corresponding_view_binding__
             attr_unbind( corresponding_binding_name )
           end
         
         end
       
-        binding_routers.delete( this_binding_name )
-
     		# delete any aliases for this one
         binding_aliases.delete_if { |key, value| value == this_binding_name }
 
@@ -275,58 +251,41 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
     
 		new_binding = ::Rmagnets::Bindings::Binding.new( self,
 		                                                 binding_name,
-		                                                 view_class, 
+		                                                 view_class,
 		                                                 & configuration_proc )
 		
-	  create_binding_from_configuration( binding_name, 
-	                                     new_binding, 
-	                                     also_create_view_methods )
+    create_binding_from_binding_instance( binding_name, new_binding, also_create_view_methods )
     
     return new_binding
     
 	end
-  
-  #######################################
-  #  create_binding_from_configuration  #
-  #######################################
+	
+	####################
+  #  create_binding  #
+  ####################
 
-  def create_binding_from_configuration( binding_name, 
-                                         binding_instance, 
-                                         also_create_view_methods = false,
-                                         corresponding_view_binding_instance = nil )
-
+  def create_binding_from_binding_instance( binding_name, 
+                                            binding_instance, 
+                                            also_create_view_methods )
+    
+    binding_instance.__name__ = binding_name
+    
 		binding_configurations[ binding_name ] = binding_instance
-	  
-	  binding_routers[ binding_name ] = ::Rmagnets::Bindings::Binding::Router.new( binding_instance )
-	  
+		
     declare_class_binding_getter( binding_name )
 		declare_binding_setter( binding_name, binding_instance )
 		declare_binding_getter( binding_name, binding_instance )
     
     if also_create_view_methods
 
-      new_corresponding_view_name = ( binding_name.to_s + '_view' ).to_sym
+      corresponding_view_name = ( binding_name.to_s + '_view' ).to_sym
 
-      binding_instance.corresponding_view_binding = new_corresponding_view_name
-
-      if corresponding_view_binding_instance
-        
-        corresponding_view_binding_instance.__binding_name__ = new_corresponding_view_name
-        
-        create_binding_from_configuration( new_corresponding_view_name, 
-                                           corresponding_view_binding_instance, 
-                                           false )
-
-      else
-        
-        corresponding_view_class = binding_instance.view_class
-
-        attr_view( new_corresponding_view_name, corresponding_view_class )
-
-      end
+      binding_instance.__corresponding_view_binding__ = corresponding_view_name
+      
+      attr_view( corresponding_view_name, binding_instance.__view_class__ )
       
     end
-
-	end
-	 
+    
+  end
+  
 end

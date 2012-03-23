@@ -37,17 +37,17 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings do
       
       some_binding = create_binding( :some_binding, view_class, & configuration_proc_one )
       some_other_binding = create_binding( :some_other_binding, view_class, & configuration_proc_two )
-      some_other_binding.required = true
+      some_other_binding.__required__ = true
       
       has_binding?( :some_binding ).should == true
       has_binding?( :some_other_binding ).should == true
-      has_binding?( :some_other_binding_view ).should == true
+      has_binding?( :some_other_binding_view ).should == false
       
       binding_configuration( :some_binding ).required?.should == false
       binding_configuration( :some_other_binding ).required?.should == true
       
-      binding_configuration( :some_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
-      binding_configuration( :some_other_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_two
+      binding_configuration( :some_binding ).__configuration_procs__.should == [ configuration_proc_one ]
+      binding_configuration( :some_other_binding ).__configuration_procs__.should == [ configuration_proc_two ]
       
       ::CascadingConfiguration::Methods.define_module_method( self, :some_binding ) { puts '' }
       ::CascadingConfiguration::Methods.define_instance_method( self, :some_binding ) { puts '' }
@@ -79,7 +79,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings do
       
       some_binding = create_bindings_for_hash( { :some_binding => view_class }, & configuration_proc_one )[0]
       some_other_binding = create_bindings_for_hash( { :some_other_binding => view_class }, & configuration_proc_two )[0]
-      some_other_binding.required = true
+      some_other_binding.__required__ = true
       
       has_binding?( :some_binding ).should == true
       has_binding?( :some_other_binding ).should == true
@@ -87,8 +87,8 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings do
       binding_configuration( :some_binding ).required?.should == false
       binding_configuration( :some_other_binding ).required?.should == true
       
-      binding_configuration( :some_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
-      binding_configuration( :some_other_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_two
+      binding_configuration( :some_binding ).__configuration_procs__.should == [ configuration_proc_one ]
+      binding_configuration( :some_other_binding ).__configuration_procs__.should == [ configuration_proc_two ]
       
       ::CascadingConfiguration::Methods.define_module_method( self, :some_binding ) { puts '' }
       ::CascadingConfiguration::Methods.define_instance_method( self, :some_binding ) { puts '' }
@@ -131,15 +131,15 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings do
       binding_configuration( :yet_another_binding ).required?.should == false
       binding_configuration( :some_other_binding ).required?.should == false
       
-      binding_configuration( :some_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
-      binding_configuration( :another_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
-      binding_configuration( :yet_another_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
-      binding_configuration( :some_other_binding ).configuration_procs[ 0 ][ 0 ].should == configuration_proc_one
+      binding_configuration( :some_binding ).__configuration_procs__.should == [ configuration_proc_one ]
+      binding_configuration( :another_binding ).__configuration_procs__.should == [ configuration_proc_one ]
+      binding_configuration( :yet_another_binding ).__configuration_procs__.should == [ configuration_proc_one ]
+      binding_configuration( :some_other_binding ).__configuration_procs__.should == [ configuration_proc_one ]
 
-      binding_configuration( :some_binding ).view_class.should == view_class
-      binding_configuration( :another_binding ).view_class.should == view_class
-      binding_configuration( :yet_another_binding ).view_class.should == view_class
-      binding_configuration( :some_other_binding ).view_class.should == other_view_class
+      binding_configuration( :some_binding ).__view_class__.should == view_class
+      binding_configuration( :another_binding ).__view_class__.should == view_class
+      binding_configuration( :yet_another_binding ).__view_class__.should == view_class
+      binding_configuration( :some_other_binding ).__view_class__.should == other_view_class
       
       ::CascadingConfiguration::Methods.define_module_method( self, :some_binding ) { puts '' }
       ::CascadingConfiguration::Methods.define_instance_method( self, :some_binding ) { puts '' }

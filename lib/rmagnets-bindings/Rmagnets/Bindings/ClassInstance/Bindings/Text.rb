@@ -19,7 +19,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Text
     bindings = create_bindings_for_args( args, & configuration_proc )
 
     bindings.each do |this_binding|
-      this_binding.text_permitted = true      
+      this_binding.__text_permitted__ = true      
 		end
 		
 		return bindings
@@ -44,7 +44,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Text
     bindings = attr_text( *args, & configuration_proc )
 		
 		bindings.each do |this_binding|
-		  this_binding.multiple_values_permitted = true
+		  this_binding.__multiple_values_permitted__ = true
 	  end
 		
 		return bindings
@@ -66,7 +66,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Text
 		bindings = attr_text( *args, & configuration_proc )
 
 		bindings.each do |this_binding|
-		  this_binding.required = true
+		  this_binding.__required__ = true
 	  end
     
 		return bindings
@@ -88,7 +88,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Text
 		bindings = attr_required_text( *args, & configuration_proc )
 		
 		bindings.each do |this_binding|
-		  this_binding.multiple_values_permitted = true
+		  this_binding.__multiple_values_permitted__ = true
 	  end
 		
 		return bindings

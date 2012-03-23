@@ -10,8 +10,6 @@ require_relative '../../../ruby/cascading-configuration/lib/cascading-configurat
 module ::Rmagnets
 	module Bindings
     class Binding
-      class Router
-      end
     end
 		module ClassInstance
       module Bindings
@@ -76,7 +74,6 @@ module ::Rmagnets
 	end
 end
 
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding/Router.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding.rb'
 
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/Binding.rb'
@@ -103,7 +100,6 @@ require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Mix
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Alias.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Order.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Rename.rb'
 
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance.rb'
 require_relative 'rmagnets-bindings/Rmagnets/Bindings/ObjectInstance.rb'

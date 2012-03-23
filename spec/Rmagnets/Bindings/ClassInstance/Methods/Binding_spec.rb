@@ -17,6 +17,9 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding do
           @called_ensure_binding_value_valid = false
           return did_call_ensure_binding_value_valid
         end
+        def __corresponding_view_binding__
+          return nil
+        end
       end
       extend ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
     end
@@ -28,12 +31,12 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding do
   
   it 'can declare a getter class method' do
     class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock
-      def self.binding_router( binding_name )
-        return @configuration_route ||= :configuration_route
+      def self.binding_configurations
+        return { :binding_name => :configuration_binding }
       end
       declare_class_binding_getter( :binding_name )
       respond_to?( :binding_name ).should == true
-      binding_name.should == :configuration_route
+      binding_name.should == :configuration_binding
     end
   end
 

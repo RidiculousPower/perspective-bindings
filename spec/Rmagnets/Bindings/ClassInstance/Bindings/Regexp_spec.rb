@@ -41,8 +41,8 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp do
       respond_to?( :some_regexp ).should == true
       instance_methods.include?( :some_regexp ).should == true
 
-      binding_instance.configuration_procs[ 0 ][ 0 ].should == config_proc
-      binding_instance.view_class.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock::View
+      binding_instance.__configuration_procs__.should == [ config_proc ]
+      binding_instance.__view_class__.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock::View
 
       has_binding?( :some_regexp ).should == true
 

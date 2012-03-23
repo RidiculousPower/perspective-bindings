@@ -11,7 +11,6 @@ describe ::Rmagnets::Bindings::ClassInstance do
       
       is_a?( ::Rmagnets::Bindings::ClassInstance::Alias ).should == true
       is_a?( ::Rmagnets::Bindings::ClassInstance::Order ).should == true
-      is_a?( ::Rmagnets::Bindings::ClassInstance::Rename ).should == true
       is_a?( ::Rmagnets::Bindings::ClassInstance::Bindings ).should == true
       is_a?( ::Rmagnets::Bindings::ClassInstance::Bindings::Binding ).should == true
       is_a?( ::Rmagnets::Bindings::ClassInstance::Bindings::Class ).should == true
