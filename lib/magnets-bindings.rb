@@ -1,11 +1,8 @@
 
 require 'accessor-utilities'
-#require 'cascading-configuration-array'
-#require 'cascading-configuration-hash'
-#require 'cascading-configuration-setting'
-
-$__cascading_configuration__spec__development = true
-require_relative '../../../ruby/cascading-configuration/lib/cascading-configuration.rb'
+require 'cascading-configuration-array'
+require 'cascading-configuration-hash'
+require 'cascading-configuration-setting'
 
 module ::Rmagnets
 	module Bindings
