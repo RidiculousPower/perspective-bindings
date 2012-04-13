@@ -1,17 +1,17 @@
 
-require_relative '../../../../../lib/rmagnets-bindings.rb'
+require_relative '../../../../../lib/magnets-bindings.rb'
 
-describe ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp do
+describe ::Magnets::Bindings::ClassInstance::Bindings::Regexp do
 
   before :all do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock
-      include ::Rmagnets::Bindings::ObjectInstance
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp
+    class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
+      include ::Magnets::Bindings::ObjectInstance
+      extend ::Magnets::Bindings::ClassInstance::Bindings
+      extend ::Magnets::Bindings::ClassInstance::Bindings::Regexp
       class View
-        include ::Rmagnets::Bindings::ObjectInstance
-        extend ::Rmagnets::Bindings::ClassInstance::Bindings
-        extend ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp
+        include ::Magnets::Bindings::ObjectInstance
+        extend ::Magnets::Bindings::ClassInstance::Bindings
+        extend ::Magnets::Bindings::ClassInstance::Bindings::Regexp
       end
     end
   end
@@ -26,36 +26,36 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp do
 
   it 'can define regexps' do
 
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 
       proc_ran = false
       config_proc = Proc.new do
         proc_ran = true
       end
 
-      attr_regexp :some_regexp => ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock::View, & config_proc
+      attr_regexp :some_regexp => ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock::View, & config_proc
 
-      binding_instance = binding_configuration( :some_regexp )
+      binding_instance = __binding_configuration__( :some_regexp )
 
       binding_instance.required?.should == false
       respond_to?( :some_regexp ).should == true
-      instance_methods.include?( :some_regexp ).should == true
+      method_defined?( :some_regexp ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
-      binding_instance.__view_class__.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock::View
+      binding_instance.__view_class__.should == ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock::View
 
       has_binding?( :some_regexp ).should == true
 
     end
 
-    instance = ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock.new
+    instance = ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock.new
     Proc.new { instance.some_regexp = [ Object ] }.should raise_error
     Proc.new { instance.some_regexp = Object }.should raise_error
     instance.some_regexp = /regexp/
 
-    instance.class.binding_configuration( :some_regexp ).ensure_binding_render_value_valid( instance.some_regexp )
+    instance.class.__binding_configuration__( :some_regexp ).ensure_binding_render_value_valid( instance.some_regexp )
 
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 
       attr_unbind :some_regexp
 
@@ -69,27 +69,27 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp do
 
   it 'can define required regexps' do
 
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 
       attr_regexps :some_regexps
 
       has_binding?( :some_regexps ).should == true
-      binding_instance = binding_configuration( :some_regexps )
+      binding_instance = __binding_configuration__( :some_regexps )
       binding_instance.required?.should == false
       binding_instance.multiple_values_permitted?.should == true
 
     end
 
-    instance = ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock.new
-    Proc.new { instance.some_regexps = [ :object, 32 ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_regexps = Class }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    instance = ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock.new
+    Proc.new { instance.some_regexps = [ :object, 32 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_regexps = Class }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
     instance.some_regexps = /regexp/
     instance.some_regexps = [ /regexp/, /other/ ]
-    Proc.new { instance.some_regexps = [ Object, :regexp ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_regexps = [ Object, :regexp ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
 
-    instance.class.binding_configuration( :some_regexps ).ensure_binding_render_value_valid( instance.some_regexps )
+    instance.class.__binding_configuration__( :some_regexps ).ensure_binding_render_value_valid( instance.some_regexps )
 
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 
       attr_unbind :some_regexps
 
@@ -103,24 +103,24 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp do
 
   it 'can define required regexps' do
 
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 
       attr_required_regexp :some_required_regexp
 
       has_binding?( :some_required_regexp ).should == true
-      binding_instance = binding_configuration( :some_required_regexp )
+      binding_instance = __binding_configuration__( :some_required_regexp )
       binding_instance.required?.should == true
       binding_instance.multiple_values_permitted?.should == false
 
     end
 
-    instance = ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock.new
+    instance = ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock.new
     Proc.new { instance.some_required_regexp = [ 42, :some_other_value ] }.should raise_error
     instance.some_required_regexp = /regexp/
     instance.some_required_regexp = nil
-    Proc.new { instance.class.binding_configuration( :some_required_regexp ).ensure_binding_render_value_valid( instance.some_required_regexp ) }.should raise_error( ::Rmagnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_regexp ).ensure_binding_render_value_valid( instance.some_required_regexp ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 
       attr_unbind :some_required_regexp
 
@@ -134,27 +134,27 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp do
 
   it 'can define required regexps' do
 
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 
       attr_required_regexps :some_required_regexps
 
       has_binding?( :some_required_regexps ).should == true
-      binding_instance = binding_configuration( :some_required_regexps )
+      binding_instance = __binding_configuration__( :some_required_regexps )
       binding_instance.required?.should == true
       binding_instance.multiple_values_permitted?.should == true
 
     end
 
-    instance = ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock.new
-    Proc.new { instance.some_required_regexps = [ 42, :other ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_regexps = [ Object, 42 ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_regexps = Object }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    instance = ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock.new
+    Proc.new { instance.some_required_regexps = [ 42, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_regexps = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_regexps = Object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
     instance.some_required_regexps = /regexp/
     instance.some_required_regexps = [ /regexp/, /other/ ]
     instance.some_required_regexps = nil
-    Proc.new { instance.class.binding_configuration( :some_required_regexps ).ensure_binding_render_value_valid( instance.some_required_regexps ) }.should raise_error( ::Rmagnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_regexps ).ensure_binding_render_value_valid( instance.some_required_regexps ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 
       attr_unbind :some_required_regexps
 

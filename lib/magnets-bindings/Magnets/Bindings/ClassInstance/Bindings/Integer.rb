@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::Integer
+module ::Magnets::Bindings::ClassInstance::Bindings::Integer
 
   ##################
   #  attr_integer  #

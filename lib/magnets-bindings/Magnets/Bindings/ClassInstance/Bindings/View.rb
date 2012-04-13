@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::View
+module ::Magnets::Bindings::ClassInstance::Bindings::View
 
   ###############
   #  attr_view  #

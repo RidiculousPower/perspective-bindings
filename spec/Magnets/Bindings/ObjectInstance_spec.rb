@@ -1,7 +1,7 @@
 
-require_relative '../../../lib/rmagnets-bindings.rb'
+require_relative '../../../lib/magnets-bindings.rb'
 
-describe ::Rmagnets::Bindings::ObjectInstance do
+describe ::Magnets::Bindings::ObjectInstance do
 
   ################
   #  initialize  #
@@ -9,31 +9,31 @@ describe ::Rmagnets::Bindings::ObjectInstance do
   
   it 'can define binding aliases' do
     
-    module ::Rmagnets::Bindings::ObjectInstance::Mock
+    module ::Magnets::Bindings::ObjectInstance::Mock
       
-      include ::Rmagnets::Bindings::ObjectInstance
-      extend ::Rmagnets::Bindings::ClassInstance
+      include ::Magnets::Bindings::ObjectInstance
+      extend ::Magnets::Bindings::ClassInstance
 
       attr_binding :some_binding
       
-      binding_configurations[ :some_binding ].should_not == nil
+      __binding_configurations__[ :some_binding ].should_not == nil
       class MockClass
-        extend ::Rmagnets::Bindings::ClassInstance
-        include ::Rmagnets::Bindings::ObjectInstance::Mock
-        binding_configurations[ :some_binding ].should_not == nil
-        binding_configurations[ :some_binding ].should_not == ::Rmagnets::Bindings::ObjectInstance::Mock.binding_configuration( :some_binding )
+        extend ::Magnets::Bindings::ClassInstance
+        include ::Magnets::Bindings::ObjectInstance::Mock
+        __binding_configurations__[ :some_binding ].should_not == nil
+        __binding_configurations__[ :some_binding ].should_not == ::Magnets::Bindings::ObjectInstance::Mock.__binding_configuration__( :some_binding )
       end
 
-      binding_configuration( :some_binding ).should_not == nil
-      MockClass.binding_configuration( :some_binding ).should_not == nil
-      binding_configuration( :some_binding ).should_not == MockClass.binding_configuration( :some_binding )
+      __binding_configuration__( :some_binding ).should_not == nil
+      MockClass.__binding_configuration__( :some_binding ).should_not == nil
+      __binding_configuration__( :some_binding ).should_not == MockClass.__binding_configuration__( :some_binding )
 
       class MockClass2 < MockClass
-        binding_configuration( :some_binding ).should_not == nil
-        binding_configuration( :some_binding ).should_not == MockClass.binding_configuration( :some_binding )
+        __binding_configuration__( :some_binding ).should_not == nil
+        __binding_configuration__( :some_binding ).should_not == MockClass.__binding_configuration__( :some_binding )
       end
 
-      binding_configuration( :some_binding ).should_not == MockClass2.binding_configuration( :some_binding )
+      __binding_configuration__( :some_binding ).should_not == MockClass2.__binding_configuration__( :some_binding )
 
       class MockClass
         attr_unbind :some_binding
@@ -54,10 +54,10 @@ describe ::Rmagnets::Bindings::ObjectInstance do
       
     end
     
-    instance = ::Rmagnets::Bindings::ObjectInstance::Mock::MockClass.new
+    instance = ::Magnets::Bindings::ObjectInstance::Mock::MockClass.new
     instance.binding_configured.should == true
 
-    class ::Rmagnets::Bindings::ObjectInstance::Mock::MockClass
+    class ::Magnets::Bindings::ObjectInstance::Mock::MockClass
 
       attr_unbind :binding_to_configure
 

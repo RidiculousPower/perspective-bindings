@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::Text
+module ::Magnets::Bindings::ClassInstance::Bindings::Text
 
   ###############
   #  attr_text  #

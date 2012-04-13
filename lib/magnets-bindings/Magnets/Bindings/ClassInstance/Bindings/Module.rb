@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::Module
+module ::Magnets::Bindings::ClassInstance::Bindings::Module
 
   #################
   #  attr_module  #

@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Remove
+module ::Magnets::Bindings::ClassInstance::Bindings::Methods::Remove
 
 	############################
 	#  remove_binding_methods  #

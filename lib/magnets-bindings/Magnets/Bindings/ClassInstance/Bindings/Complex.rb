@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::Complex
+module ::Magnets::Bindings::ClassInstance::Bindings::Complex
 
   ##################
   #  attr_complex  #

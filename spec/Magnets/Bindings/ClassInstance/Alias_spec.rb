@@ -1,20 +1,20 @@
 
-require_relative '../../../../lib/rmagnets-bindings.rb'
+require_relative '../../../../lib/magnets-bindings.rb'
 
-describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias do
+describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias do
 
   before :all do
-    class ::Rmagnets::Bindings::ClassInstance::Order::Mock
-      include ::Rmagnets::Bindings::ObjectInstance
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings::Binding
-      extend ::Rmagnets::Bindings::ClassInstance::Alias
+    class ::Magnets::Bindings::ClassInstance::Order::Mock
+      include ::Magnets::Bindings::ObjectInstance
+      extend ::Magnets::Bindings::ClassInstance::Bindings
+      extend ::Magnets::Bindings::ClassInstance::Bindings::Binding
+      extend ::Magnets::Bindings::ClassInstance::Alias
     end
-    class ::Rmagnets::Bindings::ClassInstance::Order::OtherMock
-      include ::Rmagnets::Bindings::ObjectInstance
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings::Binding
-      extend ::Rmagnets::Bindings::ClassInstance::Alias
+    class ::Magnets::Bindings::ClassInstance::Order::OtherMock
+      include ::Magnets::Bindings::ObjectInstance
+      extend ::Magnets::Bindings::ClassInstance::Bindings
+      extend ::Magnets::Bindings::ClassInstance::Bindings::Binding
+      extend ::Magnets::Bindings::ClassInstance::Alias
     end
   end
 
@@ -24,47 +24,47 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias do
   
   it 'can define binding aliases' do
     
-    class ::Rmagnets::Bindings::ClassInstance::Order::Mock
+    class ::Magnets::Bindings::ClassInstance::Order::Mock
       
       attr_binding :yet_another_binding
 
     end
     
-    Proc.new { Rmagnets::Bindings::ClassInstance::Order::Mock.attr_alias :yet_another_binding, :aliased_binding_name }.should raise_error( ::Rmagnets::Bindings::Exception::NoBindingError )
+    Proc.new { ::Magnets::Bindings::ClassInstance::Order::Mock.attr_alias :yet_another_binding, :aliased_binding_name }.should raise_error( ::Magnets::Bindings::Exception::NoBindingError )
 
-    class ::Rmagnets::Bindings::ClassInstance::Order::OtherMock
+    class ::Magnets::Bindings::ClassInstance::Order::OtherMock
       
       attr_binding :some_other_binding
 
       has_binding?( :some_other_binding ).should == true
       respond_to?( :some_other_binding ).should == true
-      some_other_binding.is_a?( ::Rmagnets::Bindings::Binding ).should == true
+      some_other_binding.is_a?( ::Magnets::Bindings::Binding ).should == true
 
     end
     
-    class ::Rmagnets::Bindings::ClassInstance::Order::Mock
+    class ::Magnets::Bindings::ClassInstance::Order::Mock
       
       attr_alias :aliased_binding_name, :yet_another_binding
-      attr_binding :another_binding, ::Rmagnets::Bindings::ClassInstance::Order::OtherMock
+      attr_binding :another_binding, ::Magnets::Bindings::ClassInstance::Order::OtherMock
       attr_alias :some_other_binding, another_binding.some_other_binding
 
       has_binding?( :aliased_binding_name ).should == true
-      binding_configuration( :aliased_binding_name ).required?.should == false
+      __binding_configuration__( :aliased_binding_name ).required?.should == false
 
       has_binding?( :some_other_binding ).should == true
-      binding_configuration( :some_other_binding ).required?.should == false
+      __binding_configuration__( :some_other_binding ).required?.should == false
       respond_to?( :some_other_binding ).should == true
-      instance_methods.include?( :some_other_binding ).should == true
-      instance_methods.include?( :some_other_binding= ).should == true
+      method_defined?( :some_other_binding ).should == true
+      method_defined?( :some_other_binding= ).should == true
 
-      some_other_binding.is_a?( ::Rmagnets::Bindings::Binding ).should == true
+      some_other_binding.is_a?( ::Magnets::Bindings::Binding ).should == true
       some_other_binding.should == another_binding.some_other_binding
 
       attr_unbind :yet_another_binding, :some_other_binding, :another_binding
       
     end
     
-    class ::Rmagnets::Bindings::ClassInstance::Order::OtherMock
+    class ::Magnets::Bindings::ClassInstance::Order::OtherMock
       
       attr_unbind :some_other_binding
 

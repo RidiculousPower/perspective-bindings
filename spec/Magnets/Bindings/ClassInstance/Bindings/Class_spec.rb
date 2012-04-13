@@ -1,17 +1,17 @@
 
-require_relative '../../../../../lib/rmagnets-bindings.rb'
+require_relative '../../../../../lib/magnets-bindings.rb'
 
-describe ::Rmagnets::Bindings::ClassInstance::Bindings::Class do
+describe ::Magnets::Bindings::ClassInstance::Bindings::Class do
 
   before :all do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock
-      include ::Rmagnets::Bindings::ObjectInstance
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings::Class
+    class ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock
+      include ::Magnets::Bindings::ObjectInstance
+      extend ::Magnets::Bindings::ClassInstance::Bindings
+      extend ::Magnets::Bindings::ClassInstance::Bindings::Class
       class View
-        include ::Rmagnets::Bindings::ObjectInstance
-        extend ::Rmagnets::Bindings::ClassInstance::Bindings
-        extend ::Rmagnets::Bindings::ClassInstance::Bindings::Class
+        include ::Magnets::Bindings::ObjectInstance
+        extend ::Magnets::Bindings::ClassInstance::Bindings
+        extend ::Magnets::Bindings::ClassInstance::Bindings::Class
       end
     end
   end
@@ -26,36 +26,36 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Class do
   
   it 'can define classes' do
     
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock
       
       proc_ran = false
       config_proc = Proc.new do
         proc_ran = true
       end
       
-      attr_class :some_class => ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock::View, & config_proc
+      attr_class :some_class => ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock::View, & config_proc
       
-      binding_instance = binding_configuration( :some_class )
+      binding_instance = __binding_configuration__( :some_class )
       
       binding_instance.required?.should == false
       respond_to?( :some_class ).should == true
-      instance_methods.include?( :some_class ).should == true
+      method_defined?( :some_class ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
-      binding_instance.__view_class__.should == ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock::View
+      binding_instance.__view_class__.should == ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock::View
       
       has_binding?( :some_class ).should == true
 
     end
     
-    instance = ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock.new
+    instance = ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock.new
     Proc.new { instance.some_class = [ Object ] }.should raise_error
     Proc.new { instance.some_class = :some_value }.should raise_error
     instance.some_class = Object
     
-    instance.class.binding_configuration( :some_class ).ensure_binding_render_value_valid( instance.some_class )
+    instance.class.__binding_configuration__( :some_class ).ensure_binding_render_value_valid( instance.some_class )
     
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock
       
       attr_unbind :some_class
 
@@ -69,27 +69,27 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Class do
   
   it 'can define required classes' do
     
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock
       
       attr_classes :some_classes
       
       has_binding?( :some_classes ).should == true
-      binding_instance = binding_configuration( :some_classes )
+      binding_instance = __binding_configuration__( :some_classes )
       binding_instance.required?.should == false
       binding_instance.multiple_values_permitted?.should == true
 
     end
     
-    instance = ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock.new
-    Proc.new { instance.some_classes = [ :object ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_classes = :object }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    instance = ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock.new
+    Proc.new { instance.some_classes = [ :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_classes = :object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
     instance.some_classes = Object
     instance.some_classes = [ Object, Class ]
-    Proc.new { instance.some_classes = [ Object, :object ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_classes = [ Object, :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
     
-    instance.class.binding_configuration( :some_classes ).ensure_binding_render_value_valid( instance.some_classes )
+    instance.class.__binding_configuration__( :some_classes ).ensure_binding_render_value_valid( instance.some_classes )
     
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock
 
       attr_unbind :some_classes
 
@@ -103,25 +103,25 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Class do
   
   it 'can define required classes' do
     
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock
       
       attr_required_class :some_required_class
       
       has_binding?( :some_required_class ).should == true
-      binding_instance = binding_configuration( :some_required_class )
+      binding_instance = __binding_configuration__( :some_required_class )
       binding_instance.required?.should == true
       binding_instance.multiple_values_permitted?.should == false
 
     end
     
-    instance = ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock.new
+    instance = ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock.new
     Proc.new { instance.some_required_class = [ :some_value, :some_other_value ] }.should raise_error
     Proc.new { instance.some_required_class = :some_value }.should raise_error
     instance.some_required_class = Class
     instance.some_required_class = nil
-    Proc.new { instance.class.binding_configuration( :some_required_class ).ensure_binding_render_value_valid( instance.some_required_class ) }.should raise_error( ::Rmagnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_class ).ensure_binding_render_value_valid( instance.some_required_class ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock
 
       attr_unbind :some_required_class
 
@@ -135,27 +135,27 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Class do
   
   it 'can define required classes' do
     
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock
       
       attr_required_classes :some_required_classes
       
       has_binding?( :some_required_classes ).should == true
-      binding_instance = binding_configuration( :some_required_classes )
+      binding_instance = __binding_configuration__( :some_required_classes )
       binding_instance.required?.should == true
       binding_instance.multiple_values_permitted?.should == true
 
     end
     
-    instance = ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock.new
-    Proc.new { instance.some_required_classes = [ :object, :other ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_classes = [ Object, :other ] }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_classes = :other }.should raise_error( ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    instance = ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock.new
+    Proc.new { instance.some_required_classes = [ :object, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_classes = [ Object, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_classes = :other }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
     instance.some_required_classes = [ Object, Class ]
     instance.some_required_classes = Object
     instance.some_required_classes = nil
-    Proc.new { instance.class.binding_configuration( :some_required_classes ).ensure_binding_render_value_valid( instance.some_required_classes ) }.should raise_error( ::Rmagnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_classes ).ensure_binding_render_value_valid( instance.some_required_classes ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Class::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock
 
       attr_unbind :some_required_classes
 

@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::TrueFalse
+module ::Magnets::Bindings::ClassInstance::Bindings::TrueFalse
 
   #####################
   #  attr_true_false  #

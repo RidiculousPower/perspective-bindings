@@ -1,10 +1,11 @@
 
 require 'accessor-utilities'
 require 'cascading-configuration-array'
+require 'cascading-configuration-array-unique'
 require 'cascading-configuration-hash'
 require 'cascading-configuration-setting'
 
-module ::Rmagnets
+module ::Magnets
 	module Bindings
     class Binding
     end
@@ -71,43 +72,45 @@ module ::Rmagnets
 	end
 end
 
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Binding.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/Binding.rb'
 
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/Binding.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/Alias.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/SharedBinding.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods/Remove.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Methods.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Methods/Binding.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Methods/Alias.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Methods/SharedBinding.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Methods/Remove.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Methods.rb'
 
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Binding.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Class.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Complex.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/File.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Float.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Integer.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Module.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Number.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Rational.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Regexp.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Text.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/TrueFalse.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/View.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings/Mixed.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/Binding.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/Class.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/Complex.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/File.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/Float.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/Integer.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/Module.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/Number.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/Rational.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/Regexp.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/Text.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/TrueFalse.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/View.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings/Mixed.rb'
 
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Alias.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Bindings.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance/Order.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Alias.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Bindings.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance/Order.rb'
 
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ClassInstance.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/ObjectInstance.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ClassInstance.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/ObjectInstance.rb'
 
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/BindingAlreadyDefinedError.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/BindingInstanceInvalidTypeError.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/BindingNameExpected.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/BindingRequired.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/BindingOrderAlreadyIncludesBinding.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/BindingOrderEmpty.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/NoBindingError.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/NumberBindingExpectsNumber.rb'
-require_relative 'rmagnets-bindings/Rmagnets/Bindings/Exception/ViewClassLacksBindings.rb'
+require_relative 'magnets-bindings/Magnets/Bindings.rb'
+
+require_relative 'magnets-bindings/Magnets/Bindings/Exception/BindingAlreadyDefinedError.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/Exception/BindingInstanceInvalidTypeError.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/Exception/BindingNameExpected.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/Exception/BindingRequired.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/Exception/BindingOrderAlreadyIncludesBinding.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/Exception/BindingOrderEmpty.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/Exception/NoBindingError.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/Exception/NumberBindingExpectsNumber.rb'
+require_relative 'magnets-bindings/Magnets/Bindings/Exception/ViewClassLacksBindings.rb'
 

@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance
+module ::Magnets::Bindings::ClassInstance
   
   include Alias
   include Bindings

@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Order
+module ::Magnets::Bindings::ClassInstance::Order
 
 	##########################################  Order  ###############################################
 	
@@ -22,19 +22,29 @@ module ::Rmagnets::Bindings::ClassInstance::Order
 
 	  	binding_order_array.each do |this_binding_name|
 	  	  
-	  	  unless has_binding?( this_binding_name )
-      		raise ::Rmagnets::Bindings::Exception::NoBindingError,
-      		      'No binding defined for :' + this_binding_name.to_s + '.'
-  	    end
+	  	  validate_binding_name_for_order( this_binding_name )
 	  	  
 			end
 
-			binding_order.replace( binding_order_array )
+			__binding_order__.replace( binding_order_array )
 			
 		end
 		
 		return return_value
 
 	end
+	
+	#####################################
+  #  validate_binding_name_for_order  #
+	#####################################
+	
+	def validate_binding_name_for_order( binding_name )
+	  
+	  unless has_binding?( binding_name )
+  		raise ::Magnets::Bindings::Exception::NoBindingError,
+  		      'No binding defined for :' + binding_name.to_s + '.'
+    end
+	  
+  end
 
 end

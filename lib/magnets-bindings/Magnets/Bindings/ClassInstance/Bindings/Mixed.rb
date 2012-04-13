@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::Mixed
+module ::Magnets::Bindings::ClassInstance::Bindings::Mixed
   
   ################
   #  attr_mixed  #

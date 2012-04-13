@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods
+module ::Magnets::Bindings::ClassInstance::Bindings::Methods
 
   include Declare
   include Binding

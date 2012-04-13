@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ObjectInstance
+module ::Magnets::Bindings::ObjectInstance
 	
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Array
@@ -11,36 +11,91 @@ module ::Rmagnets::Bindings::ObjectInstance
 
   def initialize
 
-		# instantiate specified views
-		self.class.binding_configurations.each do |this_binding_name, this_binding_instance|
+	  __initialize_bindings__
+	  
+  end
+  
+  #############################
+  #  __initialize_bindings__  #
+  #############################
+  
+  def __initialize_bindings__
 
-		  this_bound_instance = nil
-		  
-		  if view_class = this_binding_instance.__view_class__
-		    this_bound_instance = view_class.new
-		    instance_variable_set( this_binding_name.variable_name, this_bound_instance )
-      end
-      
-      # run configuration proc for each binding instance
-  		this_binding_instance.__configuration_procs__.each do |this_configuration_proc|
-        instance_exec( this_bound_instance, & this_configuration_proc )
-  	  end
+		self.class.__binding_configurations__.each do |this_binding_name, this_binding_instance|
+
+      __initialize_binding__( this_binding_name, this_binding_instance )
       
 	  end
+
+  end
+  
+  ############################
+  #  __initialize_binding__  #
+  ############################
+  
+  def __initialize_binding__( binding_name, binding_instance )
+
+	  bound_instance = nil
 	  
+		# instantiate specified view
+	  if view_class = binding_instance.__view_class__
+	    bound_instance = view_class.new
+	    instance_variable_set( binding_name.variable_name, bound_instance )
+    end
+    
+    # run configuration proc for each binding instance
+		binding_instance.__configuration_procs__.each do |configuration_proc|
+      instance_exec( bound_instance, & configuration_proc )
+	  end
+    
+    return bound_instance
+    
+  end
+    
+  #################
+  #  __binding__  #
+  #################
+
+  def __binding__( binding_name )
+    
+    if aliased_name = __binding_aliases__[ binding_name ]
+      binding_name = aliased_name
+    end
+    
+    return instance_variable_get( binding_name.variable_name )
+    
+  end
+
+  #####################
+  #  __set_binding__  #
+  #####################
+
+  def __set_binding__( binding_name, object )
+        
+    binding_instance = self.class.__binding_configuration__( binding_name )
+        
+    binding_instance.__ensure_binding_value_valid__( object )
+    
+    if this_corresponding_name = binding_instance.__corresponding_view_binding__
+      corresponding_view_binding_instance = __binding__( this_corresponding_name )
+      corresponding_view_binding_instance.content = object
+    end
+
+    return instance_variable_set( binding_name.variable_name, object )
+    
   end
 
   #######################################
   #  __binding_order_declared_empty__?  #
   #######################################
   
-  attr_configuration       :__binding_order_declared_empty__?
+  attr_configuration              :__binding_order_declared_empty__?
   
-  ############################
-  #  binding_configurations  #
-  ############################
+  ################################
+  #  __binding_configurations__  #
+  ################################
   
-	attr_module_configuration_hash  :binding_configurations do
+	attr_module_configuration_hash  :__binding_configurations__ do
 	  
 	  #======================#
 	  #  child_pre_set_hook  #
@@ -54,7 +109,7 @@ module ::Rmagnets::Bindings::ObjectInstance
       child_binding_instance = nil
 
       configuration_instance.instance_eval do
-        child_binding_instance = binding_instance.duplicate_as_inheriting_sub_binding
+        child_binding_instance = binding_instance.__duplicate_as_inheriting_sub_binding__
       end
       
       return child_binding_instance
@@ -63,11 +118,11 @@ module ::Rmagnets::Bindings::ObjectInstance
     
   end
 
-  ###################################
-  #  shared_binding_configurations  #
-  ###################################
+  #######################################
+  #  __shared_binding_configurations__  #
+  #######################################
 
-	attr_module_configuration_hash  :shared_binding_configurations do
+	attr_module_configuration_hash  :__shared_binding_configurations__ do
 	  
 	  #======================#
 	  #  child_pre_set_hook  #
@@ -81,7 +136,7 @@ module ::Rmagnets::Bindings::ObjectInstance
       child_shared_binding_instance = nil
 
       configuration_instance.instance_eval do
-        child_shared_binding_instance = binding_instance.duplicate_as_inheriting_sub_binding
+        child_shared_binding_instance = binding_instance.__duplicate_as_inheriting_sub_binding__
       end
       
       return child_shared_binding_instance
@@ -90,86 +145,31 @@ module ::Rmagnets::Bindings::ObjectInstance
     
   end
 
-  #####################
-  #  binding_aliases  #
-  #####################
+  #########################
+  #  __binding_aliases__  #
+  #########################
 
-	attr_configuration_hash   :binding_aliases
+	attr_configuration_hash   :__binding_aliases__
 
-  ###################
-  #  binding_order  #
-  ###################
+  #######################
+  #  __binding_order__  #
+  #######################
 
-  attr_configuration_array  :binding_order
+  attr_configuration_array  :__binding_order__
 
-  ####################
-  #  method_missing  #
-  ####################
+  ############################################
+  #  __ensure_binding_render_values_valid__  #
+  ############################################
   
-  def method_missing( method_name, *args )
-    
-    return_value = nil
-    
-    if @__binding_redirection_map_for_proc__
-      
-      binding_name = method_name.accessor_name
-
-      # if our method names a binding, route to the binding
-      if binding_instance = @__binding_redirection_map_for_proc__[ binding_name ]
-    
-        # for a given name we need to know the current path to its equivalent instance
-    
-        case method_name
-
-          when binding_name
-
-            binding_accessor_name = binding_instance.__name__.accessor_name
-            return_value = __send__( binding_accessor_name, *args )
-
-          when binding_name.write_accessor_name
-
-            binding_write_accessor_name = binding_instance.__name__.write_accessor_name
-            return_value = __send__( binding_write_accessor_name, *args )
-
-        end
-      
-      end
-    
-    else
-      
-      # we didn't capture method - handle as normal
-      begin
-        super
-      rescue Exception => exception
-        backtrace_array = exception.backtrace
-        missing_method_call_index = 1
-        missing_method_call = exception.backtrace[ missing_method_call_index ]
-        backtrace_array.unshift( missing_method_call )
-        raise exception
-      end
-      
-    end
-    
-    return return_value
-    
-  end
-  
-  ########################################
-  #  ensure_binding_render_values_valid  #
-  ########################################
-  
-  def ensure_binding_render_values_valid
+  def __ensure_binding_render_values_valid__
   
     # if we are rendering an empty view we don't want to raise an error for empty required values
     unless @__view_rendering_empty__
       
-      binding_order.each do |this_binding_name|
+      __binding_order__.each do |this_binding_name|
 
-  			this_binding_instance = self.class.binding_configuration( this_binding_name )
-  			this_binding_value = __send__( this_binding_name )
+        __ensure_binding_render_value_valid__( this_binding_name )
         
-        this_binding_instance.ensure_binding_render_value_valid( this_binding_value )
-                
       end
 
     else
@@ -178,6 +178,18 @@ module ::Rmagnets::Bindings::ObjectInstance
 
 	  end
     
+  end
+  
+  ###########################################
+  #  __ensure_binding_render_value_valid__  #
+  ###########################################
+  
+  def __ensure_binding_render_value_valid__( binding_name )
+
+    this_binding_instance = self.class.__binding_configuration__( binding_name )
+		this_binding_value = __binding__( binding_name )
+    this_binding_instance.ensure_binding_render_value_valid( this_binding_value )
+  
   end
   
 end

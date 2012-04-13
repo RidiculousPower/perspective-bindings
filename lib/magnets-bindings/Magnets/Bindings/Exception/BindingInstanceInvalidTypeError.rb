@@ -1,4 +1,4 @@
 
-class ::Rmagnets::Bindings::Exception::FloatNotPermitted < ::ArgumentError
+class ::Magnets::Bindings::Exception::FloatNotPermitted < ::ArgumentError
   
 end

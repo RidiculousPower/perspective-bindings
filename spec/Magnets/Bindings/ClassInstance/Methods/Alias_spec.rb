@@ -1,11 +1,11 @@
 
-require_relative '../../../../../lib/rmagnets-bindings.rb'
+require_relative '../../../../../lib/magnets-bindings.rb'
 
-describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias do
+describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias do
 
   before :all do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias::Mock
-      extend Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias::Mock
+      extend ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias
       def self.aliased_method
         @called_aliased_method = true
       end
@@ -14,16 +14,21 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias do
         @called_aliased_method = false
         return did_call_method
       end
-      def aliased_method
-        @called_aliased_method = true
-      end
-      def aliased_method=( something )
-        @called_aliased_method = true
-      end
       def called_aliased_method
         did_call_method = @called_aliased_method
         @called_aliased_method = false
         return did_call_method
+      end
+      def self.__binding_configuration__( binding_name )
+        if binding_name == :aliased_method
+          @called_aliased_method = true
+        end
+      end
+      def __set_binding__( binding_name, object )
+        @called_aliased_method = true
+      end
+      def __binding__( binding_name )
+        @called_aliased_method = true
       end
     end
   end
@@ -33,7 +38,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias do
   ##########################################
   
   it 'can declare an aliased binding getter class method' do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias::Mock
       declare_aliased_class_binding_getter( :new_alias, :aliased_method )
       respond_to?( :new_alias ).should == true
       new_alias
@@ -46,11 +51,11 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias do
   ####################################
 
   it 'can declare an aliased binding getter instance method' do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias::Mock
       declare_aliased_binding_setter( :new_alias, :aliased_method )
-      instance_methods.include?( :new_alias= ).should == true
+      method_defined?( :new_alias= ).should == true
     end
-    ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias::Mock.new.instance_eval do
+    ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias::Mock.new.instance_eval do
       self.new_alias = Object.new
       called_aliased_method.should == true
     end
@@ -61,11 +66,11 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias do
   ####################################
 
   it 'can declare an aliased binding getter instance method' do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias::Mock
       declare_aliased_binding_getter( :new_alias, :aliased_method )
-      instance_methods.include?( :new_alias ).should == true
+      method_defined?( :new_alias ).should == true
     end
-    ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Alias::Mock.new.instance_eval do
+    ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias::Mock.new.instance_eval do
       self.new_alias
       called_aliased_method.should == true
     end

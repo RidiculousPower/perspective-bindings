@@ -1,8 +1,8 @@
 
-class ::Rmagnets::Bindings::Binding
+class ::Magnets::Bindings::Binding
 
   include ::CascadingConfiguration::Setting
-  include ::CascadingConfiguration::Array
+  include ::CascadingConfiguration::Array::Unique
 
   #################################
   #  self.shared_binding_context  #
@@ -17,7 +17,7 @@ class ::Rmagnets::Bindings::Binding
     binding_route.each_with_index do |this_binding_route_part, index|
 
       unless binding_context.respond_to?( this_binding_route_part )
-    		raise ::Rmagnets::Bindings::Exception::NoBindingError,
+    		raise ::Magnets::Bindings::Exception::NoBindingError,
       		      starting_context.to_s + ' does not have route :' + 
       		      binding_route.slice( 0, index ).join( '.' ) + '.' + "\n\n" +
       		      'Shared binding route :' + this_binding_route_part.to_s + 
@@ -25,14 +25,14 @@ class ::Rmagnets::Bindings::Binding
         	      ' (' + binding_context.inspect + '). '
       end
       
-      binding_context = binding_context.__send__( this_binding_route_part )
+      binding_context = binding_context.__binding__( this_binding_route_part )
 
       route_successfully_mapped.push( this_binding_route_part )
 
     end
 
     unless binding_context.respond_to?( accessor )
-  		raise ::Rmagnets::Bindings::Exception::NoBindingError,
+  		raise ::Magnets::Bindings::Exception::NoBindingError,
       	      'No accessor :' + accessor.to_s + ' defined ' + 'in ' + 
       	      ( [ binding_context.inspect ] + binding_route ).join( '.' ) + '.' + "\n\n" + 
       	      'Shared binding :' + shared_alias_name.to_s + ' was inaccessible in ' + 
@@ -77,13 +77,13 @@ class ::Rmagnets::Bindings::Binding
   # Configuration
   # -------------
   #
-  attr_configuration_array  :__configuration_procs__, :__validation_procs__
+  attr_configuration_unique_array  :__configuration_procs__, :__validation_procs__
   
   # Instance-Specific Elements
   # --------------------------
   #
   attr_accessor             :__route__
-  attr_reader               :__bound_module__, :__sub_bindings__, :__shared_sub_bindings__
+  attr_reader               :__bound_view__, :__sub_bindings__, :__shared_sub_bindings__
   
   ################
   #  initialize  #
@@ -98,7 +98,7 @@ class ::Rmagnets::Bindings::Binding
     
     self.__name__ = binding_name
     
-    @__bound_module__ = bound_module
+    @__bound_view__ = bound_module
     @__route__ = base_route
     
     initialize_for_ancestor( ancestor_binding )
@@ -110,7 +110,17 @@ class ::Rmagnets::Bindings::Binding
     end
         
   end
-
+  
+  ################
+  #  bound_view  #
+  ################
+  
+  def bound_view
+    
+    return @__bound_view__
+    
+  end
+  
   #############################
   #  initialize_for_ancestor  #
   #############################
@@ -131,17 +141,17 @@ class ::Rmagnets::Bindings::Binding
 
       ::CascadingConfiguration::Ancestors.register_child_for_parent( self, ancestor_binding )
       
-    elsif binding_ancestor = ccv.ancestor_for_registered_instance( @__bound_module__, binding_name )
+    elsif binding_ancestor = ccv.ancestor_for_registered_instance( @__bound_view__, binding_name )
 
-      ccv.register_configuration( @__bound_module__, binding_name )
+      ccv.register_configuration( @__bound_view__, binding_name )
 
-      ancestor_binding = binding_ancestor.binding_configuration( binding_name )
+      ancestor_binding = binding_ancestor.__binding_configuration__( binding_name )
 
       ::CascadingConfiguration::Ancestors.register_child_for_parent( self, ancestor_binding )
 
     else
       
-      ccv.register_configuration( @__bound_module__, binding_name )
+      ccv.register_configuration( @__bound_view__, binding_name )
 
       initialize_default_values
 
@@ -197,10 +207,10 @@ class ::Rmagnets::Bindings::Binding
 	  #
     if self.__view_class__ = view_class
   	  
-  		unless view_class.respond_to?( :binding_configurations )
-    		raise ::Rmagnets::Bindings::Exception::ViewClassLacksBindings,
+  		unless view_class.respond_to?( :__binding_configurations__ )
+    		raise ::Magnets::Bindings::Exception::ViewClassLacksBindings,
     		        'Class ' + view_class.to_s + ' was declared as a view class, ' +
-    		        'but does not respond to :' + :binding_configurations.to_s + '.'
+    		        'but does not respond to :' + :__binding_configurations__.to_s + '.'
 		  end
 
       base_route = nil
@@ -211,9 +221,9 @@ class ::Rmagnets::Bindings::Binding
   		end
   		base_route.push( __name__ )
 
-  		view_class.binding_configurations.each do |this_binding_name, this_binding_instance|
+  		view_class.__binding_configurations__.each do |this_binding_name, this_binding_instance|
   
-        this_sub_binding = this_binding_instance.duplicate_as_inheriting_sub_binding( base_route )
+        this_sub_binding = this_binding_instance.__duplicate_as_inheriting_sub_binding__( base_route )
 
         @__sub_bindings__[ this_binding_name ] = this_sub_binding
 
@@ -229,13 +239,13 @@ class ::Rmagnets::Bindings::Binding
         
   	  end
 		
-  		view_class.shared_binding_configurations.each do |this_binding_name, this_binding_instance|
+  		view_class.__shared_binding_configurations__.each do |this_binding_name, this_binding_instance|
   
         this_shared_binding_instance = nil
 
         if this_shared_binding_route = this_binding_instance.__route__
           # with shared bindings, instead of duplicating the binding we want to get
-          # the equivalent binding that we have already duplicated from binding_configurations
+          # the equivalent binding that we have already duplicated from __binding_configurations__
           this_shared_binding_name = this_binding_instance.__name__
           this_shared_binding_instance = shared_binding_for_route( this_shared_binding_route, 
                                                                    this_shared_binding_name )
@@ -258,6 +268,24 @@ class ::Rmagnets::Bindings::Binding
 	  end
   	  		  
   end
+
+  #################
+  #  __binding__  #
+  #################
+    
+  def __binding__( binding_name )
+    
+    binding_instance = nil
+    
+    unless binding_instance = @__sub_bindings__[ binding_name ]
+      
+      binding_instance = @__shared_sub_bindings__[ binding_name ]
+      
+    end
+    
+    return binding_instance    
+    
+  end
     
   ##############################
   #  shared_binding_for_route  #
@@ -270,17 +298,17 @@ class ::Rmagnets::Bindings::Binding
                                                                 binding_route,
                                                                 shared_binding_name )
     
-    return shared_binding_context.__send__( shared_binding_name )
+    return shared_binding_context.__binding__( shared_binding_name )
     
   end
 
   #########################################
-  #  duplicate_as_inheriting_sub_binding  #
+  #  __duplicate_as_inheriting_sub_binding__  #
   #########################################
 
-  def duplicate_as_inheriting_sub_binding( base_route = @__route__ )
+  def __duplicate_as_inheriting_sub_binding__( base_route = @__route__ )
     
-    return self.class.new( @__bound_module__, __name__, __view_class__, self, base_route )
+    return self.class.new( @__bound_view__, __name__, __view_class__, self, base_route )
     
   end
   
@@ -312,7 +340,7 @@ class ::Rmagnets::Bindings::Binding
   #  ensure_binding_value_valid  #
   ################################
 
-  def ensure_binding_value_valid( binding_value )
+  def __ensure_binding_value_valid__( binding_value )
 
     case binding_value
       
@@ -320,94 +348,94 @@ class ::Rmagnets::Bindings::Binding
       
         # nothing required
       
-      when Array
+      when ::Array
         
         unless multiple_values_permitted?
-          raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError
                   'Multiple values given (' + binding_value.inspect.to_s + ') but prohibited by ' +
                   'binding configuration for binding :' + __name__.to_s
         end
         
         binding_value.each do |this_binding_value|
-          ensure_binding_value_valid( this_binding_value )
+          __ensure_binding_value_valid__( this_binding_value )
         end
       
-      when String, Symbol
+      when ::Symbol, ::String
 
         unless object_permitted? or text_permitted?
-          raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError
                   'String given ("' + binding_value.inspect.to_s + '") but prohibited by ' +
                   'binding configuration for binding :' + __name__.to_s
         end
         
-      when Integer
+      when ::Integer
         
         unless object_permitted? or number_permitted? or integer_permitted?
-          raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError
                   'Integer given (' + binding_value.inspect.to_s + ') but prohibited by ' +
                   'binding configuration for binding :' + __name__.to_s
         end
         
-      when Float
+      when ::Float
       
         unless object_permitted? or number_permitted? or float_permitted?
-          raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError
                   'Float given (' + binding_value.inspect.to_s + ') but prohibited by ' +
                   'binding configuration for binding :' + __name__.to_s
         end
       
-      when Complex
+      when ::Complex
         
         unless object_permitted? or number_permitted? or complex_permitted?
-          raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError
                   'Complex given (' + binding_value.inspect.to_s + ') but prohibited by ' +
                   'binding configuration for binding :' + __name__.to_s
         end
         
-      when Rational
+      when ::Rational
 
         unless object_permitted? or number_permitted? or rational_permitted?
-          raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError
                   'Rational given (' + binding_value.inspect.to_s + ') but prohibited by ' +
                   'binding configuration for binding :' + __name__.to_s
         end
         
-      when Regexp
+      when ::Regexp
         
         unless object_permitted? or regexp_permitted?
-          raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError
                   'Regexp given (' + binding_value.inspect.to_s + ') but prohibited by ' +
                   'binding configuration for binding :' + __name__.to_s
         end
         
-      when Class
+      when ::Class
 
         unless object_permitted? or module_permitted? or class_permitted?
-          raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError
                   'Regexp given (' + binding_value.inspect.to_s + ') but prohibited by ' +
                   'binding configuration for binding :' + __name__.to_s
         end
         
-      when Module
+      when ::Module
 
         unless object_permitted? or module_permitted?
-          raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError
                   'Regexp given (' + binding_value.inspect.to_s + ') but prohibited by ' +
                   'binding configuration for binding :' + __name__.to_s
         end
         
-      when TrueClass, FalseClass
+      when ::TrueClass, ::FalseClass
 
         unless object_permitted? or true_false_permitted?
-          raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError
                   'True/False given (' + binding_value.inspect.to_s + ') but prohibited by ' +
                   'binding configuration for binding :' + __name__.to_s
         end
         
-      when File
+      when ::File
         
         unless object_permitted? or file_permitted?
-          raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError
                   'File given (' + binding_value.inspect.to_s + ') but prohibited by ' +
                   'binding configuration for binding :' + __name__.to_s
         end
@@ -418,7 +446,7 @@ class ::Rmagnets::Bindings::Binding
            binding_value.respond_to?( :to_html_fragment )
 
           unless object_permitted? or view_permitted?
-            raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError,
+            raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError,
                     'View given (' + binding_value.inspect.to_s + ') but prohibited by ' +
                     'binding configuration for binding :' + __name__.to_s
           end
@@ -426,7 +454,7 @@ class ::Rmagnets::Bindings::Binding
         else
         
           unless object_permitted?
-            raise ::Rmagnets::Bindings::Exception::BindingInstanceInvalidTypeError,
+            raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError,
                     'Object given (' + binding_value.inspect.to_s + ') but prohibited by ' +
                     'binding configuration for binding :' + __name__.to_s
           end
@@ -446,9 +474,9 @@ class ::Rmagnets::Bindings::Binding
     # if binding is required and has a nil value, raise exception
 		unless binding_value or optional?
 
-			raise ::Rmagnets::Bindings::Exception::BindingRequired,
+			raise ::Magnets::Bindings::Exception::BindingRequired,
 			        'Binding :' + __name__.to_s + ' is required but not bound for binding :' + 
-			        __name__.to_s + ' (' + @__bound_module__.to_s + ').'
+			        __name__.to_s + ' (' + @__bound_view__.to_s + ').'
 
 		end
 		
@@ -477,15 +505,16 @@ class ::Rmagnets::Bindings::Binding
       
         # nothing required
       
-      when String
+      when ::String
 
         rendered_binding_value = binding_value
         
-      when Symbol, Integer, Float, Complex, Rational, Regexp, Class, Module, TrueClass, FalseClass
+      when ::Symbol, ::Integer, ::Float, ::Complex, ::Rational, ::Regexp, 
+           ::Class, ::Module, ::TrueClass, ::FalseClass
 
         rendered_binding_value = binding_value.to_s
         
-      when File
+      when ::File
         
         rendered_binding_value = File.readlines.join
         

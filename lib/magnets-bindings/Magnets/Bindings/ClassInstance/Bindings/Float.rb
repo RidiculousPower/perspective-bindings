@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::Float
+module ::Magnets::Bindings::ClassInstance::Bindings::Float
 
   ################
   #  attr_float  #

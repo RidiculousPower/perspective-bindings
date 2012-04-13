@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::Regexp
+module ::Magnets::Bindings::ClassInstance::Bindings::Regexp
 
   #################
   #  attr_regexp  #

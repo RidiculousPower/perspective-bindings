@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
+module ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding
 
   ##################################
   #  declare_class_binding_getter  #
@@ -16,7 +16,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
 		# class method: return the binding instance
 		::CascadingConfiguration::Methods.define_module_method( self, binding_name ) do
 
-			return binding_configurations[ binding_name ]
+			return __binding_configurations__[ binding_name ]
 		  
 		end
 		    
@@ -26,9 +26,8 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
   #  declare_binding_setter  #
   ############################
 
-	def declare_binding_setter( binding_name, binding_instance )
+	def declare_binding_setter( binding_name )
 
-    variable_name = binding_name.variable_name
     write_accessor = binding_name.write_accessor_name
 		
 		#-----------------------------------  Instance Methods  ---------------------------------------#
@@ -39,15 +38,8 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
     
 		::CascadingConfiguration::Methods.define_instance_method( self, write_accessor ) do |object|
 
-      binding_instance.ensure_binding_value_valid( object )
+      __set_binding__( binding_name, object )
       
-      if this_corresponding_name = binding_instance.__corresponding_view_binding__
-        corresponding_view_binding_instance = __send__( this_corresponding_name )
-        corresponding_view_binding_instance.content = object
-      end
-      
-      return instance_variable_set( variable_name, object )
-
     end
 
 	end
@@ -56,7 +48,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
   #  declare_binding_getter  #
   ############################
 
-	def declare_binding_getter( binding_name, binding_instance )
+	def declare_binding_getter( binding_name )
 
     variable_name = binding_name.variable_name
 
@@ -69,7 +61,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
 		# instance method: return the bound instance
 		::CascadingConfiguration::Methods.define_instance_method( self, binding_name ) do
 		  
-      return instance_variable_get( variable_name )
+      return __binding__( binding_name )
 		
 		end
         

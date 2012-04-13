@@ -1,4 +1,4 @@
 
-class ::Rmagnets::Bindings::Exception::BindingOrderEmpty < ::ArgumentError
+class ::Magnets::Bindings::Exception::BindingOrderEmpty < ::ArgumentError
   
 end

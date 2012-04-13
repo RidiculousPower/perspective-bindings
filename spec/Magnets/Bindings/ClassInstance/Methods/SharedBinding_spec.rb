@@ -1,35 +1,43 @@
 
-require_relative '../../../../../lib/rmagnets-bindings.rb'
+require_relative '../../../../../lib/magnets-bindings.rb'
 
-describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding do
+describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding do
 
   before :all do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock
+      extend ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding
+      extend ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding
       class BindingViewMock
-        def self.binding_configuration( binding_name )
-          return @config ||= ::Rmagnets::Bindings::Binding.new( self,
+        def self.__binding_configuration__( binding_name )
+          return @config ||= ::Magnets::Bindings::Binding.new( self,
                                                                 :binding_target,
                                                                 nil )
         end
-        def self.binding_configurations
-          return { :binding_target => binding_configuration( :binding_name ) }
+        def self.__binding_configurations__
+          return { :binding_target => __binding_configuration__( :binding_name ) }
         end
-        def self.shared_binding_configurations
+        def self.__shared_binding_configurations__
           return { }
         end
-        def self.shared_binding_configurations
+        def self.__shared_binding_configurations__
           return { }
         end
         def self.binding_target
-          return binding_configuration( :binding_target ).duplicate_as_inheriting_sub_binding( [ :binding_name ] )
+          return __binding_configuration__( :binding_target ).__duplicate_as_inheriting_sub_binding__( [ :binding_name ] )
         end
         def binding_target
           @called_binding_target = true
           return @binding_target ||= :no_value
         end
-        def binding_target=( some_value )
+        def binding_target=
+          @called_binding_target = true
+          return @binding_target ||= some_value
+        end
+        def __binding__( binding_name )
+          @called_binding_target = true
+          return @binding_target ||= :no_value
+        end
+        def __set_binding__( binding_name, some_value )
           @called_binding_target = true
           return @binding_target ||= some_value
         end
@@ -39,25 +47,32 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding d
           return did_call_binding_target
         end
       end
-      def self.binding_configuration( binding_name )
-        return @config ||= ::Rmagnets::Bindings::Binding.new( self,
+      def self.__binding_configuration__( binding_name )
+        return @config ||= ::Magnets::Bindings::Binding.new( self,
                                                               :binding_name,
-                                                              ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock::BindingViewMock )
+                                                              ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock::BindingViewMock )
       end
-      def self.binding_configurations
+      def self.__binding_configurations__
         return { }
       end
-      def self.shared_binding_configurations
-        return { :binding_name => binding_configuration( :binding_name ) }
+      def self.__shared_binding_configurations__
+        return { :binding_name => __binding_configuration__( :binding_name ) }
       end
       def self.binding_name
-        return binding_configuration( :binding_name )
+        return __binding_configuration__( :binding_name )
+      end
+      def __binding__( binding_name )
+        @called_binding_name = true
+        return @binding_name_mock ||= BindingViewMock.new
+      end
+      def __set_binding__( binding_name, some_value )
+        @called_binding_name = true
       end
       def binding_name
         @called_binding_name = true
         return @binding_name_mock ||= BindingViewMock.new
       end
-      def binding_name=( name )
+      def binding_name=
         @called_binding_name = true
       end
       def called_binding_name
@@ -73,10 +88,10 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding d
   #########################################
   
   it 'can declare a shared binding getter class method' do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock
       declare_class_shared_binding_getter( :binding_alias )
       respond_to?( :binding_alias ).should == true
-      binding_alias.should == shared_binding_configurations[ :binding_alias ]
+      binding_alias.should == __shared_binding_configurations__[ :binding_alias ]
     end
   end
   
@@ -85,11 +100,11 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding d
   ###################################
 
   it 'can declare a shared binding setter instance method' do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock
       declare_shared_binding_setter( :binding_alias, binding_name.binding_target )
-      instance_methods.include?( :binding_alias= ).should == true
+      method_defined?( :binding_alias= ).should == true
     end
-    ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock.new.instance_eval do
+    ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock.new.instance_eval do
       self.binding_alias = :blah
       self.binding_name.called_binding_target.should == true
       binding_name.binding_target.should == :blah
@@ -101,11 +116,11 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding d
   ###################################
 
   it 'can declare a shared binding getter instance method' do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock
       declare_shared_binding_getter( :binding_alias, binding_name.binding_target )
-      instance_methods.include?( :binding_alias ).should == true
+      method_defined?( :binding_alias ).should == true
     end
-    ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock.new.instance_eval do
+    ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock.new.instance_eval do
       binding_alias.should == :no_value
       binding_name.called_binding_target.should == true
     end

@@ -1,15 +1,22 @@
 
-require_relative '../../../../../lib/rmagnets-bindings.rb'
+require_relative '../../../../../lib/magnets-bindings.rb'
 
-describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding do
+describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding do
 
   before :all do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock
       class << self
         attr_accessor :binding_instance
       end
+      def __set_binding__( binding_name, object )
+        instance_variable_set( binding_name.variable_name, object )
+        return self.class.binding_instance.__ensure_binding_value_valid__( object )
+      end
+      def __binding__( binding_name )
+        return instance_variable_get( binding_name.variable_name )
+      end
       class InstanceMock
-        def ensure_binding_value_valid( binding_value )
+        def __ensure_binding_value_valid__( binding_value )
           @called_ensure_binding_value_valid = true
         end
         def called_ensure_binding_value_valid
@@ -21,7 +28,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding do
           return nil
         end
       end
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding
+      extend ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding
     end
   end
   
@@ -30,8 +37,8 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding do
   ##################################
   
   it 'can declare a getter class method' do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock
-      def self.binding_configurations
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock
+      def self.__binding_configurations__
         return { :binding_name => :configuration_binding }
       end
       declare_class_binding_getter( :binding_name )
@@ -45,12 +52,12 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding do
   ############################
 
   it 'can declare a setter instance method' do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock
-      @binding_instance = ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock::InstanceMock.new
-      declare_binding_setter( :binding_name, @binding_instance )
-      instance_methods.include?( :binding_name= ).should == true
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock
+      @binding_instance = ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock::InstanceMock.new
+      declare_binding_setter( :binding_name )
+      method_defined?( :binding_name= ).should == true
     end
-    ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock.new.instance_eval do
+    ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock.new.instance_eval do
       self.binding_name = :value
       self.class.binding_instance.called_ensure_binding_value_valid.should == true
       instance_variable_get( :@binding_name ).should == :value
@@ -62,12 +69,12 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding do
   ############################
 
   it 'can declare a getter instance method' do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock
-      @binding_instance = ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock::InstanceMock.new
-      declare_binding_getter( :binding_name, @binding_instance )
-      instance_methods.include?( :binding_name ).should == true
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock
+      @binding_instance = ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock::InstanceMock.new
+      declare_binding_getter( :binding_name )
+      method_defined?( :binding_name ).should == true
     end
-    ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock.new.instance_eval do
+    ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock.new.instance_eval do
       instance_variable_set( :@binding_name, :value )
       self.binding_name.should == :value
     end

@@ -1,20 +1,20 @@
 
-require_relative '../../../../lib/rmagnets-bindings.rb'
+require_relative '../../../../lib/magnets-bindings.rb'
 
-describe ::Rmagnets::Bindings::ClassInstance::Rename do
+describe ::Magnets::Bindings::ClassInstance::Rename do
 
   before :all do
-    class ::Rmagnets::Bindings::ClassInstance::Rename::Mock
-      include ::Rmagnets::Bindings::ObjectInstance
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings::Binding
-      extend ::Rmagnets::Bindings::ClassInstance::Rename
+    class ::Magnets::Bindings::ClassInstance::Rename::Mock
+      include ::Magnets::Bindings::ObjectInstance
+      extend ::Magnets::Bindings::ClassInstance::Bindings
+      extend ::Magnets::Bindings::ClassInstance::Bindings::Binding
+      extend ::Magnets::Bindings::ClassInstance::Rename
     end
-    class ::Rmagnets::Bindings::ClassInstance::Rename::OtherMock
-      include ::Rmagnets::Bindings::ObjectInstance
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings::Binding
-      extend ::Rmagnets::Bindings::ClassInstance::Rename
+    class ::Magnets::Bindings::ClassInstance::Rename::OtherMock
+      include ::Magnets::Bindings::ObjectInstance
+      extend ::Magnets::Bindings::ClassInstance::Bindings
+      extend ::Magnets::Bindings::ClassInstance::Bindings::Binding
+      extend ::Magnets::Bindings::ClassInstance::Rename
     end
   end
 
@@ -24,7 +24,7 @@ describe ::Rmagnets::Bindings::ClassInstance::Rename do
   
   it 'can define binding aliases' do
     
-    class ::Rmagnets::Bindings::ClassInstance::Rename::Mock
+    class ::Magnets::Bindings::ClassInstance::Rename::Mock
       
       attr_binding :some_binding
 
@@ -37,21 +37,21 @@ describe ::Rmagnets::Bindings::ClassInstance::Rename do
       has_binding?( :some_binding_view ).should == false
 
       respond_to?( :some_binding ).should == false
-      instance_methods.include?( :some_binding ).should == false
-      instance_methods.include?( :some_binding= ).should == false
+      method_defined?( :some_binding ).should == false
+      method_defined?( :some_binding= ).should == false
       respond_to?( :some_binding_view ).should == false
-      instance_methods.include?( :some_binding_view ).should == false
-      instance_methods.include?( :some_binding_view= ).should == false
+      method_defined?( :some_binding_view ).should == false
+      method_defined?( :some_binding_view= ).should == false
       
       has_binding?( :another_name ).should == true
       has_binding?( :another_name_view ).should == true
 
       respond_to?( :another_name ).should == true
-      instance_methods.include?( :another_name ).should == true
-      instance_methods.include?( :another_name= ).should == true
+      method_defined?( :another_name ).should == true
+      method_defined?( :another_name= ).should == true
       respond_to?( :another_name_view ).should == true
-      instance_methods.include?( :another_name_view ).should == true
-      instance_methods.include?( :another_name_view= ).should == true
+      method_defined?( :another_name_view ).should == true
+      method_defined?( :another_name_view= ).should == true
 
       attr_unbind :another_name
       

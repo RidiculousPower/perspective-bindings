@@ -1,4 +1,4 @@
 
-class ::Rmagnets::Bindings::Exception::BindingAlreadyDefinedError < ::ArgumentError
+class ::Magnets::Bindings::Exception::BindingAlreadyDefinedError < ::ArgumentError
   
 end

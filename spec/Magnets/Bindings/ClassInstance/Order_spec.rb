@@ -1,14 +1,14 @@
 
-require_relative '../../../../lib/rmagnets-bindings.rb'
+require_relative '../../../../lib/magnets-bindings.rb'
 
-describe ::Rmagnets::Bindings::ClassInstance::Order do
+describe ::Magnets::Bindings::ClassInstance::Order do
 
   before :all do
-    class ::Rmagnets::Bindings::ClassInstance::Order::Mock
-      include ::Rmagnets::Bindings::ObjectInstance
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings::Binding
-      extend ::Rmagnets::Bindings::ClassInstance::Order
+    class ::Magnets::Bindings::ClassInstance::Order::Mock
+      include ::Magnets::Bindings::ObjectInstance
+      extend ::Magnets::Bindings::ClassInstance::Bindings
+      extend ::Magnets::Bindings::ClassInstance::Bindings::Binding
+      extend ::Magnets::Bindings::ClassInstance::Order
     end
   end
 
@@ -18,35 +18,35 @@ describe ::Rmagnets::Bindings::ClassInstance::Order do
 
   it 'can order bindings in sequence' do
     
-    class ::Rmagnets::Bindings::ClassInstance::Order::Mock
+    class ::Magnets::Bindings::ClassInstance::Order::Mock
     
       attr_binding :first_binding, :second_binding
 
     end
     
-    Proc.new { ::Rmagnets::Bindings::ClassInstance::Order::Mock.attr_order :first_binding, :third_binding }.should raise_error( ::Rmagnets::Bindings::Exception::NoBindingError )
+    Proc.new { ::Magnets::Bindings::ClassInstance::Order::Mock.attr_order :first_binding, :third_binding }.should raise_error( ::Magnets::Bindings::Exception::NoBindingError )
 
-    class ::Rmagnets::Bindings::ClassInstance::Order::Mock
+    class ::Magnets::Bindings::ClassInstance::Order::Mock
 
       attr_binding :third_binding
       
     end
 
-    class ::Rmagnets::Bindings::ClassInstance::Order::Mock
+    class ::Magnets::Bindings::ClassInstance::Order::Mock
       
       attr_order :first_binding, :third_binding
       
-      binding_order.should == [ :first_binding, :third_binding ]
+      __binding_order__.should == [ :first_binding, :third_binding ]
 
-      binding_order.insert( 1, :second_binding )
+      __binding_order__.insert( 1, :second_binding )
 
-      binding_order.should == [ :first_binding, :second_binding, :third_binding ]
+      __binding_order__.should == [ :first_binding, :second_binding, :third_binding ]
 
       attr_order :third_binding
 
-      binding_order.should == [ :third_binding ]
+      __binding_order__.should == [ :third_binding ]
       
-      binding_order.clear
+      __binding_order__.clear
       attr_unbind :first_binding, :second_binding, :third_binding
     
     end

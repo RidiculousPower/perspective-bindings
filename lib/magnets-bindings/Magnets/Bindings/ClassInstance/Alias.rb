@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Alias
+module ::Magnets::Bindings::ClassInstance::Alias
 
 	##########################################  Aliases  #############################################
 
@@ -53,14 +53,14 @@ module ::Rmagnets::Bindings::ClassInstance::Alias
 
     case existing_binding_or_name
       
-      when Symbol, String
+      when ::Symbol, String
       
     	  unless has_binding?( existing_binding_or_name )
-      		raise ::Rmagnets::Bindings::Exception::NoBindingError,
+      		raise ::Magnets::Bindings::Exception::NoBindingError,
       		      'No binding defined for :' + existing_binding_or_name.to_s + '.'
         end
         
-    		binding_aliases[ binding_alias ] = existing_binding_or_name
+    		__binding_aliases__[ binding_alias ] = existing_binding_or_name
         
         declare_aliased_class_binding_getter( binding_alias, existing_binding_or_name )
     		declare_aliased_binding_setter( binding_alias, existing_binding_or_name )
@@ -69,7 +69,7 @@ module ::Rmagnets::Bindings::ClassInstance::Alias
       else
 
         shared_binding_instance = existing_binding_or_name
-        shared_binding_configurations[ binding_alias ] = shared_binding_instance
+        __shared_binding_configurations__[ binding_alias ] = shared_binding_instance
 
         declare_class_shared_binding_getter( binding_alias )
     		declare_shared_binding_setter( binding_alias, shared_binding_instance )

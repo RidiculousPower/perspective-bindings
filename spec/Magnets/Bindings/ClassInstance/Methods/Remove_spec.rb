@@ -1,11 +1,11 @@
 
-require_relative '../../../../../lib/rmagnets-bindings.rb'
+require_relative '../../../../../lib/magnets-bindings.rb'
 
-describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Remove do
+describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::Remove do
 
   before :all do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Remove::Mock
-      extend ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Remove
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::Remove::Mock
+      extend ::Magnets::Bindings::ClassInstance::Bindings::Methods::Remove
       def self.binding_name
       end
       def binding_name
@@ -20,14 +20,14 @@ describe ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Remove do
 	############################
 
   it 'can remove the methods defined for a binding' do
-    class ::Rmagnets::Bindings::ClassInstance::Bindings::Methods::Remove::Mock
+    class ::Magnets::Bindings::ClassInstance::Bindings::Methods::Remove::Mock
       respond_to?( :binding_name ).should == true
-      instance_methods.include?( :binding_name ).should == true
-      instance_methods.include?( :binding_name= ).should == true
+      method_defined?( :binding_name ).should == true
+      method_defined?( :binding_name= ).should == true
       remove_binding_methods( :binding_name )
       respond_to?( :binding_name ).should == false
-      instance_methods.include?( :binding_name ).should == false
-      instance_methods.include?( :binding_name= ).should == false
+      method_defined?( :binding_name ).should == false
+      method_defined?( :binding_name= ).should == false
     end
   end
   

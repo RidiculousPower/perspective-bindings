@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings::Rational
+module ::Magnets::Bindings::ClassInstance::Bindings::Rational
 
   ###################
   #  attr_rational  #

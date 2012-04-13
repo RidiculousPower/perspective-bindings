@@ -1,4 +1,4 @@
 
-class ::Rmagnets::Bindings::Exception::BindingOrderAlreadyIncludesBinding < ::ArgumentError
+class ::Magnets::Bindings::Exception::BindingOrderAlreadyIncludesBinding < ::ArgumentError
   
 end

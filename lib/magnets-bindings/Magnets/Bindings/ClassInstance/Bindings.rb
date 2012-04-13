@@ -1,5 +1,5 @@
 
-module ::Rmagnets::Bindings::ClassInstance::Bindings
+module ::Magnets::Bindings::ClassInstance::Bindings
 
   include Methods
 
@@ -18,7 +18,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
   include View
 
   include Mixed
-   
+    
   #########################################  Status  ###############################################
 	
   ##################
@@ -32,9 +32,9 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
 		has_binding = false
 		
 		# if we have binding, alias, or re-binding
-		if 	binding_configurations.has_key?( binding_name )        or 
-		    shared_binding_configurations.has_key?( binding_name ) or
-		    binding_aliases.has_key?( binding_name )
+		if 	__binding_configurations__.has_key?( binding_name )        or 
+		    __shared_binding_configurations__.has_key?( binding_name ) or
+		    __binding_aliases__.has_key?( binding_name )
 		
 			has_binding = true
 		
@@ -50,17 +50,17 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
   #  binding_configuration  #
   ###########################
 
-	def binding_configuration( binding_name )
+	def __binding_configuration__( binding_name )
 		
-		if binding_aliases.has_key?( binding_name )
+		if __binding_aliases__.has_key?( binding_name )
 
-		  binding_name = binding_aliases[ binding_name ]
+		  binding_name = __binding_aliases__[ binding_name ]
 
 	  end
 	  
-	  unless binding_instance = binding_configurations[ binding_name ]
+	  unless binding_instance = __binding_configurations__[ binding_name ]
       
-      binding_instance = shared_binding_configurations[ binding_name ]
+      binding_instance = __shared_binding_configurations__[ binding_name ]
       
     end
     
@@ -83,18 +83,18 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
       if has_binding?( this_binding_name )
 
     		# delete this alias if it is one
-    		if aliased_binding = binding_aliases.delete( this_binding_name )
+    		if aliased_binding = __binding_aliases__.delete( this_binding_name )
   		  
     		  # we don't automatically delete associated bindings
     		  # nothing else to do
         
-        elsif binding_instance = shared_binding_configurations.delete( this_binding_name )
+        elsif binding_instance = __shared_binding_configurations__.delete( this_binding_name )
           
           # nothing else to do here
           
         else
 
-      		binding_instance = binding_configurations.delete( this_binding_name )
+      		binding_instance = __binding_configurations__.delete( this_binding_name )
         
           # if we defined a corresponding view at the same time as our binding (we probably did)
           # then remove it as well
@@ -105,7 +105,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
         end
       
     		# delete any aliases for this one
-        binding_aliases.delete_if { |key, value| value == this_binding_name }
+        __binding_aliases__.delete_if { |key, value| value == this_binding_name }
 
         remove_binding_methods( this_binding_name )
 
@@ -142,14 +142,14 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
       
       case next_arg
         
-        when Hash
+        when ::Hash
         
           these_bindings = create_bindings_for_hash( next_arg, 
                                                      also_create_view_methods, 
                                                      & configuration_proc )
           bindings.concat( these_bindings )
         
-        when Symbol, String
+        when ::Symbol, ::String
         
           binding_names = [ next_arg ]
         
@@ -161,7 +161,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
           
             case next_arg
             
-              when Hash
+              when ::Hash
             
                 these_bindings = create_bindings_for_hash( next_arg, 
                                                            also_create_view_methods,
@@ -169,7 +169,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
                 bindings.concat( these_bindings )
                 break
             
-              when Symbol, String
+              when ::Symbol, ::String
             
                 binding_names.push( next_arg )
             
@@ -200,7 +200,7 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
                 
         else
         
-          raise ArgumentError, 'Got View argument without binding name.'
+          raise ::ArgumentError, 'Got View argument without binding name.'
         
       end
     
@@ -244,12 +244,17 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
                       & configuration_proc )
 
     if check_for_existing_binding and has_binding?( binding_name )
-		  raise ::Rmagnets::Bindings::Exception::BindingAlreadyDefinedError,
+		  raise ::Magnets::Bindings::Exception::BindingAlreadyDefinedError,
 		          'Binding already defined for :' + binding_name.to_s + ' in instance ' +
 		          self.inspect + '.'
     end
     
-		new_binding = ::Rmagnets::Bindings::Binding.new( self,
+    if ::Magnets::Bindings::ProhibitedNames.has_key?( binding_name.to_sym )
+      raise ::ArgumentError, 'Cannot declare :' + binding_name.to_s + ' as a binding - prohibited' +
+                             ' to prevent errors that are very difficult to debug.'
+    end
+    
+		new_binding = ::Magnets::Bindings::Binding.new( self,
 		                                                 binding_name,
 		                                                 view_class,
 		                                                 & configuration_proc )
@@ -260,9 +265,9 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
     
 	end
 	
-	####################
-  #  create_binding  #
-  ####################
+	##########################################
+  #  create_binding_from_binding_instance  #
+  ##########################################
 
   def create_binding_from_binding_instance( binding_name, 
                                             binding_instance, 
@@ -270,11 +275,11 @@ module ::Rmagnets::Bindings::ClassInstance::Bindings
     
     binding_instance.__name__ = binding_name
     
-		binding_configurations[ binding_name ] = binding_instance
+		__binding_configurations__[ binding_name ] = binding_instance
 		
     declare_class_binding_getter( binding_name )
-		declare_binding_setter( binding_name, binding_instance )
-		declare_binding_getter( binding_name, binding_instance )
+		declare_binding_setter( binding_name )
+		declare_binding_getter( binding_name )
     
     if also_create_view_methods
 
