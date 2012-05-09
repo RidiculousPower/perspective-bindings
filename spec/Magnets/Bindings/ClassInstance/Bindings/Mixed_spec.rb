@@ -12,6 +12,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Mixed do
         include ::Magnets::Bindings::ObjectInstance
         extend ::Magnets::Bindings::ClassInstance::Bindings
         extend ::Magnets::Bindings::ClassInstance::Bindings::Mixed
+        attr_reader :to_html_node
       end
     end
   end
@@ -98,7 +99,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Mixed do
     instance.some_mixed = :symbol
     instance.some_mixed = nil
 
-    instance.class.__binding_configuration__( :some_mixed ).ensure_binding_render_value_valid( instance.some_mixed )
+    instance.class.__binding_configuration__( :some_mixed ).__ensure_render_value_valid__( instance.some_mixed )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Mixed::Mock
 
@@ -132,7 +133,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Mixed do
     instance.some_mixeds = [ 42, :symbol, 'string' ]
     Proc.new { instance.some_mixeds = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
 
-    instance.class.__binding_configuration__( :some_mixeds ).ensure_binding_render_value_valid( instance.some_mixeds )
+    instance.class.__binding_configuration__( :some_mixeds ).__ensure_render_value_valid__( instance.some_mixeds )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Mixed::Mock
 
@@ -165,7 +166,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Mixed do
     instance.some_required_mixed = 'string'
     instance.some_required_mixed = :symbol
     instance.some_required_mixed = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_mixed ).ensure_binding_render_value_valid( instance.some_required_mixed ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_mixed ).__ensure_render_value_valid__( instance.some_required_mixed ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Mixed::Mock
 
@@ -201,7 +202,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Mixed do
     instance.some_required_mixeds = 'string'
     instance.some_required_mixeds = :symbol
     instance.some_required_mixeds = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_mixeds ).ensure_binding_render_value_valid( instance.some_required_mixeds ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_mixeds ).__ensure_render_value_valid__( instance.some_required_mixeds ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Mixed::Mock
 

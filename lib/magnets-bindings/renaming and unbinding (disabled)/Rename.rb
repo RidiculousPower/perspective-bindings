@@ -26,23 +26,21 @@ module ::Magnets::Bindings::ClassInstance::Rename
       
     else
     
-      existing_binding_instance = __binding_configurations__.delete( existing_name )
+      existing_binding_instance = __bindings__.delete( existing_name )
 
       remove_binding_methods( existing_name )
       
       create_corresponding_view = false
       
-      if corresponding_binding_name = existing_binding_instance.__corresponding_view_binding__
+      if existing_corresponding_instance = existing_binding_instance.__corresponding_view_binding__
 
-        existing_corresponding_instance = __binding_configurations__[ corresponding_binding_name ]
-
-        attr_unbind( corresponding_binding_name )
+        attr_unbind( existing_corresponding_instance.__name__ )
         
         create_corresponding_view = true
         
       end
 
-      create_binding_from_binding_instance( new_name, 
+      __create_binding_with_instance__( new_name, 
                                             existing_binding_instance, 
                                             create_corresponding_view )
       

@@ -12,6 +12,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Text do
         include ::Magnets::Bindings::ObjectInstance
         extend ::Magnets::Bindings::ClassInstance::Bindings
         extend ::Magnets::Bindings::ClassInstance::Bindings::Text
+        attr_reader :to_html_node
       end
     end
   end
@@ -54,7 +55,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Text do
     instance.some_text = 'text'
     instance.some_text = :text
 
-    instance.class.__binding_configuration__( :some_text ).ensure_binding_render_value_valid( instance.some_text )
+    instance.class.__binding_configuration__( :some_text ).__ensure_render_value_valid__( instance.some_text )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Text::Mock
 
@@ -89,7 +90,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Text do
     instance.some_texts = [ 'text', :text ]
     Proc.new { instance.some_texts = [ Object, :text ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
 
-    instance.class.__binding_configuration__( :some_texts ).ensure_binding_render_value_valid( instance.some_texts )
+    instance.class.__binding_configuration__( :some_texts ).__ensure_render_value_valid__( instance.some_texts )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Text::Mock
 
@@ -121,7 +122,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Text do
     instance.some_required_text = 'text'
     instance.some_required_text = :text
     instance.some_required_text = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_text ).ensure_binding_render_value_valid( instance.some_required_text ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_text ).__ensure_render_value_valid__( instance.some_required_text ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Text::Mock
 
@@ -156,7 +157,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Text do
     instance.some_required_texts = :text
     instance.some_required_texts = [ 'text', :text ]
     instance.some_required_texts = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_texts ).ensure_binding_render_value_valid( instance.some_required_texts ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_texts ).__ensure_render_value_valid__( instance.some_required_texts ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Text::Mock
 

@@ -12,6 +12,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::File do
         include ::Magnets::Bindings::ObjectInstance
         extend ::Magnets::Bindings::ClassInstance::Bindings
         extend ::Magnets::Bindings::ClassInstance::Bindings::File
+        attr_reader :to_html_node
       end
     end
   end
@@ -53,7 +54,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::File do
     Proc.new { instance.some_file = :some_value }.should raise_error
     instance.some_file = File.open( __FILE__ )
     
-    instance.class.__binding_configuration__( :some_file ).ensure_binding_render_value_valid( instance.some_file )
+    instance.class.__binding_configuration__( :some_file ).__ensure_render_value_valid__( instance.some_file )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::File::Mock
       
@@ -87,7 +88,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::File do
     instance.some_files = [ File.open( __FILE__ ), File.open( __FILE__ ) ]
     Proc.new { instance.some_files = [ Object, :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
     
-    instance.class.__binding_configuration__( :some_files ).ensure_binding_render_value_valid( instance.some_files )
+    instance.class.__binding_configuration__( :some_files ).__ensure_render_value_valid__( instance.some_files )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::File::Mock
 
@@ -118,7 +119,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::File do
     Proc.new { instance.some_required_file = [ File.open( __FILE__ ), :some_other_value ] }.should raise_error
     instance.some_required_file = File.open( __FILE__ )
     instance.some_required_file = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_file ).ensure_binding_render_value_valid( instance.some_required_file ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_file ).__ensure_render_value_valid__( instance.some_required_file ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::File::Mock
 
@@ -152,7 +153,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::File do
     instance.some_required_files = [ File.open( __FILE__ ), File.open( __FILE__ ) ]
     instance.some_required_files = File.open( __FILE__ )
     instance.some_required_files = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_files ).ensure_binding_render_value_valid( instance.some_required_files ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_files ).__ensure_render_value_valid__( instance.some_required_files ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::File::Mock
 

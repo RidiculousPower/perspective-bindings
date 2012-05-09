@@ -12,6 +12,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Integer do
         include ::Magnets::Bindings::ObjectInstance
         extend ::Magnets::Bindings::ClassInstance::Bindings
         extend ::Magnets::Bindings::ClassInstance::Bindings::Integer
+        attr_reader :to_html_node
       end
     end
   end
@@ -53,7 +54,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Integer do
     Proc.new { instance.some_integer = :some_value }.should raise_error
     instance.some_integer = 42
 
-    instance.class.__binding_configuration__( :some_integer ).ensure_binding_render_value_valid( instance.some_integer )
+    instance.class.__binding_configuration__( :some_integer ).__ensure_render_value_valid__( instance.some_integer )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Integer::Mock
 
@@ -87,7 +88,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Integer do
     instance.some_integers = [ 42, 42 ]
     Proc.new { instance.some_integers = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
 
-    instance.class.__binding_configuration__( :some_integers ).ensure_binding_render_value_valid( instance.some_integers )
+    instance.class.__binding_configuration__( :some_integers ).__ensure_render_value_valid__( instance.some_integers )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Integer::Mock
 
@@ -118,7 +119,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Integer do
     Proc.new { instance.some_required_integer = [ 42, :some_other_value ] }.should raise_error
     instance.some_required_integer = 42
     instance.some_required_integer = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_integer ).ensure_binding_render_value_valid( instance.some_required_integer ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_integer ).__ensure_render_value_valid__( instance.some_required_integer ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Integer::Mock
 
@@ -152,7 +153,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Integer do
     instance.some_required_integers = [ 42, 42 ]
     instance.some_required_integers = 42
     instance.some_required_integers = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_integers ).ensure_binding_render_value_valid( instance.some_required_integers ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_integers ).__ensure_render_value_valid__( instance.some_required_integers ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Integer::Mock
 

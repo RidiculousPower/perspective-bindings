@@ -16,12 +16,12 @@ describe ::Magnets::Bindings::ObjectInstance do
 
       attr_binding :some_binding
       
-      __binding_configurations__[ :some_binding ].should_not == nil
+      __bindings__[ :some_binding ].should_not == nil
       class MockClass
         extend ::Magnets::Bindings::ClassInstance
         include ::Magnets::Bindings::ObjectInstance::Mock
-        __binding_configurations__[ :some_binding ].should_not == nil
-        __binding_configurations__[ :some_binding ].should_not == ::Magnets::Bindings::ObjectInstance::Mock.__binding_configuration__( :some_binding )
+        __bindings__[ :some_binding ].should_not == nil
+        __bindings__[ :some_binding ].should_not == ::Magnets::Bindings::ObjectInstance::Mock.__binding_configuration__( :some_binding )
       end
 
       __binding_configuration__( :some_binding ).should_not == nil

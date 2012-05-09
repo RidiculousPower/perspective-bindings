@@ -16,7 +16,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding
 		# class method: return the binding instance
 		::CascadingConfiguration::Methods.define_module_method( self, shared_alias_name ) do
 
-			return __shared_binding_configurations__[ shared_alias_name ]
+			return __shared_bindings__[ shared_alias_name ]
 		  
 		end
     
@@ -44,13 +44,12 @@ module ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding
     
 		::CascadingConfiguration::Methods.define_instance_method( self, write_accessor ) do |object|
       
-      binding_class = ::Magnets::Bindings::Binding
-      binding_context = binding_class.shared_binding_context( shared_alias_name,
-                                                              self, 
-                                                              binding_route,
-                                                              shared_alias_write_accessor )
+      binding_context = ::Magnets::Bindings.binding_context_for_route( shared_alias_name,
+                                                                       self, 
+                                                                       binding_route,
+                                                                       shared_alias_write_accessor )
       
-      return binding_context.__set_binding__( binding_name, object )
+      return binding_context.__set_binding_value__( binding_name, object )
       
     end
 
@@ -74,13 +73,12 @@ module ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding
 		# instance method: return the bound instance
 		::CascadingConfiguration::Methods.define_instance_method( self, shared_alias_name ) do
       
-      binding_class = ::Magnets::Bindings::Binding
-      binding_context = binding_class.shared_binding_context( shared_alias_name,
-                                                              self, 
-                                                              binding_route,
-                                                              binding_name )
+      binding_context = ::Magnets::Bindings.binding_context_for_route( shared_alias_name,
+                                                                       self, 
+                                                                       binding_route,
+                                                                       binding_name )
 
-      return binding_context.__binding__( binding_name )
+      return binding_context.__binding_value__( binding_name )
 		
 		end
 

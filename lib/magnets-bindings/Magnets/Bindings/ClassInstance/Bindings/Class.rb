@@ -13,7 +13,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings::Class
   # 
 	def attr_class( *args, & configuration_proc )
 
-    bindings = create_bindings_for_args( args, & configuration_proc )
+    bindings = __create_bindings_for_args__( *args, & configuration_proc )
 
     bindings.each do |this_binding|
       this_binding.__class_permitted__ = true      

@@ -10,10 +10,12 @@ describe ::Magnets::Bindings::ClassInstance::Bindings do
       class View
         include ::Magnets::Bindings::ObjectInstance
         extend ::Magnets::Bindings::ClassInstance::Bindings
+        attr_reader :to_html_node
       end
       class OtherView
         include ::Magnets::Bindings::ObjectInstance
         extend ::Magnets::Bindings::ClassInstance::Bindings
+        attr_reader :to_html_node
       end
     end
   end
@@ -35,8 +37,8 @@ describe ::Magnets::Bindings::ClassInstance::Bindings do
       configuration_proc_one = Proc.new { puts 'one' }
       configuration_proc_two = Proc.new { puts 'two' }
       
-      some_binding = create_binding( :some_binding, view_class, & configuration_proc_one )
-      some_other_binding = create_binding( :some_other_binding, view_class, & configuration_proc_two )
+      some_binding = __create_binding__( :some_binding, view_class, & configuration_proc_one )
+      some_other_binding = __create_binding__( :some_other_binding, view_class, & configuration_proc_two )
       some_other_binding.__required__ = true
       
       has_binding?( :some_binding ).should == true
@@ -65,7 +67,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings do
   end
 
   ##############################
-  #  create_bindings_for_hash  #
+  #  __create_bindings_for_hash__  #
   ##############################
 
   it 'can create bindings from a hash' do
@@ -77,8 +79,8 @@ describe ::Magnets::Bindings::ClassInstance::Bindings do
       configuration_proc_one = Proc.new { puts 'one' }
       configuration_proc_two = Proc.new { puts 'two' }
       
-      some_binding = create_bindings_for_hash( { :some_binding => view_class }, & configuration_proc_one )[0]
-      some_other_binding = create_bindings_for_hash( { :some_other_binding => view_class }, & configuration_proc_two )[0]
+      some_binding = __create_bindings_for_hash__( { :some_binding => view_class }, & configuration_proc_one )[0]
+      some_other_binding = __create_bindings_for_hash__( { :some_other_binding => view_class }, & configuration_proc_two )[0]
       some_other_binding.__required__ = true
       
       has_binding?( :some_binding ).should == true
@@ -103,7 +105,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings do
   end
 
   ##############################
-  #  create_bindings_for_args  #
+  #  __create_bindings_for_args__  #
   ##############################
 
   it 'can create bindings from args' do
@@ -119,7 +121,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings do
       
       args = [ :some_binding, :another_binding, :yet_another_binding, view_class, { :some_other_binding => other_view_class } ]
       
-      create_bindings_for_args( args, & configuration_proc_one )
+      __create_bindings_for_args__( *args, & configuration_proc_one )
       
       has_binding?( :some_binding ).should == true
       has_binding?( :another_binding ).should == true

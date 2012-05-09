@@ -16,7 +16,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding
 		# class method: return the binding instance
 		::CascadingConfiguration::Methods.define_module_method( self, binding_name ) do
 
-			return __binding_configurations__[ binding_name ]
+			return __bindings__[ binding_name ]
 		  
 		end
 		    
@@ -38,7 +38,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding
     
 		::CascadingConfiguration::Methods.define_instance_method( self, write_accessor ) do |object|
 
-      __set_binding__( binding_name, object )
+      __set_binding_value__( binding_name, object )
       
     end
 
@@ -61,7 +61,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding
 		# instance method: return the bound instance
 		::CascadingConfiguration::Methods.define_instance_method( self, binding_name ) do
 		  
-      return __binding__( binding_name )
+      return __binding_value__( binding_name )
 		
 		end
         

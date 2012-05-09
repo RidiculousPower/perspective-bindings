@@ -39,7 +39,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias
     
 		::CascadingConfiguration::Methods.define_instance_method( self, write_accessor ) do |object|
       
-      return __set_binding__( binding_name, object )
+      return __set_binding_value__( binding_name, object )
       
     end
 

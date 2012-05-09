@@ -8,11 +8,11 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding do
       class << self
         attr_accessor :binding_instance
       end
-      def __set_binding__( binding_name, object )
+      def __set_binding_value__( binding_name, object )
         instance_variable_set( binding_name.variable_name, object )
         return self.class.binding_instance.__ensure_binding_value_valid__( object )
       end
-      def __binding__( binding_name )
+      def __binding_value__( binding_name )
         return instance_variable_get( binding_name.variable_name )
       end
       class InstanceMock
@@ -38,7 +38,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding do
   
   it 'can declare a getter class method' do
     class ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding::Mock
-      def self.__binding_configurations__
+      def self.__bindings__
         return { :binding_name => :configuration_binding }
       end
       declare_class_binding_getter( :binding_name )

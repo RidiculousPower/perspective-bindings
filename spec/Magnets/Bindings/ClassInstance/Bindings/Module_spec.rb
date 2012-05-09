@@ -13,6 +13,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Module do
         include ::Magnets::Bindings::ObjectInstance
         extend ::Magnets::Bindings::ClassInstance::Bindings
         extend ::Magnets::Bindings::ClassInstance::Bindings::Module
+        attr_reader :to_html_node
       end
     end
   end
@@ -54,7 +55,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Module do
     Proc.new { instance.some_module = :some_value }.should raise_error
     instance.some_module = Kernel
     
-    instance.class.__binding_configuration__( :some_module ).ensure_binding_render_value_valid( instance.some_module )
+    instance.class.__binding_configuration__( :some_module ).__ensure_render_value_valid__( instance.some_module )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Module::Mock
       
@@ -88,7 +89,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Module do
     instance.some_modules = [ Kernel, Kernel ]
     Proc.new { instance.some_modules = [ Kernel, :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
     
-    instance.class.__binding_configuration__( :some_modules ).ensure_binding_render_value_valid( instance.some_modules )
+    instance.class.__binding_configuration__( :some_modules ).__ensure_render_value_valid__( instance.some_modules )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Module::Mock
 
@@ -120,7 +121,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Module do
     Proc.new { instance.some_required_module = :some_value }.should raise_error
     instance.some_required_module = Kernel
     instance.some_required_module = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_module ).ensure_binding_render_value_valid( instance.some_required_module ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_module ).__ensure_render_value_valid__( instance.some_required_module ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Module::Mock
 
@@ -154,7 +155,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Module do
     instance.some_required_modules = [ Kernel, Kernel ]
     instance.some_required_modules = Kernel
     instance.some_required_modules = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_modules ).ensure_binding_render_value_valid( instance.some_required_modules ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_modules ).__ensure_render_value_valid__( instance.some_required_modules ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Module::Mock
 

@@ -13,6 +13,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::TrueFalse do
         include ::Magnets::Bindings::ObjectInstance
         extend ::Magnets::Bindings::ClassInstance::Bindings
         extend ::Magnets::Bindings::ClassInstance::Bindings::TrueFalse
+        attr_reader :to_html_node
       end
     end
   end
@@ -55,7 +56,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::TrueFalse do
     instance.some_true_false = true
     instance.some_true_false = false
 
-    instance.class.__binding_configuration__( :some_true_false ).ensure_binding_render_value_valid( instance.some_true_false )
+    instance.class.__binding_configuration__( :some_true_false ).__ensure_render_value_valid__( instance.some_true_false )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::TrueFalse::Mock
 
@@ -90,7 +91,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::TrueFalse do
     instance.some_true_falses = [ true, true, false ]
     Proc.new { instance.some_true_falses = [ Object, :true_false, true ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
 
-    instance.class.__binding_configuration__( :some_true_falses ).ensure_binding_render_value_valid( instance.some_true_falses )
+    instance.class.__binding_configuration__( :some_true_falses ).__ensure_render_value_valid__( instance.some_true_falses )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::TrueFalse::Mock
 
@@ -122,7 +123,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::TrueFalse do
     instance.some_required_true_false = true
     instance.some_required_true_false = false
     instance.some_required_true_false = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_true_false ).ensure_binding_render_value_valid( instance.some_required_true_false ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_true_false ).__ensure_render_value_valid__( instance.some_required_true_false ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::TrueFalse::Mock
 
@@ -157,7 +158,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::TrueFalse do
     instance.some_required_true_falses = false
     instance.some_required_true_falses = [ true, false ]
     instance.some_required_true_falses = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_true_falses ).ensure_binding_render_value_valid( instance.some_required_true_falses ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_true_falses ).__ensure_render_value_valid__( instance.some_required_true_falses ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::TrueFalse::Mock
 

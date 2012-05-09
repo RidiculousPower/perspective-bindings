@@ -24,10 +24,10 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias do
           @called_aliased_method = true
         end
       end
-      def __set_binding__( binding_name, object )
+      def __set_binding_value__( binding_name, object )
         @called_aliased_method = true
       end
-      def __binding__( binding_name )
+      def __binding_value__( binding_name )
         @called_aliased_method = true
       end
     end

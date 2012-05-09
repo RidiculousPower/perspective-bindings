@@ -13,13 +13,13 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding do
                                                                 :binding_target,
                                                                 nil )
         end
-        def self.__binding_configurations__
+        def self.__bindings__
           return { :binding_target => __binding_configuration__( :binding_name ) }
         end
-        def self.__shared_binding_configurations__
+        def self.__shared_bindings__
           return { }
         end
-        def self.__shared_binding_configurations__
+        def self.__shared_bindings__
           return { }
         end
         def self.binding_target
@@ -33,11 +33,11 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding do
           @called_binding_target = true
           return @binding_target ||= some_value
         end
-        def __binding__( binding_name )
+        def __binding_value__( binding_name )
           @called_binding_target = true
           return @binding_target ||= :no_value
         end
-        def __set_binding__( binding_name, some_value )
+        def __set_binding_value__( binding_name, some_value )
           @called_binding_target = true
           return @binding_target ||= some_value
         end
@@ -52,20 +52,20 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding do
                                                               :binding_name,
                                                               ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock::BindingViewMock )
       end
-      def self.__binding_configurations__
+      def self.__bindings__
         return { }
       end
-      def self.__shared_binding_configurations__
+      def self.__shared_bindings__
         return { :binding_name => __binding_configuration__( :binding_name ) }
       end
       def self.binding_name
         return __binding_configuration__( :binding_name )
       end
-      def __binding__( binding_name )
+      def __binding_value__( binding_name )
         @called_binding_name = true
         return @binding_name_mock ||= BindingViewMock.new
       end
-      def __set_binding__( binding_name, some_value )
+      def __set_binding_value__( binding_name, some_value )
         @called_binding_name = true
       end
       def binding_name
@@ -91,7 +91,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding do
     class ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding::Mock
       declare_class_shared_binding_getter( :binding_alias )
       respond_to?( :binding_alias ).should == true
-      binding_alias.should == __shared_binding_configurations__[ :binding_alias ]
+      binding_alias.should == __shared_bindings__[ :binding_alias ]
     end
   end
   

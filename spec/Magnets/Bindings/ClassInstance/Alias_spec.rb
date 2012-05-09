@@ -9,12 +9,14 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias do
       extend ::Magnets::Bindings::ClassInstance::Bindings
       extend ::Magnets::Bindings::ClassInstance::Bindings::Binding
       extend ::Magnets::Bindings::ClassInstance::Alias
+      attr_reader :to_html_node
     end
     class ::Magnets::Bindings::ClassInstance::Order::OtherMock
       include ::Magnets::Bindings::ObjectInstance
       extend ::Magnets::Bindings::ClassInstance::Bindings
       extend ::Magnets::Bindings::ClassInstance::Bindings::Binding
       extend ::Magnets::Bindings::ClassInstance::Alias
+      attr_reader :to_html_node
     end
   end
 

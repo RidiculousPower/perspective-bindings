@@ -18,38 +18,38 @@ describe ::Magnets::Bindings::Binding do
 
     class ::Magnets::Bindings::Binding::MockViewC
       @binding_instance = ::Magnets::Bindings::Binding.new( self, :binding_instance )
-      def self.__binding_configurations__
+      def self.__bindings__
         return { :binding_instance => @binding_instance }
       end
-      def self.__shared_binding_configurations__
+      def self.__shared_bindings__
         return { }
       end
     end
     
     class ::Magnets::Bindings::Binding::MockViewB
       @binding_c = ::Magnets::Bindings::Binding.new( self,
-                                                      :binding_C,
-                                                      ::Magnets::Bindings::Binding::MockViewC )
+                                                     :binding_C,
+                                                     ::Magnets::Bindings::Binding::MockViewC )
       @binding_instance = ::Magnets::Bindings::Binding.new( self, :binding_instance )
-      def self.__binding_configurations__
+      def self.__bindings__
         return { :binding_C => @binding_c,
                  :binding_instance => @binding_instance }
       end
-      def self.__shared_binding_configurations__
+      def self.__shared_bindings__
         return { }
       end
     end
     
     class ::Magnets::Bindings::Binding::MockViewA
       @binding_b = ::Magnets::Bindings::Binding.new( self,
-                                                      :binding_B,
-                                                      ::Magnets::Bindings::Binding::MockViewB )
+                                                     :binding_B,
+                                                     ::Magnets::Bindings::Binding::MockViewB )
       @binding_instance = ::Magnets::Bindings::Binding.new( self, :binding_instance )
-      def self.__binding_configurations__
+      def self.__bindings__
         return { :binding_B => @binding_b,
                  :binding_instance => @binding_instance }
       end
-      def self.__shared_binding_configurations__
+      def self.__shared_bindings__
         return { }
       end
     end
@@ -61,7 +61,7 @@ describe ::Magnets::Bindings::Binding do
       @binding_b.binding_C.should_not == nil
       
       @binding_b.binding_C.should_not == ::Magnets::Bindings::Binding::MockViewB.instance_variable_get( :@binding_c )
-      
+
       ::CascadingConfiguration::Variable.ancestor( @binding_b.binding_C, :__name__ ).should == ::Magnets::Bindings::Binding::MockViewB.instance_variable_get( :@binding_c )
       ::CascadingConfiguration::Variable.ancestor( @binding_b.binding_C, :required? ).should == ::Magnets::Bindings::Binding::MockViewB.instance_variable_get( :@binding_c )
       

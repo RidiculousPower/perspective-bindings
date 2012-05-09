@@ -14,7 +14,9 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Binding do
         extend ::Magnets::Bindings::ClassInstance::Bindings
         extend ::Magnets::Bindings::ClassInstance::Bindings::Binding
         extend ::Magnets::Bindings::ClassInstance::Bindings::View
-        attr_accessor :content
+        attr_accessor :content, :to_html_node
+        def autobind( object )
+        end
       end
     end
   end
@@ -46,20 +48,10 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Binding do
       respond_to?( :some_binding ).should == true
       method_defined?( :some_binding ).should == true
 
-      has_binding?( :some_binding_view ).should == false
-      respond_to?( :some_binding_view ).should == false
-      method_defined?( :some_binding_view ).should == false
-
       has_binding?( :some_other_binding ).should == true
       __binding_configuration__( :some_other_binding ).required?.should == false
       respond_to?( :some_other_binding ).should == true
       method_defined?( :some_other_binding ).should == true
-
-      has_binding?( :some_other_binding_view ).should == true
-      __binding_configuration__( :some_other_binding_view ).required?.should == false
-      respond_to?( :some_other_binding_view ).should == true
-      method_defined?( :some_other_binding_view ).should == true
-      __binding_configuration__( :some_other_binding_view ).__view_class__.should == ::Magnets::Bindings::ClassInstance::Bindings::Binding::Mock::View
 
       has_binding?( :another_binding ).should == false      
 
@@ -78,17 +70,14 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Binding do
     end
     
     instance = ::Magnets::Bindings::ClassInstance::Bindings::Binding::Mock.new
-    instance.some_other_binding_view.is_a?( ::Magnets::Bindings::ClassInstance::Bindings::Binding::Mock::View ).should == true
 
     Proc.new { instance.some_binding = [ :some_value, :some_other_value ] }.should raise_error
     instance.some_binding = :some_value
     
     # prove corresponding views work - this should only be necessary to prove once
-    instance.class.__binding_configuration__( :some_binding ).ensure_binding_render_value_valid( instance.some_binding )
+    instance.class.__binding_configuration__( :some_binding ).__ensure_render_value_valid__( instance.some_binding )
     instance.some_other_binding = :some_value
     instance.__ensure_binding_render_values_valid__
-    instance.some_other_binding_view.is_a?( ::Magnets::Bindings::ClassInstance::Bindings::Binding::Mock::View ).should == true
-    instance.some_other_binding_view.content.should == :some_value
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Binding::Mock
       
@@ -108,10 +97,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Binding do
       
       attr_bindings :some_bindings
 
-      has_binding?( :some_bindings_view ).should == false
-      respond_to?( :some_bindings_view ).should == false
-      method_defined?( :some_bindings_view ).should == false
-      
       has_binding?( :some_bindings ).should == true
       binding_instance = __binding_configuration__( :some_bindings )
       binding_instance.required?.should == false
@@ -123,7 +108,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Binding do
     instance.some_bindings = [ :some_value, :some_other_value ]
     instance.some_bindings = :some_value
     
-    instance.class.__binding_configuration__( :some_bindings ).ensure_binding_render_value_valid( instance.some_bindings )
+    instance.class.__binding_configuration__( :some_bindings ).__ensure_render_value_valid__( instance.some_bindings )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Binding::Mock
 
@@ -143,10 +128,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Binding do
       
       attr_required_binding :some_required_binding
       
-      has_binding?( :some_required_binding_view ).should == false
-      respond_to?( :some_required_binding_view ).should == false
-      method_defined?( :some_required_binding_view ).should == false
-      
       has_binding?( :some_required_binding ).should == true
       binding_instance = __binding_configuration__( :some_required_binding )
       binding_instance.required?.should == true
@@ -158,7 +139,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Binding do
     Proc.new { instance.some_required_binding = [ :some_value, :some_other_value ] }.should raise_error
     instance.some_required_binding = :some_value
     instance.some_required_binding = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_binding ).ensure_binding_render_value_valid( instance.some_required_binding ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_binding ).__ensure_render_value_valid__( instance.some_required_binding ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Binding::Mock
 
@@ -178,10 +159,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Binding do
       
       attr_required_bindings :some_required_bindings
 
-      has_binding?( :some_required_bindings_view ).should == false
-      respond_to?( :some_required_bindings_view ).should == false
-      method_defined?( :some_required_bindings_view ).should == false
-      
       has_binding?( :some_required_bindings ).should == true
       binding_instance = __binding_configuration__( :some_required_bindings )
       binding_instance.required?.should == true
@@ -193,7 +170,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Binding do
     instance.some_required_bindings = [ :some_value, :some_other_value ]
     instance.some_required_bindings = :some_value
     instance.some_required_bindings = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_bindings ).ensure_binding_render_value_valid( instance.some_required_bindings ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_bindings ).__ensure_render_value_valid__( instance.some_required_bindings ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Binding::Mock
 

@@ -87,7 +87,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings::Mixed
     end
     
     # create our binding
-    binding = create_binding( binding_name, view_class, & configuration_proc )
+    binding = __create_binding__( binding_name, view_class, & configuration_proc )
     
     # the rest of the args are permitted types
 

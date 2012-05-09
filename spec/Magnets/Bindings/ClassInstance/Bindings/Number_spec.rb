@@ -12,6 +12,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Number do
         include ::Magnets::Bindings::ObjectInstance
         extend ::Magnets::Bindings::ClassInstance::Bindings
         extend ::Magnets::Bindings::ClassInstance::Bindings::Number
+        attr_reader :to_html_node
       end
     end
   end
@@ -56,7 +57,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Number do
     instance.some_number = Complex( 1, 2 )
     instance.some_number = Rational( 2, 3 )
 
-    instance.class.__binding_configuration__( :some_number ).ensure_binding_render_value_valid( instance.some_number )
+    instance.class.__binding_configuration__( :some_number ).__ensure_render_value_valid__( instance.some_number )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Number::Mock
 
@@ -93,7 +94,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Number do
     instance.some_numbers = [ 42, 42.0, Complex( 1, 2 ), Rational( 2, 3 ) ]
     Proc.new { instance.some_numbers = [ Rational( 2, 3 ), 42, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
 
-    instance.class.__binding_configuration__( :some_numbers ).ensure_binding_render_value_valid( instance.some_numbers )
+    instance.class.__binding_configuration__( :some_numbers ).__ensure_render_value_valid__( instance.some_numbers )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Number::Mock
 
@@ -127,7 +128,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Number do
     instance.some_required_number = Complex( 1, 2 )
     instance.some_required_number = Rational( 2, 3 )
     instance.some_required_number = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_number ).ensure_binding_render_value_valid( instance.some_required_number ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_number ).__ensure_render_value_valid__( instance.some_required_number ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Number::Mock
 
@@ -164,7 +165,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Number do
     instance.some_required_numbers = Rational( 2, 3 )
     instance.some_required_numbers = [ 42, 42.0, Complex( 1, 2 ), Rational( 2, 3 ) ]
     instance.some_required_numbers = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_numbers ).ensure_binding_render_value_valid( instance.some_required_numbers ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_numbers ).__ensure_render_value_valid__( instance.some_required_numbers ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Number::Mock
 

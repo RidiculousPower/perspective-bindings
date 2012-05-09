@@ -65,15 +65,27 @@ module ::Magnets::Bindings::ClassInstance::Alias
         declare_aliased_class_binding_getter( binding_alias, existing_binding_or_name )
     		declare_aliased_binding_setter( binding_alias, existing_binding_or_name )
     		declare_aliased_binding_getter( binding_alias, existing_binding_or_name )
-        
+
+        binding_instance = __binding_configuration__( existing_binding_or_name )
+
+        if corresponding_view_binding = binding_instance.__corresponding_view_binding__
+          corresponding_alias_name = ( binding_alias.to_s + '_view' ).to_sym
+          create_binding_alias( corresponding_alias_name, corresponding_view_binding.__name__ )
+        end
+                
       else
 
         shared_binding_instance = existing_binding_or_name
-        __shared_binding_configurations__[ binding_alias ] = shared_binding_instance
+        __shared_bindings__[ binding_alias ] = shared_binding_instance
 
         declare_class_shared_binding_getter( binding_alias )
     		declare_shared_binding_setter( binding_alias, shared_binding_instance )
     		declare_shared_binding_getter( binding_alias, shared_binding_instance )
+
+        if corresponding_view_binding = shared_binding_instance.__corresponding_view_binding__
+          corresponding_alias_name = ( binding_alias.to_s + '_view' ).to_sym
+          create_binding_alias( corresponding_alias_name, corresponding_view_binding.__name__ )
+        end
         
     end
     

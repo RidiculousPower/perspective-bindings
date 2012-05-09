@@ -12,6 +12,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Regexp do
         include ::Magnets::Bindings::ObjectInstance
         extend ::Magnets::Bindings::ClassInstance::Bindings
         extend ::Magnets::Bindings::ClassInstance::Bindings::Regexp
+        attr_reader :to_html_node
       end
     end
   end
@@ -53,7 +54,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Regexp do
     Proc.new { instance.some_regexp = Object }.should raise_error
     instance.some_regexp = /regexp/
 
-    instance.class.__binding_configuration__( :some_regexp ).ensure_binding_render_value_valid( instance.some_regexp )
+    instance.class.__binding_configuration__( :some_regexp ).__ensure_render_value_valid__( instance.some_regexp )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 
@@ -87,7 +88,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Regexp do
     instance.some_regexps = [ /regexp/, /other/ ]
     Proc.new { instance.some_regexps = [ Object, :regexp ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
 
-    instance.class.__binding_configuration__( :some_regexps ).ensure_binding_render_value_valid( instance.some_regexps )
+    instance.class.__binding_configuration__( :some_regexps ).__ensure_render_value_valid__( instance.some_regexps )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 
@@ -118,7 +119,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Regexp do
     Proc.new { instance.some_required_regexp = [ 42, :some_other_value ] }.should raise_error
     instance.some_required_regexp = /regexp/
     instance.some_required_regexp = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_regexp ).ensure_binding_render_value_valid( instance.some_required_regexp ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_regexp ).__ensure_render_value_valid__( instance.some_required_regexp ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 
@@ -152,7 +153,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Regexp do
     instance.some_required_regexps = /regexp/
     instance.some_required_regexps = [ /regexp/, /other/ ]
     instance.some_required_regexps = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_regexps ).ensure_binding_render_value_valid( instance.some_required_regexps ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.class.__binding_configuration__( :some_required_regexps ).__ensure_render_value_valid__( instance.some_required_regexps ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Regexp::Mock
 

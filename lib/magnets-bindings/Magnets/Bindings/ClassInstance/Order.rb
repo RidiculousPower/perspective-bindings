@@ -11,8 +11,10 @@ module ::Magnets::Bindings::ClassInstance::Order
 
     return_value = self
 
-		if binding_order_array.empty? or 
-		   ( binding_order_array.count == 1 and binding_order_array[ 0 ].empty? )
+		if binding_order_array.empty?         or 
+		   ( binding_order_array.count == 1            and 
+		     binding_order_array[ 0 ].is_a?( ::Array ) and
+		     binding_order_array[ 0 ].empty? )
 		
       self.__binding_order_declared_empty__ = true
 		

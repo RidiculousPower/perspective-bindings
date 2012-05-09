@@ -14,8 +14,8 @@ module ::Magnets::Bindings::ClassInstance::Bindings
   include Rational
   include Regexp
   include Text
+  include TextOrNumber
   include TrueFalse
-  include View
 
   include Mixed
     
@@ -32,8 +32,8 @@ module ::Magnets::Bindings::ClassInstance::Bindings
 		has_binding = false
 		
 		# if we have binding, alias, or re-binding
-		if 	__binding_configurations__.has_key?( binding_name )        or 
-		    __shared_binding_configurations__.has_key?( binding_name ) or
+		if 	__bindings__.has_key?( binding_name )        or 
+		    __shared_bindings__.has_key?( binding_name ) or
 		    __binding_aliases__.has_key?( binding_name )
 		
 			has_binding = true
@@ -46,9 +46,9 @@ module ::Magnets::Bindings::ClassInstance::Bindings
 
 	########################################  Bindings  ##############################################
 
-  ###########################
-  #  binding_configuration  #
-  ###########################
+  ###############################
+  #  __binding_configuration__  #
+  ###############################
 
 	def __binding_configuration__( binding_name )
 		
@@ -58,9 +58,9 @@ module ::Magnets::Bindings::ClassInstance::Bindings
 
 	  end
 	  
-	  unless binding_instance = __binding_configurations__[ binding_name ]
+	  unless binding_instance = __bindings__[ binding_name ]
       
-      binding_instance = __shared_binding_configurations__[ binding_name ]
+      binding_instance = __shared_bindings__[ binding_name ]
       
     end
     
@@ -88,18 +88,18 @@ module ::Magnets::Bindings::ClassInstance::Bindings
     		  # we don't automatically delete associated bindings
     		  # nothing else to do
         
-        elsif binding_instance = __shared_binding_configurations__.delete( this_binding_name )
+        elsif binding_instance = __shared_bindings__.delete( this_binding_name )
           
           # nothing else to do here
           
         else
 
-      		binding_instance = __binding_configurations__.delete( this_binding_name )
+      		binding_instance = __bindings__.delete( this_binding_name )
         
           # if we defined a corresponding view at the same time as our binding (we probably did)
           # then remove it as well
-          if corresponding_binding_name = binding_instance.__corresponding_view_binding__
-            attr_unbind( corresponding_binding_name )
+          if corresponding_binding = binding_instance.__corresponding_view_binding__
+            attr_unbind( corresponding_binding.__name__ )
           end
         
         end
@@ -126,16 +126,14 @@ module ::Magnets::Bindings::ClassInstance::Bindings
       private ######################################################################################
   ##################################################################################################
 
-	####################################  Defining Bindings  #########################################
+  ##################################
+  #  __create_bindings_for_args__  #
+  ##################################
 
-  ##############################
-  #  create_bindings_for_args  #
-  ##############################
-
-	def create_bindings_for_args( args, also_create_view_methods = nil, & configuration_proc )
+	def __create_bindings_for_args__( *args, & configuration_proc )
 
 	  bindings = [ ]
-	  
+    
 	  until args.empty?
       
       next_arg = args.shift
@@ -144,9 +142,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings
         
         when ::Hash
         
-          these_bindings = create_bindings_for_hash( next_arg, 
-                                                     also_create_view_methods, 
-                                                     & configuration_proc )
+          these_bindings = __create_bindings_for_hash__( next_arg, & configuration_proc )
           bindings.concat( these_bindings )
         
         when ::Symbol, ::String
@@ -163,9 +159,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings
             
               when ::Hash
             
-                these_bindings = create_bindings_for_hash( next_arg, 
-                                                           also_create_view_methods,
-                                                           & configuration_proc )
+                these_bindings = __create_bindings_for_hash__( next_arg, & configuration_proc )
                 bindings.concat( these_bindings )
                 break
             
@@ -175,14 +169,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings
             
               else
             
-                view_class = next_arg
-                
-                unless view_class.nil?
-                  unless also_create_view_methods == false
-                    also_create_view_methods = true
-                  end
-                end
-                
+                view_class = next_arg                
                 break
             
             end
@@ -190,11 +177,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings
           end
           
           binding_names.each do |this_binding_name|
-            this_binding = create_binding( this_binding_name, 
-                                           view_class,
-                                           true, 
-                                           also_create_view_methods, 
-                                           & configuration_proc )
+            this_binding = __create_binding__( this_binding_name, view_class, & configuration_proc )
             bindings.push( this_binding )
           end
                 
@@ -210,86 +193,61 @@ module ::Magnets::Bindings::ClassInstance::Bindings
     
   end
 
-  ##############################
-  #  create_bindings_for_hash  #
-  ##############################
+  ##################################
+  #  __create_bindings_for_hash__  #
+  ##################################
 
-  def create_bindings_for_hash( hash_instance, 
-                                also_create_view_methods = true, 
-                                & configuration_proc )
+  def __create_bindings_for_hash__( hash_instance, & configuration_proc )
     
     bindings = [ ]
     
     hash_instance.each do |this_binding_name, this_view_class|
-      binding = create_binding( this_binding_name, 
-                                this_view_class, 
-                                true, 
-                                also_create_view_methods, 
-                                & configuration_proc )
-      bindings.push( binding )
+      this_binding = __create_binding__( this_binding_name, this_view_class, & configuration_proc )
+      bindings.push( this_binding )
     end
     
     return bindings
     
   end
 
-  ####################
-  #  create_binding  #
-  ####################
+  ########################
+  #  __create_binding__  #
+  ########################
 
-  def create_binding( binding_name, 
-                      view_class, 
-                      check_for_existing_binding = true, 
-                      also_create_view_methods = false, 
-                      & configuration_proc )
+  def __create_binding__( binding_name, view_class, & configuration_proc )
 
-    if check_for_existing_binding and has_binding?( binding_name )
+    if has_binding?( binding_name )
 		  raise ::Magnets::Bindings::Exception::BindingAlreadyDefinedError,
 		          'Binding already defined for :' + binding_name.to_s + ' in instance ' +
 		          self.inspect + '.'
     end
     
-    if ::Magnets::Bindings::ProhibitedNames.has_key?( binding_name.to_sym )
-      raise ::ArgumentError, 'Cannot declare :' + binding_name.to_s + ' as a binding - prohibited' +
-                             ' to prevent errors that are very difficult to debug.'
-    end
+    new_binding = ::Magnets::Bindings::Binding.new( self, 
+                                                    binding_name, 
+                                                    view_class, 
+                                                    & configuration_proc )
     
-		new_binding = ::Magnets::Bindings::Binding.new( self,
-		                                                 binding_name,
-		                                                 view_class,
-		                                                 & configuration_proc )
-		
-    create_binding_from_binding_instance( binding_name, new_binding, also_create_view_methods )
+    __create_binding_with_instance__( new_binding )
     
     return new_binding
     
 	end
-	
-	##########################################
-  #  create_binding_from_binding_instance  #
-  ##########################################
+  
+	######################################
+  #  __create_binding_with_instance__  #
+  ######################################
 
-  def create_binding_from_binding_instance( binding_name, 
-                                            binding_instance, 
-                                            also_create_view_methods )
+  def __create_binding_with_instance__( binding_instance )
     
-    binding_instance.__name__ = binding_name
+    binding_name = binding_instance.__name__
     
-		__binding_configurations__[ binding_name ] = binding_instance
+		__bindings__[ binding_name ] = binding_instance
 		
     declare_class_binding_getter( binding_name )
 		declare_binding_setter( binding_name )
 		declare_binding_getter( binding_name )
     
-    if also_create_view_methods
-
-      corresponding_view_name = ( binding_name.to_s + '_view' ).to_sym
-
-      binding_instance.__corresponding_view_binding__ = corresponding_view_name
-      
-      attr_view( corresponding_view_name, binding_instance.__view_class__ )
-      
-    end
+    return self
     
   end
   
