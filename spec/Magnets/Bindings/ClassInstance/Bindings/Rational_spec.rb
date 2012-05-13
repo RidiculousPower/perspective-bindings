@@ -5,13 +5,9 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Rational do
 
   before :all do
     class ::Magnets::Bindings::ClassInstance::Bindings::Rational::Mock
-      include ::Magnets::Bindings::ObjectInstance
-      extend ::Magnets::Bindings::ClassInstance::Bindings
-      extend ::Magnets::Bindings::ClassInstance::Bindings::Rational
+      include ::Magnets::Bindings
       class View
-        include ::Magnets::Bindings::ObjectInstance
-        extend ::Magnets::Bindings::ClassInstance::Bindings
-        extend ::Magnets::Bindings::ClassInstance::Bindings::Rational
+        include ::Magnets::Bindings
         attr_reader :to_html_node
       end
     end
@@ -77,7 +73,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Rational do
       has_binding?( :some_rationals ).should == true
       binding_instance = __binding_configuration__( :some_rationals )
       binding_instance.required?.should == false
-      binding_instance.multiple_values_permitted?.should == true
 
     end
     
@@ -111,7 +106,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Rational do
       has_binding?( :some_required_rational ).should == true
       binding_instance = __binding_configuration__( :some_required_rational )
       binding_instance.required?.should == true
-      binding_instance.multiple_values_permitted?.should == false
 
     end
     
@@ -119,7 +113,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Rational do
     Proc.new { instance.some_required_rational = [ Rational( 4, 2 ), :some_other_value ] }.should raise_error
     instance.some_required_rational = Rational( 4, 2 )
     instance.some_required_rational = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_rational ).__ensure_render_value_valid__( instance.some_required_rational ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.__ensure_binding_render_values_valid__ }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Rational::Mock
 
@@ -142,7 +136,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Rational do
       has_binding?( :some_required_rationals ).should == true
       binding_instance = __binding_configuration__( :some_required_rationals )
       binding_instance.required?.should == true
-      binding_instance.multiple_values_permitted?.should == true
 
     end
     
@@ -153,7 +146,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Rational do
     instance.some_required_rationals = [ Rational( 4, 2 ), Rational( 3, 7 ) ]
     instance.some_required_rationals = Rational( 4, 2 )
     instance.some_required_rationals = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_rationals ).__ensure_render_value_valid__( instance.some_required_rationals ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.__ensure_binding_render_values_valid__ }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Rational::Mock
 

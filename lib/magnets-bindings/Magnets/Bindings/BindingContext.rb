@@ -22,7 +22,11 @@ module ::Magnets::Bindings::BindingContext
         	      ' (' + binding_context.inspect + '). '
       end
       
-      binding_context = binding_context.__binding__( this_binding_route_part )
+      if binding_context.respond_to?( :__binding__ )
+        binding_context = binding_context.__binding__( this_binding_route_part )
+      else
+        binding_context = binding_context.__binding_value__( this_binding_route_part )
+      end
 
       route_successfully_mapped.push( this_binding_route_part )
 

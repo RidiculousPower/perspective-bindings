@@ -1,6 +1,22 @@
 
 module ::Magnets::Bindings::Binding::Rendering
 
+  ###################################
+  #  __ensure_render_value_valid__  #
+  ###################################
+
+  def __ensure_render_value_valid__( binding_value )
+    
+    render_value_valid = true
+    
+    if required? and binding_value.nil?
+      render_value_valid = false
+    end
+    
+    return render_value_valid
+    
+  end
+
 	##############################
 	#  __render_binding_value__  #
 	##############################

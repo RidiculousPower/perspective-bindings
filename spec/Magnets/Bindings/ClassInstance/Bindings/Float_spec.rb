@@ -5,13 +5,9 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Float do
 
   before :all do
     class ::Magnets::Bindings::ClassInstance::Bindings::Float::Mock
-      include ::Magnets::Bindings::ObjectInstance
-      extend ::Magnets::Bindings::ClassInstance::Bindings
-      extend ::Magnets::Bindings::ClassInstance::Bindings::Float
+      include ::Magnets::Bindings
       class View
-        include ::Magnets::Bindings::ObjectInstance
-        extend ::Magnets::Bindings::ClassInstance::Bindings
-        extend ::Magnets::Bindings::ClassInstance::Bindings::Float
+        include ::Magnets::Bindings
         attr_reader :to_html_node
       end
     end
@@ -77,7 +73,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Float do
       has_binding?( :some_floats ).should == true
       binding_instance = __binding_configuration__( :some_floats )
       binding_instance.required?.should == false
-      binding_instance.multiple_values_permitted?.should == true
 
     end
 
@@ -111,7 +106,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Float do
       has_binding?( :some_required_float ).should == true
       binding_instance = __binding_configuration__( :some_required_float )
       binding_instance.required?.should == true
-      binding_instance.multiple_values_permitted?.should == false
 
     end
 
@@ -119,7 +113,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Float do
     Proc.new { instance.some_required_float = [ 42.0, :some_other_value ] }.should raise_error
     instance.some_required_float = 42.0
     instance.some_required_float = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_float ).__ensure_render_value_valid__( instance.some_required_float ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.__ensure_binding_render_values_valid__ }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Float::Mock
 
@@ -142,7 +136,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Float do
       has_binding?( :some_required_floats ).should == true
       binding_instance = __binding_configuration__( :some_required_floats )
       binding_instance.required?.should == true
-      binding_instance.multiple_values_permitted?.should == true
 
     end
 
@@ -153,7 +146,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Float do
     instance.some_required_floats = [ 42.0, 42.0 ]
     instance.some_required_floats = 42.0
     instance.some_required_floats = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_floats ).__ensure_render_value_valid__( instance.some_required_floats ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.__ensure_binding_render_values_valid__ }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Float::Mock
 

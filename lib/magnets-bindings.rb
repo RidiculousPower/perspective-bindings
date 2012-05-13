@@ -81,38 +81,23 @@ files = [
   'ClassInstance/Methods/Remove',
   'ClassInstance/Methods',
 
+  'ClassInstance/Bindings',
+
+  'Binding/Definition/Multiple',
   'Binding/Definition/Class',
   'Binding/Definition/Complex',
   'Binding/Definition/File',
   'Binding/Definition/Float',
   'Binding/Definition/Integer',
   'Binding/Definition/Module',
-  'Binding/Definition/Number',
   'Binding/Definition/Rational',
   'Binding/Definition/Regexp',
   'Binding/Definition/Text',
   'Binding/Definition/TrueFalse',
   'Binding/Definition/URI',
+  'Binding/Definition/Number',
   'Binding/Definition/Binding',
   'Binding/Definition',
-  
-  'ClassInstance/Bindings/Binding',
-  'ClassInstance/Bindings/Class',
-  'ClassInstance/Bindings/Complex',
-  'ClassInstance/Bindings/File',
-  'ClassInstance/Bindings/Float',
-  'ClassInstance/Bindings/Integer',
-  'ClassInstance/Bindings/Module',
-  'ClassInstance/Bindings/Number',
-  'ClassInstance/Bindings/Rational',
-  'ClassInstance/Bindings/Regexp',
-  'ClassInstance/Bindings/Text',
-  'ClassInstance/Bindings/TextOrNumber',
-  'ClassInstance/Bindings/TrueFalse',
-  'ClassInstance/Bindings/URL',
-  'ClassInstance/Bindings/Mixed',
-
-  'ClassInstance/Bindings',
 
   'ClassInstance/Alias',
   'ClassInstance/Order',
@@ -137,3 +122,6 @@ files.each do |this_file|
 end
 
 require_relative( basepath + '.rb' )
+
+# And finally define types  
+require_relative( File.join( basepath, 'Types' ) )

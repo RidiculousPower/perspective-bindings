@@ -46,6 +46,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::SharedBinding do
           @called_binding_target = false
           return did_call_binding_target
         end
+        attr_reader :to_html_node
       end
       def self.__binding_configuration__( binding_name )
         return @config ||= ::Magnets::Bindings::Binding.new( self,

@@ -107,20 +107,6 @@ module ::Magnets::Bindings::Binding::Initialization
   def __initialize_default_values__
 
     self.__required__                  = false
-    self.__multiple_values_permitted__ = false
-    self.__text_permitted__            = false
-    self.__number_permitted__          = false
-    self.__integer_permitted__         = false
-    self.__float_permitted__           = false
-    self.__complex_permitted__         = false
-    self.__rational_permitted__        = false
-    self.__regexp_permitted__          = false
-    self.__module_permitted__          = false
-    self.__class_permitted__           = false
-    self.__true_false_permitted__      = false
-    self.__file_permitted__            = false
-    self.__view_permitted__            = false
-    self.__object_permitted__          = false
     
   end
   

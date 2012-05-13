@@ -60,7 +60,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings::Methods::Alias
 		# instance method: return the bound instance
 		::CascadingConfiguration::Methods.define_instance_method( self, binding_alias ) do
       
-      return __binding__( binding_name )
+      return __binding_value__( binding_name )
 		
 		end
 

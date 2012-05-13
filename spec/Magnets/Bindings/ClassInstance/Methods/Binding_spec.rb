@@ -24,9 +24,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding do
           @called_ensure_binding_value_valid = false
           return did_call_ensure_binding_value_valid
         end
-        def __corresponding_view_binding__
-          return nil
-        end
       end
       extend ::Magnets::Bindings::ClassInstance::Bindings::Methods::Binding
     end

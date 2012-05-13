@@ -1,4 +1,4 @@
 
-class ::Magnets::Bindings::Exception::FloatNotPermitted < ::ArgumentError
+class ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError < ::ArgumentError
   
 end

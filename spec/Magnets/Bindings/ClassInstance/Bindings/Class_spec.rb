@@ -5,13 +5,9 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Class do
 
   before :all do
     class ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock
-      include ::Magnets::Bindings::ObjectInstance
-      extend ::Magnets::Bindings::ClassInstance::Bindings
-      extend ::Magnets::Bindings::ClassInstance::Bindings::Class
+      include ::Magnets::Bindings
       class View
-        include ::Magnets::Bindings::ObjectInstance
-        extend ::Magnets::Bindings::ClassInstance::Bindings
-        extend ::Magnets::Bindings::ClassInstance::Bindings::Class
+        include ::Magnets::Bindings
         attr_reader :to_html_node
       end
     end
@@ -77,7 +73,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Class do
       has_binding?( :some_classes ).should == true
       binding_instance = __binding_configuration__( :some_classes )
       binding_instance.required?.should == false
-      binding_instance.multiple_values_permitted?.should == true
 
     end
     
@@ -111,7 +106,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Class do
       has_binding?( :some_required_class ).should == true
       binding_instance = __binding_configuration__( :some_required_class )
       binding_instance.required?.should == true
-      binding_instance.multiple_values_permitted?.should == false
 
     end
     
@@ -120,7 +114,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Class do
     Proc.new { instance.some_required_class = :some_value }.should raise_error
     instance.some_required_class = Class
     instance.some_required_class = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_class ).__ensure_render_value_valid__( instance.some_required_class ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.__ensure_binding_render_values_valid__ }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock
 
@@ -143,7 +137,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Class do
       has_binding?( :some_required_classes ).should == true
       binding_instance = __binding_configuration__( :some_required_classes )
       binding_instance.required?.should == true
-      binding_instance.multiple_values_permitted?.should == true
 
     end
     
@@ -154,7 +147,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Class do
     instance.some_required_classes = [ Object, Class ]
     instance.some_required_classes = Object
     instance.some_required_classes = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_classes ).__ensure_render_value_valid__( instance.some_required_classes ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.__ensure_binding_render_values_valid__ }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Class::Mock
 

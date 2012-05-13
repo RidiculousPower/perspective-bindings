@@ -1,5 +1,7 @@
 
 module ::Magnets::Bindings
+  
+  extend ::Magnets::Bindings::Binding::Definition
 	
 	include ::Magnets::Bindings::ObjectInstance
 	

@@ -2,22 +2,6 @@
 module ::Magnets::Bindings::ClassInstance::Bindings
 
   include Methods
-
-  include Binding
-  include Class
-  include Complex
-  include File
-  include Float
-  include Integer
-  include Module
-  include Number
-  include Rational
-  include Regexp
-  include Text
-  include TextOrNumber
-  include TrueFalse
-
-  include Mixed
     
   #########################################  Status  ###############################################
 	
@@ -95,12 +79,6 @@ module ::Magnets::Bindings::ClassInstance::Bindings
         else
 
       		binding_instance = __bindings__.delete( this_binding_name )
-        
-          # if we defined a corresponding view at the same time as our binding (we probably did)
-          # then remove it as well
-          if corresponding_binding = binding_instance.__corresponding_view_binding__
-            attr_unbind( corresponding_binding.__name__ )
-          end
         
         end
       
@@ -221,7 +199,7 @@ module ::Magnets::Bindings::ClassInstance::Bindings
 		          'Binding already defined for :' + binding_name.to_s + ' in instance ' +
 		          self.inspect + '.'
     end
-    
+
     new_binding = ::Magnets::Bindings::Binding.new( self, 
                                                     binding_name, 
                                                     view_class, 

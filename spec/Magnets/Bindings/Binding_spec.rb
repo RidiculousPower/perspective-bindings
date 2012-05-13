@@ -24,6 +24,7 @@ describe ::Magnets::Bindings::Binding do
       def self.__shared_bindings__
         return { }
       end
+      attr_reader :to_html_node
     end
     
     class ::Magnets::Bindings::Binding::MockViewB
@@ -38,6 +39,7 @@ describe ::Magnets::Bindings::Binding do
       def self.__shared_bindings__
         return { }
       end
+      attr_reader :to_html_node
     end
     
     class ::Magnets::Bindings::Binding::MockViewA
@@ -52,6 +54,7 @@ describe ::Magnets::Bindings::Binding do
       def self.__shared_bindings__
         return { }
       end
+      attr_reader :to_html_node
     end
 
     ::Magnets::Bindings::Binding::MockViewA.instance_eval do

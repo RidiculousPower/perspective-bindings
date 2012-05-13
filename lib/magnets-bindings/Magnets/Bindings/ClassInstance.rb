@@ -1,8 +1,8 @@
 
 module ::Magnets::Bindings::ClassInstance
   
-  include Alias
-  include Bindings
-  include Order
+  include ::Magnets::Bindings::ClassInstance::Alias
+  include ::Magnets::Bindings::ClassInstance::Bindings
+  include ::Magnets::Bindings::ClassInstance::Order
   
 end

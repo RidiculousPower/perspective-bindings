@@ -5,13 +5,9 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::TextOrNumber do
 
   before :all do
     class ::Magnets::Bindings::ClassInstance::Bindings::TextOrNumber::Mock
-      include ::Magnets::Bindings::ObjectInstance
-      extend ::Magnets::Bindings::ClassInstance::Bindings
-      extend ::Magnets::Bindings::ClassInstance::Bindings::TextOrNumber
+      include ::Magnets::Bindings
       class View
-        include ::Magnets::Bindings::ObjectInstance
-        extend ::Magnets::Bindings::ClassInstance::Bindings
-        extend ::Magnets::Bindings::ClassInstance::Bindings::TextOrNumber
+        include ::Magnets::Bindings
         attr_reader :to_html_node
       end
     end
@@ -82,7 +78,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::TextOrNumber do
       has_binding?( :some_text_or_numbers ).should == true
       binding_instance = __binding_configuration__( :some_text_or_numbers )
       binding_instance.required?.should == false
-      binding_instance.multiple_values_permitted?.should == true
 
     end
 
@@ -122,7 +117,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::TextOrNumber do
       has_binding?( :some_required_text_or_number ).should == true
       binding_instance = __binding_configuration__( :some_required_text_or_number )
       binding_instance.required?.should == true
-      binding_instance.multiple_values_permitted?.should == false
 
     end
 
@@ -136,7 +130,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::TextOrNumber do
     instance.some_required_text_or_number = Complex( 1, 2 )
     instance.some_required_text_or_number = nil
     
-    Proc.new { instance.class.__binding_configuration__( :some_required_text_or_number ).__ensure_render_value_valid__( instance.some_required_text_or_number ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.__ensure_binding_render_values_valid__ }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::TextOrNumber::Mock
 
@@ -159,7 +153,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::TextOrNumber do
       has_binding?( :some_required_text_or_numbers ).should == true
       binding_instance = __binding_configuration__( :some_required_text_or_numbers )
       binding_instance.required?.should == true
-      binding_instance.multiple_values_permitted?.should == true
 
     end
 
@@ -175,7 +168,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::TextOrNumber do
     instance.some_required_text_or_numbers = Rational( 1, 2 )
     instance.some_required_text_or_numbers = Complex( 1, 2 )
     instance.some_required_text_or_numbers = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_text_or_numbers ).__ensure_render_value_valid__( instance.some_required_text_or_numbers ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.__ensure_binding_render_values_valid__ }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::TextOrNumber::Mock
 

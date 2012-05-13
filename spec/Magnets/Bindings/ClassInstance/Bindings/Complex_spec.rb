@@ -5,13 +5,9 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Complex do
 
   before :all do
     class ::Magnets::Bindings::ClassInstance::Bindings::Complex::Mock
-      include ::Magnets::Bindings::ObjectInstance
-      extend ::Magnets::Bindings::ClassInstance::Bindings
-      extend ::Magnets::Bindings::ClassInstance::Bindings::Complex
+      include ::Magnets::Bindings
       class View
-        include ::Magnets::Bindings::ObjectInstance
-        extend ::Magnets::Bindings::ClassInstance::Bindings
-        extend ::Magnets::Bindings::ClassInstance::Bindings::Complex
+        include ::Magnets::Bindings
         attr_reader :to_html_node
       end
     end
@@ -77,7 +73,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Complex do
       has_binding?( :some_complexes ).should == true
       binding_instance = __binding_configuration__( :some_complexes )
       binding_instance.required?.should == false
-      binding_instance.multiple_values_permitted?.should == true
 
     end
     
@@ -111,7 +106,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Complex do
       has_binding?( :some_required_complex ).should == true
       binding_instance = __binding_configuration__( :some_required_complex )
       binding_instance.required?.should == true
-      binding_instance.multiple_values_permitted?.should == false
 
     end
     
@@ -119,7 +113,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Complex do
     Proc.new { instance.some_required_complex = [ Complex( 4, 2 ), :some_other_value ] }.should raise_error
     instance.some_required_complex = Complex( 4, 2 )
     instance.some_required_complex = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_complex ).__ensure_render_value_valid__( instance.some_required_complex ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.__ensure_binding_render_values_valid__ }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Complex::Mock
 
@@ -142,7 +136,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Complex do
       has_binding?( :some_required_complexes ).should == true
       binding_instance = __binding_configuration__( :some_required_complexes )
       binding_instance.required?.should == true
-      binding_instance.multiple_values_permitted?.should == true
 
     end
     
@@ -153,7 +146,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Complex do
     instance.some_required_complexes = [ Complex( 4, 2 ), Complex( 3, 7 ) ]
     instance.some_required_complexes = Complex( 4, 2 )
     instance.some_required_complexes = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_complexes ).__ensure_render_value_valid__( instance.some_required_complexes ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.__ensure_binding_render_values_valid__ }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
     
     class ::Magnets::Bindings::ClassInstance::Bindings::Complex::Mock
 

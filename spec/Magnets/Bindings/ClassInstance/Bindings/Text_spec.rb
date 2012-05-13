@@ -5,13 +5,9 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Text do
 
   before :all do
     class ::Magnets::Bindings::ClassInstance::Bindings::Text::Mock
-      include ::Magnets::Bindings::ObjectInstance
-      extend ::Magnets::Bindings::ClassInstance::Bindings
-      extend ::Magnets::Bindings::ClassInstance::Bindings::Text
+      include ::Magnets::Bindings
       class View
-        include ::Magnets::Bindings::ObjectInstance
-        extend ::Magnets::Bindings::ClassInstance::Bindings
-        extend ::Magnets::Bindings::ClassInstance::Bindings::Text
+        include ::Magnets::Bindings
         attr_reader :to_html_node
       end
     end
@@ -78,7 +74,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Text do
       has_binding?( :some_texts ).should == true
       binding_instance = __binding_configuration__( :some_texts )
       binding_instance.required?.should == false
-      binding_instance.multiple_values_permitted?.should == true
 
     end
 
@@ -113,7 +108,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Text do
       has_binding?( :some_required_text ).should == true
       binding_instance = __binding_configuration__( :some_required_text )
       binding_instance.required?.should == true
-      binding_instance.multiple_values_permitted?.should == false
 
     end
 
@@ -122,7 +116,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Text do
     instance.some_required_text = 'text'
     instance.some_required_text = :text
     instance.some_required_text = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_text ).__ensure_render_value_valid__( instance.some_required_text ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.__ensure_binding_render_values_valid__ }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Text::Mock
 
@@ -145,7 +139,6 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Text do
       has_binding?( :some_required_texts ).should == true
       binding_instance = __binding_configuration__( :some_required_texts )
       binding_instance.required?.should == true
-      binding_instance.multiple_values_permitted?.should == true
 
     end
 
@@ -157,7 +150,7 @@ describe ::Magnets::Bindings::ClassInstance::Bindings::Text do
     instance.some_required_texts = :text
     instance.some_required_texts = [ 'text', :text ]
     instance.some_required_texts = nil
-    Proc.new { instance.class.__binding_configuration__( :some_required_texts ).__ensure_render_value_valid__( instance.some_required_texts ) }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
+    Proc.new { instance.__ensure_binding_render_values_valid__ }.should raise_error( ::Magnets::Bindings::Exception::BindingRequired )
 
     class ::Magnets::Bindings::ClassInstance::Bindings::Text::Mock
 

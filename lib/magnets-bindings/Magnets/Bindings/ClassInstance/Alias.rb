@@ -22,7 +22,7 @@ module ::Magnets::Bindings::ClassInstance::Alias
 				
 				new_binding_alias_to_existing_binding_name.each do |new_binding_alias, existing_name|
 
-          create_binding_alias( new_binding_alias, existing_name )
+          __create_binding_alias__( new_binding_alias, existing_name )
           
 				end
 				
@@ -31,7 +31,7 @@ module ::Magnets::Bindings::ClassInstance::Alias
 				new_binding_alias	= new_binding_alias_to_existing_binding_name
 				existing_name    	= new_binding_aliases.shift
 
-        create_binding_alias( new_binding_alias, existing_name )
+        __create_binding_alias__( new_binding_alias, existing_name )
 				
 			end
 			
@@ -45,11 +45,11 @@ module ::Magnets::Bindings::ClassInstance::Alias
       private ######################################################################################
   ##################################################################################################
 
-	##########################
-  #  create_binding_alias  #
-  ##########################
+	##############################
+  #  __create_binding_alias__  #
+  ##############################
 	
-	def create_binding_alias( binding_alias, existing_binding_or_name )
+	def __create_binding_alias__( binding_alias, existing_binding_or_name )
 
     case existing_binding_or_name
       
@@ -60,35 +60,45 @@ module ::Magnets::Bindings::ClassInstance::Alias
       		      'No binding defined for :' + existing_binding_or_name.to_s + '.'
         end
         
-    		__binding_aliases__[ binding_alias ] = existing_binding_or_name
-        
-        declare_aliased_class_binding_getter( binding_alias, existing_binding_or_name )
-    		declare_aliased_binding_setter( binding_alias, existing_binding_or_name )
-    		declare_aliased_binding_getter( binding_alias, existing_binding_or_name )
-
-        binding_instance = __binding_configuration__( existing_binding_or_name )
-
-        if corresponding_view_binding = binding_instance.__corresponding_view_binding__
-          corresponding_alias_name = ( binding_alias.to_s + '_view' ).to_sym
-          create_binding_alias( corresponding_alias_name, corresponding_view_binding.__name__ )
-        end
+        __create_name_alias__( binding_alias, existing_binding_or_name )
                 
       else
 
-        shared_binding_instance = existing_binding_or_name
-        __shared_bindings__[ binding_alias ] = shared_binding_instance
-
-        declare_class_shared_binding_getter( binding_alias )
-    		declare_shared_binding_setter( binding_alias, shared_binding_instance )
-    		declare_shared_binding_getter( binding_alias, shared_binding_instance )
-
-        if corresponding_view_binding = shared_binding_instance.__corresponding_view_binding__
-          corresponding_alias_name = ( binding_alias.to_s + '_view' ).to_sym
-          create_binding_alias( corresponding_alias_name, corresponding_view_binding.__name__ )
-        end
+        __create_shared_binding_alias__( binding_alias, existing_binding_or_name )
         
     end
     
+  end
+  
+  ###########################
+  #  __create_name_alias__  #
+  ###########################
+	
+  def __create_name_alias__( binding_alias, existing_binding_or_name )
+    
+    __binding_aliases__[ binding_alias ] = existing_binding_or_name
+    
+    declare_aliased_class_binding_getter( binding_alias, existing_binding_or_name )
+		declare_aliased_binding_setter( binding_alias, existing_binding_or_name )
+		declare_aliased_binding_getter( binding_alias, existing_binding_or_name )
+
+    binding_instance = __binding_configuration__( existing_binding_or_name )
+		
+  end
+
+	#####################################
+  #  __create_shared_binding_alias__  #
+  #####################################
+  
+  def __create_shared_binding_alias__( binding_alias, existing_binding_or_name )
+
+    shared_binding_instance = existing_binding_or_name
+    __shared_bindings__[ binding_alias ] = shared_binding_instance
+
+    declare_class_shared_binding_getter( binding_alias )
+		declare_shared_binding_setter( binding_alias, shared_binding_instance )
+		declare_shared_binding_getter( binding_alias, shared_binding_instance )
+
   end
   
 end
