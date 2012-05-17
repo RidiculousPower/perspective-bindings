@@ -8,102 +8,80 @@ require 'cascading-configuration-hash'
 require 'cascading-configuration-setting'
 
 module ::Magnets
-	module Bindings
-    class Binding
-      module Definition
-      end
+	module Binding
+	  class ClassBinding
     end
-		module ClassInstance
-      module Bindings
+	  class InstanceBinding
+    end
+	  module Container
+  		module ClassInstance
         module Methods
-          module Declare
-          end
-          module Alias
-          end
-          module Binding
-          end
-          module Remove
-          end
-          module SharedBinding
-          end
         end
-        module Binding
-        end
-        module Class
-        end
-        module Complex
-        end
-        module File
-        end
-        module Float
-        end
-        module Integer
-        end
-        module Module
-        end
-        module Number
-        end
-        module Rational
-        end
-        module Regexp
-        end
-        module Text
-        end
-        module TextOrNumber
-        end
-        module TrueFalse
-        end
-      end
+  		end
+  		module ObjectInstance
+  		end
 		end
-		module ObjectInstance
-		end
+		module Definition
+	  end
 		module Exception
 	  end
 	end
 end
 
-basepath = 'magnets-bindings/Magnets/Bindings'
+basepath = 'magnets-binding/Magnets/Binding'
 
 files = [
+    
+  'Configuration',
   
-  'BindingContext',
+  'ClassBinding/Bindings',
+  'ClassBinding/Configuration',
+  'ClassBinding/Initialization',
+  'ClassBinding',
+
+  'InstanceBinding/BoundInstance',
+  'InstanceBinding/Configuration',
+  'InstanceBinding/Initialization',
+  'InstanceBinding/Validation',
+  'InstanceBinding/Rendering',
+  'InstanceBinding/Value',
+  'InstanceBinding',
+
+  'Definition/Multiple',
+  'Definition/Class',
+  'Definition/Complex',
+  'Definition/File',
+  'Definition/Float',
+  'Definition/Integer',
+  'Definition/Module',
+  'Definition/Rational',
+  'Definition/Regexp',
+  'Definition/Text',
+  'Definition/TrueFalse',
+  'Definition/URI',
+  'Definition/Number',
+  'Definition/Binding',
+  'Definition',
+
+  'Container/ClassInstance/Methods/Binding',
+  'Container/ClassInstance/Methods/Alias',
+  'Container/ClassInstance/Methods/SharedBinding',
+  'Container/ClassInstance/Methods/Remove',
+  'Container/ClassInstance/Methods',
+  'Container/ClassInstance/Bindings',
+  'Container/ClassInstance/Alias',
+  'Container/ClassInstance/Creation',
+  'Container/ClassInstance/Order',
+  'Container/ClassInstance/Unbind',  
+  'Container/ClassInstance',
+
+  'Container/ObjectInstance/Binding',
+  'Container/ObjectInstance/Validation',
+  'Container/ObjectInstance',
   
-  'Binding/SubBindings',
-  'Binding/Configuration',
-  'Binding/Initialization',
-  'Binding/Validation',
-  'Binding/Rendering',
-  'Binding',
+  'Container/Context',
 
-  'ClassInstance/Methods/Binding',
-  'ClassInstance/Methods/Alias',
-  'ClassInstance/Methods/SharedBinding',
-  'ClassInstance/Methods/Remove',
-  'ClassInstance/Methods',
-
-  'ClassInstance/Bindings',
-
-  'Binding/Definition/Multiple',
-  'Binding/Definition/Class',
-  'Binding/Definition/Complex',
-  'Binding/Definition/File',
-  'Binding/Definition/Float',
-  'Binding/Definition/Integer',
-  'Binding/Definition/Module',
-  'Binding/Definition/Rational',
-  'Binding/Definition/Regexp',
-  'Binding/Definition/Text',
-  'Binding/Definition/TrueFalse',
-  'Binding/Definition/URI',
-  'Binding/Definition/Number',
-  'Binding/Definition/Binding',
-  'Binding/Definition',
-
-  'ClassInstance/Alias',
-  'ClassInstance/Order',
-  
-  'ClassInstance',
-  'ObjectInstance',
+  'Container',
   
   'Exception/BindingAlreadyDefinedError',
   'Exception/BindingInstanceInvalidTypeError',
@@ -113,7 +91,9 @@ files = [
   'Exception/BindingOrderEmpty',
   'Exception/NoBindingError',
   'Exception/NumberBindingExpectsNumber',
-  'Exception/ViewClassLacksBindings'
+  'Exception/ViewClassLacksBindings',
+  
+  'Types'
   
 ]
 
@@ -122,6 +102,3 @@ files.each do |this_file|
 end
 
 require_relative( basepath + '.rb' )
-
-# And finally define types  
-require_relative( File.join( basepath, 'Types' ) )

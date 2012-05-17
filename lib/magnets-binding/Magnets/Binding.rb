@@ -1,0 +1,4 @@
+
+module ::Magnets::Binding
+  
+end
