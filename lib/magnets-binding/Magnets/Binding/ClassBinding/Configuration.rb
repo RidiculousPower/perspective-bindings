@@ -3,14 +3,17 @@ module ::Magnets::Binding::ClassBinding::Configuration
 
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Array::Unique
-  
+
+  ccm = ::CascadingConfiguration::Methods
+    
   ####################
   #  view_class      #
   #  __view_class__  #
   ####################
 
   attr_instance_configuration  :__view_class__
-  alias_method  :view_class, :__view_class__
+
+  ccm.alias_instance_method( self, :view_class, :__view_class__ )
 
   #############################
   #  configuration_procs      #
@@ -18,7 +21,8 @@ module ::Magnets::Binding::ClassBinding::Configuration
   #############################
                               
   attr_instance_configuration_unique_array  :__configuration_procs__
-  alias_method  :configuration_procs, :__configuration_procs__
+
+  ccm.alias_instance_method( self, :configuration_procs, :__configuration_procs__ )
 
   ###################
   #  configure      #
@@ -30,6 +34,7 @@ module ::Magnets::Binding::ClassBinding::Configuration
     __configuration_procs__.push( configuration_proc )
     
   end
-  alias_method :configure, :__configure__
+
+  alias_method( :configure, :__configure__ )
 
 end

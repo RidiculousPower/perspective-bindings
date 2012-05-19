@@ -2,64 +2,80 @@
 module ::Magnets::Binding::Configuration
 
   include ::CascadingConfiguration::Setting
+  include ::CascadingConfiguration::Hash
 
-  ##############
-  #  name      #
-  #  __name__  #
-  ##############
-  
-  attr_instance_configuration  :__name__
-  alias_method  :name, :__name__
-  
-  ###################
-  #  required?      #
-  #  required=      #
-  #  __required__=  #
-  ###################
+  ccm = ::CascadingConfiguration::Methods
 
-  attr_instance_configuration  :required? => :__required__=
-  alias_method  :required=, :__required__=
-  
-  ###############
-  #  optional?  #
-  ###############
-  
-  def optional?
-  
-    return ! required?
-  
-  end
-  
   ###############
   #  route      #
   #  __route__  #
   ###############
 
   attr_instance_configuration  :__route__
-  alias_method  :route, :__route__
+
+  ccm.alias_instance_method( self, :route, :__route__ )
 
   ######################
   #  route_string      #
   #  __route_string__  #
   ######################
 
-  attr_reader  :__route_string__
-  alias_method  :route_string, :__route_string__
+  attr_instance_configuration  :__route_string__
 
-  ######################
-  #  sub_bindings      #
-  #  __sub_bindings__  #
-  ######################
+  ccm.alias_instance_method( self, :route_string, :__route_string__ )
 
-  attr_reader  :__sub_bindings__
-  alias_method  :sub_bindings, :__sub_bindings__
+  ##################
+  #  bindings      #
+  #  __bindings__  #
+  ##################
 
-  #############################
-  #  shared_sub_bindings      #
-  #  __shared_sub_bindings__  #
-  #############################
-  
-  attr_reader  :__shared_sub_bindings__
-  alias_method  :shared_sub_bindings, :__shared_sub_bindings__
+	attr_instance_configuration_hash  :__bindings__ do
+
+	  #======================#
+	  #  child_pre_set_hook  #
+	  #======================#
+
+	  def child_pre_set_hook( binding_name, binding_instance )
+
+      child_instance = nil
+
+      case configuration_instance
+
+        when ::Magnets::Binding::Container::ClassInstance, 
+             ::Magnets::Binding::ClassBinding
+
+          binding_instance.instance_eval do
+            # Create a new binding without any settings - causes automatic lookup to superclass.
+            base_route = binding_instance.__route__
+            child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__( base_route )
+          end
+
+        when ::Magnets::Binding::Container::ObjectInstance, 
+             ::Magnets::Binding::InstanceBinding
+
+          child_instance = binding_instance.class::InstanceBinding.new( binding_instance )
+
+      end
+
+
+      return child_instance
+
+    end
+
+  end
+
+  ccm.alias_instance_method( self, :bindings, :__bindings__ )
+
+	#################
+  #  binding      #
+  #  __binding__  #
+  #################
+    
+  def __binding__( binding_name )
+    
+    return __bindings__[ binding_name ]   
+    
+  end
+  alias_method  :binding, :__binding__
   
 end

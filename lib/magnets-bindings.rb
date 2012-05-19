@@ -7,8 +7,12 @@ require 'cascading-configuration-array-unique'
 require 'cascading-configuration-hash'
 require 'cascading-configuration-setting'
 
+require_relative '../../configuration/lib/magnets-configuration.rb'
+
 module ::Magnets
 	module Binding
+	  module Configuration
+    end
 	  class ClassBinding
     end
 	  class InstanceBinding
@@ -32,6 +36,7 @@ basepath = 'magnets-binding/Magnets/Binding'
 
 files = [
     
+  'Configuration/BindingInstance',
   'Configuration',
   
   'ClassBinding/Bindings',
@@ -62,6 +67,8 @@ files = [
   'Definition/Number',
   'Definition/Binding',
   'Definition',
+  
+  'ParseBindingDeclarationArgs',
 
   'Container/ClassInstance/Methods/Binding',
   'Container/ClassInstance/Methods/Alias',
@@ -70,12 +77,11 @@ files = [
   'Container/ClassInstance/Methods',
   'Container/ClassInstance/Bindings',
   'Container/ClassInstance/Alias',
-  'Container/ClassInstance/Creation',
   'Container/ClassInstance/Order',
   'Container/ClassInstance/Unbind',  
   'Container/ClassInstance',
 
-  'Container/ObjectInstance/Binding',
+  'Container/ObjectInstance/Bindings',
   'Container/ObjectInstance/Validation',
   'Container/ObjectInstance',
   

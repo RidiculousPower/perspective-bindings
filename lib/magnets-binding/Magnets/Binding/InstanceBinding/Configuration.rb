@@ -2,6 +2,9 @@
 module ::Magnets::Binding::InstanceBinding::Configuration
 
   include ::CascadingConfiguration::Setting
+  include ::CascadingConfiguration::Hash
+
+  ccm = ::CascadingConfiguration::Methods
   
   ########################
   #  parent_binding      #
@@ -9,6 +12,7 @@ module ::Magnets::Binding::InstanceBinding::Configuration
   ########################
 
   attr_reader  :__parent_binding__
+
   alias_method  :parent_binding, :__parent_binding__
 
   ##############
@@ -17,14 +21,7 @@ module ::Magnets::Binding::InstanceBinding::Configuration
   ##############
 
   attr_instance_configuration  :__view__
-  alias_method  :view, :__view__
 
-  ###############
-  #  value      #
-  #  __value__  #
-  ###############
-
-  attr_reader  :__value__
-  alias_method  :value, :__value__
+  ccm.alias_instance_method( self, :view, :__view__ )
   
 end

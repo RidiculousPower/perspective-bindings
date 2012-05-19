@@ -6,17 +6,9 @@ module ::Magnets::Binding::Container::ClassInstance::Bindings
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Array
   include ::CascadingConfiguration::Hash
+  
+  ccm = ::CascadingConfiguration::Methods
     
-  #######################################
-  #  binding_order_declared_empty?      #
-  #  __binding_order_declared_empty__?  #
-  #######################################
-  
-  attr_module_configuration  :__binding_order_declared_empty__?
-  class << self
-    alias_method  :binding_order_declared_empty?, :__binding_order_declared_empty__?
-  end
-  
   ##################
   #  bindings      #
   #  __bindings__  #
@@ -30,21 +22,21 @@ module ::Magnets::Binding::Container::ClassInstance::Bindings
 	  
 	  def child_pre_set_hook( binding_name, binding_instance )
 
-      child_binding_instance = nil
+      child_instance = nil
 
       configuration_instance.instance_eval do
         # Create a new binding without any settings - causes automatic lookup to superclass.
-        child_binding_instance = binding_instance.__duplicate_as_inheriting_sub_binding__
+        base_route = configuration_instance.__route__
+        child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__( base_route )
       end
       
-      return child_binding_instance
+      return child_instance
       
     end
     
   end
-  class << self
-    alias_method  :bindings, :__bindings__
-  end
+  
+  ccm.alias_module_method( self, :bindings, :__bindings__ )
   
   #########################
   #  shared_bindings      #
@@ -59,21 +51,21 @@ module ::Magnets::Binding::Container::ClassInstance::Bindings
 	  
 	  def child_pre_set_hook( binding_name, binding_instance )
 
-      child_shared_binding_instance = nil
+      child_instance = nil
 
       configuration_instance.instance_eval do
         # Create a new binding without any settings - causes automatic lookup to superclass.
-        child_shared_binding_instance = binding_instance.__duplicate_as_inheriting_sub_binding__
+        base_route = configuration_instance.__route__
+        child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__( base_route )
       end
       
-      return child_shared_binding_instance
+      return child_instance
       
     end
     
   end
-  class << self
-    alias_method  :shared_bindings, :__shared_bindings__
-  end
+  
+  ccm.alias_module_method( self, :shared_bindings, :__shared_bindings__ )
 
   #########################
   #  binding_aliases      #
@@ -81,9 +73,8 @@ module ::Magnets::Binding::Container::ClassInstance::Bindings
   #########################
 
 	attr_module_configuration_hash  :__binding_aliases__
-  class << self
-    alias_method  :binding_aliases, :__binding_aliases__
-  end
+	
+  ccm.alias_module_method( self, :binding_aliases, :__binding_aliases__ )
 
   #######################
   #  binding_order      #
@@ -91,9 +82,17 @@ module ::Magnets::Binding::Container::ClassInstance::Bindings
   #######################
 
   attr_module_configuration_array  :__binding_order__
-  class << self
-    alias_method  :binding_order, :__binding_order__
-  end
+  
+  ccm.alias_module_method( self, :binding_order, :__binding_order__ )
+  
+  #######################################
+  #  binding_order_declared_empty?      #
+  #  __binding_order_declared_empty__?  #
+  #######################################
+  
+  attr_module_configuration  :__binding_order_declared_empty__?
+  
+  ccm.alias_module_method( self, :binding_order_declared_empty?, :__binding_order_declared_empty__ )
   
   #########################################  Status  ###############################################
 	

@@ -9,7 +9,7 @@ module ::Magnets::Binding::InstanceBinding::Rendering
     
     render_value_valid = true
     
-    if required? and binding_value.nil?
+    if required? and __value__.nil?
       render_value_valid = false
     end
     
@@ -27,7 +27,7 @@ module ::Magnets::Binding::InstanceBinding::Rendering
 	  
 	  rendered_binding_value = nil
 	  
-	  case binding_value
+	  case value = __value__
       
       when nil
       
@@ -35,12 +35,12 @@ module ::Magnets::Binding::InstanceBinding::Rendering
       
       when ::String
 
-        rendered_binding_value = binding_value
+        rendered_binding_value = value
         
       when ::Symbol, ::Integer, ::Float, ::Complex, ::Rational, ::Regexp, 
            ::Class, ::Module, ::TrueClass, ::FalseClass
 
-        rendered_binding_value = binding_value.to_s
+        rendered_binding_value = value.to_s
         
       when ::File
         
@@ -48,7 +48,7 @@ module ::Magnets::Binding::InstanceBinding::Rendering
         
       else
         
-        rendered_binding_value = binding_value
+        rendered_binding_value = value
         
     end
     

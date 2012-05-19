@@ -1,7 +1,7 @@
 
 require_relative '../../../lib/magnets-bindings.rb'
 
-describe ::Magnets::Bindings do
+describe ::Magnets::Bindings::Types do
 
   it 'defines types based on binding definitions' do
     # attr_binding

@@ -1,5 +1,5 @@
 
-module ::Magnets::Binding::Container::ObjectInstance::Binding
+module ::Magnets::Binding::Container::ObjectInstance::Bindings
 	
   include ::CascadingConfiguration::Hash
 
@@ -34,31 +34,15 @@ module ::Magnets::Binding::Container::ObjectInstance::Binding
 	  
 	  def child_pre_set_hook( binding_name, binding_instance )
 
-      return self.class::InstanceBinding.new( binding_instance )
+      new_instance_binding = self.class::InstanceBinding.new( binding_instance )
+
+      new_instance_binding.extend( self.class::BindingMethods )
+
+      return new_instance_binding
       
     end
     
   end
   alias_method  :bindings, :__bindings__
-
-  #########################
-  #  shared_bindings      #
-  #  __shared_bindings__  #
-  #########################
-
-	attr_instance_configuration_hash  :__shared_bindings__ do
-	  
-	  #======================#
-	  #  child_pre_set_hook  #
-	  #======================#
-	  
-	  def child_pre_set_hook( binding_name, binding_instance )
-
-      return self.class::InstanceBinding.new( binding_instance )
-      
-    end
-    
-  end
-  alias_method  :shared_bindings, :__shared_bindings__
 
 end
