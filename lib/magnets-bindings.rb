@@ -2,15 +2,13 @@
 require 'uri'
 
 require 'accessor-utilities'
-require 'cascading-configuration-array'
-require 'cascading-configuration-array-unique'
-require 'cascading-configuration-hash'
-require 'cascading-configuration-setting'
+
+require 'cascading-configuration'
 
 require_relative '../../configuration/lib/magnets-configuration.rb'
 
 module ::Magnets
-	module Binding
+	module Bindings
 	  module Configuration
     end
 	  class ClassBinding
@@ -25,17 +23,34 @@ module ::Magnets
   		module ObjectInstance
   		end
 		end
-		module Definition
+		module Attributes
 	  end
 		module Exception
 	  end
 	end
 end
 
-basepath = 'magnets-binding/Magnets/Binding'
+basepath = 'magnets-bindings/Magnets/Bindings'
 
 files = [
-    
+
+  'Attributes/Multiple',
+  'Attributes/Class',
+  'Attributes/Complex',
+  'Attributes/File',
+  'Attributes/Float',
+  'Attributes/Integer',
+  'Attributes/Module',
+  'Attributes/Rational',
+  'Attributes/Regexp',
+  'Attributes/Text',
+  'Attributes/TrueFalse',
+  'Attributes/URI',
+  'Attributes/Number',
+  'Attributes/Binding',
+
+  'Attributes',
+      
   'Configuration/BindingInstance',
   'Configuration',
   
@@ -51,53 +66,27 @@ files = [
   'InstanceBinding/Rendering',
   'InstanceBinding/Value',
   'InstanceBinding',
-
-  'Definition/Multiple',
-  'Definition/Class',
-  'Definition/Complex',
-  'Definition/File',
-  'Definition/Float',
-  'Definition/Integer',
-  'Definition/Module',
-  'Definition/Rational',
-  'Definition/Regexp',
-  'Definition/Text',
-  'Definition/TrueFalse',
-  'Definition/URI',
-  'Definition/Number',
-  'Definition/Binding',
-  'Definition',
-  
-  'ParseBindingDeclarationArgs',
-
-  'Container/ClassInstance/Methods/Binding',
-  'Container/ClassInstance/Methods/Alias',
-  'Container/ClassInstance/Methods/SharedBinding',
-  'Container/ClassInstance/Methods/Remove',
-  'Container/ClassInstance/Methods',
-  'Container/ClassInstance/Bindings',
-  'Container/ClassInstance/Alias',
-  'Container/ClassInstance/Order',
-  'Container/ClassInstance/Unbind',  
-  'Container/ClassInstance',
-
-  'Container/ObjectInstance/Bindings',
-  'Container/ObjectInstance/Validation',
-  'Container/ObjectInstance',
-  
-  'Container/Context',
-
-  'Container',
   
   'Exception/BindingAlreadyDefinedError',
-  'Exception/BindingInstanceInvalidTypeError',
   'Exception/BindingNameExpected',
+
+  'Exception/BindingInstanceInvalidTypeError',
   'Exception/BindingRequired',
-  'Exception/BindingOrderAlreadyIncludesBinding',
   'Exception/BindingOrderEmpty',
   'Exception/NoBindingError',
-  'Exception/NumberBindingExpectsNumber',
-  'Exception/ViewClassLacksBindings',
+  'Exception/ContainerClassLacksBindings',
+  'Exception/AutobindFailed',  
+  
+  'Container/Attributes',
+  'Container/MultipleContainerProxy',
+  'Container/Context',
+  'Container/BindingMethods',
+  'Container/BindingMethods/InstanceBindingMethods',
+  'Container/ClassInstance',
+  'Container/ObjectInstance',
+  'Container',
+  
+  'ParseBindingDeclarationArgs',
   
   'Types'
   
