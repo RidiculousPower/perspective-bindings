@@ -9,7 +9,24 @@ describe ::Magnets::Bindings::Container do
       
       include ::Magnets::Bindings::Container
       
-      attr_text :text_binding
+      class ContentBindingView
+
+        include ::Magnets::Bindings::Container
+        
+        attr_binding :content
+                
+      end
+      
+      class AutobindMultibindingsView
+
+        include ::Magnets::Bindings::Container
+        
+        attr_binding :binding_one, :binding_two
+                
+      end
+      
+      attr_text :text_binding, ::Magnets::Bindings::Container::Mock::ContentBindingView
+      attr_texts :texts_binding, ::Magnets::Bindings::Container::Mock::AutobindMultibindingsView
       
     end
 
@@ -39,10 +56,12 @@ describe ::Magnets::Bindings::Container do
     Magnets::Bindings::Container::Mock.has_binding?( :text_binding ).should == true
 
     instance = ::Magnets::Bindings::Container::Mock.new    
+    
     instance.__bindings__.is_a?( ::Hash ).should == true
     instance.__bindings__[ :text_binding ].is_a?( ::Magnets::Bindings::InstanceBinding ).should == true
     instance.__binding__( :text_binding ).should == instance.__bindings__[ :text_binding ]
     instance.has_binding?( :text_binding ).should == true
+    
   end
 
   ################
@@ -94,6 +113,31 @@ describe ::Magnets::Bindings::Container do
       some_other_binding.should == another_binding.some_other_binding
       
     end
+    
+  end
+
+  ##################
+  #  autobind      #
+  #  __autobind__  #
+  ##################
+
+  it 'can autobind a data object' do
+
+    instance = ::Magnets::Bindings::Container::Mock::ContentBindingView.new    
+    instance.__autobind__( :one )
+    instance.content.__value__.should == :one
+
+    instance = ::Magnets::Bindings::Container::Mock::AutobindMultibindingsView.new
+    data_object = Object.new
+    data_object.define_singleton_method( :binding_one ) do
+      :one
+    end
+    data_object.define_singleton_method( :binding_two ) do
+      :two
+    end
+    instance.__autobind__( data_object )
+    instance.binding_one.__value__.should == :one
+    instance.binding_two.__value__.should == :two
     
   end
 

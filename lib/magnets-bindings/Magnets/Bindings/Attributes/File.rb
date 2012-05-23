@@ -9,7 +9,7 @@ module ::Magnets::Bindings::Attributes::File
     
     binding_value_valid = false
     
-    if binding_value.is_a?( File )
+    if binding_value.is_a?( ::File )
       
       binding_value_valid = true
       

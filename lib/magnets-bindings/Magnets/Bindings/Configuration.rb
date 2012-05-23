@@ -65,16 +65,22 @@ module ::Magnets::Bindings::Configuration
         when ::Magnets::Bindings::Container::ObjectInstance, 
              ::Magnets::Bindings::InstanceBinding
 
-          instance_binding_class = binding_instance.class::InstanceBinding
-
           case binding_instance
             
+            when ::Magnets::Bindings::InstanceBinding
+
+              instance_binding_class = binding_instance.class
+              parent_class_binding = binding_instance.__parent_binding__
+              child_instance = instance_binding_class.new( parent_class_binding )
+              
             when ::Magnets::Bindings::Attributes::Multiple
 
+              instance_binding_class = binding_instance.class::InstanceBinding
               child_instance = instance_binding_class::Multiple.new( binding_instance )
 
             else
 
+              instance_binding_class = binding_instance.class::InstanceBinding
               child_instance = instance_binding_class.new( binding_instance )
 
           end
@@ -203,7 +209,7 @@ module ::Magnets::Bindings::Configuration
                               
   attr_instance_configuration_unique_array  :__configuration_procs__
 
-  ccm.alias_instance_method( self, :configuration_procs, :__configuration_procs__ )
+  ccm.alias_module_and_instance_methods( self, :configuration_procs, :__configuration_procs__ )
 
   ###################
   #  configure      #

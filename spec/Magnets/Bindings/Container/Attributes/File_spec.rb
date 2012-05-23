@@ -8,6 +8,7 @@ describe ::Magnets::Bindings::Types::File do
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
+        attr_accessor :content
       end
     end
   end
@@ -49,8 +50,6 @@ describe ::Magnets::Bindings::Types::File do
     Proc.new { instance.some_file = :some_value }.should raise_error
     instance.some_file = File.open( __FILE__ )
     
-    instance.__binding__( :some_file ).render_value_valid?.should == true
-        
   end
 
   #################
@@ -76,8 +75,6 @@ describe ::Magnets::Bindings::Types::File do
     instance.some_files = [ File.open( __FILE__ ), File.open( __FILE__ ) ]
     Proc.new { instance.some_files = [ Object, :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
     
-    instance.__binding__( :some_files ).render_value_valid?.should == true
-        
   end  
 
   ########################

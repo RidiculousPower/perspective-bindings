@@ -8,6 +8,7 @@ describe ::Magnets::Bindings::Types::Complex do
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
+        attr_accessor :content
       end
     end
   end
@@ -49,8 +50,6 @@ describe ::Magnets::Bindings::Types::Complex do
     Proc.new { instance.some_complex = :some_value }.should raise_error
     instance.some_complex = Complex( 1, 2 )
     
-    instance.__binding__( :some_complex ).render_value_valid?.should == true
-    
   end
 
   ####################
@@ -76,8 +75,6 @@ describe ::Magnets::Bindings::Types::Complex do
     instance.some_complexes = [ Complex( 4, 2 ), Complex( 2, 3 ) ]
     Proc.new { instance.some_complexes = [ Object, :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
     
-    instance.__binding__( :some_complexes ).render_value_valid?.should == true
-        
   end  
 
   ###########################

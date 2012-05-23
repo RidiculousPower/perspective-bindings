@@ -8,6 +8,7 @@ describe ::Magnets::Bindings::Types::Rational do
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
+        attr_accessor :content
       end
     end
   end
@@ -49,8 +50,6 @@ describe ::Magnets::Bindings::Types::Rational do
     Proc.new { instance.some_rational = :some_value }.should raise_error
     instance.some_rational = Rational( 1, 2 )
     
-    instance.__binding__( :some_rational ).render_value_valid?.should == true
-    
   end
 
   ####################
@@ -75,8 +74,6 @@ describe ::Magnets::Bindings::Types::Rational do
     instance.some_rationals = Rational( 1, 4 )
     instance.some_rationals = [ Rational( 4, 2 ), Rational( 2, 3 ) ]
     Proc.new { instance.some_rationals = [ Object, :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    
-    instance.__binding__( :some_rationals ).render_value_valid?.should == true
     
   end  
 

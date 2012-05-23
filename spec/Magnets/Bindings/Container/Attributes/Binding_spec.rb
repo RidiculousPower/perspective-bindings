@@ -93,9 +93,7 @@ describe ::Magnets::Bindings::Types::Binding do
     instance = ::Magnets::Bindings::Types::Binding::Mock.new
     instance.some_bindings = [ :some_value, :some_other_value ]
     instance.some_bindings = :some_value
-    
-    instance.__binding__( :some_bindings ).render_value_valid?.should == true
-    
+        
   end  
 
   ###########################

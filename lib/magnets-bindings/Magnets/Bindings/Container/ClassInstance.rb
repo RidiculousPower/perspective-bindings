@@ -33,7 +33,7 @@ module ::Magnets::Bindings::Container::ClassInstance
 			
 			new_binding_alias_to_existing_binding_name = new_binding_aliases.shift
 			
-			if new_binding_alias_to_existing_binding_name.is_a?( Hash )
+			if new_binding_alias_to_existing_binding_name.is_a?( ::Hash )
 				
 				new_binding_alias_to_existing_binding_name.each do |new_binding_alias, existing_reference|
 

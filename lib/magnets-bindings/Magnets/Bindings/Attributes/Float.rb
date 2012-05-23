@@ -9,7 +9,7 @@ module ::Magnets::Bindings::Attributes::Float
     
     binding_value_valid = false
     
-    if binding_value.is_a?( Float )
+    if binding_value.is_a?( ::Float )
       
       binding_value_valid = true
       

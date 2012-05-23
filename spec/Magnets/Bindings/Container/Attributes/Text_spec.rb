@@ -8,6 +8,7 @@ describe ::Magnets::Bindings::Types::Text do
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
+        attr_accessor :content
       end
     end
   end
@@ -50,8 +51,6 @@ describe ::Magnets::Bindings::Types::Text do
     instance.some_text = 'text'
     instance.some_text = :text
 
-    instance.__binding__( :some_text ).render_value_valid?.should == true
-
   end
 
   ################
@@ -77,8 +76,6 @@ describe ::Magnets::Bindings::Types::Text do
     instance.some_texts = :text
     instance.some_texts = [ 'text', :text ]
     Proc.new { instance.some_texts = [ Object, :text ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-
-    instance.__binding__( :some_texts ).render_value_valid?.should == true
 
   end  
 

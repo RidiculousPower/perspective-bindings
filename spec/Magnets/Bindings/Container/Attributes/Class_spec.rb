@@ -8,6 +8,7 @@ describe ::Magnets::Bindings::Types::Class do
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
+        attr_accessor :content
       end
     end
   end
@@ -49,8 +50,6 @@ describe ::Magnets::Bindings::Types::Class do
     Proc.new { instance.some_class = :some_value }.should raise_error
     instance.some_class = Object
     
-    instance.__binding__( :some_class ).render_value_valid?.should == true
-        
   end
 
   ##################
@@ -75,8 +74,6 @@ describe ::Magnets::Bindings::Types::Class do
     instance.some_classes = Object
     instance.some_classes = [ Object, Class ]
     Proc.new { instance.some_classes = [ Object, :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    
-    instance.__binding__( :some_classes ).render_value_valid?.should == true
     
   end  
 

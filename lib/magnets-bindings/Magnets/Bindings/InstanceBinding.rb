@@ -6,7 +6,6 @@ class ::Magnets::Bindings::InstanceBinding
   
   include ::Magnets::Bindings::InstanceBinding::Initialization
   include ::Magnets::Bindings::InstanceBinding::Configuration
-  include ::Magnets::Bindings::InstanceBinding::Rendering
   include ::Magnets::Bindings::InstanceBinding::Validation
   include ::Magnets::Bindings::InstanceBinding::Value
 

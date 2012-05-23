@@ -7,38 +7,25 @@ describe ::Magnets::Bindings::InstanceBinding do
     class ::Magnets::Bindings::InstanceBinding::ContainerMock
       def self.__bindings__
       end
+      attr_accessor :content, :__parent_binding__
+      def __autobind__( data_object )
+        @content = data_object
+        @__called_autobind__ = true
+      end
+      def __called_autobind__
+        called_autobind = @__called_autobind__
+        @__called_autobind__ = true
+        return called_autobind
+      end
+      def __initialize_for_parent_binding__( parent )
+      end
       module ClassBindingMethods
       end
       module InstanceBindingMethods
       end
       
+      include ::Magnets::Bindings::Attributes::Text
       
-      module Text
-
-        ##########################
-        #  binding_value_valid?  #
-        ##########################
-
-        def binding_value_valid?( binding_value )
-
-          binding_value_valid = false
-
-          if binding_value.is_a?( String ) or binding_value.is_a?( Symbol )
-
-            binding_value_valid = true
-
-          elsif defined?( super )
-
-            binding_value_valid = super
-
-          end
-
-          return binding_value_valid
-
-        end
-
-      end
-
     end
   end
 
@@ -48,8 +35,8 @@ describe ::Magnets::Bindings::InstanceBinding do
   #  __parent_binding__  #
   #  name                #
   #  __name__            #
-  #  container                #
-  #  __container__            #
+  #  container           #
+  #  __container__       #
   #  route               #
   #  __route__           #
   #  route_string        #
@@ -101,40 +88,6 @@ describe ::Magnets::Bindings::InstanceBinding do
 
   end
 
-  ##########################
-  #  value                 #
-  #  __value__             #
-  #  value=                #
-  #  __value__=            #
-  #  binding_value_valid?  #
-  #  render_value_valid?   #
-	#  render_value          #
-	#  __render_value__      #
-  ##########################
-
-  it 'can report whether a binding value is valid for assignment to this binding and accept and return a value, performing this check and raising an exception if it fails and finally translate this value to a string for final output' do
-
-    ::Magnets::Bindings::InstanceBinding.instance_method( :value ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__value__ )
-    ::Magnets::Bindings::InstanceBinding.instance_method( :value= ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__value__= )
-    ::Magnets::Bindings::InstanceBinding.instance_method( :render_value ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__render_value__ )
-
-    class_instance = ::Magnets::Bindings::ClassBinding.new( :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
-    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance )
-    instance.__value__.should == nil
-    instance.binding_value_valid?( :some_value ).should == false
-    Proc.new { instance.__value__ = :some_value }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    instance.extend( ::Magnets::Bindings::InstanceBinding::ContainerMock::Text )
-    instance.binding_value_valid?( :some_value ).should == true
-    instance.__value__ = :some_value
-    instance.__value__.should == :some_value
-    instance.render_value_valid?.should == true
-    instance.__render_value__.should == 'some_value'
-    instance.__value__ = nil
-    instance.__required__ = true
-    instance.render_value_valid?.should == false
-    Proc.new { instance.__value__ = 42 }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-  end
-
   ##################
   #  bindings      #
   #  __bindings__  #
@@ -156,6 +109,49 @@ describe ::Magnets::Bindings::InstanceBinding do
     instance.__bindings__[ :some_binding ].is_a?( ::Magnets::Bindings::InstanceBinding ).should == true
     instance.__binding__( :some_binding ).parent_binding.should == some_binding_instance
     instance.has_binding?( :some_binding ).should == true
+  end
+
+  ##########################
+  #  value                 #
+  #  __value__             #
+  #  value=                #
+  #  __value__=            #
+  #  binding_value_valid?  #
+  ##########################
+
+  it 'can report whether a binding value is valid for assignment to this binding and accept and return a value, performing this check and raising an exception if it fails and finally translate this value to a string for final output' do
+
+    ::Magnets::Bindings::InstanceBinding.instance_method( :value ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__value__ )
+    ::Magnets::Bindings::InstanceBinding.instance_method( :value= ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__value__= )
+
+    class_instance = ::Magnets::Bindings::ClassBinding.new( :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
+    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance )
+    instance.__value__.should == nil
+    instance.binding_value_valid?( :some_value ).should == false
+    Proc.new { instance.__value__ = :some_value }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    instance.extend( ::Magnets::Bindings::Attributes::Text )
+    instance.binding_value_valid?( :some_value ).should == true
+    instance.__value__ = :some_value
+    instance.__value__.should == :some_value
+    instance.__value__ = nil
+    instance.__required__ = true
+    Proc.new { instance.__value__ = 42 }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    instance.__container__.content.should == instance.__value__
+    
+    instance.extend( ::Magnets::Bindings::Attributes::Multiple )
+    
+    instance.__value__ = [ :one, :two, :three, :four ]
+    instance.__container__.is_a?( ::Magnets::Bindings::Container::MultiContainerProxy ).should == true
+    instance.__container__.__count__.should == 4
+    instance.__container__[ 0 ].is_a?( class_instance.__container_class__ ).should == true
+    instance.__container__[ 0 ].content.should == :one
+    instance.__container__[ 1 ].is_a?( class_instance.__container_class__ ).should == true
+    instance.__container__[ 1 ].content.should == :two
+    instance.__container__[ 2 ].is_a?( class_instance.__container_class__ ).should == true
+    instance.__container__[ 2 ].content.should == :three
+    instance.__container__[ 3 ].is_a?( class_instance.__container_class__ ).should == true
+    instance.__container__[ 3 ].content.should == :four
+    
   end
 
 end

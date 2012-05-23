@@ -9,7 +9,7 @@ module ::Magnets::Bindings::Attributes::Complex
     
     binding_value_valid = false
     
-    if binding_value.is_a?( Complex )
+    if binding_value.is_a?( ::Complex )
       
       binding_value_valid = true
       

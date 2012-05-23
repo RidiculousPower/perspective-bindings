@@ -8,6 +8,7 @@ describe ::Magnets::Bindings::Types::Float do
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
+        attr_accessor :content
       end
     end
   end
@@ -49,8 +50,6 @@ describe ::Magnets::Bindings::Types::Float do
     Proc.new { instance.some_float = :some_value }.should raise_error
     instance.some_float = 42.0
 
-    instance.__binding__( :some_float ).render_value_valid?.should == true
-
   end
 
   #################
@@ -75,8 +74,6 @@ describe ::Magnets::Bindings::Types::Float do
     instance.some_floats = 42.0
     instance.some_floats = [ 42.0, 42.0 ]
     Proc.new { instance.some_floats = [ Object, 42.0 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-
-    instance.__binding__( :some_floats ).render_value_valid?.should == true
 
   end  
 

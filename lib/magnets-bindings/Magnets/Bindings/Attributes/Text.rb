@@ -9,7 +9,7 @@ module ::Magnets::Bindings::Attributes::Text
     
     binding_value_valid = false
     
-    if binding_value.is_a?( String ) or binding_value.is_a?( Symbol )
+    if binding_value.is_a?( ::String ) or binding_value.is_a?( ::Symbol )
       
       binding_value_valid = true
       

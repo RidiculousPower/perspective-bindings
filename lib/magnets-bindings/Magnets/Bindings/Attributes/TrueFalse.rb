@@ -9,7 +9,7 @@ module ::Magnets::Bindings::Attributes::TrueFalse
     
     binding_value_valid = false
     
-    if binding_value.is_a?( TrueClass ) or binding_value.is_a?( FalseClass )
+    if binding_value.is_a?( ::TrueClass ) or binding_value.is_a?( ::FalseClass )
       
       binding_value_valid = true
       

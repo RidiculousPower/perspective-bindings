@@ -8,6 +8,7 @@ describe ::Magnets::Bindings::Types::Number do
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
+        attr_accessor :content
       end
     end
   end
@@ -52,8 +53,6 @@ describe ::Magnets::Bindings::Types::Number do
     instance.some_number = Complex( 1, 2 )
     instance.some_number = Rational( 2, 3 )
 
-    instance.__binding__( :some_number ).render_value_valid?.should == true
-
   end
 
   ##################
@@ -81,8 +80,6 @@ describe ::Magnets::Bindings::Types::Number do
     instance.some_numbers = Rational( 2, 3 )
     instance.some_numbers = [ 42, 42.0, Complex( 1, 2 ), Rational( 2, 3 ) ]
     Proc.new { instance.some_numbers = [ Rational( 2, 3 ), 42, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-
-    instance.__binding__( :some_numbers ).render_value_valid?.should == true
 
   end  
 

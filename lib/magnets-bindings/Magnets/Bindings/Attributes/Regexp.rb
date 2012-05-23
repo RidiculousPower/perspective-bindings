@@ -9,7 +9,7 @@ module ::Magnets::Bindings::Attributes::Regexp
     
     binding_value_valid = false
     
-    if binding_value.is_a?( Regexp )
+    if binding_value.is_a?( ::Regexp )
       
       binding_value_valid = true
       

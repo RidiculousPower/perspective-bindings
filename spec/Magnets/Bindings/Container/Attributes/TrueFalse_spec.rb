@@ -9,6 +9,7 @@ describe ::Magnets::Bindings::Types::TrueFalse do
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
+        attr_accessor :content
       end
     end
   end
@@ -51,8 +52,6 @@ describe ::Magnets::Bindings::Types::TrueFalse do
     instance.some_true_false = true
     instance.some_true_false = false
 
-    instance.__binding__( :some_true_false ).render_value_valid?.should == true
-
   end
 
   ######################
@@ -78,8 +77,6 @@ describe ::Magnets::Bindings::Types::TrueFalse do
     instance.some_true_falses = false
     instance.some_true_falses = [ true, true, false ]
     Proc.new { instance.some_true_falses = [ Object, :true_false, true ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-
-    instance.__binding__( :some_true_falses ).render_value_valid?.should == true
 
   end  
 

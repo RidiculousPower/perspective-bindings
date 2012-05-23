@@ -9,6 +9,7 @@ describe ::Magnets::Bindings::Types::Module do
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
+        attr_accessor :content
       end
     end
   end
@@ -50,8 +51,6 @@ describe ::Magnets::Bindings::Types::Module do
     Proc.new { instance.some_module = :some_value }.should raise_error
     instance.some_module = Kernel
     
-    instance.__binding__( :some_module ).render_value_valid?.should == true
-    
   end
 
   ##################
@@ -76,8 +75,6 @@ describe ::Magnets::Bindings::Types::Module do
     instance.some_modules = Kernel
     instance.some_modules = [ Kernel, Kernel ]
     Proc.new { instance.some_modules = [ Kernel, :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    
-    instance.__binding__( :some_modules ).render_value_valid?.should == true
     
   end  
 

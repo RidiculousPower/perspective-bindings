@@ -9,7 +9,7 @@ module ::Magnets::Bindings::Attributes::Rational
     
     binding_value_valid = false
     
-    if binding_value.is_a?( Rational )
+    if binding_value.is_a?( ::Rational )
       
       binding_value_valid = true
       

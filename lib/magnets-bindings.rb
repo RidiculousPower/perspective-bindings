@@ -63,7 +63,6 @@ files = [
   'InstanceBinding/Configuration',
   'InstanceBinding/Initialization',
   'InstanceBinding/Validation',
-  'InstanceBinding/Rendering',
   'InstanceBinding/Value',
   'InstanceBinding',
   
@@ -78,7 +77,7 @@ files = [
   'Exception/AutobindFailed',  
   
   'Container/Attributes',
-  'Container/MultipleContainerProxy',
+  'Container/MultiContainerProxy',
   'Container/Context',
   'Container/BindingMethods',
   'Container/BindingMethods/InstanceBindingMethods',

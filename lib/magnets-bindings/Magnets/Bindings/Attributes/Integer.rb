@@ -9,7 +9,7 @@ module ::Magnets::Bindings::Attributes::Integer
     
     binding_value_valid = false
     
-    if binding_value.is_a?( Integer )
+    if binding_value.is_a?( ::Integer )
       
       binding_value_valid = true
       

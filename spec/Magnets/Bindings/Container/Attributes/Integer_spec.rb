@@ -8,6 +8,7 @@ describe ::Magnets::Bindings::Types::Integer do
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
+        attr_accessor :content
       end
     end
   end
@@ -49,8 +50,6 @@ describe ::Magnets::Bindings::Types::Integer do
     Proc.new { instance.some_integer = :some_value }.should raise_error
     instance.some_integer = 42
 
-    instance.__binding__( :some_integer ).render_value_valid?.should == true
-
   end
 
   ###################
@@ -75,8 +74,6 @@ describe ::Magnets::Bindings::Types::Integer do
     instance.some_integers = 42
     instance.some_integers = [ 42, 42 ]
     Proc.new { instance.some_integers = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-
-    instance.__binding__( :some_integers ).render_value_valid?.should == true
 
   end  
 

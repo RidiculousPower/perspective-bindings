@@ -3,10 +3,6 @@ module ::Magnets::Bindings::Container::ObjectInstance
 
   include ::Magnets::Bindings::Configuration
 
-  include ::CascadingConfiguration::Array::Unique
-
-  attr_configuration_unique_array :__configuration_procs__
-  
   #######################################
   #  __initialize_for_parent_binding__  #
   #######################################
@@ -34,12 +30,19 @@ module ::Magnets::Bindings::Container::ObjectInstance
     
     found_a_binding = false
     
+    if method_map_hash
+      found_a_binding = true
+    end
+    
     # iterate bindings, binding each to method in data_object
     # method_map_hash permits name of method in data_object to be overridden from binding_name
     __bindings__.each do |this_binding_name, this_binding_instance|
 
       if method_map_hash and method_name = method_map_hash[ this_binding_name ]
-
+        
+        # if we are given false/nil instead of a method name, don't look for this binding
+        next unless method_name
+        
         found_a_binding = true
         this_binding_instance.__value__ = data_object.__send__( method_name )
 
@@ -64,8 +67,9 @@ module ::Magnets::Bindings::Container::ObjectInstance
                   'respond to :' + :content.to_s + '.'
         else
           raise ::Magnets::Bindings::Exception::AutobindFailed, 
-                  'Data object did not respond to the name of any declared bindings in ' + 
-                  self.inspect + ', no method map was provided, and ' + self.inspect + 
+                  ':autobind was called on ' + self.inspect + ' but data object did not respond ' +
+                  'to the name of any declared bindings in ' + self.inspect + 
+                  ', no method map was provided, and ' + self.inspect + 
                   ' does not respond to :' + :content.to_s + '.'
         end
       end

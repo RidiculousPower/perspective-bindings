@@ -25,26 +25,26 @@ describe ::Magnets::Bindings::ParseBindingDeclarationArgs do
     result = ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock.parse_binding_declaration_args( :binding_one, ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1 )
     result.should == { :binding_one => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1 }
     result = ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock.parse_binding_declaration_args( :binding_one => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1, 
-                                                                                                   :binding_two => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container2, 
-                                                                                                   :binding_three => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container3 )
+                                                                                                    :binding_two => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container2, 
+                                                                                                    :binding_three => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container3 )
     result.should == { :binding_one => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1, 
                        :binding_two => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container2, 
                        :binding_three => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container3 }
     result = ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock.parse_binding_declaration_args( :binding_one, 
-                                                                                                   :binding_two, 
-                                                                                                   :binding_three => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1 )
+                                                                                                    :binding_two, 
+                                                                                                    :binding_three => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1 )
     result.should == { :binding_one => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1, 
                        :binding_two => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1, 
                        :binding_three => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1 }
     
     result = ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock.parse_binding_declaration_args( :binding_one, 
-                                                                                                   :binding_two, 
-                                                                                                   :binding_three, 
-                                                                                                   :binding_four, ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1,
-                                                                                                   :binding_five, { 
-                                                                                                   :binding_six => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container2,
-                                                                                                   :binding_seven => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container3 },
-                                                                                                   :binding_eight )
+                                                                                                    :binding_two, 
+                                                                                                    :binding_three, 
+                                                                                                    :binding_four, ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1,
+                                                                                                    :binding_five, { 
+                                                                                                    :binding_six => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container2,
+                                                                                                    :binding_seven => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container3 },
+                                                                                                    :binding_eight )
     result.should == { :binding_one => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1, 
                        :binding_two => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1, 
                        :binding_three => ::Magnets::Bindings::ParseBindingDeclarationArgs::Mock::Container1,

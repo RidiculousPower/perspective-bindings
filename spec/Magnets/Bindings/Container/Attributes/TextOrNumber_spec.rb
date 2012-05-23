@@ -8,6 +8,7 @@ describe ::Magnets::Bindings::Types::TextOrNumber do
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
+        attr_accessor :content
       end
     end
   end
@@ -54,8 +55,6 @@ describe ::Magnets::Bindings::Types::TextOrNumber do
     instance.some_text_or_number = Rational( 1, 2 )
     instance.some_text_or_number = Complex( 1, 2 )
 
-    instance.__binding__( :some_text_or_number ).render_value_valid?.should == true
-
   end
 
   ##########################
@@ -86,8 +85,6 @@ describe ::Magnets::Bindings::Types::TextOrNumber do
     instance.some_text_or_numbers = Complex( 1, 2 )
     
     Proc.new { instance.some_text_or_numbers = [ Object, :text ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-
-    instance.__binding__( :some_text_or_numbers ).render_value_valid?.should == true
 
   end  
 

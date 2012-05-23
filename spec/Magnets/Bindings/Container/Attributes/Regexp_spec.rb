@@ -8,6 +8,7 @@ describe ::Magnets::Bindings::Types::Regexp do
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
+        attr_accessor :content
       end
     end
   end
@@ -49,8 +50,6 @@ describe ::Magnets::Bindings::Types::Regexp do
     Proc.new { instance.some_regexp = Object }.should raise_error
     instance.some_regexp = /regexp/
 
-    instance.__binding__( :some_regexp ).render_value_valid?.should == true
-
   end
 
   ##################
@@ -75,8 +74,6 @@ describe ::Magnets::Bindings::Types::Regexp do
     instance.some_regexps = /regexp/
     instance.some_regexps = [ /regexp/, /other/ ]
     Proc.new { instance.some_regexps = [ Object, :regexp ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-
-    instance.__binding__( :some_regexps ).render_value_valid?.should == true
 
   end  
 
