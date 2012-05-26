@@ -3,7 +3,25 @@ module ::Magnets::Bindings::Container::ClassInstance
 
   include ::Magnets::Bindings::Configuration
 
-  extend ::Magnets::Bindings::Attributes
+  ::Magnets::Bindings::Attributes.define_container_type( :bindings ) do
+
+    define_binding_type( :binding,        ::Magnets::Bindings::Attributes::Binding )
+    define_binding_type( :class,          ::Magnets::Bindings::Attributes::Class )
+    define_binding_type( :complex,        ::Magnets::Bindings::Attributes::Complex )
+    define_binding_type( :file,           ::Magnets::Bindings::Attributes::File )
+    define_binding_type( :float,          ::Magnets::Bindings::Attributes::Float )
+    define_binding_type( :integer,        ::Magnets::Bindings::Attributes::Integer )
+    define_binding_type( :module,         ::Magnets::Bindings::Attributes::Module )
+    define_binding_type( :number,         ::Magnets::Bindings::Attributes::Number )
+    define_binding_type( :rational,       ::Magnets::Bindings::Attributes::Rational )
+    define_binding_type( :regexp,         ::Magnets::Bindings::Attributes::Regexp )
+    define_binding_type( :text,           ::Magnets::Bindings::Attributes::Text )
+    define_binding_type( :text_or_number, ::Magnets::Bindings::Attributes::Text,
+                                          ::Magnets::Bindings::Attributes::Number )
+    define_binding_type( :true_false,     ::Magnets::Bindings::Attributes::TrueFalse )
+    define_binding_type( :uri,            ::Magnets::Bindings::Attributes::URI )
+  
+  end
 
   include ::Magnets::Bindings::Attributes.bindings_module( :bindings )
 

@@ -88,29 +88,5 @@ module ::Magnets::Bindings::Attributes
     return bindings_module
     
   end
-      
-  ####################################  Base Attribute Types  ######################################
-	
-	attributes = self
-  
-  define_container_type( :bindings ) do
-
-    define_binding_type( :binding,        attributes::Binding )
-    define_binding_type( :class,          attributes::Class )
-    define_binding_type( :complex,        attributes::Complex )
-    define_binding_type( :file,           attributes::File )
-    define_binding_type( :float,          attributes::Float )
-    define_binding_type( :integer,        attributes::Integer )
-    define_binding_type( :module,         attributes::Module )
-    define_binding_type( :number,         attributes::Number )
-    define_binding_type( :rational,       attributes::Rational )
-    define_binding_type( :regexp,         attributes::Regexp )
-    define_binding_type( :text,           attributes::Text )
-    define_binding_type( :text_or_number, attributes::Text,
-                                          attributes::Number )
-    define_binding_type( :true_false,     attributes::TrueFalse )
-    define_binding_type( :uri,            attributes::URI )
-  
-  end
   
 end
