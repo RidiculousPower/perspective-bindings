@@ -1,6 +1,8 @@
 
 module ::Magnets::Bindings::Attributes::URI
   
+  extend ::Magnets::Bindings::AttributeDefinitionModule
+  
   ##########################
   #  binding_value_valid?  #
   ##########################

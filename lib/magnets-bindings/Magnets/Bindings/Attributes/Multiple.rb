@@ -1,6 +1,8 @@
 
 module ::Magnets::Bindings::Attributes::Multiple
 
+  extend ::Magnets::Bindings::AttributeDefinitionModule
+
   ################
   #  value=      #
   #  __value__=  #

@@ -48,6 +48,8 @@ files = [
   'InstanceBinding/Value',
   'InstanceBinding',
   
+  'AttributeDefinitionModule',
+  
   'AttributesContainer',
 
   'Attributes/Multiple',

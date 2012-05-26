@@ -1,5 +1,7 @@
 
 module ::Magnets::Bindings::Attributes::Binding
+
+  extend ::Magnets::Bindings::AttributeDefinitionModule
   
   include ::Magnets::Bindings::Attributes::Class
   include ::Magnets::Bindings::Attributes::File

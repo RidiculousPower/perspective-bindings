@@ -1,6 +1,8 @@
 
 module ::Magnets::Bindings::Attributes::Integer
 
+  extend ::Magnets::Bindings::AttributeDefinitionModule
+
   ##########################
   #  binding_value_valid?  #
   ##########################
