@@ -152,6 +152,13 @@ describe ::Magnets::Bindings::InstanceBinding do
     instance.__container__[ 3 ].is_a?( class_instance.__container_class__ ).should == true
     instance.__container__[ 3 ].content.should == :four
     
+    second_class_instance = ::Magnets::Bindings::ClassBinding.new( :other_binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
+    second_instance = ::Magnets::Bindings::InstanceBinding.new( second_class_instance )
+    second_instance.extend( ::Magnets::Bindings::Attributes::Text )
+    second_instance.__value__ = :some_value
+    instance.__value__ = second_instance
+    instance.__value__.should == :some_value
+    
   end
 
 end

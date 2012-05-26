@@ -141,4 +141,20 @@ describe ::Magnets::Bindings::Container do
     
   end
 
+  ###############
+  #  configure  #
+  ###############
+
+  it 'can define configuration procs to be run before rendering' do
+    rspec = self
+    class ::Magnets::Bindings::Container::Mock
+      include ::Magnets::Bindings::Container
+      configuration_proc = Proc.new do
+        configuration_method
+      end
+      configure( & configuration_proc )
+      __configuration_procs__[ 0 ].should == configuration_proc
+    end
+  end
+
 end

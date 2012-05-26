@@ -3,36 +3,52 @@ require 'uri'
 
 require 'accessor-utilities'
 
-require 'cascading-configuration'
+#require 'cascading-configuration'
+$__cascading_configuration__spec__development = true
+require_relative '../../../ruby/cascading-configuration/lib/cascading-configuration.rb'
 
 require_relative '../../configuration/lib/magnets-configuration.rb'
 
-module ::Magnets
-	module Bindings
-	  module Configuration
-    end
-	  class ClassBinding
-    end
-	  class InstanceBinding
-    end
-	  module Container
-  		module ClassInstance
-        module Methods
-        end
-  		end
-  		module ObjectInstance
-  		end
+module ::Magnets::Bindings
+  module Configuration
+  end
+  class ClassBinding
+  end
+  class InstanceBinding
+  end
+  module Container
+		module ClassInstance
+      module Methods
+      end
 		end
-		module Attributes
-	  end
-		module Exception
-	  end
+		module ObjectInstance
+		end
 	end
+	module Attributes
+  end
+	module Exception
+  end
 end
 
 basepath = 'magnets-bindings/Magnets/Bindings'
 
 files = [
+
+  'Configuration/BindingInstance',
+  'Configuration',
+  
+  'ClassBinding/Bindings',
+  'ClassBinding/Configuration',
+  'ClassBinding/Initialization',
+  'ClassBinding',
+
+  'InstanceBinding/Configuration',
+  'InstanceBinding/Initialization',
+  'InstanceBinding/Validation',
+  'InstanceBinding/Value',
+  'InstanceBinding',
+  
+  'AttributesContainer',
 
   'Attributes/Multiple',
   'Attributes/Class',
@@ -50,33 +66,7 @@ files = [
   'Attributes/Binding',
 
   'Attributes',
-      
-  'Configuration/BindingInstance',
-  'Configuration',
   
-  'ClassBinding/Bindings',
-  'ClassBinding/Configuration',
-  'ClassBinding/Initialization',
-  'ClassBinding',
-
-  'InstanceBinding/BoundInstance',
-  'InstanceBinding/Configuration',
-  'InstanceBinding/Initialization',
-  'InstanceBinding/Validation',
-  'InstanceBinding/Value',
-  'InstanceBinding',
-  
-  'Exception/BindingAlreadyDefinedError',
-  'Exception/BindingNameExpected',
-
-  'Exception/BindingInstanceInvalidTypeError',
-  'Exception/BindingRequired',
-  'Exception/BindingOrderEmpty',
-  'Exception/NoBindingError',
-  'Exception/ContainerClassLacksBindings',
-  'Exception/AutobindFailed',  
-  
-  'Container/Attributes',
   'Container/MultiContainerProxy',
   'Container/Context',
   'Container/BindingMethods',
@@ -86,8 +76,16 @@ files = [
   'Container',
   
   'ParseBindingDeclarationArgs',
-  
-  'Types'
+
+  'Exception/BindingAlreadyDefinedError',
+  'Exception/BindingNameExpected',
+
+  'Exception/BindingInstanceInvalidTypeError',
+  'Exception/BindingRequired',
+  'Exception/BindingOrderEmpty',
+  'Exception/NoBindingError',
+  'Exception/ContainerClassLacksBindings',
+  'Exception/AutobindFailed'
   
 ]
 

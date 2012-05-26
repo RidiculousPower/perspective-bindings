@@ -1,10 +1,10 @@
 
 require_relative '../../../../../lib/magnets-bindings.rb'
 
-describe ::Magnets::Bindings::Types::Binding do
+describe ::Magnets::Bindings::AttributesContainer::Bindings::Binding do
 
   before :all do
-    class ::Magnets::Bindings::Types::Binding::Mock
+    class ::Magnets::Bindings::AttributesContainer::Bindings::Binding::Mock
       include ::Magnets::Bindings::Container
       class Container
         include ::Magnets::Bindings::Container
@@ -27,7 +27,7 @@ describe ::Magnets::Bindings::Types::Binding do
   
   it 'can define bindings' do
     
-    class ::Magnets::Bindings::Types::Binding::Mock
+    class ::Magnets::Bindings::AttributesContainer::Bindings::Binding::Mock
       
       proc_ran = false
       config_proc = Proc.new do
@@ -35,7 +35,7 @@ describe ::Magnets::Bindings::Types::Binding do
       end
       
       attr_binding :some_binding, & config_proc
-      attr_binding :some_other_binding, ::Magnets::Bindings::Types::Binding::Mock::Container, & config_proc
+      attr_binding :some_other_binding, ::Magnets::Bindings::AttributesContainer::Bindings::Binding::Mock::Container, & config_proc
       
       has_binding?( :some_binding ).should == true
       __binding__( :some_binding ).required?.should == false
@@ -56,14 +56,14 @@ describe ::Magnets::Bindings::Types::Binding do
       config.__container_class__.should == nil
 
       other_config = __binding__( :some_other_binding )
-      other_config.__container_class__.should == ::Magnets::Bindings::Types::Binding::Mock::Container
+      other_config.__container_class__.should == ::Magnets::Bindings::AttributesContainer::Bindings::Binding::Mock::Container
       some_other_binding.__container_class__.should == other_config.__container_class__
       
       has_binding?( :some_binding ).should == true
 
     end
     
-    instance = ::Magnets::Bindings::Types::Binding::Mock.new
+    instance = ::Magnets::Bindings::AttributesContainer::Bindings::Binding::Mock.new
 
     Proc.new { instance.some_binding = [ :some_value, :some_other_value ] }.should raise_error
     instance.some_binding = :some_value
@@ -80,7 +80,7 @@ describe ::Magnets::Bindings::Types::Binding do
   
   it 'can define required bindings' do
     
-    class ::Magnets::Bindings::Types::Binding::Mock
+    class ::Magnets::Bindings::AttributesContainer::Bindings::Binding::Mock
       
       attr_bindings :some_bindings
 
@@ -90,7 +90,7 @@ describe ::Magnets::Bindings::Types::Binding do
 
     end
     
-    instance = ::Magnets::Bindings::Types::Binding::Mock.new
+    instance = ::Magnets::Bindings::AttributesContainer::Bindings::Binding::Mock.new
     instance.some_bindings = [ :some_value, :some_other_value ]
     instance.some_bindings = :some_value
         
@@ -102,7 +102,7 @@ describe ::Magnets::Bindings::Types::Binding do
   
   it 'can define required bindings' do
     
-    class ::Magnets::Bindings::Types::Binding::Mock
+    class ::Magnets::Bindings::AttributesContainer::Bindings::Binding::Mock
       
       attr_required_binding :some_required_binding
       
@@ -112,7 +112,7 @@ describe ::Magnets::Bindings::Types::Binding do
 
     end
     
-    instance = ::Magnets::Bindings::Types::Binding::Mock.new
+    instance = ::Magnets::Bindings::AttributesContainer::Bindings::Binding::Mock.new
     Proc.new { instance.some_required_binding = [ :some_value, :some_other_value ] }.should raise_error
     instance.some_required_binding = :some_value
     instance.some_required_binding = nil
@@ -125,7 +125,7 @@ describe ::Magnets::Bindings::Types::Binding do
   
   it 'can define required bindings' do
     
-    class ::Magnets::Bindings::Types::Binding::Mock
+    class ::Magnets::Bindings::AttributesContainer::Bindings::Binding::Mock
       
       attr_required_bindings :some_required_bindings
 
@@ -135,7 +135,7 @@ describe ::Magnets::Bindings::Types::Binding do
 
     end
     
-    instance = ::Magnets::Bindings::Types::Binding::Mock.new
+    instance = ::Magnets::Bindings::AttributesContainer::Bindings::Binding::Mock.new
     instance.some_required_bindings = [ :some_value, :some_other_value ]
     instance.some_required_bindings = :some_value
     instance.some_required_bindings = nil

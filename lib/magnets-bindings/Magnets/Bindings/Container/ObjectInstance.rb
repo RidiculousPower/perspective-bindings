@@ -2,7 +2,7 @@
 module ::Magnets::Bindings::Container::ObjectInstance
 
   include ::Magnets::Bindings::Configuration
-
+  
   #######################################
   #  __initialize_for_parent_binding__  #
   #######################################

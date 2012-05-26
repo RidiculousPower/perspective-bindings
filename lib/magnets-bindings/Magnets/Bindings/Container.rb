@@ -5,7 +5,6 @@ module ::Magnets::Bindings::Container
   extend ::ModuleCluster::Define::Block::CascadingClass
 
   extend ::Magnets::Bindings::Attributes
-	extend ::Magnets::Bindings::Container::Attributes
 	extend ::Magnets::Bindings::Container::Context
   
 	include ::Magnets::Bindings::Container::ObjectInstance
@@ -35,5 +34,5 @@ module ::Magnets::Bindings::Container
                                       self::BindingMethods::InstanceBindingMethods )
     
   end
-
+  
 end

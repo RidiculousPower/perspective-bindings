@@ -2,7 +2,6 @@
 module ::Magnets::Bindings::Configuration
 
   include ::CascadingConfiguration::Setting
-  include ::CascadingConfiguration::Array
   include ::CascadingConfiguration::Array::Unique
   include ::CascadingConfiguration::Hash
 
@@ -41,7 +40,7 @@ module ::Magnets::Bindings::Configuration
 
       child_instance = nil
 
-      case configuration_instance
+      case instance = configuration_instance
 
         when ::Magnets::Bindings::Container::ClassInstance
 
@@ -60,6 +59,7 @@ module ::Magnets::Bindings::Configuration
             base_route = [ ]
           end
           base_route.push( configuration_instance.__name__ )
+          
           child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__( base_route )
 
         when ::Magnets::Bindings::Container::ObjectInstance, 
@@ -84,7 +84,7 @@ module ::Magnets::Bindings::Configuration
               child_instance = instance_binding_class.new( binding_instance )
 
           end
-
+        
       end
 
       return child_instance
@@ -95,25 +95,6 @@ module ::Magnets::Bindings::Configuration
 
   ccm.alias_module_and_instance_methods( self, :bindings, :__bindings__ )
 
-  #######################
-  #  binding_order      #
-  #  __binding_order__  #
-  #######################
-
-  attr_configuration_array  :__binding_order__
-  
-  ccm.alias_module_and_instance_methods( self, :binding_order, :__binding_order__ )
-  
-  #######################################
-  #  binding_order_declared_empty?      #
-  #  __binding_order_declared_empty__?  #
-  #######################################
-  
-  attr_configuration  :__binding_order_declared_empty__?
-  
-  ccm.alias_module_and_instance_methods( self, :binding_order_declared_empty?, 
-                                               :__binding_order_declared_empty__ )
-  
   #########################
   #  binding_aliases      #
   #  __binding_aliases__  #

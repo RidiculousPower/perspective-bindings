@@ -16,17 +16,27 @@ module ::Magnets::Bindings::InstanceBinding::Value
   ################
 
   def __value__=( object )
-        
-    unless binding_value_valid?( object )
-      raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError, 
-              'Invalid value ' +  object.inspect + ' for binding :' + __name__.to_s + '.'
-    end
+            
+    case object
+      
+      when ::Magnets::Bindings::InstanceBinding
 
-    @__value__ = object
-    
-    if __container__
-      self.__container__.__autobind__( object )    
-    end
+        @__value__ = object.__value__
+      
+      else
+
+        unless binding_value_valid?( object )
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError, 
+                  'Invalid value ' +  object.inspect + ' for binding :' + __name__.to_s + '.'
+        end
+
+        @__value__ = object
+
+        if __container__
+          self.__container__.__autobind__( object )    
+        end
+      
+    end    
     
     return object
     
