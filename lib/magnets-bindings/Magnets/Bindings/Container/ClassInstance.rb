@@ -23,7 +23,7 @@ module ::Magnets::Bindings::Container::ClassInstance
   
   end
 
-  include ::Magnets::Bindings::Attributes.bindings_module( :bindings )
+  include ::Magnets::Bindings::AttributesContainer::Bindings
 
   ###############
   #  configure  #
@@ -77,26 +77,6 @@ module ::Magnets::Bindings::Container::ClassInstance
 		return self
 		
 	end
-
-  #############################
-  #  __class_binding_class__  #
-  #############################
-
-  def __class_binding_class__( type )
-    
-    return ::Magnets::Bindings::Container.class_binding_class( type )
-    
-  end
-
-  ################################
-  #  __instance_binding_class__  #
-  ################################
-
-  def __instance_binding_class__( type )
-    
-    return ::Magnets::Bindings::Container.instance_binding_class( type )
-    
-  end
 
   ##################################################################################################
       private ######################################################################################

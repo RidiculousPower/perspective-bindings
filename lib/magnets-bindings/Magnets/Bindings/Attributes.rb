@@ -53,15 +53,13 @@ module ::Magnets::Bindings::Attributes
   
       when ::Symbol, ::String
 
-        unless parent_container = @bindings_modules[ parent_container_type ]
-          raise ::ArgumentError, 'No container defined by name :' + parent_container_type.to_s
+        unless parent_container = @bindings_modules[ parent_container_or_type ]
+          raise ::ArgumentError, 'No container defined by name :' + parent_container_or_type.to_s
         end
 
     end
     
     container_type_module = ::Magnets::Bindings::AttributesContainer.new( parent_container,
-                                                                          class_binding_class,
-                                                                          instance_binding_class,
                                                                           & definition_block )
     
     ::Magnets::Bindings::AttributesContainer.const_set( container_type.to_s.to_camel_case, 

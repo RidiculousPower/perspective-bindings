@@ -30,66 +30,20 @@ describe ::Magnets::Bindings::Attributes do
     
     # without parent container or base class specification
     instance = ::Magnets::Bindings::Attributes.define_container_type( :container1, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding
     proc_ran.should == true
     proc_ran = false
     ::Magnets::Bindings::Attributes.bindings_module( :container1 ).should == instance
-    # without parent with base class binding class
-    instance = ::Magnets::Bindings::Attributes.define_container_type( :container2, nil, ::Magnets::Bindings::ClassBinding::MockSub, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding::MockSub
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding
-    proc_ran.should == true
-    proc_ran = false
-    ::Magnets::Bindings::Attributes.bindings_module( :container2 ).should == instance
-    # without parent with base instance binding class
-    instance = ::Magnets::Bindings::Attributes.define_container_type( :container3, nil, nil, ::Magnets::Bindings::InstanceBinding::MockSub, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding::MockSub
-    proc_ran.should == true
-    proc_ran = false
-    ::Magnets::Bindings::Attributes.bindings_module( :container3 ).should == instance
-    # without parent with base class and instance binding classes
-    instance = ::Magnets::Bindings::Attributes.define_container_type( :container4, nil, ::Magnets::Bindings::ClassBinding::MockSub, ::Magnets::Bindings::InstanceBinding::MockSub, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding::MockSub
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding::MockSub
-    proc_ran.should == true
-    proc_ran = false
-    ::Magnets::Bindings::Attributes.bindings_module( :container4 ).should == instance
     
     parent_instance = instance
     
     # with parent container no base class specification
-    instance = ::Magnets::Bindings::Attributes.define_container_type( :container5, parent_instance, & define_proc )
+    instance = ::Magnets::Bindings::Attributes.define_container_type( :container2, parent_instance, & define_proc )
     instance.ancestors.include?( parent_instance ).should == true
     ::CascadingConfiguration::Variable.ancestor( parent_instance, :binding_types ).should == ::Magnets::Bindings::AttributesContainer
     ::CascadingConfiguration::Variable.ancestor( instance, :binding_types ).should == parent_instance
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding::MockSub
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding::MockSub
     proc_ran.should == true
     proc_ran = false
-    ::Magnets::Bindings::Attributes.bindings_module( :container5 ).should == instance
-    # with parent container with base class binding class
-    instance = ::Magnets::Bindings::Attributes.define_container_type( :container6, parent_instance, ::Magnets::Bindings::ClassBinding::MockSubSub, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding::MockSubSub
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding::MockSub
-    proc_ran.should == true
-    proc_ran = false
-    ::Magnets::Bindings::Attributes.bindings_module( :container6 ).should == instance
-    # with parent container with base instance binding class
-    instance = ::Magnets::Bindings::Attributes.define_container_type( :container7, parent_instance, nil, ::Magnets::Bindings::InstanceBinding::MockSubSub, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding::MockSub
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding::MockSubSub
-    proc_ran.should == true
-    proc_ran = false
-    ::Magnets::Bindings::Attributes.bindings_module( :container7 ).should == instance
-    # with parent container with base class and instance binding classes
-    instance = ::Magnets::Bindings::Attributes.define_container_type( :container8, parent_instance, ::Magnets::Bindings::ClassBinding::MockSubSub, ::Magnets::Bindings::InstanceBinding::MockSubSub, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding::MockSubSub
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding::MockSubSub
-    proc_ran.should == true
-    proc_ran = false
-    ::Magnets::Bindings::Attributes.bindings_module( :container8 ).should == instance
+    ::Magnets::Bindings::Attributes.bindings_module( :container2 ).should == instance
   end
 
   it 'defines types based on binding definitions' do

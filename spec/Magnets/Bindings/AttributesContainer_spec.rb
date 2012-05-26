@@ -29,59 +29,11 @@ describe ::Magnets::Bindings::AttributesContainer do
     
     # without parent container or base class specification
     instance = ::Magnets::Bindings::AttributesContainer.new( & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding
-    proc_ran.should == true
-    proc_ran = false
-    # without parent with base class binding class
-    instance = ::Magnets::Bindings::AttributesContainer.new( nil, ::Magnets::Bindings::ClassBinding::MockSub, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding::MockSub
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding
-    proc_ran.should == true
-    proc_ran = false
-    # without parent with base instance binding class
-    instance = ::Magnets::Bindings::AttributesContainer.new( nil, nil, ::Magnets::Bindings::InstanceBinding::MockSub, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding::MockSub
-    proc_ran.should == true
-    proc_ran = false
-    # without parent with base class and instance binding classes
-    instance = ::Magnets::Bindings::AttributesContainer.new( nil, ::Magnets::Bindings::ClassBinding::MockSub, ::Magnets::Bindings::InstanceBinding::MockSub, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding::MockSub
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding::MockSub
     proc_ran.should == true
     proc_ran = false
     
     parent_instance = instance
-    
-    # with parent container no base class specification
-    instance = ::Magnets::Bindings::AttributesContainer.new( parent_instance, & define_proc )
-    instance.ancestors.include?( parent_instance ).should == true
-    ::CascadingConfiguration::Variable.ancestor( parent_instance, :binding_types ).should == ::Magnets::Bindings::AttributesContainer
-    ::CascadingConfiguration::Variable.ancestor( instance, :binding_types ).should == parent_instance
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding::MockSub
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding::MockSub
-    proc_ran.should == true
-    proc_ran = false
-    # with parent container with base class binding class
-    instance = ::Magnets::Bindings::AttributesContainer.new( parent_instance, ::Magnets::Bindings::ClassBinding::MockSubSub, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding::MockSubSub
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding::MockSub
-    proc_ran.should == true
-    proc_ran = false
-    # with parent container with base instance binding class
-    instance = ::Magnets::Bindings::AttributesContainer.new( parent_instance, nil, ::Magnets::Bindings::InstanceBinding::MockSubSub, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding::MockSub
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding::MockSubSub
-    proc_ran.should == true
-    proc_ran = false
-    # with parent container with base class and instance binding classes
-    instance = ::Magnets::Bindings::AttributesContainer.new( parent_instance, ::Magnets::Bindings::ClassBinding::MockSubSub, ::Magnets::Bindings::InstanceBinding::MockSubSub, & define_proc )
-    instance.base_class_binding_class.should == ::Magnets::Bindings::ClassBinding::MockSubSub
-    instance.base_instance_binding_class.should == ::Magnets::Bindings::InstanceBinding::MockSubSub
-    proc_ran.should == true
-    proc_ran = false
-    
+
   end
 
 	#######################################  Method Names  ###########################################
@@ -268,15 +220,13 @@ describe ::Magnets::Bindings::AttributesContainer do
   ###################
   
   it 'can re-define binding types in each cascading module instance using the local base binding types' do
-    parent_instance = ::Magnets::Bindings::AttributesContainer.new( nil, ::Magnets::Bindings::ClassBinding::MockSub, ::Magnets::Bindings::InstanceBinding::MockSub )
+    parent_instance = ::Magnets::Bindings::AttributesContainer.new
     parent_instance.define_binding_type( 'also_like_text' )
-    Instance = instance = ::Magnets::Bindings::AttributesContainer.new( parent_instance, ::Magnets::Bindings::ClassBinding::MockSubSub, ::Magnets::Bindings::InstanceBinding::MockSubSub )
+    Instance = instance = ::Magnets::Bindings::AttributesContainer.new( parent_instance )
     instance::AlsoLikeText.is_a?( ::Class ).should == true
     instance::AlsoLikeText::InstanceBinding.is_a?( ::Class ).should == true
     instance::AlsoLikeText::Multiple.is_a?( ::Class ).should == true
     instance::AlsoLikeText::InstanceBinding::Multiple.is_a?( ::Class ).should == true
-    instance::AlsoLikeText.ancestors.include?( ::Magnets::Bindings::ClassBinding::MockSubSub ).should == true
-    instance::AlsoLikeText::InstanceBinding.ancestors.include?( ::Magnets::Bindings::InstanceBinding::MockSubSub ).should == true
   end
 
 end

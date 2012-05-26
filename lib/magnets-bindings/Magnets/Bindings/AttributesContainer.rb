@@ -10,27 +10,20 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
   #  initialize  #
   ################
   
-  def initialize( parent_container = nil, 
-                  class_binding_class = nil, 
-                  instance_binding_class = nil,
-                  & definition_block )
+  def initialize( parent_container = nil, & definition_block )
         
-    if class_binding_class
-      self.base_class_binding_class = class_binding_class
-    end
-
-    if instance_binding_class
-      self.base_instance_binding_class = instance_binding_class
-    end
-
     if parent_container
       include parent_container
       ::CascadingConfiguration::Variable.register_child_for_parent( self, parent_container )
       # this will cause the compositing hash to initialize
       # maybe we can move this elsewhere at some point - for now it's a simple solution
       binding_types
+      self.const_set( :ClassBinding, ::Class.new( parent_container::ClassBinding ) )
+      self.const_set( :InstanceBinding, ::Class.new( parent_container::InstanceBinding ) )
     else
       ::CascadingConfiguration::Variable.register_child_for_parent( self, self.class )
+      self.const_set( :ClassBinding, ::Class.new( ::Magnets::Bindings::ClassBinding ) )
+      self.const_set( :InstanceBinding, ::Class.new( ::Magnets::Bindings::InstanceBinding ) )
     end
 
     if block_given?
@@ -74,22 +67,6 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
     end
     
   end
-  
-  ##############################
-  #  base_class_binding_class  #
-  ##############################
-  
-  attr_configuration  :base_class_binding_class
-
-  self.base_class_binding_class = ::Magnets::Bindings::ClassBinding
-  
-  #################################
-  #  base_instance_binding_class  #
-  #################################
-  
-  attr_configuration  :base_instance_binding_class
-
-  self.base_instance_binding_class = ::Magnets::Bindings::InstanceBinding
   
   #########################
   #  class_binding_class  #
@@ -139,7 +116,7 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
 
   def define_class_binding_class( binding_type_name, *definition_modules )
 
-    class_binding_class = ::Class.new( base_class_binding_class ) do
+    class_binding_class = ::Class.new( self::ClassBinding ) do
 
       unless definition_modules.empty?
         include( *definition_modules.reverse )
@@ -175,7 +152,7 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
     camel_case_name = binding_type_name.to_s.to_camel_case
     class_binding_class = const_get( camel_case_name )
 
-    instance_binding_class = ::Class.new( base_instance_binding_class ) do
+    instance_binding_class = ::Class.new( self::InstanceBinding ) do
       
       unless definition_modules.empty?
         include( *definition_modules.reverse )
