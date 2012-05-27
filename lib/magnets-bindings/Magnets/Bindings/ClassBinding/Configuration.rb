@@ -35,10 +35,4 @@ module ::Magnets::Bindings::ClassBinding::Configuration
 
   ccm.alias_instance_method( self, :container_class, :__container_class__ )
 
-  ##############
-  #  __type__  #
-  ##############
-
-  attr_configuration  :__type__
-
 end

@@ -60,10 +60,10 @@ module ::Magnets::Bindings::Attributes
     end
     
     container_type_module = ::Magnets::Bindings::AttributesContainer.new( parent_container,
+                                                                          ::Magnets::Bindings::
+                                                                            AttributesContainer,
+                                                                          container_type,
                                                                           & definition_block )
-    
-    ::Magnets::Bindings::AttributesContainer.const_set( container_type.to_s.to_camel_case, 
-                                                        container_type_module )
     
     @bindings_modules[ container_type ] = container_type_module
     

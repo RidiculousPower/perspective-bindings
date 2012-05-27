@@ -10,20 +10,26 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
   #  initialize  #
   ################
   
-  def initialize( parent_container = nil, & definition_block )
-        
+  def initialize( parent_container = nil, store_in_container = nil, name = nil, & definition_block )
+
+    if store_in_container
+      store_in_container.const_set( name.to_s.to_camel_case, self )
+    end
+          
     if parent_container
       include parent_container
       ::CascadingConfiguration::Variable.register_child_for_parent( self, parent_container )
       # this will cause the compositing hash to initialize
       # maybe we can move this elsewhere at some point - for now it's a simple solution
+      class_binding_class = ::Class.new( parent_container::ClassBinding )
+      instance_binding_class = ::Class.new( parent_container::InstanceBinding )  
+      const_set( :ClassBinding, class_binding_class )
+      const_set( :InstanceBinding, instance_binding_class )
       binding_types
-      self.const_set( :ClassBinding, ::Class.new( parent_container::ClassBinding ) )
-      self.const_set( :InstanceBinding, ::Class.new( parent_container::InstanceBinding ) )
     else
       ::CascadingConfiguration::Variable.register_child_for_parent( self, self.class )
-      self.const_set( :ClassBinding, ::Class.new( ::Magnets::Bindings::ClassBinding ) )
-      self.const_set( :InstanceBinding, ::Class.new( ::Magnets::Bindings::InstanceBinding ) )
+      const_set( :ClassBinding, ::Class.new( ::Magnets::Bindings::ClassBinding ) )
+      const_set( :InstanceBinding, ::Class.new( ::Magnets::Bindings::InstanceBinding ) )
     end
 
     if block_given?
@@ -38,13 +44,27 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
   
   def define_binding_type( binding_type_name, *instance_definition_modules )
     
-    self.binding_types[ binding_type_name ] = instance_definition_modules
+    binding_types[ binding_type_name ] = instance_definition_modules
     
     define_class_binding_class( binding_type_name )
     define_instance_binding_class( binding_type_name, *instance_definition_modules )
     
     define_binding_methods( binding_type_name )
     
+  end
+
+  #########################
+  #  extend_binding_type  #
+  #########################
+  
+  def extend_binding_type( binding_type_name, *instance_definition_modules )
+    
+    binding_types[ binding_type_name ].concat( instance_definition_modules )
+    
+    instance_binding_class( binding_type_name ).module_eval do
+      include *instance_definition_modules.reverse
+    end
+        
   end
 
   ###################
@@ -121,9 +141,7 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
       unless definition_modules.empty?
         include( *definition_modules.reverse )
       end
-      
-      self.__type__ = binding_type_name
-      
+            
     end
     
     class_multiple_binding_class = ::Class.new( class_binding_class ) do
@@ -149,18 +167,18 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
   def define_instance_binding_class( binding_type_name, *definition_modules )
 
     # Assumes class binding type has already been defined.
-    camel_case_name = binding_type_name.to_s.to_camel_case
-    class_binding_class = const_get( camel_case_name )
+    class_binding_class = class_binding_class( binding_type_name )
 
     instance_binding_class = ::Class.new( self::InstanceBinding ) do
       
       unless definition_modules.empty?
         include( *definition_modules.reverse )
       end
-    
-      self.__type__ = binding_type_name
-      
+          
     end
+
+    # Class name is self::binding_type_name.to_s.to_camel_case::InstanceBinding
+    class_binding_class.const_set( :InstanceBinding, instance_binding_class )
     
     instance_multiple_binding_class = ::Class.new( instance_binding_class ) do
       
@@ -168,9 +186,7 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
       
     end
 
-    
-    # Class name is self::binding_type_name.to_s.to_camel_case::InstanceBinding
-    class_binding_class.const_set( :InstanceBinding, instance_binding_class )
+    # Class name is self::binding_type_name.to_s.to_camel_case::InstanceBinding::Multiple
     class_binding_class::InstanceBinding.const_set( :Multiple, instance_multiple_binding_class )
     
     return instance_binding_class
