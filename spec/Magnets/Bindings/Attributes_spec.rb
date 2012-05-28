@@ -33,14 +33,12 @@ describe ::Magnets::Bindings::Attributes do
     proc_ran.should == true
     proc_ran = false
     ::Magnets::Bindings::Attributes.bindings_module( :container1 ).should == instance
-    
+
     parent_instance = instance
-    
+      
     # with parent container no base class specification
     instance = ::Magnets::Bindings::Attributes.define_container_type( :container2, parent_instance, & define_proc )
     instance.ancestors.include?( parent_instance ).should == true
-    ::CascadingConfiguration::Variable.ancestor( parent_instance, :binding_types ).should == ::Magnets::Bindings::AttributeContainer
-    ::CascadingConfiguration::Variable.ancestor( instance, :binding_types ).should == parent_instance
     proc_ran.should == true
     proc_ran = false
     ::Magnets::Bindings::Attributes.bindings_module( :container2 ).should == instance

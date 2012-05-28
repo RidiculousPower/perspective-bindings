@@ -19,8 +19,10 @@ module ::Magnets::Bindings::AttributeDefinitionModule
   
   def included( attribute_definition_module )
     
-    unless @modules_including_self.has_key?( attribute_definition_module )
-      @modules_including_self[ attribute_definition_module ] = true
+    unless @relaying_includes
+      unless @modules_including_self.has_key?( attribute_definition_module )
+        @modules_including_self[ attribute_definition_module ] = true
+      end
     end
     
   end
@@ -35,11 +37,15 @@ module ::Magnets::Bindings::AttributeDefinitionModule
     
     reference_to_self = self
     
+    @relaying_includes = true
+    
     @modules_including_self.each do |this_module, true_value|
       this_module.module_eval do
         include reference_to_self
       end
     end
+
+    @relaying_includes = false
     
   end
   

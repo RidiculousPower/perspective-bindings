@@ -87,7 +87,7 @@ describe ::Magnets::Bindings::AttributeContainer do
 
   it 'can define and return a class binding class for a given type' do
     instance = ::Magnets::Bindings::AttributeContainer.new
-    instance.define_class_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
+    instance.define_class_binding_class( 'like_text' )
     instance::LikeText.is_a?( ::Class ).should == true
     instance::LikeText::Multiple.is_a?( ::Class ).should == true
     instance.define_instance_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
@@ -107,7 +107,7 @@ describe ::Magnets::Bindings::AttributeContainer do
 
   it 'can define a single binding declaration method for a given type' do
     instance = ::Magnets::Bindings::AttributeContainer.new
-    instance.define_class_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
+    instance.define_class_binding_class( 'like_text' )
     instance.define_instance_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_single_binding_type( 'like_text' )
     instance.method_defined?( :attr_like_text ).should == true
@@ -119,7 +119,7 @@ describe ::Magnets::Bindings::AttributeContainer do
 
   it 'can define a multiple binding declaration method for a given type' do
     instance = ::Magnets::Bindings::AttributeContainer.new
-    instance.define_class_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
+    instance.define_class_binding_class( 'like_text' )
     instance.define_instance_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_multiple_binding_type( 'like_text' )
     instance.method_defined?( :attr_like_texts ).should == true
@@ -131,7 +131,7 @@ describe ::Magnets::Bindings::AttributeContainer do
 
   it 'can define a required single binding declaration method for a given type' do
     instance = ::Magnets::Bindings::AttributeContainer.new
-    instance.define_class_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
+    instance.define_class_binding_class( 'like_text' )
     instance.define_instance_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_required_single_binding_type( 'like_text' )
     instance.method_defined?( :attr_required_like_text ).should == true
@@ -143,7 +143,7 @@ describe ::Magnets::Bindings::AttributeContainer do
 
   it 'can define a required multiple binding declaration method for a given type' do
     instance = ::Magnets::Bindings::AttributeContainer.new
-    instance.define_class_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
+    instance.define_class_binding_class( 'like_text' )
     instance.define_instance_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_required_multiple_binding_type( 'like_text' )
     instance.method_defined?( :attr_required_like_texts ).should == true
@@ -155,7 +155,7 @@ describe ::Magnets::Bindings::AttributeContainer do
 
   it 'can define all necessary supports for a binding type' do
     instance = ::Magnets::Bindings::AttributeContainer.new
-    instance.define_class_binding_class( 'also_alot_like_text', ::Magnets::Bindings::Attributes::Text )
+    instance.define_class_binding_class( 'also_alot_like_text' )
     instance.define_instance_binding_class( 'also_alot_like_text', ::Magnets::Bindings::Attributes::Text )
 
 

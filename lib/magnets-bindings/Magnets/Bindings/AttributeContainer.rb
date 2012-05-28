@@ -21,18 +21,30 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     
     initialize_binding_extension_modules( parent_container )
     
+    @parents = [ ]
+    
     if parent_container
-      initialize_for_parent_container( parent_container )
-    else
-      initialize_as_top_container
+      include parent_container
+      if parents_of_parent = parent_container.parents
+        @parents.concat( parents_of_parent )
+      end
+      @parents.push( parent_container )
     end
+
+    @binding_types = { }
 
     if block_given?
       module_eval( & definition_block )
     end
     
   end
+
+  #############
+  #  parents  #
+  #############
   
+  attr_reader :parents
+
   ##########################################
   #  initialize_binding_extension_modules  #
   ##########################################
@@ -74,29 +86,12 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   end
 
   #################################
-  #  initialize_as_top_container  #
+  #  instance_binding_extensions  #
   #################################
-  
-  def initialize_as_top_container
-  
-    ::CascadingConfiguration::Variable.register_child_for_parent( self, self.class )
-    
-  end
-  
-  #####################################
-  #  initialize_for_parent_container  #
-  #####################################
-  
-  def initialize_for_parent_container( parent_container )
 
-    include parent_container
+  def instance_binding_extensions( binding_type_name )
     
-    ::CascadingConfiguration::Variable.register_child_for_parent( self, parent_container )
-
-    # FIX
-    # this will cause the compositing hash to initialize
-    # maybe we can move this elsewhere at some point - for now it's a simple solution
-    binding_types
+    return @binding_types[ binding_type_name ]
     
   end
 
@@ -106,7 +101,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   
   def define_binding_type( binding_type_name, *instance_definition_modules )
     
-    binding_types[ binding_type_name ] = instance_definition_modules
+    @binding_types[ binding_type_name ] = instance_definition_modules
     
     define_class_binding_class( binding_type_name )
     define_instance_binding_class( binding_type_name, *instance_definition_modules )
@@ -121,33 +116,12 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   
   def extend_binding_type( binding_type_name, *instance_definition_modules )
     
-    binding_types[ binding_type_name ].concat( instance_definition_modules )
+    @binding_types[ binding_type_name ].concat( instance_definition_modules )
     
     instance_binding_class( binding_type_name ).module_eval do
       include *instance_definition_modules.reverse
     end
         
-  end
-
-  ###################
-  #  binding_types  #
-  ###################
-
-  attr_configuration_hash  :binding_types do
-    
-    #======================#
-	  #  child_pre_set_hook  #
-	  #======================#
-
-	  def child_pre_set_hook( binding_type, instance_definition_modules )
-
-	    # We are inheriting types - we have to define our own corresponding classes.
-	    configuration_instance.define_binding_type( binding_type, *instance_definition_modules )
-
-	    return instance_definition_modules
-	    
-    end
-    
   end
   
   #########################
@@ -196,18 +170,17 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   #  define_class_binding_class  #
   ################################
 
-  def define_class_binding_class( binding_type_name, *definition_modules )
+  def define_class_binding_class( binding_type_name )
 
     class_binding_extension_module = self::ClassBinding
-
+    
     class_binding_class = ::Class.new( ::Magnets::Bindings::ClassBinding ) do
+
+      # We currently don't track class ClassBinding extensions.
+      # This could easily be extended by mirroring the InstanceBinding implementation.
 
       include class_binding_extension_module
 
-      unless definition_modules.empty?
-        include( *definition_modules.reverse )
-      end
-            
     end
     
     # Class name is self::binding_type_name.to_s.to_camel_case
@@ -235,7 +208,19 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
 
     instance_binding_extension_module = self::InstanceBinding
 
+    parents = @parents
+
     instance_binding_class = ::Class.new( ::Magnets::Bindings::InstanceBinding ) do
+      
+      parents.each do |this_parent|
+        # include ClassBinding module for this parent
+        include this_parent::InstanceBinding
+        # include class binding extension modules for this parent
+        instance_binding_extensions = this_parent.instance_binding_extensions( binding_type_name )
+        unless instance_binding_extensions.empty?
+          include *instance_binding_extensions.reverse
+        end
+      end
       
       include instance_binding_extension_module
       
