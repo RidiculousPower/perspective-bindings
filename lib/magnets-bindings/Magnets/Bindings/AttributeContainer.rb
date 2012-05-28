@@ -21,30 +21,42 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     
     initialize_binding_extension_modules( parent_container )
     
-    @parents = [ ]
-    
-    if parent_container
-      include parent_container
-      if parents_of_parent = parent_container.parents
-        @parents.concat( parents_of_parent )
-      end
-      @parents.push( parent_container )
-    end
-
     @binding_types = { }
 
+    initialize_for_parents( parent_container )
+    
     if block_given?
       module_eval( & definition_block )
     end
     
   end
 
-  #############
-  #  parents  #
-  #############
-  
-  attr_reader :parents
+  ############################
+  #  initialize_for_parents  #
+  ############################
 
+  def initialize_for_parents( parent_container )
+    
+    @parents = [ ]
+    
+    if parent_container
+
+      include parent_container
+
+      if parents_of_parent = parent_container.parents
+        @parents.concat( parents_of_parent )
+      end
+
+      @parents.push( parent_container )
+
+      parent_container.binding_types.each do |this_binding_type, these_instance_extension_modules|
+        define_binding_type( this_binding_type )
+      end
+
+    end
+    
+  end
+  
   ##########################################
   #  initialize_binding_extension_modules  #
   ##########################################
@@ -85,6 +97,18 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     
   end
 
+  #############
+  #  parents  #
+  #############
+  
+  attr_reader :parents
+
+  ###################
+  #  binding_types  #
+  ###################
+  
+  attr_reader :binding_types
+
   #################################
   #  instance_binding_extensions  #
   #################################
@@ -101,7 +125,8 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   
   def define_binding_type( binding_type_name, *instance_definition_modules )
     
-    @binding_types[ binding_type_name ] = instance_definition_modules
+    @binding_types[ binding_type_name ] ||= [ ]
+    @binding_types[ binding_type_name ].concat( instance_definition_modules )
     
     define_class_binding_class( binding_type_name )
     define_instance_binding_class( binding_type_name, *instance_definition_modules )
@@ -116,6 +141,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   
   def extend_binding_type( binding_type_name, *instance_definition_modules )
     
+    @binding_types[ binding_type_name ] ||= [ ]
     @binding_types[ binding_type_name ].concat( instance_definition_modules )
     
     instance_binding_class( binding_type_name ).module_eval do
@@ -173,7 +199,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   def define_class_binding_class( binding_type_name )
 
     class_binding_extension_module = self::ClassBinding
-    
+
     class_binding_class = ::Class.new( ::Magnets::Bindings::ClassBinding ) do
 
       # We currently don't track class ClassBinding extensions.
@@ -217,7 +243,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
         include this_parent::InstanceBinding
         # include class binding extension modules for this parent
         instance_binding_extensions = this_parent.instance_binding_extensions( binding_type_name )
-        unless instance_binding_extensions.empty?
+        unless instance_binding_extensions.nil? or instance_binding_extensions.empty?
           include *instance_binding_extensions.reverse
         end
       end
