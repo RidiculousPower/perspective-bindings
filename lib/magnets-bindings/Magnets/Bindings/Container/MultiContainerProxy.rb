@@ -45,7 +45,7 @@ class ::Magnets::Bindings::Container::MultiContainerProxy < ::BasicObject
   def method_missing( method, *args )
     
     results = [ ]
-    
+
     @__storage_array__.each do |this_container|
       results.push( this_container.__send__( method, *args ) )
     end

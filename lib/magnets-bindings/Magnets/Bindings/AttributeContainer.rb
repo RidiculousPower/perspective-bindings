@@ -78,9 +78,23 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
       end
 
     end
+
+    multiple_class_binding_extension_module = ::Module.new do
+
+      # Causes module inclusion to forward to any including modules.
+      # This is to get around Ruby's dynamic include problem.
+      extend ::Magnets::Bindings::AttributeDefinitionModule
+
+      if parent_container
+        include parent_container::ClassBinding::Multiple
+      end
+
+    end
     
     const_set( :ClassBinding, class_binding_extension_module )
-      
+
+    class_binding_extension_module.const_set( :Multiple, multiple_class_binding_extension_module )
+    
     instance_binding_extension_module = ::Module.new do
       
       # Causes module inclusion to forward to any including modules.
@@ -93,7 +107,20 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
       
     end
     
+    multiple_instance_binding_extension_module = ::Module.new do
+      
+      # Causes module inclusion to forward to any including modules.
+      # This is to get around Ruby's dynamic include problem.
+      extend ::Magnets::Bindings::AttributeDefinitionModule
+
+      if parent_container
+        include parent_container::InstanceBinding::Multiple
+      end
+
+    end
+    
     const_set( :InstanceBinding, instance_binding_extension_module ) 
+    instance_binding_extension_module.const_set( :Multiple, multiple_instance_binding_extension_module )
     
   end
 
@@ -214,9 +241,13 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     
     const_set( camel_case_name, class_binding_class )
 
+    multiple_class_binding_extension_module = self::ClassBinding::Multiple
+
     class_multiple_binding_class = ::Class.new( class_binding_class ) do
       
-      include( ::Magnets::Bindings::Attributes::Multiple )
+      include ::Magnets::Bindings::Attributes::Multiple
+      
+      include multiple_class_binding_extension_module
       
     end
     
@@ -262,9 +293,13 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     # Class name is self::binding_type_name.to_s.to_camel_case::InstanceBinding
     class_binding_class.const_set( :InstanceBinding, instance_binding_class )
     
+    multiple_instance_binding_extension_module = self::ClassBinding::Multiple
+    
     instance_multiple_binding_class = ::Class.new( instance_binding_class ) do
       
-      include( ::Magnets::Bindings::Attributes::Multiple )
+      include ::Magnets::Bindings::Attributes::Multiple
+      
+      include multiple_instance_binding_extension_module
       
     end
 
