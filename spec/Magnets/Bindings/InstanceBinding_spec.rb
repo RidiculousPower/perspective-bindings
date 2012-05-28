@@ -141,7 +141,7 @@ describe ::Magnets::Bindings::InstanceBinding do
     instance.extend( ::Magnets::Bindings::Attributes::Multiple )
     
     instance.__value__ = [ :one, :two, :three, :four ]
-    instance.__container__.is_a?( ::Magnets::Bindings::Container::MultiContainerProxy ).should == true
+    instance.__container__.class.should == ::Magnets::Bindings::Container::MultiContainerProxy
     instance.__container__.__count__.should == 4
     instance.__container__[ 0 ].is_a?( class_instance.__container_class__ ).should == true
     instance.__container__[ 0 ].content.should == :one

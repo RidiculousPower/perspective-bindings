@@ -125,7 +125,7 @@ describe ::Magnets::Bindings::Container do
 
     instance = ::Magnets::Bindings::Container::Mock::ContentBindingView.new    
     instance.__autobind__( :one )
-    instance.content.__value__.should == :one
+    instance.content.should == :one
 
     instance = ::Magnets::Bindings::Container::Mock::AutobindMultibindingsView.new
     data_object = Object.new
@@ -136,8 +136,8 @@ describe ::Magnets::Bindings::Container do
       :two
     end
     instance.__autobind__( data_object )
-    instance.binding_one.__value__.should == :one
-    instance.binding_two.__value__.should == :two
+    instance.binding_one.should == :one
+    instance.binding_two.should == :two
     
   end
 

@@ -7,9 +7,8 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
   
   def define_binding( binding_name )
   
-    super
-    
     define_binding_value_setter( binding_name )
+    define_binding_value_getter( binding_name )
   
   end
 
@@ -19,9 +18,8 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
   
   def define_binding_alias( binding_alias, binding_name )
   
-    super
-    
     define_binding_alias_value_setter( binding_alias, binding_name )
+    define_binding_alias_value_getter( binding_alias, binding_name )
   
   end
 
@@ -31,9 +29,8 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
   
   def define_shared_binding( binding_alias, shared_binding_instance )
     
-    super
-
     define_shared_binding_value_setter( binding_alias, shared_binding_instance )
+    define_shared_binding_value_getter( binding_alias, shared_binding_instance )
   
   end
 
@@ -45,24 +42,6 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
 
   end
 
-  ##################################
-  #  define_shared_binding_getter  #
-  ##################################
-  
-  def define_shared_binding_getter( binding_alias, shared_binding_instance )
-    
-    #=======================#
-    #  shared_binding_name  #
-    #=======================#
-    
-    define_method( binding_alias ) do
-      
-      return __shared_bindings__[ binding_alias ]
-      
-    end
-    
-  end
-  
   #################################
   #  define_binding_value_setter  #
   #################################
@@ -77,6 +56,25 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
     define_method( binding_name.write_accessor_name ) do |value|
       
       return __bindings__[ binding_name ].__value__ = value
+      
+    end
+    
+  end
+
+  #################################
+  #  define_binding_value_setter  #
+  #################################
+
+  # Defines :binding_name=, which sets the value in the binding instance (instance binding only).
+  def define_binding_value_getter( binding_name )
+
+    #================#
+    #  binding_name  #
+    #================#
+    
+    define_method( binding_name ) do
+      
+      return __bindings__[ binding_name ].__value__
       
     end
     
@@ -99,6 +97,24 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
     end
 
   end
+
+  #######################################
+  #  define_binding_alias_value_getter  #
+  #######################################
+
+  def define_binding_alias_value_getter( binding_alias, binding_name )
+
+    #======================#
+    #  binding_alias_name  #
+    #======================#
+    
+    define_method( binding_alias ) do
+      
+      return __bindings__[ binding_name ].__value__
+      
+    end
+
+  end
   
   ########################################
   #  define_shared_binding_value_setter  #
@@ -117,5 +133,24 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
     end
 
   end
+
+  ########################################
+  #  define_shared_binding_value_getter  #
+  ########################################
+  
+  def define_shared_binding_value_getter( binding_alias, shared_binding_instance )
+    
+    #=======================#
+    #  shared_binding_name  #
+    #=======================#
+    
+    define_method( binding_alias ) do
+      
+      return __shared_bindings__[ binding_alias ].__value__
+      
+    end
+    
+  end
+  
   
 end

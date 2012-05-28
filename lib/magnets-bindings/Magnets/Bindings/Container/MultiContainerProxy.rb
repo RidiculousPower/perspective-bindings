@@ -21,18 +21,36 @@ class ::Magnets::Bindings::Container::MultiContainerProxy < ::BasicObject
     __autobind__( *data_objects )
     
   end
-
+  
+  ########################
+  #  __parent_binding__  #
+  ########################
+  
+  attr_reader :__parent_binding__
+  
+  ###########
+  #  class  #
+  ###########
+  
+  def class
+    
+    return ::Magnets::Bindings::Container::MultiContainerProxy
+    
+  end
+  
   ####################
   #  method_missing  #
   ####################
   
   def method_missing( method, *args )
     
+    results = [ ]
+    
     @__storage_array__.each do |this_container|
-      this_container.__send__( method, *args )
+      results.push( this_container.__send__( method, *args ) )
     end
     
-    return self
+    return results
     
   end
 
