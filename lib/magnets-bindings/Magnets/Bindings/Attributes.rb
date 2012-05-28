@@ -9,8 +9,6 @@ module ::Magnets::Bindings::Attributes
   
   def self.define_container_type( container_type, 
                                   parent_container_or_type = nil, 
-                                  class_binding_class = nil, 
-                                  instance_binding_class = nil, 
                                   & definition_block )
 
     if container_type_module = @bindings_modules[ container_type ]
@@ -23,8 +21,6 @@ module ::Magnets::Bindings::Attributes
 
       container_type_module = create_container_type( container_type,
                                                      parent_container_or_type,
-                                                     class_binding_class,
-                                                     instance_binding_class,
                                                      & definition_block )
       
     end
@@ -38,9 +34,7 @@ module ::Magnets::Bindings::Attributes
   ################################
   
   def self.create_container_type( container_type, 
-                                  parent_container_or_type = nil, 
-                                  class_binding_class = nil, 
-                                  instance_binding_class = nil, 
+                                  parent_container_or_type = nil,
                                   & definition_block )
     
     parent_container = nil
@@ -59,11 +53,12 @@ module ::Magnets::Bindings::Attributes
 
     end
     
-    container_type_module = ::Magnets::Bindings::AttributesContainer.new( parent_container,
-                                                                          ::Magnets::Bindings::
-                                                                            AttributesContainer,
-                                                                          container_type,
-                                                                          & definition_block )
+    container_type_module = ::Magnets::Bindings::
+                              AttributeContainer.new( parent_container,
+                                                      ::Magnets::Bindings::
+                                                        AttributeContainer,
+                                                      container_type,
+                                                      & definition_block )
     
     @bindings_modules[ container_type ] = container_type_module
     

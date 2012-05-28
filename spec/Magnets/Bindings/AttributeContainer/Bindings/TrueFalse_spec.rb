@@ -1,7 +1,7 @@
 
 require_relative '../../../../../lib/magnets-bindings.rb'
 
-describe ::Magnets::Bindings::AttributesContainer::Bindings::TrueFalse do
+describe ::Magnets::Bindings::AttributeContainer::Bindings::TrueFalse do
 
 
   before :all do

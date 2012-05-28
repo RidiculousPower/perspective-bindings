@@ -1,7 +1,7 @@
 
 require_relative '../../../lib/magnets-bindings.rb'
 
-describe ::Magnets::Bindings::AttributesContainer do
+describe ::Magnets::Bindings::AttributeContainer do
 
   before :all do
     
@@ -28,7 +28,7 @@ describe ::Magnets::Bindings::AttributesContainer do
     end
     
     # without parent container or base class specification
-    instance = ::Magnets::Bindings::AttributesContainer.new( & define_proc )
+    instance = ::Magnets::Bindings::AttributeContainer.new( & define_proc )
     proc_ran.should == true
     proc_ran = false
     
@@ -43,7 +43,7 @@ describe ::Magnets::Bindings::AttributesContainer do
   ################################
   
   it 'can return a method name for defining a single binding type: attr_[type]' do
-    instance = ::Magnets::Bindings::AttributesContainer.new
+    instance = ::Magnets::Bindings::AttributeContainer.new
     instance.single_binding_method_name( 'text' ).should == 'attr_text'
   end
   
@@ -52,7 +52,7 @@ describe ::Magnets::Bindings::AttributesContainer do
   ##################################
   
   it 'can return a method name for defining a single binding type: attr_[type]s or attr_[types]es' do
-    instance = ::Magnets::Bindings::AttributesContainer.new
+    instance = ::Magnets::Bindings::AttributeContainer.new
     instance.multiple_binding_method_name( 'text' ).should == 'attr_texts'
   end
   
@@ -61,7 +61,7 @@ describe ::Magnets::Bindings::AttributesContainer do
   #########################################
   
   it 'can return a method name for defining a single binding type: attr_required_[type]' do
-    instance = ::Magnets::Bindings::AttributesContainer.new
+    instance = ::Magnets::Bindings::AttributeContainer.new
     instance.required_single_binding_method_name( 'text' ).should == 'attr_required_text'
   end
   
@@ -70,7 +70,7 @@ describe ::Magnets::Bindings::AttributesContainer do
   ###########################################
 
   it 'can return a method name for defining a single binding type: attr_required_[type]s or attr_required_[types]es' do
-    instance = ::Magnets::Bindings::AttributesContainer.new
+    instance = ::Magnets::Bindings::AttributeContainer.new
     instance.required_multiple_binding_method_name( 'text' ).should == 'attr_required_texts'
   end
 
@@ -86,7 +86,7 @@ describe ::Magnets::Bindings::AttributesContainer do
   #####################################
 
   it 'can define and return a class binding class for a given type' do
-    instance = ::Magnets::Bindings::AttributesContainer.new
+    instance = ::Magnets::Bindings::AttributeContainer.new
     instance.define_class_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance::LikeText.is_a?( ::Class ).should == true
     instance::LikeText::Multiple.is_a?( ::Class ).should == true
@@ -106,7 +106,7 @@ describe ::Magnets::Bindings::AttributesContainer do
   ################################
 
   it 'can define a single binding declaration method for a given type' do
-    instance = ::Magnets::Bindings::AttributesContainer.new
+    instance = ::Magnets::Bindings::AttributeContainer.new
     instance.define_class_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_instance_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_single_binding_type( 'like_text' )
@@ -118,7 +118,7 @@ describe ::Magnets::Bindings::AttributesContainer do
   ##################################
 
   it 'can define a multiple binding declaration method for a given type' do
-    instance = ::Magnets::Bindings::AttributesContainer.new
+    instance = ::Magnets::Bindings::AttributeContainer.new
     instance.define_class_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_instance_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_multiple_binding_type( 'like_text' )
@@ -130,7 +130,7 @@ describe ::Magnets::Bindings::AttributesContainer do
   #########################################
 
   it 'can define a required single binding declaration method for a given type' do
-    instance = ::Magnets::Bindings::AttributesContainer.new
+    instance = ::Magnets::Bindings::AttributeContainer.new
     instance.define_class_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_instance_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_required_single_binding_type( 'like_text' )
@@ -142,7 +142,7 @@ describe ::Magnets::Bindings::AttributesContainer do
   ###########################################
 
   it 'can define a required multiple binding declaration method for a given type' do
-    instance = ::Magnets::Bindings::AttributesContainer.new
+    instance = ::Magnets::Bindings::AttributeContainer.new
     instance.define_class_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_instance_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_required_multiple_binding_type( 'like_text' )
@@ -154,7 +154,7 @@ describe ::Magnets::Bindings::AttributesContainer do
   ############################
 
   it 'can define all necessary supports for a binding type' do
-    instance = ::Magnets::Bindings::AttributesContainer.new
+    instance = ::Magnets::Bindings::AttributeContainer.new
     instance.define_class_binding_class( 'also_alot_like_text', ::Magnets::Bindings::Attributes::Text )
     instance.define_instance_binding_class( 'also_alot_like_text', ::Magnets::Bindings::Attributes::Text )
 
@@ -166,38 +166,38 @@ describe ::Magnets::Bindings::AttributesContainer do
     instance.method_defined?( :attr_required_also_alot_like_text ).should == true
     instance.method_defined?( :attr_required_also_alot_like_texts ).should == true
 
-    class ::Magnets::Bindings::AttributesContainer::NestedContainerMock
+    class ::Magnets::Bindings::AttributeContainer::NestedContainerMock
       include ::Magnets::Bindings::Container
     end
     
-    ::Magnets::Bindings::AttributesContainer::ContainerMock = ::Class.new do
+    ::Magnets::Bindings::AttributeContainer::ContainerMock = ::Class.new do
       include ::Magnets::Bindings::Container
       extend instance
 
-      new_bindings = attr_also_alot_like_text :some_binding, ::Magnets::Bindings::AttributesContainer::NestedContainerMock
+      new_bindings = attr_also_alot_like_text :some_binding, ::Magnets::Bindings::AttributeContainer::NestedContainerMock
       new_binding = new_bindings[ 0 ]
       new_binding.is_a?( instance::AlsoAlotLikeText ).should == true
       new_binding.required?.should == false
 
-      new_bindings = attr_also_alot_like_texts :some_bindings, ::Magnets::Bindings::AttributesContainer::NestedContainerMock
+      new_bindings = attr_also_alot_like_texts :some_bindings, ::Magnets::Bindings::AttributeContainer::NestedContainerMock
       new_binding = new_bindings[ 0 ]
       new_binding.is_a?( instance::AlsoAlotLikeText::Multiple ).should == true
       new_binding.required?.should == false
 
-      new_bindings = attr_required_also_alot_like_text :some_required_binding, ::Magnets::Bindings::AttributesContainer::NestedContainerMock
+      new_bindings = attr_required_also_alot_like_text :some_required_binding, ::Magnets::Bindings::AttributeContainer::NestedContainerMock
       new_binding = new_bindings[ 0 ]
 
       new_binding.is_a?( instance::AlsoAlotLikeText ).should == true
       new_binding.required?.should == true
 
-      new_bindings = attr_required_also_alot_like_texts :some_required_bindings, ::Magnets::Bindings::AttributesContainer::NestedContainerMock
+      new_bindings = attr_required_also_alot_like_texts :some_required_bindings, ::Magnets::Bindings::AttributeContainer::NestedContainerMock
       new_binding = new_bindings[ 0 ]
       new_binding.is_a?( instance::AlsoAlotLikeText::Multiple ).should == true
       new_binding.required?.should == true
 
     end
 
-    container_instance = ::Magnets::Bindings::AttributesContainer::ContainerMock.new
+    container_instance = ::Magnets::Bindings::AttributeContainer::ContainerMock.new
 
 
   end
@@ -207,7 +207,7 @@ describe ::Magnets::Bindings::AttributesContainer do
   #########################
 
   it 'can define all necessary supports for a binding type' do
-    instance = ::Magnets::Bindings::AttributesContainer.new
+    instance = ::Magnets::Bindings::AttributeContainer.new
     instance.define_binding_type( 'also_like_text' )
     instance::AlsoLikeText.is_a?( ::Class ).should == true
     instance::AlsoLikeText::InstanceBinding.is_a?( ::Class ).should == true
@@ -220,9 +220,9 @@ describe ::Magnets::Bindings::AttributesContainer do
   ###################
   
   it 'can re-define binding types in each cascading module instance using the local base binding types' do
-    parent_instance = ::Magnets::Bindings::AttributesContainer.new
+    parent_instance = ::Magnets::Bindings::AttributeContainer.new
     parent_instance.define_binding_type( 'also_like_text' )
-    Instance = instance = ::Magnets::Bindings::AttributesContainer.new( parent_instance )
+    Instance = instance = ::Magnets::Bindings::AttributeContainer.new( parent_instance )
     instance::AlsoLikeText.is_a?( ::Class ).should == true
     instance::AlsoLikeText::InstanceBinding.is_a?( ::Class ).should == true
     instance::AlsoLikeText::Multiple.is_a?( ::Class ).should == true

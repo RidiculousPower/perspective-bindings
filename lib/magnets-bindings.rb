@@ -50,7 +50,7 @@ files = [
   
   'AttributeDefinitionModule',
   
-  'AttributesContainer',
+  'AttributeContainer',
 
   'Attributes/Multiple',
   'Attributes/Class',

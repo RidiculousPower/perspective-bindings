@@ -1,7 +1,7 @@
 
 require_relative '../../../../../lib/magnets-bindings.rb'
 
-describe ::Magnets::Bindings::AttributesContainer::Bindings::Regexp do
+describe ::Magnets::Bindings::AttributeContainer::Bindings::Regexp do
 
   before :all do
     class ::Magnets::Bindings::Container::ClassInstance::Mock

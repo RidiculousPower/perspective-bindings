@@ -23,7 +23,7 @@ module ::Magnets::Bindings::Container::ClassInstance
   
   end
 
-  include ::Magnets::Bindings::AttributesContainer::Bindings
+  include ::Magnets::Bindings::AttributeContainer::Bindings
 
   ###############
   #  configure  #

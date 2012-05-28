@@ -1,5 +1,5 @@
 
-class ::Magnets::Bindings::AttributesContainer < ::Module
+class ::Magnets::Bindings::AttributeContainer < ::Module
 
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Hash
@@ -10,31 +10,93 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
   #  initialize  #
   ################
   
-  def initialize( parent_container = nil, store_in_container = nil, name = nil, & definition_block )
+  def initialize( parent_container = nil, 
+                  store_in_container = nil, 
+                  name = nil, 
+                  & definition_block )
 
     if store_in_container
       store_in_container.const_set( name.to_s.to_camel_case, self )
     end
-          
+    
+    initialize_binding_extension_modules( parent_container )
+    
     if parent_container
-      include parent_container
-      ::CascadingConfiguration::Variable.register_child_for_parent( self, parent_container )
-      # this will cause the compositing hash to initialize
-      # maybe we can move this elsewhere at some point - for now it's a simple solution
-      class_binding_class = ::Class.new( parent_container::ClassBinding )
-      instance_binding_class = ::Class.new( parent_container::InstanceBinding )  
-      const_set( :ClassBinding, class_binding_class )
-      const_set( :InstanceBinding, instance_binding_class )
-      binding_types
+      initialize_for_parent_container( parent_container )
     else
-      ::CascadingConfiguration::Variable.register_child_for_parent( self, self.class )
-      const_set( :ClassBinding, ::Class.new( ::Magnets::Bindings::ClassBinding ) )
-      const_set( :InstanceBinding, ::Class.new( ::Magnets::Bindings::InstanceBinding ) )
+      initialize_as_top_container
     end
 
     if block_given?
       module_eval( & definition_block )
     end
+    
+  end
+  
+  ##########################################
+  #  initialize_binding_extension_modules  #
+  ##########################################
+  
+  def initialize_binding_extension_modules( parent_container = nil )
+    
+    # Define extension modules for class and instance bindings.
+    # These always live at ::Magnets::Bindings::AttributeContainers::ContainerName::ClassBinding 
+    # and ::Magnets::Bindings::AttributeContainers::ContainerName::InstanceBinding.
+    
+    class_binding_extension_module = ::Module.new do
+
+      # Causes module inclusion to forward to any including modules.
+      # This is to get around Ruby's dynamic include problem.
+      extend ::Magnets::Bindings::AttributeDefinitionModule
+
+      if parent_container
+        include parent_container::ClassBinding
+      end
+
+    end
+    
+    const_set( :ClassBinding, class_binding_extension_module )
+      
+    instance_binding_extension_module = ::Module.new do
+      
+      # Causes module inclusion to forward to any including modules.
+      # This is to get around Ruby's dynamic include problem.
+      extend ::Magnets::Bindings::AttributeDefinitionModule
+      
+      if parent_container
+        include parent_container::InstanceBinding
+      end
+      
+    end
+    
+    const_set( :InstanceBinding, instance_binding_extension_module ) 
+    
+  end
+
+  #################################
+  #  initialize_as_top_container  #
+  #################################
+  
+  def initialize_as_top_container
+  
+    ::CascadingConfiguration::Variable.register_child_for_parent( self, self.class )
+    
+  end
+  
+  #####################################
+  #  initialize_for_parent_container  #
+  #####################################
+  
+  def initialize_for_parent_container( parent_container )
+
+    include parent_container
+    
+    ::CascadingConfiguration::Variable.register_child_for_parent( self, parent_container )
+
+    # FIX
+    # this will cause the compositing hash to initialize
+    # maybe we can move this elsewhere at some point - for now it's a simple solution
+    binding_types
     
   end
 
@@ -136,7 +198,11 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
 
   def define_class_binding_class( binding_type_name, *definition_modules )
 
-    class_binding_class = ::Class.new( self::ClassBinding ) do
+    class_binding_extension_module = self::ClassBinding
+
+    class_binding_class = ::Class.new( ::Magnets::Bindings::ClassBinding ) do
+
+      include class_binding_extension_module
 
       unless definition_modules.empty?
         include( *definition_modules.reverse )
@@ -144,16 +210,17 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
             
     end
     
+    # Class name is self::binding_type_name.to_s.to_camel_case
+    camel_case_name = binding_type_name.to_s.to_camel_case
+    
+    const_set( camel_case_name, class_binding_class )
+
     class_multiple_binding_class = ::Class.new( class_binding_class ) do
       
       include( ::Magnets::Bindings::Attributes::Multiple )
       
     end
     
-    # Class name is self::binding_type_name.to_s.to_camel_case
-    camel_case_name = binding_type_name.to_s.to_camel_case
-    
-    const_set( camel_case_name, class_binding_class )
     class_binding_class.const_set( :Multiple, class_multiple_binding_class )
     
     return class_binding_class
@@ -166,16 +233,20 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
   
   def define_instance_binding_class( binding_type_name, *definition_modules )
 
-    # Assumes class binding type has already been defined.
-    class_binding_class = class_binding_class( binding_type_name )
+    instance_binding_extension_module = self::InstanceBinding
 
-    instance_binding_class = ::Class.new( self::InstanceBinding ) do
+    instance_binding_class = ::Class.new( ::Magnets::Bindings::InstanceBinding ) do
+      
+      include instance_binding_extension_module
       
       unless definition_modules.empty?
         include( *definition_modules.reverse )
       end
           
     end
+
+    # Assumes class binding type has already been defined.
+    class_binding_class = class_binding_class( binding_type_name )
 
     # Class name is self::binding_type_name.to_s.to_camel_case::InstanceBinding
     class_binding_class.const_set( :InstanceBinding, instance_binding_class )
@@ -216,7 +287,7 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
     
     # attr_[type]
     
-    method_prefix = ::Magnets::Bindings::AttributesContainer::MethodPrefix.dup
+    method_prefix = ::Magnets::Bindings::AttributeContainer::MethodPrefix.dup
     
     return method_prefix << '_' << binding_type_name.to_s
     
@@ -228,7 +299,7 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
   
   def multiple_binding_method_name( binding_type_name )
     
-    method_prefix = ::Magnets::Bindings::AttributesContainer::MethodPrefix.dup
+    method_prefix = ::Magnets::Bindings::AttributeContainer::MethodPrefix.dup
     
     # attr_[type]s or attr_[types]es
     method_name = method_prefix << '_' << binding_type_name.to_s
@@ -247,7 +318,7 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
   
   def required_single_binding_method_name( binding_type_name )
     
-    method_prefix = ::Magnets::Bindings::AttributesContainer::MethodPrefix.dup
+    method_prefix = ::Magnets::Bindings::AttributeContainer::MethodPrefix.dup
     
     # attr_required_[type]
     return method_prefix << '_required_' << binding_type_name.to_s
@@ -260,7 +331,7 @@ class ::Magnets::Bindings::AttributesContainer < ::Module
   
   def required_multiple_binding_method_name( binding_type_name )
     
-    method_prefix = ::Magnets::Bindings::AttributesContainer::MethodPrefix.dup
+    method_prefix = ::Magnets::Bindings::AttributeContainer::MethodPrefix.dup
     
     # attr_required_[type]s or attr_required_[types]es
     method_name = method_prefix << '_required_' << binding_type_name.to_s
