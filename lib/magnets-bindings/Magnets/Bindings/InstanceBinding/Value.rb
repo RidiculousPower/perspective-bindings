@@ -31,17 +31,27 @@ module ::Magnets::Bindings::InstanceBinding::Value
         end
 
         @__value__ = object
-
-        if __container__
-          self.__container__.__autobind__( object )    
-        end
       
     end    
+
+    __set_value_in_container__
     
     return object
     
   end
 
-  alias_method :value=, :__value__=
+  alias_method  :value=, :__value__=
+  
+  ################################
+  #  __set_value_in_container__  #
+  ################################
+  
+  def __set_value_in_container__
+    
+    if container = __container__
+      container.__autobind__( __value__ )    
+    end
+    
+  end
 
 end

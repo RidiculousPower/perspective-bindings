@@ -85,6 +85,10 @@ module ::Magnets::Bindings::Configuration
 
           end
         
+        else
+          
+          raise ::RuntimeError, 'We should not have gotten here!'
+          
       end
 
       return child_instance

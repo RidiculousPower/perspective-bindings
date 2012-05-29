@@ -1,9 +1,6 @@
 
 class ::Magnets::Bindings::AttributeContainer < ::Module
 
-  include ::CascadingConfiguration::Setting
-  include ::CascadingConfiguration::Hash
-  
   MethodPrefix = 'attr'
 
   ################
