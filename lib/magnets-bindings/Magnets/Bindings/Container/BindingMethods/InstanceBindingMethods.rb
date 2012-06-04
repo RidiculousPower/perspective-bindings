@@ -73,7 +73,7 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
     #=================#
     
     define_method( binding_name.write_accessor_name ) do |value|
-      
+
       return __bindings__[ binding_name ].__value__ = value
       
     end

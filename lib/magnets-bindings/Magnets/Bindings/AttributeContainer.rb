@@ -210,7 +210,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
 
   def instance_multiple_binding_class( binding_type_name )
     
-    return instance_binding_class( binding_type_name )::Multiple
+    return class_multiple_binding_class( binding_type_name )::InstanceBinding
     
   end
 
@@ -300,8 +300,8 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
       
     end
 
-    # Class name is self::binding_type_name.to_s.to_camel_case::InstanceBinding::Multiple
-    class_binding_class::InstanceBinding.const_set( :Multiple, instance_multiple_binding_class )
+    # Class name is self::binding_type_name.to_s.to_camel_case::Multiple::InstanceBinding
+    class_binding_class::Multiple.const_set( :InstanceBinding, instance_multiple_binding_class )
     
     return instance_binding_class
     

@@ -40,18 +40,27 @@ module ::Magnets::Bindings::Configuration
 
       child_instance = nil
 
+      # Pretty much all binding initialization takes place here.
+
       case instance = configuration_instance
 
+        # We are attaching to a root container class/module.
         when ::Magnets::Bindings::Container::ClassInstance
+
+          # We have either a subclass of a class with class bindings or an included module
+          # with class bindings.
+          #
+          # We create class bindings that are children of the provided bindings.
 
           # Create a new binding without any settings - causes automatic lookup to superclass.
           # Container classes are always the base of their route.
           child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__
 
+        # We are attaching to a nested container class binding.
         when ::Magnets::Bindings::ClassBinding
 
-          # Create a new binding without any settings - causes automatic lookup to superclass.
-          # Attaching to a class-binding means we are nested, so we need to nest with our route.
+          # We need to track the route where this binding is nested - 
+          # this is simply the binding path from the root container to this nested binding.
           base_route = nil
           if binding_instance.__route__
             base_route = binding_instance.__route__.dup
@@ -60,37 +69,73 @@ module ::Magnets::Bindings::Configuration
           end
           base_route.push( configuration_instance.__name__ )
           
+          # Create a new binding without any settings - causes automatic lookup to parent.
           child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__( base_route )
 
-        when ::Magnets::Bindings::Container::ObjectInstance, 
-             ::Magnets::Bindings::InstanceBinding
+        # We are attaching to a container instance nested in an instance binding.
+        # Nested instances are extended below so that this hook catches first.
+        when ::Magnets::Bindings::Container::ObjectInstance::Nested
+
+          # We want the same instance bindings we attached to the instance binding that
+          # this container is attached to.
+          child_instance = binding_instance
+
+        # We are attaching to a root container instance.
+        # We know this because we haven't been extended as a nested instance.
+        when ::Magnets::Bindings::Container::ObjectInstance
+          
+          case binding_instance
+            
+            when ::Magnets::Bindings::InstanceBinding
+
+              child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__
+            
+            when ::Magnets::Bindings::ClassBinding
+          
+              binding_instance.__bindings__
+
+              # We need instance bindings corresponding to the declared class bindings
+              child_instance = binding_instance.class::InstanceBinding.new( binding_instance )
+              child_instance.__bindings__
+
+              # whenever a view is set we want it to be set as nested (if appropriate)
+              if container = child_instance.__container__
+                container.extend( ::Magnets::Bindings::Container::ObjectInstance::Nested )
+                ::CascadingConfiguration::Variable.register_child_for_parent( container,
+                                                                              child_instance )
+                container.__bindings__
+              end
+
+          end
+          
+        # We are attaching to a nested instance binding
+        when ::Magnets::Bindings::InstanceBinding
 
           case binding_instance
             
             when ::Magnets::Bindings::InstanceBinding
 
-              instance_binding_class = binding_instance.class
-              parent_class_binding = binding_instance.__parent_binding__
-              child_instance = instance_binding_class.new( parent_class_binding )
+              child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__
+            
+            when ::Magnets::Bindings::ClassBinding
+
+              child_instance = binding_instance.class::InstanceBinding.new( binding_instance )
               
-            when ::Magnets::Bindings::Attributes::Multiple
-
-              instance_binding_class = binding_instance.class::InstanceBinding
-              child_instance = instance_binding_class::Multiple.new( binding_instance )
-
-            else
-
-              instance_binding_class = binding_instance.class::InstanceBinding
-              child_instance = instance_binding_class.new( binding_instance )
+              if container = child_instance.__container__
+                container.extend( ::Magnets::Bindings::Container::ObjectInstance::Nested )
+                ::CascadingConfiguration::Variable.register_child_for_parent( container,
+                                                                              binding_instance )
+                container.__bindings__
+              end
 
           end
         
         else
-          
-          raise ::RuntimeError, 'We should not have gotten here!'
+
+          raise ::RuntimeError, 'Unexpected binding type (' + instance.to_s + ')!'
           
       end
-
+      
       return child_instance
 
     end
@@ -113,7 +158,7 @@ module ::Magnets::Bindings::Configuration
   #  __shared_bindings__  #
   #########################
 
-	attr_module_configuration_hash  :__shared_bindings__ do
+	attr_configuration_hash  :__shared_bindings__ do
 
 	  #======================#
 	  #  child_pre_set_hook  #

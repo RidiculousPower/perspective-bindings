@@ -4,6 +4,7 @@ require 'uri'
 require 'accessor-utilities'
 
 #require 'cascading-configuration'
+
 $__cascading_configuration__spec__development = true
 require_relative '../../../ruby/cascading-configuration/lib/cascading-configuration.rb'
 
@@ -21,7 +22,11 @@ module ::Magnets::Bindings
       module Methods
       end
 		end
+		class MultiContainerProxy < ::BasicObject
+	  end
 		module ObjectInstance
+		  module Nested
+	    end
 		end
 	end
 	module Attributes
@@ -42,6 +47,7 @@ files = [
   'ClassBinding/Initialization',
   'ClassBinding',
 
+  'InstanceBinding/Bindings',
   'InstanceBinding/Configuration',
   'InstanceBinding/Initialization',
   'InstanceBinding/Validation',
@@ -69,6 +75,7 @@ files = [
 
   'Attributes',
   
+  'Container/MultiContainerProxy/Interface',
   'Container/MultiContainerProxy',
   'Container/Context',
   'Container/BindingMethods',

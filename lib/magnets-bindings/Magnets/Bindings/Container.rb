@@ -32,8 +32,8 @@ module ::Magnets::Bindings::Container
     
   end
 
-	include_or_extend_cascades_extends ::Magnets::Bindings::Container::ClassInstance
-
 	include ::Magnets::Bindings::Container::ObjectInstance
-  
+
+	include_or_extend_cascades_prepend_extends ::Magnets::Bindings::Container::ClassInstance
+	
 end

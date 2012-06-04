@@ -89,7 +89,7 @@ describe ::Magnets::Bindings::Container do
     end
     
     class ::Magnets::Bindings::Container::Mock
-      
+
       attr_alias :aliased_binding_name, :yet_another_binding
       attr_binding :another_binding, ::Magnets::Bindings::Container::OtherMock
       attr_alias :some_other_binding, another_binding.some_other_binding

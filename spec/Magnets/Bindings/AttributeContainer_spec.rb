@@ -92,11 +92,11 @@ describe ::Magnets::Bindings::AttributeContainer do
     instance::LikeText::Multiple.is_a?( ::Class ).should == true
     instance.define_instance_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance::LikeText::InstanceBinding.is_a?( ::Class ).should == true
-    instance::LikeText::InstanceBinding::Multiple.is_a?( ::Class ).should == true
+    instance::LikeText::Multiple::InstanceBinding.is_a?( ::Class ).should == true
     instance.class_binding_class( 'like_text' ).should == instance::LikeText
     instance.instance_binding_class( 'like_text' ).should == instance::LikeText::InstanceBinding
     instance.class_multiple_binding_class( 'like_text' ).should == instance::LikeText::Multiple
-    instance.instance_multiple_binding_class( 'like_text' ).should == instance::LikeText::InstanceBinding::Multiple
+    instance.instance_multiple_binding_class( 'like_text' ).should == instance::LikeText::Multiple::InstanceBinding
   end
 
 	#######################################  Define Types  ###########################################
@@ -212,7 +212,7 @@ describe ::Magnets::Bindings::AttributeContainer do
     instance::AlsoLikeText.is_a?( ::Class ).should == true
     instance::AlsoLikeText::InstanceBinding.is_a?( ::Class ).should == true
     instance::AlsoLikeText::Multiple.is_a?( ::Class ).should == true
-    instance::AlsoLikeText::InstanceBinding::Multiple.is_a?( ::Class ).should == true
+    instance::AlsoLikeText::Multiple::InstanceBinding.is_a?( ::Class ).should == true
   end
 
   ###################
@@ -226,7 +226,7 @@ describe ::Magnets::Bindings::AttributeContainer do
     instance::AlsoLikeText.is_a?( ::Class ).should == true
     instance::AlsoLikeText::InstanceBinding.is_a?( ::Class ).should == true
     instance::AlsoLikeText::Multiple.is_a?( ::Class ).should == true
-    instance::AlsoLikeText::InstanceBinding::Multiple.is_a?( ::Class ).should == true
+    instance::AlsoLikeText::Multiple::InstanceBinding.is_a?( ::Class ).should == true
   end
 
 end

@@ -1,6 +1,6 @@
 
 module ::Magnets::Bindings::ClassBinding::Bindings
-  
+
   #############################################
   #  __duplicate_as_inheriting_sub_binding__  #
   #############################################
