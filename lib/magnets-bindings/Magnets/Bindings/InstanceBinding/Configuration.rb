@@ -22,7 +22,7 @@ module ::Magnets::Bindings::InstanceBinding::Configuration
   def __initialize_for_bound_container__( bound_container )
     
     @__bound_container__ = bound_container
-    
+        
   end
 
   #########################

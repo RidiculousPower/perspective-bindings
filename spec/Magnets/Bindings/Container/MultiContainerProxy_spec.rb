@@ -60,9 +60,6 @@ describe ::Magnets::Bindings::Container::MultiContainerProxy do
     instance[ 1 ].content.should == :two
     instance[ 2 ].content.should == :three
     instance[ 3 ].content.should == :four
-    CascadingConfiguration::Variable.ancestor( instance[ 1 ], :__bindings__ ).should == instance[ 0 ]
-    CascadingConfiguration::Variable.ancestor( instance[ 2 ], :__bindings__ ).should == instance[ 0 ]
-    CascadingConfiguration::Variable.ancestor( instance[ 3 ], :__bindings__ ).should == instance[ 0 ]
   end
 
   #################

@@ -59,10 +59,8 @@ module ::Magnets::Bindings::InstanceBinding::Initialization
       extend( container_class::InstanceBindingMethods )
             
     end
-    
-    __configure_container__
-    
-    container_instance
+        
+    return container_instance
     
   end
 

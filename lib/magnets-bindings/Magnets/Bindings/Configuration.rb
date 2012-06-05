@@ -92,19 +92,15 @@ module ::Magnets::Bindings::Configuration
             
             when ::Magnets::Bindings::ClassBinding
           
-              binding_instance.__bindings__
-
               # We need instance bindings corresponding to the declared class bindings
               child_instance = binding_instance.class::InstanceBinding.new( binding_instance )
               child_instance.__initialize_for_bound_container__( instance )
-              child_instance.__bindings__
 
               # whenever a view is set we want it to be set as nested (if appropriate)
               if container = child_instance.__container__
                 container.extend( ::Magnets::Bindings::Container::ObjectInstance::Nested )
                 ::CascadingConfiguration::Variable.register_child_for_parent( container,
                                                                               child_instance )
-                container.__bindings__
               end
 
           end
@@ -127,7 +123,6 @@ module ::Magnets::Bindings::Configuration
                 container.extend( ::Magnets::Bindings::Container::ObjectInstance::Nested )
                 ::CascadingConfiguration::Variable.register_child_for_parent( container,
                                                                               binding_instance )
-                container.__bindings__
               end
 
           end
@@ -170,12 +165,13 @@ module ::Magnets::Bindings::Configuration
 
       # get the shared instance from the same route in self
       binding_route = shared_binding_instance.__route__
+
       shared_context = ::Magnets::Bindings::Container.context( shared_alias_name,
-                                                               self, 
+                                                               configuration_instance, 
                                                                binding_route,
                                                                shared_alias_name )
       
-      return binding_context.__binding__( shared_alias_name )
+      return shared_context.__binding__( shared_alias_name )
 
     end
   

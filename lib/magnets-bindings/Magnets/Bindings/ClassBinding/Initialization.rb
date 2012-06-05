@@ -23,7 +23,7 @@ module ::Magnets::Bindings::ClassBinding::Initialization
         __validate_container_class__( container_class )
         self.__container_class__ = container_class
         extend( container_class::ClassBindingMethods )
-      end    
+      end
 
     else
 

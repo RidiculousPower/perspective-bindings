@@ -132,7 +132,7 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
     #================#
     
     define_method( view_binding_name_for_binding_name( binding_name ) ) do
-      
+
       return __bindings__[ binding_name ].__view__
       
     end

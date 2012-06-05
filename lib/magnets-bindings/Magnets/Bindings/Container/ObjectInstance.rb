@@ -2,6 +2,28 @@
 module ::Magnets::Bindings::Container::ObjectInstance
 
   include ::Magnets::Bindings::Configuration
+
+  ################
+  #  initialize  #
+  ################
+  
+  def initialize
+    
+    __configure_bindings__
+        
+  end
+  
+  ############################
+  #  __configure_bindings__  #
+  ############################
+
+  def __configure_bindings__
+    
+    __bindings__.each do |this_binding_name, this_binding_instance|
+      this_binding_instance.__configure_container__
+    end
+    
+  end
   
   #######################################
   #  __initialize_for_parent_binding__  #
