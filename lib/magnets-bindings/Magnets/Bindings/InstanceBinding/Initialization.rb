@@ -54,12 +54,13 @@ module ::Magnets::Bindings::InstanceBinding::Initialization
     if container_class
       
       container_instance = container_class.new
+      ::CascadingConfiguration::Variable.register_child_for_parent( container_instance, self )
       self.__container__ = container_instance
       extend( container_class::InstanceBindingMethods )
-      
-      __configure_container__
-      
+            
     end
+    
+    __configure_container__
     
     container_instance
     
@@ -70,10 +71,10 @@ module ::Magnets::Bindings::InstanceBinding::Initialization
   #############################
   
   def __configure_container__
-    
+
     container_instance = __container__
     bound_container = __bound_container__
-    
+
     # run configuration proc for each binding instance
 		__configuration_procs__.each do |this_configuration_proc|
       bound_container.instance_exec( container_instance, & this_configuration_proc )

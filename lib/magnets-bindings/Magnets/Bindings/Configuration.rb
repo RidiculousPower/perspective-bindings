@@ -96,6 +96,7 @@ module ::Magnets::Bindings::Configuration
 
               # We need instance bindings corresponding to the declared class bindings
               child_instance = binding_instance.class::InstanceBinding.new( binding_instance )
+              child_instance.__initialize_for_bound_container__( instance )
               child_instance.__bindings__
 
               # whenever a view is set we want it to be set as nested (if appropriate)
@@ -120,6 +121,7 @@ module ::Magnets::Bindings::Configuration
             when ::Magnets::Bindings::ClassBinding
 
               child_instance = binding_instance.class::InstanceBinding.new( binding_instance )
+              child_instance.__initialize_for_bound_container__( instance )
               
               if container = child_instance.__container__
                 container.extend( ::Magnets::Bindings::Container::ObjectInstance::Nested )
