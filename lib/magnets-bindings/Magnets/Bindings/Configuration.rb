@@ -32,6 +32,20 @@ module ::Magnets::Bindings::Configuration
 
 	attr_configuration_hash  :__bindings__ do
 
+	  #=========================#
+	  #  initialize_for_parent  #
+	  #=========================#
+
+    def initialize_for_parent( parent )
+      
+      super
+      
+      if configuration_instance.respond_to?( :__configure_bindings__ )
+        configuration_instance.__configure_bindings__
+      end
+      
+    end
+
 	  #======================#
 	  #  child_pre_set_hook  #
 	  #======================#
@@ -73,48 +87,31 @@ module ::Magnets::Bindings::Configuration
           # Create a new binding without any settings - causes automatic lookup to parent.
           child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__( base_route )
 
-        # We are attaching to a container instance nested in an instance binding.
-        # Nested instances are extended below so that this hook catches first.
-        when ::Magnets::Bindings::Container::ObjectInstance::Nested
-
-          # We want the same instance bindings we attached to the instance binding that
-          # this container is attached to.
-          child_instance = binding_instance
-puts 'route: ' + child_instance.__route_string__
         # We are attaching to a root container instance.
         # We know this because we haven't been extended as a nested instance.
         when ::Magnets::Bindings::Container::ObjectInstance
-          
+
           case binding_instance
             
             when ::Magnets::Bindings::InstanceBinding
-              raise 'here1'
 
-              child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__
+              # We want the same instance bindings we attached to the instance binding that
+              # this container is attached to.
+              child_instance = binding_instance
             
             when ::Magnets::Bindings::ClassBinding
-          
-              # We need instance bindings corresponding to the declared class bindings
-              child_instance = binding_instance.class::InstanceBinding.new( binding_instance )
-              child_instance.__initialize_for_bound_container__( instance )
 
+              # We need instance bindings corresponding to the declared class bindings
+              child_instance = binding_instance.class::InstanceBinding.new( binding_instance, 
+                                                                            instance )
+              
           end
-          
+            
         # We are attaching to a nested instance binding
         when ::Magnets::Bindings::InstanceBinding
 
-          case binding_instance
-            
-            when ::Magnets::Bindings::InstanceBinding
-raise 'here2'
-              child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__
-            
-            when ::Magnets::Bindings::ClassBinding
-
-              child_instance = binding_instance.class::InstanceBinding.new( binding_instance )
-              child_instance.__initialize_for_bound_container__( instance )
-
-          end
+          child_instance = binding_instance.class::InstanceBinding.new( binding_instance,
+                                                                        instance.__container__ )
         
         else
 
@@ -125,7 +122,7 @@ raise 'here2'
       return child_instance
 
     end
-
+    
   end
 
   ccm.alias_module_and_instance_methods( self, :bindings, :__bindings__ )

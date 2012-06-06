@@ -30,7 +30,7 @@ module ::Magnets::Bindings::InstanceBinding::Configuration
   #  __bound_container__  #
   #########################
 
-  attr_accessor  :__bound_container__
+  attr_reader  :__bound_container__
 
   alias_method  :bound_container, :__bound_container__
 

@@ -50,7 +50,7 @@ describe ::Magnets::Bindings::InstanceBinding do
     ::Magnets::Bindings::InstanceBinding.instance_method( :route ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__route__ )
     ::Magnets::Bindings::InstanceBinding.instance_method( :route_string ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__route_string__ )
     class_instance = ::Magnets::Bindings::ClassBinding.new( :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
-    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance )
+    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance, Object.new )
     instance.__parent_binding__.should == class_instance
     instance.__name__.should == class_instance.__name__
     instance.__container__.class.should == class_instance.__container_class__
@@ -70,7 +70,7 @@ describe ::Magnets::Bindings::InstanceBinding do
     ::Magnets::Bindings::InstanceBinding.instance_method( :required= ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__required__= )
     
     class_instance = ::Magnets::Bindings::ClassBinding.new( :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
-    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance )
+    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance, Object.new )
 
     instance.required?.should == false
     instance.optional?.should == true
@@ -79,7 +79,7 @@ describe ::Magnets::Bindings::InstanceBinding do
     instance.optional?.should == false
     
     class_instance.__required__ = true
-    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance )
+    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance, Object.new )
     instance.required?.should == true
     instance.optional?.should == false
     instance.__required__ = false
@@ -100,7 +100,7 @@ describe ::Magnets::Bindings::InstanceBinding do
     ::Magnets::Bindings::InstanceBinding.instance_method( :bindings ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__bindings__ )
     ::Magnets::Bindings::InstanceBinding.instance_method( :binding ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__binding__ )
     class_instance = ::Magnets::Bindings::ClassBinding.new( :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
-    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance )
+    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance, Object.new )
     # mock reference to InstanceBinding from ClassBinding
     ::Magnets::Bindings::ClassBinding::InstanceBinding = ::Magnets::Bindings::InstanceBinding
     some_binding_instance = ::Magnets::Bindings::ClassBinding.new( :some_binding )
@@ -125,7 +125,7 @@ describe ::Magnets::Bindings::InstanceBinding do
     ::Magnets::Bindings::InstanceBinding.instance_method( :value= ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__value__= )
 
     class_instance = ::Magnets::Bindings::ClassBinding.new( :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
-    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance )
+    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance, Object.new )
     instance.__value__.should == nil
     instance.binding_value_valid?( :some_value ).should == false
     Proc.new { instance.__value__ = :some_value }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
@@ -153,7 +153,7 @@ describe ::Magnets::Bindings::InstanceBinding do
     instance.__container__[ 3 ].content.should == :four
     
     second_class_instance = ::Magnets::Bindings::ClassBinding.new( :other_binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
-    second_instance = ::Magnets::Bindings::InstanceBinding.new( second_class_instance )
+    second_instance = ::Magnets::Bindings::InstanceBinding.new( second_class_instance, Object.new )
     second_instance.extend( ::Magnets::Bindings::Attributes::Text )
     second_instance.__value__ = :some_value
     instance.__value__ = second_instance

@@ -5,37 +5,17 @@ module ::Magnets::Bindings::InstanceBinding::Initialization
   #  initialize  #
   ################
 
-  def initialize( parent_class_or_instance_binding )
+  def initialize( parent_class_binding, bound_container_instance )
         
-    __initialize_for_parent_binding__( parent_class_or_instance_binding )
-    
+    @__parent_binding__ = parent_class_binding
+
+    # register parent class binding as ancestor for configurations
+    ::CascadingConfiguration::Variable.register_child_for_parent( self, @__parent_binding__ )
+
+    @__bound_container__ = bound_container_instance
+        
     __initialize_container__
         
-  end
-  
-  #######################################
-  #  __initialize_for_parent_binding__  #
-  #######################################
-  
-  def __initialize_for_parent_binding__( parent_class_or_instance_binding )
-    
-    case @__parent_binding__ = parent_class_or_instance_binding
-      
-      when ::Magnets::Bindings::InstanceBinding
-      
-        
-        if @__bound_container__ = @__parent_binding__.__container__
-          @__bound_container_class__ = @__bound_container__.class
-          @__container_class__ = @__bound_container__.class
-        end
-        
-      when ::Magnets::Bindings::ClassBinding
-
-        @__bound_container_class__ = @__parent_binding__.__bound_container_class__
-        @__container_class__ = @__parent_binding__.__container_class__
-      
-    end
-    
   end
 
   ##############################
@@ -46,28 +26,16 @@ module ::Magnets::Bindings::InstanceBinding::Initialization
     
     container_instance = nil
 
-    container_class = nil
-
-    if container_class
+    if container_class = @__parent_binding__.__container_class__
 
       container_instance = container_class.new
-      
-      if __bound_container__.__route__
-        container_instance.extend( ::Magnets::Bindings::Container::ObjectInstance::Nested )
-      end
-      
-      container_instance.__configure_bindings__
-      
-      ::CascadingConfiguration::Variable.register_child_for_parent( container_instance, self )
+
       self.__container__ = container_instance
       extend( container_class::InstanceBindingMethods )
-            
+      ::CascadingConfiguration::Variable.register_child_for_parent( container_instance, self )
+
     end
-       
-    # register parent class binding as ancestor for configurations
-    ::CascadingConfiguration::Variable.register_child_for_parent( self, 
-                                                                  @__parent_binding__ )
-        
+               
     return container_instance
     
   end

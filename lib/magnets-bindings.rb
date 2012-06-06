@@ -3,11 +3,6 @@ require 'uri'
 
 require 'accessor-utilities'
 
-#require 'cascading-configuration'
-
-$__cascading_configuration__spec__development = true
-require_relative '../../../ruby/cascading-configuration/lib/cascading-configuration.rb'
-
 require_relative '../../configuration/lib/magnets-configuration.rb'
 
 module ::Magnets::Bindings
@@ -25,8 +20,6 @@ module ::Magnets::Bindings
 		class MultiContainerProxy < ::BasicObject
 	  end
 		module ObjectInstance
-		  module Nested
-	    end
 		end
 	end
 	module Attributes
