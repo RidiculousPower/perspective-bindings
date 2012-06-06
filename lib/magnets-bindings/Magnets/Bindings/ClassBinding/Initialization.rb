@@ -22,7 +22,6 @@ module ::Magnets::Bindings::ClassBinding::Initialization
       if container_class
         __validate_container_class__( container_class )
         self.__container_class__ = container_class
-        extend( container_class::ClassBindingMethods )
       end
 
     else
@@ -31,10 +30,14 @@ module ::Magnets::Bindings::ClassBinding::Initialization
 
     end
 
+    if container_class or container_class = __container_class__
+      extend( container_class::ClassBindingMethods )
+    end
+
     if block_given?
       __configure__( & configuration_proc )
     end
-        
+    
   end
 
   ###############################

@@ -11,6 +11,5 @@ module ::Magnets::Bindings::InstanceBinding::Validation
     return binding_value.nil?
     
   end
-  alias_method  :ensure_binding_value_valid, :binding_value_valid?
 
 end

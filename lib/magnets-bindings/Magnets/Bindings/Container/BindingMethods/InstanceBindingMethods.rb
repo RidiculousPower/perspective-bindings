@@ -7,6 +7,8 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
   
   def define_binding( binding_name )
   
+    define_binding_getter( binding_name )
+    
     define_binding_value_setter( binding_name )
     define_binding_value_getter( binding_name )
 
@@ -21,6 +23,8 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
   
   def define_binding_alias( binding_alias, binding_name )
   
+    define_binding_alias_getter( binding_alias, binding_name )
+    
     define_binding_alias_value_setter( binding_alias, binding_name )
     define_binding_alias_value_getter( binding_alias, binding_name )
 
@@ -34,6 +38,8 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
   ###########################
   
   def define_shared_binding( binding_alias, shared_binding_instance )
+    
+    define_shared_binding_getter( binding_alias, shared_binding_instance )
     
     define_shared_binding_value_setter( binding_alias, shared_binding_instance )
     define_shared_binding_value_getter( binding_alias, shared_binding_instance )
@@ -52,12 +58,41 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
   end
 
   ########################################
-  #  view_binding_name_for_binding_name  #
+  #  view_method_name_for_binding_name  #
   ########################################
 
-  def view_binding_name_for_binding_name( binding_name )
+  def view_method_name_for_binding_name( binding_name )
     
-    return ( binding_name.to_s + '_view' ).to_sym
+    return ( binding_name.to_s << '_view' ).to_sym
+    
+  end
+  
+  ##########################################
+  #  binding_method_name_for_binding_name  #
+  ##########################################
+  
+  def binding_method_name_for_binding_name( binding_name )
+    
+    return ( binding_name.to_s << '_binding' ).to_sym
+    
+  end
+
+  ###########################
+  #  define_binding_getter  #
+  ###########################
+
+  # Defines :binding_name_binding, which gets the binding instance (instance binding only).
+  def define_binding_getter( binding_name )
+
+    #========================#
+    #  binding_name_binding  #
+    #========================#
+    
+    define_method( binding_method_name_for_binding_name( binding_name ) ) do
+      
+      return __bindings__[ binding_name ]
+      
+    end
     
   end
 
@@ -106,11 +141,11 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
   # Defines :binding_name=, which sets the view in the binding instance (instance binding only).
   def define_binding_view_setter( binding_name )
 
-    #=================#
-    #  binding_name=  #
-    #=================#
+    #======================#
+    #  binding_name_view=  #
+    #======================#
     
-    view_binding_method_name = view_binding_name_for_binding_name( binding_name )
+    view_binding_method_name = view_method_name_for_binding_name( binding_name )
     
     define_method( view_binding_method_name.write_accessor_name ) do |view|
       
@@ -127,13 +162,32 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
   # Defines :binding_name=, which sets the view in the binding instance (instance binding only).
   def define_binding_view_getter( binding_name )
 
-    #================#
-    #  binding_name  #
-    #================#
+    #=====================#
+    #  binding_name_view  #
+    #=====================#
     
-    define_method( view_binding_name_for_binding_name( binding_name ) ) do
+    define_method( view_method_name_for_binding_name( binding_name ) ) do
 
       return __bindings__[ binding_name ].__view__
+      
+    end
+    
+  end
+
+  #################################
+  #  define_binding_alias_getter  #
+  #################################
+
+  # Defines :binding_name_binding, which gets the binding instance (instance binding only).
+  def define_binding_alias_getter( binding_alias, binding_name )
+
+    #========================#
+    #  binding_name_binding  #
+    #========================#
+    
+    define_method( binding_method_name_for_binding_name( binding_alias ) ) do
+      
+      return __bindings__[ binding_name ]
       
     end
     
@@ -185,7 +239,7 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
     #  binding_alias_name=  #
     #=======================#
     
-    view_binding_method_name = view_binding_name_for_binding_name( binding_alias )
+    view_binding_method_name = view_method_name_for_binding_name( binding_alias )
     
     define_method( view_binding_method_name.write_accessor_name ) do |view|
       
@@ -205,12 +259,31 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
     #  binding_alias_name  #
     #======================#
     
-    define_method( view_binding_name_for_binding_name( binding_alias ) ) do
+    define_method( view_method_name_for_binding_name( binding_alias ) ) do
       
       return __bindings__[ binding_name ].__view__
       
     end
 
+  end
+  
+  ##################################
+  #  define_shared_binding_getter  #
+  ##################################
+
+  # Defines :binding_name_binding, which gets the binding instance (instance binding only).
+  def define_shared_binding_getter( binding_alias, shared_binding_instance )
+
+    #========================#
+    #  binding_name_binding  #
+    #========================#
+    
+    define_method( binding_method_name_for_binding_name( binding_alias ) ) do
+      
+      return __shared_bindings__[ binding_alias ]
+      
+    end
+    
   end
   
   ########################################
@@ -259,7 +332,7 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
     #  shared_binding_name=  #
     #========================#
     
-    view_binding_method_name = view_binding_name_for_binding_name( binding_alias )
+    view_binding_method_name = view_method_name_for_binding_name( binding_alias )
     
     define_method( view_binding_method_name.write_accessor_name ) do |view|
       
@@ -279,7 +352,7 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
     #  shared_binding_name  #
     #=======================#
     
-    define_method( view_binding_name_for_binding_name( binding_alias ) ) do
+    define_method( view_method_name_for_binding_name( binding_alias ) ) do
       
       return __shared_bindings__[ binding_alias ].__view__
       

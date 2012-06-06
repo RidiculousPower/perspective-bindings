@@ -2,16 +2,6 @@
 module ::Magnets::Bindings::Container::ObjectInstance
 
   include ::Magnets::Bindings::Configuration
-
-  ################
-  #  initialize  #
-  ################
-  
-  def initialize
-    
-    __configure_bindings__
-        
-  end
   
   ############################
   #  __configure_bindings__  #

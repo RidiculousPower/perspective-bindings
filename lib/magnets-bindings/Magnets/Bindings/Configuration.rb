@@ -59,15 +59,16 @@ module ::Magnets::Bindings::Configuration
         # We are attaching to a nested container class binding.
         when ::Magnets::Bindings::ClassBinding
 
+          base_route = nil
+
           # We need to track the route where this binding is nested - 
           # this is simply the binding path from the root container to this nested binding.
-          base_route = nil
-          if binding_instance.__route__
-            base_route = binding_instance.__route__.dup
+          if route = instance.__route__
+            base_route = route.dup
           else
             base_route = [ ]
           end
-          base_route.push( configuration_instance.__name__ )
+          base_route.push( instance.__name__ )
           
           # Create a new binding without any settings - causes automatic lookup to parent.
           child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__( base_route )
@@ -79,7 +80,7 @@ module ::Magnets::Bindings::Configuration
           # We want the same instance bindings we attached to the instance binding that
           # this container is attached to.
           child_instance = binding_instance
-
+puts 'route: ' + child_instance.__route_string__
         # We are attaching to a root container instance.
         # We know this because we haven't been extended as a nested instance.
         when ::Magnets::Bindings::Container::ObjectInstance
@@ -87,6 +88,7 @@ module ::Magnets::Bindings::Configuration
           case binding_instance
             
             when ::Magnets::Bindings::InstanceBinding
+              raise 'here1'
 
               child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__
             
@@ -96,13 +98,6 @@ module ::Magnets::Bindings::Configuration
               child_instance = binding_instance.class::InstanceBinding.new( binding_instance )
               child_instance.__initialize_for_bound_container__( instance )
 
-              # whenever a view is set we want it to be set as nested (if appropriate)
-              if container = child_instance.__container__
-                container.extend( ::Magnets::Bindings::Container::ObjectInstance::Nested )
-                ::CascadingConfiguration::Variable.register_child_for_parent( container,
-                                                                              child_instance )
-              end
-
           end
           
         # We are attaching to a nested instance binding
@@ -111,19 +106,13 @@ module ::Magnets::Bindings::Configuration
           case binding_instance
             
             when ::Magnets::Bindings::InstanceBinding
-
+raise 'here2'
               child_instance = binding_instance.__duplicate_as_inheriting_sub_binding__
             
             when ::Magnets::Bindings::ClassBinding
 
               child_instance = binding_instance.class::InstanceBinding.new( binding_instance )
               child_instance.__initialize_for_bound_container__( instance )
-              
-              if container = child_instance.__container__
-                container.extend( ::Magnets::Bindings::Container::ObjectInstance::Nested )
-                ::CascadingConfiguration::Variable.register_child_for_parent( container,
-                                                                              binding_instance )
-              end
 
           end
         
