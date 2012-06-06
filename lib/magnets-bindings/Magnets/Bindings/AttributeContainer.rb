@@ -7,9 +7,9 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   #  initialize  #
   ################
   
-  def initialize( parent_container = nil, 
-                  store_in_container = nil, 
+  def initialize( store_in_container = nil, 
                   name = nil, 
+                  parent_container = nil, 
                   & definition_block )
 
     if store_in_container
@@ -19,6 +19,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     initialize_binding_extension_modules( parent_container )
     
     @binding_types = { }
+    @binding_aliases = { }
 
     initialize_for_parents( parent_container )
     
@@ -34,7 +35,15 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
 
   def initialize_for_parents( parent_container )
     
-    @parents = [ ]
+    # We store parents in a unique array so that we retain initial sort order.
+    #
+    # This forces the same behavior as the Ruby ancestor chain - with the exception of
+    # re-including, which is not managed. So long as new parents are only added once, only new
+    # parents will be added to the chain, and in the order parents are added.
+    # 
+    # This should be all we need to permit multiple parents.
+    # 
+    @parents ||= ::CompositingArray::Unique.new( nil, self )
     
     if parent_container
 
@@ -50,7 +59,13 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
         define_binding_type( this_binding_type )
       end
 
+      parent_container.binding_aliases.each do |this_binding_alias, this_binding_type|
+        alias_binding_type( this_binding_alias, this_binding_type )
+      end
+
     end
+    
+    return @parents
     
   end
   
@@ -133,6 +148,12 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   
   attr_reader :binding_types
 
+  #####################
+  #  binding_aliases  #
+  #####################
+  
+  attr_reader :binding_aliases
+
   #################################
   #  instance_binding_extensions  #
   #################################
@@ -152,13 +173,28 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     @binding_types[ binding_type_name ] ||= [ ]
     @binding_types[ binding_type_name ].concat( instance_definition_modules )
     
-    define_class_binding_class( binding_type_name )
-    define_instance_binding_class( binding_type_name, *instance_definition_modules )
+    class_binding_class = define_class_binding_class( binding_type_name )
+    instance_binding_class = define_instance_binding_class( binding_type_name, 
+                                                            *instance_definition_modules )
     
     define_binding_methods( binding_type_name )
     
+    return class_binding_class
+    
   end
 
+  ########################
+  #  alias_binding_type  #
+  ########################
+  
+  def alias_binding_type( alias_name, binding_type_name )
+    
+    @binding_aliases[ alias_name ] = binding_type_name
+    
+    define_binding_methods( alias_name, binding_type_name )
+    
+  end
+  
   #########################
   #  extend_binding_type  #
   #########################

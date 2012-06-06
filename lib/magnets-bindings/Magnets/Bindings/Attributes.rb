@@ -8,7 +8,7 @@ module ::Magnets::Bindings::Attributes
   ################################
   
   def self.define_container_type( container_type, 
-                                  parent_container_or_type = nil, 
+                                  *parent_container_or_types, 
                                   & definition_block )
 
     if container_type_module = @bindings_modules[ container_type ]
@@ -20,7 +20,7 @@ module ::Magnets::Bindings::Attributes
     else
 
       container_type_module = create_container_type( container_type,
-                                                     parent_container_or_type,
+                                                     *parent_container_or_types,
                                                      & definition_block )
       
     end
@@ -34,30 +34,37 @@ module ::Magnets::Bindings::Attributes
   ################################
   
   def self.create_container_type( container_type, 
-                                  parent_container_or_type = nil,
+                                  *parent_container_or_types,
                                   & definition_block )
     
-    parent_container = nil
+    parent_containers = [ ]
+    
+    parent_container_or_types.each do |this_parent_container_or_type|
 
-    case parent_container_or_type
+      case this_parent_container_or_type
     
-      when ::Module
+        when ::Module
     
-        parent_container = parent_container_or_type
+          parent_containers.push( this_parent_container_or_type )
   
-      when ::Symbol, ::String
+        when ::Symbol, ::String
 
-        unless parent_container = @bindings_modules[ parent_container_or_type ]
-          raise ::ArgumentError, 'No container defined by name :' + parent_container_or_type.to_s
-        end
+          if this_parent_container = @bindings_modules[ this_parent_container_or_type ]
+            parent_containers.push( this_parent_container )
+          else
+            raise ::ArgumentError, 
+                    'No container defined by name :' + this_parent_container_or_type.to_s
+          end
+
+      end
 
     end
-    
+
     container_type_module = ::Magnets::Bindings::
-                              AttributeContainer.new( parent_container,
-                                                      ::Magnets::Bindings::
+                              AttributeContainer.new( ::Magnets::Bindings::
                                                         AttributeContainer,
                                                       container_type,
+                                                      *parent_containers,
                                                       & definition_block )
     
     @bindings_modules[ container_type ] = container_type_module
