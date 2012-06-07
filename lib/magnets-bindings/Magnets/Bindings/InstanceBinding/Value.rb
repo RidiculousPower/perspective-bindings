@@ -26,7 +26,7 @@ module ::Magnets::Bindings::InstanceBinding::Value
       else
 
         unless binding_value_valid?( object )
-          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError, 
+          raise ::Magnets::Bindings::Exception::BindingInstanceInvalidType, 
                   'Invalid value ' +  object.inspect + ' for binding :' + __name__.to_s + '.'
         end
 

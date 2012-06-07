@@ -34,18 +34,18 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
   end
 
   ###########################
-  #  define_shared_binding  #
+  #  define_local_alias_to_binding  #
   ###########################
   
-  def define_shared_binding( binding_alias, shared_binding_instance )
+  def define_local_alias_to_binding( binding_alias, binding_instance )
     
-    define_shared_binding_getter( binding_alias, shared_binding_instance )
+    define_local_alias_to_binding_getter( binding_alias, binding_instance )
     
-    define_shared_binding_value_setter( binding_alias, shared_binding_instance )
-    define_shared_binding_value_getter( binding_alias, shared_binding_instance )
+    define_local_alias_to_binding_value_setter( binding_alias, binding_instance )
+    define_local_alias_to_binding_value_getter( binding_alias, binding_instance )
 
-    define_shared_binding_view_setter( binding_alias, shared_binding_instance )
-    define_shared_binding_view_getter( binding_alias, shared_binding_instance )
+    define_local_alias_to_binding_view_setter( binding_alias, binding_instance )
+    define_local_alias_to_binding_view_getter( binding_alias, binding_instance )
   
   end
 
@@ -268,11 +268,11 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
   end
   
   ##################################
-  #  define_shared_binding_getter  #
+  #  define_local_alias_to_binding_getter  #
   ##################################
 
   # Defines :binding_name_binding, which gets the binding instance (instance binding only).
-  def define_shared_binding_getter( binding_alias, shared_binding_instance )
+  def define_local_alias_to_binding_getter( binding_alias, binding_instance )
 
     #========================#
     #  binding_name_binding  #
@@ -280,81 +280,81 @@ module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
     
     define_method( binding_method_name_for_binding_name( binding_alias ) ) do
       
-      return __shared_bindings__[ binding_alias ]
+      return __local_aliases_to_bindings__[ binding_alias ]
       
     end
     
   end
   
   ########################################
-  #  define_shared_binding_value_setter  #
+  #  define_local_alias_to_binding_value_setter  #
   ########################################
 
-  def define_shared_binding_value_setter( binding_alias, shared_binding_instance )
+  def define_local_alias_to_binding_value_setter( binding_alias, binding_instance )
 
     #========================#
-    #  shared_binding_name=  #
+    #  local_alias_to_binding_name=  #
     #========================#
     
     define_method( binding_alias.write_accessor_name ) do |value|
       
-      return __shared_bindings__[ binding_alias ].__value__ = value
+      return __local_aliases_to_bindings__[ binding_alias ].__value__ = value
       
     end
 
   end
 
   ########################################
-  #  define_shared_binding_value_getter  #
+  #  define_local_alias_to_binding_value_getter  #
   ########################################
   
-  def define_shared_binding_value_getter( binding_alias, shared_binding_instance )
+  def define_local_alias_to_binding_value_getter( binding_alias, binding_instance )
     
     #=======================#
-    #  shared_binding_name  #
+    #  local_alias_to_binding_name  #
     #=======================#
     
     define_method( binding_alias ) do
       
-      return __shared_bindings__[ binding_alias ].__value__
+      return __local_aliases_to_bindings__[ binding_alias ].__value__
       
     end
     
   end
   
   #######################################
-  #  define_shared_binding_view_setter  #
+  #  define_local_alias_to_binding_view_setter  #
   #######################################
 
-  def define_shared_binding_view_setter( binding_alias, shared_binding_instance )
+  def define_local_alias_to_binding_view_setter( binding_alias, binding_instance )
 
     #========================#
-    #  shared_binding_name=  #
+    #  local_alias_to_binding_name=  #
     #========================#
     
     view_binding_method_name = view_method_name_for_binding_name( binding_alias )
     
     define_method( view_binding_method_name.write_accessor_name ) do |view|
       
-      return __shared_bindings__[ binding_alias ].__view__ = view
+      return __local_aliases_to_bindings__[ binding_alias ].__view__ = view
       
     end
 
   end
 
   #######################################
-  #  define_shared_binding_view_getter  #
+  #  define_local_alias_to_binding_view_getter  #
   #######################################
   
-  def define_shared_binding_view_getter( binding_alias, shared_binding_instance )
+  def define_local_alias_to_binding_view_getter( binding_alias, binding_instance )
     
     #=======================#
-    #  shared_binding_name  #
+    #  local_alias_to_binding_name  #
     #=======================#
     
     define_method( view_method_name_for_binding_name( binding_alias ) ) do
       
-      return __shared_bindings__[ binding_alias ].__view__
+      return __local_aliases_to_bindings__[ binding_alias ].__view__
       
     end
     

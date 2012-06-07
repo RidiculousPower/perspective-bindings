@@ -96,7 +96,7 @@ module ::Magnets::Bindings::Container::ClassInstance
                 
       else
 
-        __create_shared_binding_alias__( binding_alias, existing_reference )
+        __create_local_alias_to_binding__( binding_alias, existing_reference )
         
     end
     
@@ -109,8 +109,7 @@ module ::Magnets::Bindings::Container::ClassInstance
   def __create_name_alias__( binding_alias, existing_binding_name )
     
     unless has_binding?( existing_binding_name )
-  		raise ::Magnets::Bindings::Exception::NoBindingError,
-  		      'No binding defined for :' + existing_binding_name.to_s + '.'
+  		raise ::Magnets::Bindings::Exception::NoBindingError.new( self, existing_binding_name )
     end
 	  
     __binding_aliases__[ binding_alias ] = existing_binding_name
@@ -121,15 +120,15 @@ module ::Magnets::Bindings::Container::ClassInstance
   end
 
 	#####################################
-  #  __create_shared_binding_alias__  #
+  #  __create_local_alias_to_binding__  #
   #####################################
   
-  def __create_shared_binding_alias__( binding_alias, shared_binding_instance )
+  def __create_local_alias_to_binding__( binding_alias, binding_instance )
 
-    __shared_bindings__[ binding_alias ] = shared_binding_instance
+    __local_aliases_to_bindings__[ binding_alias ] = binding_instance
 
-		self::ClassBindingMethods.define_shared_binding( binding_alias, shared_binding_instance )
-    self::InstanceBindingMethods.define_shared_binding( binding_alias, shared_binding_instance )
+		self::ClassBindingMethods.define_local_alias_to_binding( binding_alias, binding_instance )
+    self::InstanceBindingMethods.define_local_alias_to_binding( binding_alias, binding_instance )
 
   end
 

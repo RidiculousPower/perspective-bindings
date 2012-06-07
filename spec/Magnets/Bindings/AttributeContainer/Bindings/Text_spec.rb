@@ -70,12 +70,12 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::Text do
     end
 
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_texts = [ :object, 32 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_texts = Class }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_texts = [ :object, 32 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_texts = Class }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_texts = 'text'
     instance.some_texts = :text
     instance.some_texts = [ 'text', :text ]
-    Proc.new { instance.some_texts = [ Object, :text ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_texts = [ Object, :text ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -120,9 +120,9 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::Text do
     end
 
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_texts = [ 42, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_texts = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_texts = Object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_texts = [ 42, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_texts = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_texts = Object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_required_texts = 'text'
     instance.some_required_texts = :text
     instance.some_required_texts = [ 'text', :text ]

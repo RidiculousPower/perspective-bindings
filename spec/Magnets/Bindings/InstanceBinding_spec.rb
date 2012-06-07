@@ -128,14 +128,14 @@ describe ::Magnets::Bindings::InstanceBinding do
     instance = ::Magnets::Bindings::InstanceBinding.new( class_instance, Object.new )
     instance.__value__.should == nil
     instance.binding_value_valid?( :some_value ).should == false
-    Proc.new { instance.__value__ = :some_value }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.__value__ = :some_value }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.extend( ::Magnets::Bindings::Attributes::Text )
     instance.binding_value_valid?( :some_value ).should == true
     instance.__value__ = :some_value
     instance.__value__.should == :some_value
     instance.__value__ = nil
     instance.__required__ = true
-    Proc.new { instance.__value__ = 42 }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.__value__ = 42 }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.__container__.content.should == instance.__value__
     
     instance.extend( ::Magnets::Bindings::Attributes::Multiple )

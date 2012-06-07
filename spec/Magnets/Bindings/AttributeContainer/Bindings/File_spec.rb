@@ -69,11 +69,11 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::File do
     end
     
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_files = [ :object, File.open( __FILE__ ) ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_files = :object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_files = [ :object, File.open( __FILE__ ) ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_files = :object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_files = File.open( __FILE__ )
     instance.some_files = [ File.open( __FILE__ ), File.open( __FILE__ ) ]
-    Proc.new { instance.some_files = [ Object, :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_files = [ Object, :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     
   end  
 
@@ -117,9 +117,9 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::File do
     end
     
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_files = [ File.open( __FILE__ ), :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_files = [ Object, File.open( __FILE__ ) ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_files = :other }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_files = [ File.open( __FILE__ ), :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_files = [ Object, File.open( __FILE__ ) ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_files = :other }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_required_files = [ File.open( __FILE__ ), File.open( __FILE__ ) ]
     instance.some_required_files = File.open( __FILE__ )
     instance.some_required_files = nil

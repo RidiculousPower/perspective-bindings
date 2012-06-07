@@ -31,6 +31,10 @@ end
 basepath = 'magnets-bindings/Magnets/Bindings'
 
 files = [
+  
+  'Constants',
+
+  'Container/Context',
 
   'Configuration/BindingInstance',
   'Configuration',
@@ -70,7 +74,6 @@ files = [
   
   'Container/MultiContainerProxy/Interface',
   'Container/MultiContainerProxy',
-  'Container/Context',
   'Container/BindingMethods',
   'Container/BindingMethods/InstanceBindingMethods',
   'Container/ClassInstance',
@@ -79,10 +82,10 @@ files = [
   
   'ParseBindingDeclarationArgs',
 
-  'Exception/BindingAlreadyDefinedError',
+  'Exception/BindingAlreadyDefined',
   'Exception/BindingNameExpected',
 
-  'Exception/BindingInstanceInvalidTypeError',
+  'Exception/BindingInstanceInvalidType',
   'Exception/BindingRequired',
   'Exception/BindingOrderEmpty',
   'Exception/NoBindingError',

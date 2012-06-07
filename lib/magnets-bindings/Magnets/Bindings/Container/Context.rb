@@ -5,38 +5,150 @@ module ::Magnets::Bindings::Container::Context
   #  context  #
   #############
 
-  def context( shared_alias_name, starting_context, binding_route, binding_name )
+  def context( starting_context, binding_route )
 
-    binding_context = starting_context
+    current_context = starting_context
     
-    route_successfully_mapped = [ ]
+    binding_route.each_with_index do |this_binding_name, index|
 
-    binding_route.each_with_index do |this_binding_route_part, index|
-
-      unless binding_context.has_binding?( this_binding_route_part )
-    		raise ::Magnets::Bindings::Exception::NoBindingError,
-      		      starting_context.inspect + ' does not have route :' + 
-      		      binding_route.slice( index, binding_route.count ).join( '.' ) + '.' + "\n\n" +
-      		      'Shared binding route :' + this_binding_route_part.to_s + 
-      		      ' was inaccessible in context ' + route_successfully_mapped.join( '.' ) +
-        	      ' (' + binding_context.inspect + '). '
+      unless current_context = current_context.__binding__( this_binding_name )
+        
+        remaining_route = nil
+        if remaining_route_parts = binding_route.count - index
+          remaining_route = binding_route.slice( index,remaining_route_parts  )
+        end
+        
+    		raise ::Magnets::Bindings::Exception::NoBindingContext.new( starting_context, 
+    		                                                            current_context, 
+    		                                                            remaining_route )
       end
       
-      binding_context = binding_context.__binding__( this_binding_route_part )
-
-      route_successfully_mapped.push( this_binding_route_part )
-
-    end
-
-    unless binding_context.has_binding?( binding_name )
-  		raise ::Magnets::Bindings::Exception::NoBindingError,
-      	      'No binding :' + binding_name.to_s + ' defined ' + 'in ' + 
-      	      ( [ binding_context.inspect ] + binding_route ).join( '.' ) + '.' + "\n\n" + 
-      	      'Shared binding :' + shared_alias_name.to_s + ' was inaccessible in ' + 
-      	      starting_context.to_s + '.'
     end
     
-    return binding_context
+    return current_context
+    
+  end
+
+  ########################
+  #  binding_in_context  #
+  ########################
+  
+  def binding_in_context( starting_context, binding_route, binding_name )
+    
+    binding_context = context( starting_context, binding_route )
+    
+    unless binding_instance = binding_context.__binding__( binding_name )
+      
+      raise ::Magnets::Bindings::Exception::NoBindingError.new( binding_context, 
+                                                                binding_name, 
+                                                                starting_context )
+  		
+    end
+    
+    return binding_instance
+    
+  end
+
+  ################################
+  #  aliased_binding_in_context  #
+  ################################
+  
+  def aliased_binding_in_context( starting_context, 
+                                  binding_route, 
+                                  binding_name, 
+                                  local_alias = nil,
+                                  local_alias_binding_instance = nil )
+
+    binding_context = context( starting_context, binding_route )
+
+    unless binding_instance = binding_context.__binding__( binding_name )
+
+  		raise ::Magnets::Bindings::Exception::NoBindingError.new( binding_context, 
+  		                                                          binding_name,
+  		                                                          starting_context,
+  		                                                          local_alias,
+  		                                                          local_alias_binding_instance )
+
+    end
+
+    return binding_instance
+
+  end
+  
+  ####################
+  #  context_string  #
+  ####################
+
+  def context_string( *contexts )
+    
+    return_context_string = ''
+    
+    contexts.each do |this_context|
+
+      unless return_context_string.empty?
+        return_context_string << ::Magnets::Bindings::RouteDelimiter
+      end
+
+      case this_context
+
+        when ::Array
+
+          return_context_string << this_context.join( ::Magnets::Bindings::RouteDelimiter )
+
+        when ::String
+
+          return_context_string << this_context
+
+        when ::Symbol
+
+          
+          return_context_string << this_context.to_s
+
+        when ::Magnets::Bindings::Configuration
+
+          if return_context_string.empty?
+            return_context_string << this_context.__name__
+          else
+            return_context_string << this_context.__route_string__
+          end
+
+      end
+
+    end
+    
+    return return_context_string
+    
+  end
+  
+  ##########################
+  #  context_print_string  #
+  ##########################
+  
+  def context_print_string( *contexts )
+    
+    print_string =  ::Magnets::Bindings::ContextPrintPrefix.dup
+
+    print_string << ::Magnets::Bindings::RootString
+
+    case contexts.count
+      
+      when 0
+
+        # nothing more to do
+      
+      when 1
+
+        print_string << ::Magnets::Bindings::RouteDelimiter
+        print_string << contexts[ 0 ]
+
+      else
+
+        print_string << ::Magnets::Bindings::RouteDelimiter
+        print_string << context_string( this_context )
+
+    end
+    
+    return print_string
     
   end
   

@@ -97,19 +97,15 @@ module ::Magnets::Bindings::ClassBinding::Initialization
   
   def __initialize_route__( base_route )
     
-    route_string = nil
-    
     if base_route
       self.__route__ = base_route
-      route_string = base_route.join( ::Magnets::Bindings::RouteDelimiter )
-      route_string << ::Magnets::Bindings::RouteDelimiter
-    else
-      route_string = ''
     end
-    
-    route_string << __name__.to_s
+
+    route_string = ::Magnets::Bindings.context_string( base_route, __name__ )
     
     self.__route_string__ = route_string
+    
+    self.__route_print_string__ = ::Magnets::Bindings.context_print_string( route_string )
     
   end
   

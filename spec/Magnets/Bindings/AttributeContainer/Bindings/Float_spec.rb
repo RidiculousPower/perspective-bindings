@@ -69,11 +69,11 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::Float do
     end
 
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_floats = [ :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_floats = :object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_floats = [ :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_floats = :object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_floats = 42.0
     instance.some_floats = [ 42.0, 42.0 ]
-    Proc.new { instance.some_floats = [ Object, 42.0 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_floats = [ Object, 42.0 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -117,9 +117,9 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::Float do
     end
 
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_floats = [ 42.0, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_floats = [ Object, 42.0 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_floats = :other }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_floats = [ 42.0, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_floats = [ Object, 42.0 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_floats = :other }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_required_floats = [ 42.0, 42.0 ]
     instance.some_required_floats = 42.0
     instance.some_required_floats = nil

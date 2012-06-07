@@ -69,11 +69,11 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::Integer do
     end
 
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_integers = [ :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_integers = :object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_integers = [ :object ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_integers = :object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_integers = 42
     instance.some_integers = [ 42, 42 ]
-    Proc.new { instance.some_integers = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_integers = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -117,9 +117,9 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::Integer do
     end
 
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_integers = [ 42, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_integers = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_integers = :other }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_integers = [ 42, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_integers = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_integers = :other }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_required_integers = [ 42, 42 ]
     instance.some_required_integers = 42
     instance.some_required_integers = nil

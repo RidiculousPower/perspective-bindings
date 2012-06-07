@@ -1,12 +1,14 @@
 
 module ::Magnets::Bindings::Configuration
 
+  extend ::Magnets::Bindings::Container::Context
+
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Array::Unique
   include ::CascadingConfiguration::Hash
 
   ccm = ::CascadingConfiguration::Methods
-
+  
   ###############
   #  route      #
   #  __route__  #
@@ -24,6 +26,17 @@ module ::Magnets::Bindings::Configuration
   attr_instance_configuration  :__route_string__
 
   ccm.alias_instance_method( self, :route_string, :__route_string__ )
+
+  ############################
+  #  route_print_string      #
+  #  __route_print_string__  #
+  ############################
+
+  attr_configuration  :__route_print_string__
+
+  ccm.alias_module_and_instance_methods( self, :route_print_string, :__route_print_string__ )
+
+  self.__route_print_string__ = context_print_string
 
   ##################
   #  bindings      #
@@ -136,34 +149,36 @@ module ::Magnets::Bindings::Configuration
 	
   ccm.alias_module_method( self, :binding_aliases, :__binding_aliases__ )
 
-  #########################
-  #  shared_bindings      #
-  #  __shared_bindings__  #
-  #########################
+  ###################################
+  #  local_aliases_to_bindings      #
+  #  __local_aliases_to_bindings__  #
+  ###################################
 
-	attr_configuration_hash  :__shared_bindings__ do
+	attr_configuration_hash  :__local_aliases_to_bindings__ do
 
 	  #======================#
 	  #  child_pre_set_hook  #
 	  #======================#
 
-	  def child_pre_set_hook( shared_alias_name, shared_binding_instance )
+	  def child_pre_set_hook( local_alias_to_binding, binding_instance )
 
       # get the shared instance from the same route in self
-      binding_route = shared_binding_instance.__route__
+      binding_route = binding_instance.__route__
 
-      shared_context = ::Magnets::Bindings::Container.context( shared_alias_name,
-                                                               configuration_instance, 
-                                                               binding_route,
-                                                               shared_alias_name )
+      child_instance = ::Magnets::Bindings.aliased_binding_in_context( configuration_instance, 
+                                                                       binding_route,
+                                                                       binding_instance.__name__,
+                                                                       local_alias_to_binding,
+                                                                       binding_instance )
       
-      return shared_context.__binding__( shared_alias_name )
+      return child_instance
 
     end
   
   end
 
-  ccm.alias_module_and_instance_methods( self, :shared_bindings, :__shared_bindings__ )
+  ccm.alias_module_and_instance_methods( self, :local_aliases_to_bindings, 
+                                               :__local_aliases_to_bindings__ )
   
 	#################
   #  binding      #
@@ -182,7 +197,7 @@ module ::Magnets::Bindings::Configuration
 
       else
 
-        binding_instance = __shared_bindings__[ binding_name ]
+        binding_instance = __local_aliases_to_bindings__[ binding_name ]
 
       end      
       
@@ -206,7 +221,7 @@ module ::Magnets::Bindings::Configuration
 		# if we have binding, alias, or re-binding
 		if 	__bindings__.has_key?( binding_name )        or 
 		    __binding_aliases__.has_key?( binding_name ) or
-		    __shared_bindings__.has_key?( binding_name )
+		    __local_aliases_to_bindings__.has_key?( binding_name )
 		
 			has_binding = true
 		

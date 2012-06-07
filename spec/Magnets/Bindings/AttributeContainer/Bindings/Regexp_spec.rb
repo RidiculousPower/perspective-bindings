@@ -69,11 +69,11 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::Regexp do
     end
 
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_regexps = [ :object, 32 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_regexps = Class }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_regexps = [ :object, 32 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_regexps = Class }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_regexps = /regexp/
     instance.some_regexps = [ /regexp/, /other/ ]
-    Proc.new { instance.some_regexps = [ Object, :regexp ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_regexps = [ Object, :regexp ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -117,9 +117,9 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::Regexp do
     end
 
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_regexps = [ 42, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_regexps = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_regexps = Object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_regexps = [ 42, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_regexps = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_regexps = Object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_required_regexps = /regexp/
     instance.some_required_regexps = [ /regexp/, /other/ ]
     instance.some_required_regexps = nil

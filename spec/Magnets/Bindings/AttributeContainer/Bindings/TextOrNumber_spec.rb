@@ -74,8 +74,8 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::TextOrNumber do
     end
 
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_text_or_numbers = [ :object, Class ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_text_or_numbers = Class }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_text_or_numbers = [ :object, Class ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_text_or_numbers = Class }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_text_or_numbers = 'text'
     instance.some_text_or_numbers = :text
     instance.some_text_or_numbers = [ 'text', :text, 12, 37.0 ]
@@ -84,7 +84,7 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::TextOrNumber do
     instance.some_text_or_numbers = Rational( 1, 2 )
     instance.some_text_or_numbers = Complex( 1, 2 )
     
-    Proc.new { instance.some_text_or_numbers = [ Object, :text ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_text_or_numbers = [ Object, :text ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -133,9 +133,9 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::TextOrNumber do
     end
 
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_text_or_numbers = [ Class, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_text_or_numbers = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_text_or_numbers = Object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_text_or_numbers = [ Class, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_text_or_numbers = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_text_or_numbers = Object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_required_text_or_numbers = 'text'
     instance.some_required_text_or_numbers = :text
     instance.some_required_text_or_numbers = [ 'text', :text, 42, 23.0 ]

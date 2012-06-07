@@ -4,7 +4,6 @@ module ::Magnets::Bindings::Container
 	extend ::ModuleCluster
   extend ::ModuleCluster::Define::Block::CascadingClassOrModule
 
-  extend ::Magnets::Bindings::Attributes
 	extend ::Magnets::Bindings::Container::Context
   
   ccm_module = CascadingConfiguration::Methods::Module
@@ -38,5 +37,5 @@ module ::Magnets::Bindings::Container
                                       self::BindingMethods::InstanceBindingMethods )
         
   end
-	
+  
 end

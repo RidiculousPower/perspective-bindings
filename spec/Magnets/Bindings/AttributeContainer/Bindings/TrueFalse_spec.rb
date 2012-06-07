@@ -71,12 +71,12 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::TrueFalse do
     end
 
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_true_falses = [ :object, 32, false ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_true_falses = Class }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_true_falses = [ :object, 32, false ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_true_falses = Class }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_true_falses = true
     instance.some_true_falses = false
     instance.some_true_falses = [ true, true, false ]
-    Proc.new { instance.some_true_falses = [ Object, :true_false, true ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_true_falses = [ Object, :true_false, true ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -121,9 +121,9 @@ describe ::Magnets::Bindings::AttributeContainer::Bindings::TrueFalse do
     end
 
     instance = ::Magnets::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_true_falses = [ 42, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_true_falses = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
-    Proc.new { instance.some_required_true_falses = Object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidTypeError )
+    Proc.new { instance.some_required_true_falses = [ 42, :other ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_true_falses = [ Object, 42 ] }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_true_falses = Object }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
     instance.some_required_true_falses = true
     instance.some_required_true_falses = false
     instance.some_required_true_falses = [ true, false ]

@@ -22,12 +22,12 @@ module ::Magnets::Bindings::Container::BindingMethods
   end
 
   ###########################
-  #  define_shared_binding  #
+  #  define_local_alias_to_binding  #
   ###########################
   
-  def define_shared_binding( binding_alias, shared_binding_instance )
+  def define_local_alias_to_binding( binding_alias, binding_instance )
   
-    define_shared_binding_getter( binding_alias, shared_binding_instance )
+    define_local_alias_to_binding_getter( binding_alias, binding_instance )
   
   end
   
@@ -77,18 +77,18 @@ module ::Magnets::Bindings::Container::BindingMethods
   end
 
   ##################################
-  #  define_shared_binding_getter  #
+  #  define_local_alias_to_binding_getter  #
   ##################################
   
-  def define_shared_binding_getter( binding_alias, shared_binding_instance )
+  def define_local_alias_to_binding_getter( binding_alias, binding_instance )
     
     #=======================#
-    #  shared_binding_name  #
+    #  local_alias_to_binding_name  #
     #=======================#
 
     define_method( binding_alias ) do
 
-      return __shared_bindings__[ binding_alias ]
+      return __local_aliases_to_bindings__[ binding_alias ]
       
     end
     
