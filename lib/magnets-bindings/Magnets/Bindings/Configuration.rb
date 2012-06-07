@@ -1,8 +1,6 @@
 
 module ::Magnets::Bindings::Configuration
 
-  extend ::Magnets::Bindings::Container::Context
-
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Array::Unique
   include ::CascadingConfiguration::Hash
@@ -36,7 +34,7 @@ module ::Magnets::Bindings::Configuration
 
   ccm.alias_module_and_instance_methods( self, :route_print_string, :__route_print_string__ )
 
-  self.__route_print_string__ = context_print_string
+  self.__route_print_string__ = ::Magnets::Bindings.context_print_string
 
   ##################
   #  bindings      #

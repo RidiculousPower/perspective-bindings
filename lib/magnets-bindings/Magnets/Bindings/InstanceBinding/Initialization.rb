@@ -47,7 +47,7 @@ module ::Magnets::Bindings::InstanceBinding::Initialization
 
     # run configuration proc for each binding instance
 		__configuration_procs__.each do |this_configuration_proc|
-      bound_container.instance_exec( container_instance, & this_configuration_proc )
+      bound_container.instance_exec( self, & this_configuration_proc )
 	  end
     
   end

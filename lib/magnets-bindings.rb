@@ -32,9 +32,9 @@ basepath = 'magnets-bindings/Magnets/Bindings'
 
 files = [
   
-  'Constants',
-
   'Container/Context',
+
+  'Constants',
 
   'Configuration/BindingInstance',
   'Configuration',
