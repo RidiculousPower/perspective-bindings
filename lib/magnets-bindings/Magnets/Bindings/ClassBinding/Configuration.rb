@@ -5,27 +5,18 @@ module ::Magnets::Bindings::ClassBinding::Configuration
   include ::CascadingConfiguration::Array::Unique
 
   ccm = ::CascadingConfiguration::Methods
-
-  ##############################################
-  #  __initialize_for_bound_container_class__  #
-  ##############################################
-  
-  def __initialize_for_bound_container_class__( bound_container_class )
-    
-    @__bound_container_class__ = bound_container_class
-    
-  end
     
   ###############################
   #  bound_container_class      #
   #  __bound_container_class__  #
+  #  bound_container            #
+  #  __bound_container__        #
   ###############################
 
-  attr_accessor  :__bound_container_class__
+  attr_reader  :__bound_container_class__
   
   alias_method  :bound_container_class, :__bound_container_class__
-  alias_method  :bound_container_class=, :__bound_container_class__=
-    
+      
   #########################
   #  container_class      #
   #  __container_class__  #

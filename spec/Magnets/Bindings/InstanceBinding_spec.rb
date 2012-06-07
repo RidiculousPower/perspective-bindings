@@ -4,6 +4,11 @@ require_relative '../../../lib/magnets-bindings.rb'
 describe ::Magnets::Bindings::InstanceBinding do
 
   before :all do
+    class ::Magnets::Bindings::InstanceBinding::BoundContainerMock
+      def self.__bindings__
+        return @__bindings__ ||= { }
+      end
+    end
     class ::Magnets::Bindings::InstanceBinding::ContainerMock
       def self.__bindings__
       end
@@ -49,7 +54,7 @@ describe ::Magnets::Bindings::InstanceBinding do
     ::Magnets::Bindings::InstanceBinding.instance_method( :container ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__container__ )
     ::Magnets::Bindings::InstanceBinding.instance_method( :route ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__route__ )
     ::Magnets::Bindings::InstanceBinding.instance_method( :route_string ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__route_string__ )
-    class_instance = ::Magnets::Bindings::ClassBinding.new( :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
+    class_instance = ::Magnets::Bindings::ClassBinding.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
     instance = ::Magnets::Bindings::InstanceBinding.new( class_instance, Object.new )
     instance.__parent_binding__.should == class_instance
     instance.__name__.should == class_instance.__name__
@@ -69,7 +74,7 @@ describe ::Magnets::Bindings::InstanceBinding do
     
     ::Magnets::Bindings::InstanceBinding.instance_method( :required= ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__required__= )
     
-    class_instance = ::Magnets::Bindings::ClassBinding.new( :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
+    class_instance = ::Magnets::Bindings::ClassBinding.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
     instance = ::Magnets::Bindings::InstanceBinding.new( class_instance, Object.new )
 
     instance.required?.should == false
@@ -99,11 +104,11 @@ describe ::Magnets::Bindings::InstanceBinding do
   it 'can return sub-bindings that define containers nested inside this binding container class' do
     ::Magnets::Bindings::InstanceBinding.instance_method( :bindings ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__bindings__ )
     ::Magnets::Bindings::InstanceBinding.instance_method( :binding ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__binding__ )
-    class_instance = ::Magnets::Bindings::ClassBinding.new( :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
+    class_instance = ::Magnets::Bindings::ClassBinding.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
     instance = ::Magnets::Bindings::InstanceBinding.new( class_instance, Object.new )
     # mock reference to InstanceBinding from ClassBinding
     ::Magnets::Bindings::ClassBinding::InstanceBinding = ::Magnets::Bindings::InstanceBinding
-    some_binding_instance = ::Magnets::Bindings::ClassBinding.new( :some_binding )
+    some_binding_instance = ::Magnets::Bindings::ClassBinding.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :some_binding )
     class_instance.__bindings__[ :some_binding ] = some_binding_instance
     instance.__bindings__.is_a?( ::Hash ).should == true
     instance.__bindings__[ :some_binding ].is_a?( ::Magnets::Bindings::InstanceBinding ).should == true
@@ -124,7 +129,7 @@ describe ::Magnets::Bindings::InstanceBinding do
     ::Magnets::Bindings::InstanceBinding.instance_method( :value ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__value__ )
     ::Magnets::Bindings::InstanceBinding.instance_method( :value= ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__value__= )
 
-    class_instance = ::Magnets::Bindings::ClassBinding.new( :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
+    class_instance = ::Magnets::Bindings::ClassBinding.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
     instance = ::Magnets::Bindings::InstanceBinding.new( class_instance, Object.new )
     instance.__value__.should == nil
     instance.binding_value_valid?( :some_value ).should == false
@@ -152,7 +157,7 @@ describe ::Magnets::Bindings::InstanceBinding do
     instance.__container__[ 3 ].is_a?( class_instance.__container_class__ ).should == true
     instance.__container__[ 3 ].content.should == :four
     
-    second_class_instance = ::Magnets::Bindings::ClassBinding.new( :other_binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
+    second_class_instance = ::Magnets::Bindings::ClassBinding.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :other_binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
     second_instance = ::Magnets::Bindings::InstanceBinding.new( second_class_instance, Object.new )
     second_instance.extend( ::Magnets::Bindings::Attributes::Text )
     second_instance.__value__ = :some_value

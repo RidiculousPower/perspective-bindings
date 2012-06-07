@@ -5,11 +5,27 @@ module ::Magnets::Bindings::ClassBinding::Initialization
   #  initialize  #
   ################
 
-  def initialize( binding_name, 
+  def initialize( bound_container, 
+                  binding_name,
                   container_class = nil, 
                   ancestor_binding = nil,
                   base_route = nil, 
                   & configuration_proc )
+
+    case bound_container
+
+      when ::Magnets::Bindings::Container::ClassInstance
+
+        @__bound_container_class__ = bound_container
+        @__bound_container__ = bound_container
+      
+      when ::Magnets::Bindings::ClassBinding
+      
+        @__parent_binding__ = bound_container
+        @__bound_container__ = bound_container
+        @__bound_container_class__ = bound_container.__container_class__
+        
+    end
 
     if ancestor_binding
 

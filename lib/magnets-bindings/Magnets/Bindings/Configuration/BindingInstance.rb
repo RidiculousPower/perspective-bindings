@@ -5,6 +5,15 @@ module ::Magnets::Bindings::Configuration::BindingInstance
 
   ccm = ::CascadingConfiguration::Methods
 
+  #########################
+  #  bound_container      #
+  #  __bound_container__  #
+  #########################
+
+  attr_reader  :__bound_container__
+
+  alias_method  :bound_container, :__bound_container__
+
   ##############
   #  name      #
   #  __name__  #

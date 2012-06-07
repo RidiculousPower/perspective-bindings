@@ -7,8 +7,7 @@ module ::Magnets::Bindings::ClassBinding::Bindings
 
   def __duplicate_as_inheriting_sub_binding__( base_route = nil )
   
-    new_binding = self.class.new( nil, nil, self, base_route )
-    new_binding.__bound_container_class__ = __bound_container_class__
+    new_binding = self.class.new( self, nil, nil, self, base_route )
     
     return new_binding
     

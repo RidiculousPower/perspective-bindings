@@ -458,12 +458,12 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
       binding_descriptor_hash = ::Magnets::Bindings.parse_binding_declaration_args( *args )
 
       binding_descriptor_hash.each do |this_binding_name, this_container_class|
-        this_new_binding = class_binding_class.new( this_binding_name, 
+        this_new_binding = class_binding_class.new( self, 
+                                                    this_binding_name,
                                                     this_container_class, 
                                                     & configuration_proc )
         new_bindings.push( this_new_binding )
         __bindings__[ this_binding_name ] = this_new_binding
-        this_new_binding.__bound_container_class__ = self
         self::ClassBindingMethods.define_binding( this_binding_name )
         self::InstanceBindingMethods.define_binding( this_binding_name )
       end
@@ -497,12 +497,12 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
       binding_descriptor_hash = ::Magnets::Bindings.parse_binding_declaration_args( *args )
 
       binding_descriptor_hash.each do |this_binding_name, this_container_class|
-        this_new_binding = class_multiple_binding.new( this_binding_name, 
+        this_new_binding = class_multiple_binding.new( self, 
+                                                       this_binding_name,
                                                        this_container_class, 
                                                        & configuration_proc )
         new_bindings.push( this_new_binding )
         __bindings__[ this_binding_name ] = this_new_binding
-        this_new_binding.__bound_container_class__ = self
         self::ClassBindingMethods.define_binding( this_binding_name )
         self::InstanceBindingMethods.define_binding( this_binding_name )
       end

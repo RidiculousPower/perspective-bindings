@@ -7,6 +7,15 @@ module ::Magnets::Bindings::Configuration
 
   ccm = ::CascadingConfiguration::Methods
   
+  ########################
+  #  parent_binding      #
+  #  __parent_binding__  #
+  ########################
+
+  attr_reader  :__parent_binding__
+
+  alias_method  :parent_binding, :__parent_binding__
+
   ###############
   #  route      #
   #  __route__  #

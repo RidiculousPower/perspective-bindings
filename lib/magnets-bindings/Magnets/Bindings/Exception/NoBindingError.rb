@@ -30,13 +30,7 @@ class ::Magnets::Bindings::Exception::NoBindingError < ::ArgumentError
 
     if local_alias_binding_instance
       
-      if local_alias_binding_instance.respond_to?( :__bound_container_class__ )
-        # Class binding
-        bound_container = local_alias_binding_instance.__bound_container_class__
-      else
-        # Instance binding
-        bound_container = local_alias_binding_instance.__bound_container__
-      end
+      bound_instance = local_alias_binding_instance.__bound_container__
 
       exception_string << "\n\n" <<
                        'Aliased binding ' << local_alias_binding_instance.__route_print_string__

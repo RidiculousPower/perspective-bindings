@@ -6,15 +6,6 @@ module ::Magnets::Bindings::InstanceBinding::Configuration
 
   ccm = ::CascadingConfiguration::Methods
   
-  ########################
-  #  parent_binding      #
-  #  __parent_binding__  #
-  ########################
-
-  attr_reader  :__parent_binding__
-
-  alias_method  :parent_binding, :__parent_binding__
-
   ########################################
   #  __initialize_for_bound_container__  #
   ########################################
@@ -24,15 +15,6 @@ module ::Magnets::Bindings::InstanceBinding::Configuration
     @__bound_container__ = bound_container
         
   end
-
-  #########################
-  #  bound_container      #
-  #  __bound_container__  #
-  #########################
-
-  attr_reader  :__bound_container__
-
-  alias_method  :bound_container, :__bound_container__
 
   ###################
   #  container      #

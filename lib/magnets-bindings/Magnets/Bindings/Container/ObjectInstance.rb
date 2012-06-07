@@ -25,14 +25,6 @@ module ::Magnets::Bindings::Container::ObjectInstance
         
   end
 
-  ########################
-  #  parent_binding      #
-  #  __parent_binding__  #
-  ########################
-    
-  attr_reader  :__parent_binding__
-  alias_method  :parent_binding, :__parent_binding__
-
   ##################
   #  autobind      #
   #  __autobind__  #
