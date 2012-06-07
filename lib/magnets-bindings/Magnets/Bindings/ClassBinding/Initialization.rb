@@ -73,6 +73,8 @@ module ::Magnets::Bindings::ClassBinding::Initialization
 
   def __initialize_defaults__( binding_name, container_class, base_route )
     
+    ::CascadingConfiguration::Variable.register_child_for_parent( self, self.class )
+
     __validate_binding_name__( binding_name )
 
     if container_class
