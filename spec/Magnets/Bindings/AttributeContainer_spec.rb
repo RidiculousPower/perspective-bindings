@@ -222,7 +222,7 @@ describe ::Magnets::Bindings::AttributeContainer do
   it 'can re-define binding types in each cascading module instance using the local base binding types' do
     parent_instance = ::Magnets::Bindings::AttributeContainer.new
     parent_instance.define_binding_type( 'also_like_text' )
-    Instance = instance = ::Magnets::Bindings::AttributeContainer.new( nil, nil, parent_instance )
+    instance = ::Magnets::Bindings::AttributeContainer.new( ::Module.new, :A, true, parent_instance )
     instance::AlsoLikeText.is_a?( ::Class ).should == true
     instance::AlsoLikeText::InstanceBinding.is_a?( ::Class ).should == true
     instance::AlsoLikeText::Multiple.is_a?( ::Class ).should == true

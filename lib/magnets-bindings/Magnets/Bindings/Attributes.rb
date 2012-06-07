@@ -7,7 +7,8 @@ module ::Magnets::Bindings::Attributes
   #  self.define_container_type  #
   ################################
   
-  def self.define_container_type( container_type, 
+  def self.define_container_type( container_type,
+                                  subclass_existing_bindings = true,
                                   *parent_container_or_types, 
                                   & definition_block )
 
@@ -20,6 +21,7 @@ module ::Magnets::Bindings::Attributes
     else
 
       container_type_module = create_container_type( container_type,
+                                                     subclass_existing_bindings,
                                                      *parent_container_or_types,
                                                      & definition_block )
       
@@ -34,6 +36,7 @@ module ::Magnets::Bindings::Attributes
   ################################
   
   def self.create_container_type( container_type, 
+                                  subclass_existing_bindings = true,
                                   *parent_container_or_types,
                                   & definition_block )
     
@@ -61,9 +64,9 @@ module ::Magnets::Bindings::Attributes
     end
 
     container_type_module = ::Magnets::Bindings::
-                              AttributeContainer.new( ::Magnets::Bindings::
-                                                        AttributeContainer,
+                              AttributeContainer.new( ::Magnets::Bindings::AttributeContainer,
                                                       container_type,
+                                                      subclass_existing_bindings,
                                                       *parent_containers,
                                                       & definition_block )
     

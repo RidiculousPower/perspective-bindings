@@ -37,7 +37,7 @@ describe ::Magnets::Bindings::Attributes do
     parent_instance = instance
       
     # with parent container no base class specification
-    instance = ::Magnets::Bindings::Attributes.define_container_type( :container2, parent_instance, & define_proc )
+    instance = ::Magnets::Bindings::Attributes.define_container_type( :container2, true, parent_instance, & define_proc )
     instance.ancestors.include?( parent_instance ).should == true
     proc_ran.should == true
     proc_ran = false

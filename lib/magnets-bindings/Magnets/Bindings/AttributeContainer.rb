@@ -9,19 +9,20 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   
   def initialize( store_in_container = nil, 
                   name = nil, 
-                  parent_container = nil, 
+                  subclass_existing_bindings = true,
+                  *parent_containers,
                   & definition_block )
 
     if store_in_container
       store_in_container.const_set( name.to_s.to_camel_case, self )
     end
     
-    initialize_binding_extension_modules( parent_container )
+    initialize_binding_extension_modules( *parent_containers )
     
     @binding_types = { }
     @binding_aliases = { }
 
-    initialize_for_parents( parent_container )
+    initialize_for_parents( subclass_existing_bindings, *parent_containers )
     
     if block_given?
       module_eval( & definition_block )
@@ -33,7 +34,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   #  initialize_for_parents  #
   ############################
 
-  def initialize_for_parents( parent_container )
+  def initialize_for_parents( subclass_existing_bindings = true, *parent_containers )
     
     # We store parents in a unique array so that we retain initial sort order.
     #
@@ -45,24 +46,53 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     # 
     @parents ||= ::CompositingArray::Unique.new( nil, self )
     
-    if parent_container
+    unless parent_containers.empty?
 
-      include parent_container
+      parent_containers.each do |this_parent_container|
+        
+        include this_parent_container
 
-      if parents_of_parent = parent_container.parents
-        @parents.concat( parents_of_parent )
+        if parents_of_parent = this_parent_container.parents
+          @parents.concat( parents_of_parent )
+        end
+
+        @parents.push( this_parent_container )
+
+        self::ClassBinding.module_eval do
+          include this_parent_container::ClassBinding
+        end
+
+        self::ClassBinding::Multiple.module_eval do
+          include this_parent_container::ClassBinding::Multiple
+        end
+
+        self::InstanceBinding.module_eval do
+          include this_parent_container::InstanceBinding
+        end
+
+        self::InstanceBinding::Multiple.module_eval do
+          include this_parent_container::InstanceBinding::Multiple
+        end
+
+        if subclass_existing_bindings
+
+          this_parent_container.binding_types.each do |this_binding_type, these_instance_extension_modules|
+            define_binding_type( this_binding_type )
+          end
+
+          this_parent_container.binding_aliases.each do |this_binding_alias, this_binding_type|
+            alias_binding_type( this_binding_alias, this_binding_type )
+          end
+          
+        else
+
+          @binding_types.merge!( this_parent_container.binding_types )
+          @binding_aliases.merge!( this_parent_container.binding_aliases )
+
+        end
+
       end
-
-      @parents.push( parent_container )
-
-      parent_container.binding_types.each do |this_binding_type, these_instance_extension_modules|
-        define_binding_type( this_binding_type )
-      end
-
-      parent_container.binding_aliases.each do |this_binding_alias, this_binding_type|
-        alias_binding_type( this_binding_alias, this_binding_type )
-      end
-
+      
     end
     
     return @parents
@@ -73,7 +103,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   #  initialize_binding_extension_modules  #
   ##########################################
   
-  def initialize_binding_extension_modules( parent_container = nil )
+  def initialize_binding_extension_modules( *parent_containers )
     
     # Define extension modules for class and instance bindings.
     # These always live at ::Magnets::Bindings::AttributeContainers::ContainerName::ClassBinding 
@@ -85,10 +115,6 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
       # This is to get around Ruby's dynamic include problem.
       extend ::Magnets::Bindings::AttributeDefinitionModule
 
-      if parent_container
-        include parent_container::ClassBinding
-      end
-
     end
 
     multiple_class_binding_extension_module = ::Module.new do
@@ -96,10 +122,6 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
       # Causes module inclusion to forward to any including modules.
       # This is to get around Ruby's dynamic include problem.
       extend ::Magnets::Bindings::AttributeDefinitionModule
-
-      if parent_container
-        include parent_container::ClassBinding::Multiple
-      end
 
     end
     
@@ -113,10 +135,6 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
       # This is to get around Ruby's dynamic include problem.
       extend ::Magnets::Bindings::AttributeDefinitionModule
       
-      if parent_container
-        include parent_container::InstanceBinding
-      end
-      
     end
     
     multiple_instance_binding_extension_module = ::Module.new do
@@ -124,10 +142,6 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
       # Causes module inclusion to forward to any including modules.
       # This is to get around Ruby's dynamic include problem.
       extend ::Magnets::Bindings::AttributeDefinitionModule
-
-      if parent_container
-        include parent_container::InstanceBinding::Multiple
-      end
 
     end
     
