@@ -13,9 +13,7 @@ module ::Magnets::Bindings::InstanceBinding::Initialization
     ::CascadingConfiguration::Variable.register_child_for_parent( self, @__parent_binding__ )
 
     @__bound_container__ = bound_container_instance
-        
-    __initialize_container__
-        
+
   end
 
   ##############################
@@ -24,18 +22,16 @@ module ::Magnets::Bindings::InstanceBinding::Initialization
   
   def __initialize_container__
     
-    container_instance = nil
+    container_class = @__parent_binding__.__container_class__
+    
+    container_instance = container_class.new
 
-    if container_class = @__parent_binding__.__container_class__
+    self.__container__ = container_instance
+    
+    extend( container_class::InstanceBindingMethods )
+    
+    ::CascadingConfiguration::Variable.register_child_for_parent( container_instance, self )
 
-      container_instance = container_class.new
-
-      self.__container__ = container_instance
-      extend( container_class::InstanceBindingMethods )
-      ::CascadingConfiguration::Variable.register_child_for_parent( container_instance, self )
-
-    end
-               
     return container_instance
     
   end
