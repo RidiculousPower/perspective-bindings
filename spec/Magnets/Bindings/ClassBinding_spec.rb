@@ -39,7 +39,7 @@ describe ::Magnets::Bindings::ClassBinding do
   #  initialize                             #
   #  __initialize_ancestor_configuration__  #
   #  __initialize_defaults__                #
-  #  __validate_binding_name__              #
+  #  binding_name_validates?( binding_name )              #
   #  __validate_container_class__           #
   #  __initialize_route__                   #
   #  name                                   #

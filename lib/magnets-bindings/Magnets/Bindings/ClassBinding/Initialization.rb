@@ -56,11 +56,11 @@ module ::Magnets::Bindings::ClassBinding::Initialization
     
   end
 
-  ###############################
-  #  __validate_binding_name__  #
-  ###############################
+  #############################
+  #  binding_name_validates?  #
+  #############################
 
-  def __validate_binding_name__( binding_name )
+  def binding_name_validates?( binding_name )
   
     if ::Magnets::Bindings::ProhibitedNames.has_key?( binding_name.to_sym )
       raise ::ArgumentError, 'Cannot declare :' + binding_name.to_s + ' as a binding - ' +
@@ -91,7 +91,7 @@ module ::Magnets::Bindings::ClassBinding::Initialization
     
     ::CascadingConfiguration::Variable.register_child_for_parent( self, self.class )
 
-    __validate_binding_name__( binding_name )
+    binding_name_validates?( binding_name )
 
     if container_class
       __validate_container_class__( container_class )
