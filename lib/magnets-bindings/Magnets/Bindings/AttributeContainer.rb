@@ -182,9 +182,17 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   #  define_binding_type  #
   #########################
   
-  def define_binding_type( binding_type_name, *instance_definition_modules )
+  def define_binding_type( binding_type_name, 
+                           inheriting_from_binding_name = nil, 
+                           *instance_definition_modules )
     
     @binding_types[ binding_type_name ] ||= [ ]
+    
+    if inheriting_from_binding_name
+      inheriting_definition_modules = @binding_types[ inheriting_from_binding_name ]
+      @binding_types[ binding_type_name ].concat( inheriting_definition_modules )
+    end
+    
     @binding_types[ binding_type_name ].concat( instance_definition_modules )
     
     class_binding_class = define_class_binding_class( binding_type_name )
