@@ -117,6 +117,36 @@ describe ::Magnets::Bindings::ClassBinding do
 
   end
 
+  ######################
+  #  nested_route      #
+  #  __nested_route__  #
+  ######################
+
+  it 'it can calculate the nested route from one container to another nested inside it' do
+
+    ::Magnets::Bindings::ClassBinding.instance_method( :nested_route ).should == ::Magnets::Bindings::ClassBinding.instance_method( :__nested_route__ )
+
+    instance = ::Magnets::Bindings::ClassBinding.new( ::Magnets::Bindings::ClassBinding::ContainerMock, :binding_name )
+    nested_instance = ::Magnets::Bindings::ClassBinding.new( ::Magnets::Bindings::ClassBinding::ContainerMock, :binding_name )
+
+    instance.__route__ = [ :route, :to, :binding ]
+    nested_instance.__route__ = [ :route, :to, :binding, :binding_name, :nested, :in, :self ]
+    instance.__nested_route__( nested_instance ).should == [ :nested, :in, :self ]
+
+    instance.__route__ = [ ]
+    nested_instance.__route__ = [ :binding_name, :nested, :in, :self ]
+    instance.__nested_route__( nested_instance ).should == [ :nested, :in, :self ]
+
+    instance.__route__ = [ :route, :to, :binding ]
+    nested_instance.__route__ = [ :route, :to, :binding, :binding_name ]
+    instance.__nested_route__( nested_instance ).should == [ ]
+
+    instance.__route__ = [ ]
+    nested_instance.__route__ = [ :binding_name ]
+    instance.__nested_route__( nested_instance ).should == [ ]
+
+  end
+
   ###################
   #  required?      #
   #  optional?      #

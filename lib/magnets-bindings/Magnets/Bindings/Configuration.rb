@@ -26,6 +26,47 @@ module ::Magnets::Bindings::Configuration
   ccm.alias_instance_method( self, :route, :__route__ )
 
   ######################
+  #  nested_route      #
+  #  __nested_route__  #
+  ######################
+
+  def __nested_route__( nested_binding )
+    
+    nested_route_from_self = nil
+    
+    if route = __route__
+
+      # our route: <root>-route-to-binding
+      # nested route: <root>-route-to-binding-nested-in-self
+      # result desired: nested-in-self
+
+      # our own route or 0 index if none
+      # plus our name, which is part of the nested route but not part of our route
+      nested_depth_of_self = ( route.count || 0 ) + 1
+
+      # route from root to nested binding
+      nested_route_from_root = nested_binding.__route__
+      nested_route_length = nested_route_from_root.count
+
+      # slice from the end of our own route to the end of nested route
+      remaining_route_length = nested_route_length - nested_depth_of_self
+      nested_route_from_self = nested_route_from_root.slice( nested_depth_of_self, 
+                                                             remaining_route_length )
+      
+    else
+      
+      nested_route_from_self = nested_binding.__route__
+      
+    end
+    
+
+    return nested_route_from_self
+    
+  end
+  
+  alias_method  :nested_route, :__nested_route__
+  
+  ######################
   #  route_string      #
   #  __route_string__  #
   ######################
