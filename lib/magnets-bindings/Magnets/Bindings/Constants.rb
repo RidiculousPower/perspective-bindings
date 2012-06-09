@@ -3,7 +3,7 @@ module ::Magnets::Bindings
 
   extend ::Magnets::Bindings::Container::Context
 
-  RouteDelimiter = '-'
+  RouteDelimiter = '::'
 
   ContextPrintPrefix = ':'
   

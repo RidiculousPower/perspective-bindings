@@ -62,16 +62,16 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
           include this_parent_container::ClassBinding
         end
 
-        self::ClassBinding::Multiple.module_eval do
-          include this_parent_container::ClassBinding::Multiple
+        self::ClassBinding::NestedClassBinding.module_eval do
+          include this_parent_container::ClassBinding::NestedClassBinding
         end
 
         self::InstanceBinding.module_eval do
           include this_parent_container::InstanceBinding
         end
 
-        self::InstanceBinding::Multiple.module_eval do
-          include this_parent_container::InstanceBinding::Multiple
+        self::InstanceBinding::NestedInstanceBinding.module_eval do
+          include this_parent_container::InstanceBinding::NestedInstanceBinding
         end
 
         if subclass_existing_bindings
@@ -117,7 +117,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
 
     end
 
-    multiple_class_binding_extension_module = ::Module.new do
+    nested_class_binding_extension_module = ::Module.new do
 
       # Causes module inclusion to forward to any including modules.
       # This is to get around Ruby's dynamic include problem.
@@ -127,7 +127,8 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     
     const_set( :ClassBinding, class_binding_extension_module )
 
-    class_binding_extension_module.const_set( :Multiple, multiple_class_binding_extension_module )
+    class_binding_extension_module.const_set( :NestedClassBinding, 
+                                              nested_class_binding_extension_module )
     
     instance_binding_extension_module = ::Module.new do
       
@@ -137,7 +138,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
       
     end
     
-    multiple_instance_binding_extension_module = ::Module.new do
+    nested_instance_binding_extension_module = ::Module.new do
       
       # Causes module inclusion to forward to any including modules.
       # This is to get around Ruby's dynamic include problem.
@@ -146,7 +147,8 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     end
     
     const_set( :InstanceBinding, instance_binding_extension_module ) 
-    instance_binding_extension_module.const_set( :Multiple, multiple_instance_binding_extension_module )
+    instance_binding_extension_module.const_set( :NestedInstanceBinding, 
+                                                 nested_instance_binding_extension_module )
     
   end
 
@@ -182,15 +184,20 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   #  define_binding_type  #
   #########################
   
-  def define_binding_type( binding_type_name, 
-                           inheriting_from_binding_name = nil, 
-                           *instance_definition_modules )
+  def define_binding_type( binding_type_name, *instance_definition_modules )
     
     @binding_types[ binding_type_name ] ||= [ ]
     
-    if inheriting_from_binding_name
-      inheriting_definition_modules = @binding_types[ inheriting_from_binding_name ]
-      @binding_types[ binding_type_name ].concat( inheriting_definition_modules )
+    inheriting_from_binding_name = nil
+    unless instance_definition_modules.empty?
+      case instance_definition_modules[ 0 ]
+        when nil
+          instance_definition_modules.shift
+        when self, ::Symbol, ::String
+          inheriting_from_binding_name = instance_definition_modules.shift
+          inheriting_definition_modules = @binding_types[ inheriting_from_binding_name ]
+          @binding_types[ binding_type_name ].concat( inheriting_definition_modules )
+      end
     end
     
     @binding_types[ binding_type_name ].concat( instance_definition_modules )
@@ -252,23 +259,23 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     
   end
 
-  ##################################
-  #  class_multiple_binding_class  #
-  ##################################
+  ################################
+  #  class_nested_binding_class  #
+  ################################
   
-  def class_multiple_binding_class( binding_type_name )
+  def class_nested_binding_class( binding_type_name )
     
-    return class_binding_class( binding_type_name )::Multiple
+    return class_binding_class( binding_type_name )::NestedClassBinding
     
   end
 
-  #####################################
-  #  instance_multiple_binding_class  #
-  #####################################
+  ###################################
+  #  instance_nested_binding_class  #
+  ###################################
 
-  def instance_multiple_binding_class( binding_type_name )
+  def instance_nested_binding_class( binding_type_name )
     
-    return class_multiple_binding_class( binding_type_name )::InstanceBinding
+    return class_nested_binding_class( binding_type_name )::InstanceBinding
     
   end
 
@@ -296,17 +303,17 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     
     const_set( camel_case_name, class_binding_class )
 
-    multiple_class_binding_extension_module = self::ClassBinding::Multiple
+    nested_class_binding_extension_module = self::ClassBinding::NestedClassBinding
 
-    class_multiple_binding_class = ::Class.new( class_binding_class ) do
+    class_nested_binding_class = ::Class.new( class_binding_class ) do
       
-      include ::Magnets::Bindings::Attributes::Multiple
+      include ::Magnets::Bindings::ClassBinding::NestedClassBinding
       
-      include multiple_class_binding_extension_module
+      include nested_class_binding_extension_module
       
     end
     
-    class_binding_class.const_set( :Multiple, class_multiple_binding_class )
+    class_binding_class.const_set( :NestedClassBinding, class_nested_binding_class )
     
     return class_binding_class
     
@@ -348,18 +355,22 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     # Class name is self::binding_type_name.to_s.to_camel_case::InstanceBinding
     class_binding_class.const_set( :InstanceBinding, instance_binding_class )
     
-    multiple_instance_binding_extension_module = self::ClassBinding::Multiple
+    nested_instance_binding_extension_module = self::InstanceBinding::NestedInstanceBinding
     
-    instance_multiple_binding_class = ::Class.new( instance_binding_class ) do
+    instance_nested_binding_class = ::Class.new( instance_binding_class ) do
       
-      include ::Magnets::Bindings::Attributes::Multiple
+      include ::Magnets::Bindings::InstanceBinding::NestedInstanceBinding
       
-      include multiple_instance_binding_extension_module
+      include nested_instance_binding_extension_module
       
     end
 
-    # Class name is self::binding_type_name.to_s.to_camel_case::Multiple::InstanceBinding
-    class_binding_class::Multiple.const_set( :InstanceBinding, instance_multiple_binding_class )
+    # We store NestedInstanceBinding after NestedClassBinding instead of after InstanceBinding
+    # so that when we are given a class binding we can create an instance binding simply by
+    # appending ::InstanceBinding to the class binding's class.
+    #
+    class_binding_class::NestedClassBinding.const_set( :NestedInstanceBinding, 
+                                                       instance_nested_binding_class )
     
     return instance_binding_class
     
@@ -492,7 +503,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     
     single_binding_method_name = single_binding_method_name( binding_method_name )
     
-    class_multiple_binding = class_binding_class( binding_type_name )::Multiple
+    class_binding_class = class_binding_class( binding_type_name )
     
     #================#
     #  attr_[type]s  #
@@ -505,10 +516,11 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
       binding_descriptor_hash = ::Magnets::Bindings.parse_binding_declaration_args( *args )
 
       binding_descriptor_hash.each do |this_binding_name, this_container_class|
-        this_new_binding = class_multiple_binding.new( self, 
-                                                       this_binding_name,
-                                                       this_container_class, 
-                                                       & configuration_proc )
+        this_new_binding = class_binding_class.new( self, 
+                                                    this_binding_name,
+                                                    this_container_class, 
+                                                    & configuration_proc )
+        this_new_binding.__permits_multiple__ = true
         new_bindings.push( this_new_binding )
         __bindings__[ this_binding_name ] = this_new_binding
         self::ClassBindingMethods.define_binding( this_binding_name )

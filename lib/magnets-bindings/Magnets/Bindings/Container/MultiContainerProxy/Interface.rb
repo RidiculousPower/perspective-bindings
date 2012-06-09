@@ -12,11 +12,14 @@ module ::Magnets::Bindings::Container::MultiContainerProxy::Interface
 
     current_container = parent_instance_binding.__container__
 
-    @__storage_array__ = [ current_container ]
-
     # we ask the instance what class it is since that could change at runtime from
     # the class binding configuration
     @__container_class__ = current_container.class
+    if @__container_class__.equal?( ::Magnets::Bindings::Container::MultiContainerProxy )
+      Kernel.raise 'TWTWTTT'
+    end
+
+    @__storage_array__ = [ current_container ]
 
     __autobind__( *data_objects )
 
@@ -83,7 +86,8 @@ module ::Magnets::Bindings::Container::MultiContainerProxy::Interface
 
       else
 
-        this_container_instance = __create_new_view_for_autobind__( this_index )
+        this_container_instance = __create_new_view_for_autobind__
+
         __push__( this_container_instance )
 
       end
@@ -102,7 +106,7 @@ module ::Magnets::Bindings::Container::MultiContainerProxy::Interface
   #  __create_new_view_for_autobind__  #
   ######################################
 
-  def __create_new_view_for_autobind__( index )
+  def __create_new_view_for_autobind__
 
     new_container_instance = @__container_class__.new
     parent_class_binding = @__parent_binding__.__parent_binding__

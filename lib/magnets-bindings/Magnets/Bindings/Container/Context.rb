@@ -8,21 +8,30 @@ module ::Magnets::Bindings::Container::Context
   def context( starting_context, binding_route )
 
     current_context = starting_context
-    
+
     binding_route.each_with_index do |this_binding_name, index|
 
-      unless current_context = current_context.__binding__( this_binding_name )
-        
-        remaining_route = nil
-        if remaining_route_parts = binding_route.count - index
-          remaining_route = binding_route.slice( index,remaining_route_parts  )
-        end
-        
-    		raise ::Magnets::Bindings::Exception::NoBindingContext.new( starting_context, 
-    		                                                            current_context, 
-    		                                                            remaining_route )
+      if current_context.respond_to?( :__name__)
+        puts 'looking in self: ' + current_context.__name__.to_s
+        puts 'for binding: ' + this_binding_name.to_s
       end
       
+      if requested_context = current_context.__binding__( this_binding_name )
+        
+        current_context = requested_context
+        
+      else
+        
+        remaining_route = nil
+        if remaining_route_parts = binding_route.count - index 
+          remaining_route = binding_route.slice( index + 1, remaining_route_parts - 1 )
+        end
+    		raise ::Magnets::Bindings::Exception::NoBindingContext.new( starting_context, 
+    		                                                            current_context, 
+    		                                                            this_binding_name,
+    		                                                            remaining_route )
+      end
+            
     end
     
     return current_context
@@ -143,9 +152,11 @@ module ::Magnets::Bindings::Container::Context
 
       else
 
-        print_string << ::Magnets::Bindings::RouteDelimiter
-        print_string << context_string( this_context )
-
+        contexts.each do |this_context|
+          print_string << ::Magnets::Bindings::RouteDelimiter
+          print_string << context_string( this_context )
+        end
+        
     end
     
     return print_string

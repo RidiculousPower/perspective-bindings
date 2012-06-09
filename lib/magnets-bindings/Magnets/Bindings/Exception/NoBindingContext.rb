@@ -5,18 +5,22 @@ class ::Magnets::Bindings::Exception::NoBindingContext < ::ArgumentError
   #  initialize  #
   ################
   
-  def initialize( starting_context, current_context, remaining_route = nil )
+  def initialize( starting_context, current_context, binding_name, remaining_route = nil )
+    
+    starting_context_inspect = nil
     
     exception_string =  'Binding context ' << starting_context.__route_print_string__
-    exception_string << ' (' << starting_context.inspect << ') does not have route ' << 
-                        current_context.__route_print_string__
+    exception_string << ' (' << starting_context.to_s << ') does not have binding :' << 
+                     binding_name.to_s
     
-    if remaining_route
-      context_route_string = current_context.__route_string__
-      full_route_string = ::Magnets::Bindings.context_print_string( context_route_string, 
-                                                                    remaining_route )
-      exception_string << ' requested in route ' << full_route_string
+    current_context_route = nil
+    if current_context
+      current_context_route = current_context.__route_string__
     end
+    
+    full_route_string = ::Magnets::Bindings.context_print_string( current_context_route, 
+                                                                  remaining_route )
+    exception_string << ' requested in route ' << full_route_string
     
     exception_string << '.'
 

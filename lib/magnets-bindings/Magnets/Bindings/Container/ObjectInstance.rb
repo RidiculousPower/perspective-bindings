@@ -2,6 +2,30 @@
 module ::Magnets::Bindings::Container::ObjectInstance
 
   include ::Magnets::Bindings::Configuration
+  include ::Magnets::Bindings::Container::ClassAndObjectInstance
+  
+  ##############
+  #  name      #
+  #  __name__  #
+  ##############
+  
+  def __name__
+    
+    name = nil
+    
+    if @__parent_binding__
+      
+      name = @__parent_binding__.__name__
+      
+    else
+      
+      name = ::Magnets::Bindings::RootString
+      
+    end
+    
+    return name
+    
+  end
   
   ############################
   #  __configure_bindings__  #
@@ -31,6 +55,8 @@ module ::Magnets::Bindings::Container::ObjectInstance
   ##################
 
   def __autobind__( data_object, method_map_hash = nil )
+    
+    @__view_rendering_empty__ = false
     
     found_a_binding = false
     

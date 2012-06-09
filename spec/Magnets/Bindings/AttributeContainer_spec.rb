@@ -81,22 +81,22 @@ describe ::Magnets::Bindings::AttributeContainer do
   #  define_instance_binding_class    #
   #  class_binding_class              #
   #  instance_binding_class           #
-  #  class_multiple_binding_class     #
-  #  instance_multiple_binding_class  #
+  #  class_nested_binding_class     #
+  #  instance_nested_binding_class  #
   #####################################
 
   it 'can define and return a class binding class for a given type' do
     instance = ::Magnets::Bindings::AttributeContainer.new
     instance.define_class_binding_class( 'like_text' )
     instance::LikeText.is_a?( ::Class ).should == true
-    instance::LikeText::Multiple.is_a?( ::Class ).should == true
+    instance::LikeText::NestedClassBinding.is_a?( ::Class ).should == true
     instance.define_instance_binding_class( 'like_text', ::Magnets::Bindings::Attributes::Text )
     instance::LikeText::InstanceBinding.is_a?( ::Class ).should == true
-    instance::LikeText::Multiple::InstanceBinding.is_a?( ::Class ).should == true
+    instance::LikeText::NestedClassBinding::InstanceBinding.is_a?( ::Class ).should == true
     instance.class_binding_class( 'like_text' ).should == instance::LikeText
     instance.instance_binding_class( 'like_text' ).should == instance::LikeText::InstanceBinding
-    instance.class_multiple_binding_class( 'like_text' ).should == instance::LikeText::Multiple
-    instance.instance_multiple_binding_class( 'like_text' ).should == instance::LikeText::Multiple::InstanceBinding
+    instance.class_nested_binding_class( 'like_text' ).should == instance::LikeText::NestedClassBinding
+    instance.instance_nested_binding_class( 'like_text' ).should == instance::LikeText::NestedClassBinding::InstanceBinding
   end
 
 	#######################################  Define Types  ###########################################
@@ -181,7 +181,7 @@ describe ::Magnets::Bindings::AttributeContainer do
 
       new_bindings = attr_also_alot_like_texts :some_bindings, ::Magnets::Bindings::AttributeContainer::NestedContainerMock
       new_binding = new_bindings[ 0 ]
-      new_binding.is_a?( instance::AlsoAlotLikeText::Multiple ).should == true
+      new_binding.permits_multiple?.should == true
       new_binding.required?.should == false
 
       new_bindings = attr_required_also_alot_like_text :some_required_binding, ::Magnets::Bindings::AttributeContainer::NestedContainerMock
@@ -192,7 +192,7 @@ describe ::Magnets::Bindings::AttributeContainer do
 
       new_bindings = attr_required_also_alot_like_texts :some_required_bindings, ::Magnets::Bindings::AttributeContainer::NestedContainerMock
       new_binding = new_bindings[ 0 ]
-      new_binding.is_a?( instance::AlsoAlotLikeText::Multiple ).should == true
+      new_binding.permits_multiple?.should == true
       new_binding.required?.should == true
 
     end
@@ -209,10 +209,17 @@ describe ::Magnets::Bindings::AttributeContainer do
   it 'can define all necessary supports for a binding type' do
     instance = ::Magnets::Bindings::AttributeContainer.new
     instance.define_binding_type( 'also_like_text' )
-    instance::AlsoLikeText.is_a?( ::Class ).should == true
-    instance::AlsoLikeText::InstanceBinding.is_a?( ::Class ).should == true
-    instance::AlsoLikeText::Multiple.is_a?( ::Class ).should == true
-    instance::AlsoLikeText::Multiple::InstanceBinding.is_a?( ::Class ).should == true
+
+    instance::AlsoLikeText.ancestors.include?( ::Magnets::Bindings::ClassBinding ).should == true
+
+    instance::AlsoLikeText::InstanceBinding.ancestors.include?( ::Magnets::Bindings::InstanceBinding ).should == true
+
+    instance::AlsoLikeText::NestedClassBinding.ancestors.include?( ::Magnets::Bindings::ClassBinding ).should == true
+    instance::AlsoLikeText::NestedClassBinding.ancestors.include?( ::Magnets::Bindings::ClassBinding::NestedClassBinding ).should == true
+
+    instance::AlsoLikeText::NestedClassBinding::InstanceBinding.ancestors.include?( ::Magnets::Bindings::InstanceBinding ).should == true
+    instance::AlsoLikeText::NestedClassBinding::NestedInstanceBinding.ancestors.include?( ::Magnets::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+
   end
 
   ###################
@@ -225,8 +232,8 @@ describe ::Magnets::Bindings::AttributeContainer do
     instance = ::Magnets::Bindings::AttributeContainer.new( ::Module.new, :A, true, parent_instance )
     instance::AlsoLikeText.is_a?( ::Class ).should == true
     instance::AlsoLikeText::InstanceBinding.is_a?( ::Class ).should == true
-    instance::AlsoLikeText::Multiple.is_a?( ::Class ).should == true
-    instance::AlsoLikeText::Multiple::InstanceBinding.is_a?( ::Class ).should == true
+    instance::AlsoLikeText::NestedClassBinding.is_a?( ::Class ).should == true
+    instance::AlsoLikeText::NestedClassBinding::InstanceBinding.is_a?( ::Class ).should == true
   end
 
 end

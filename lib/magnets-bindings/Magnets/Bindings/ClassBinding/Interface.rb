@@ -1,5 +1,10 @@
 
-module ::Magnets::Bindings::ClassBinding::Initialization
+module ::Magnets::Bindings::ClassBinding::Interface
+
+  include ::CascadingConfiguration::Setting
+  include ::CascadingConfiguration::Array::Unique
+
+  ccm = ::CascadingConfiguration::Methods
 
   ################
   #  initialize  #
@@ -9,7 +14,6 @@ module ::Magnets::Bindings::ClassBinding::Initialization
                   binding_name,
                   container_class = nil, 
                   ancestor_binding = nil,
-                  base_route = nil, 
                   & configuration_proc )
 
     case bound_container
@@ -31,10 +35,6 @@ module ::Magnets::Bindings::ClassBinding::Initialization
 
       __initialize_ancestor_configuration__( ancestor_binding )
 
-      if base_route
-        __initialize_route__( base_route )
-      end
-
       if container_class
         __validate_container_class__( container_class )
         self.__container_class__ = container_class
@@ -42,13 +42,15 @@ module ::Magnets::Bindings::ClassBinding::Initialization
 
     else
 
-      __initialize_defaults__( binding_name, container_class, base_route )
+      __initialize_defaults__( binding_name, container_class )
 
     end
 
     if container_class or container_class = __container_class__
       extend( container_class::ClassBindingMethods )
     end
+
+    __initialize_route__( bound_container )
 
     if block_given?
       __configure__( & configuration_proc )
@@ -87,7 +89,7 @@ module ::Magnets::Bindings::ClassBinding::Initialization
   #  __initialize_defaults__  #
   #############################
 
-  def __initialize_defaults__( binding_name, container_class, base_route )
+  def __initialize_defaults__( binding_name, container_class )
     
     ::CascadingConfiguration::Variable.register_child_for_parent( self, self.class )
 
@@ -103,24 +105,16 @@ module ::Magnets::Bindings::ClassBinding::Initialization
     self.__name__ = binding_name
     self.__required__ = false    
 
-    __initialize_route__( base_route )
-    
   end
 
   ##########################
   #  __initialize_route__  #
   ##########################
   
-  def __initialize_route__( base_route )
+  def __initialize_route__( bound_container )
     
-    if base_route
-      self.__route__ = base_route
-    end
-
-    route_string = ::Magnets::Bindings.context_string( base_route, __name__ )
-    
-    self.__route_string__ = route_string
-    
+    self.__route_with_name__ = route_with_name = [ __name__ ]
+    self.__route_string__ = route_string = ::Magnets::Bindings.context_string( route_with_name )
     self.__route_print_string__ = ::Magnets::Bindings.context_print_string( route_string )
     
   end
@@ -134,5 +128,25 @@ module ::Magnets::Bindings::ClassBinding::Initialization
     ::CascadingConfiguration::Variable.register_child_for_parent( self, ancestor_binding )
 
   end
-    
+
+  ###############################
+  #  bound_container_class      #
+  #  __bound_container_class__  #
+  #  bound_container            #
+  #  __bound_container__        #
+  ###############################
+
+  attr_reader  :__bound_container_class__
+  
+  alias_method  :bound_container_class, :__bound_container_class__
+      
+  #########################
+  #  container_class      #
+  #  __container_class__  #
+  #########################
+
+  attr_configuration  :__container_class__
+
+  ccm.alias_module_and_instance_methods( self, :container_class, :__container_class__ )
+
 end

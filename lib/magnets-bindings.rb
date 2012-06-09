@@ -39,23 +39,18 @@ files = [
   'Configuration/BindingInstance',
   'Configuration',
   
-  'ClassBinding/Bindings',
-  'ClassBinding/Configuration',
-  'ClassBinding/Initialization',
+  'ClassBinding/Interface',
+  'ClassBinding/NestedClassBinding',
   'ClassBinding',
 
-  'InstanceBinding/Bindings',
-  'InstanceBinding/Configuration',
-  'InstanceBinding/Initialization',
-  'InstanceBinding/Validation',
-  'InstanceBinding/Value',
+  'InstanceBinding/Interface',
+  'InstanceBinding/NestedInstanceBinding',
   'InstanceBinding',
   
   'AttributeDefinitionModule',
   
   'AttributeContainer',
 
-  'Attributes/Multiple',
   'Attributes/Class',
   'Attributes/Complex',
   'Attributes/File',
@@ -76,6 +71,7 @@ files = [
   'Container/MultiContainerProxy',
   'Container/BindingMethods',
   'Container/BindingMethods/InstanceBindingMethods',
+  'Container/ClassAndObjectInstance',
   'Container/ClassInstance',
   'Container/ObjectInstance',
   'Container',
@@ -85,6 +81,7 @@ files = [
   'Exception/BindingAlreadyDefined',
   'Exception/BindingNameExpected',
 
+  'Exception/NoBindingContext',
   'Exception/BindingInstanceInvalidType',
   'Exception/BindingRequired',
   'Exception/BindingOrderEmpty',

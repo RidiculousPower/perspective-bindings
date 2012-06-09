@@ -75,7 +75,7 @@ describe ::Magnets::Bindings::Container do
       attr_binding :yet_another_binding
 
     end
-    
+
     Proc.new { ::Magnets::Bindings::Container::Mock.attr_alias :yet_another_binding, :aliased_binding_name }.should raise_error( ::Magnets::Bindings::Exception::NoBindingError )
 
     class ::Magnets::Bindings::Container::OtherMock
