@@ -15,9 +15,6 @@ module ::Magnets::Bindings::Container::MultiContainerProxy::Interface
     # we ask the instance what class it is since that could change at runtime from
     # the class binding configuration
     @__container_class__ = current_container.class
-    if @__container_class__.equal?( ::Magnets::Bindings::Container::MultiContainerProxy )
-      Kernel.raise 'TWTWTTT'
-    end
 
     @__storage_array__ = [ current_container ]
 

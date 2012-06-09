@@ -137,9 +137,9 @@ module ::Magnets::Bindings::Configuration
             
         # We are attaching to a nested instance binding
         when ::Magnets::Bindings::InstanceBinding
-
-          child_instance = binding_instance.class::InstanceBinding.new( binding_instance,
-                                                                        instance.__container__ )
+          
+          binding_class = binding_instance.class::NestedInstanceBinding
+          child_instance = binding_class.new( binding_instance, instance.__container__ )
         
         else
 
