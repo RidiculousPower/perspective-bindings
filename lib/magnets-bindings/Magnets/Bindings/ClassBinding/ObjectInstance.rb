@@ -16,20 +16,8 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
                   ancestor_binding = nil,
                   & configuration_proc )
 
-    case bound_container
-
-      when ::Magnets::Bindings::Container::ClassInstance
-
-        @__bound_container_class__ = bound_container
-        @__bound_container__ = bound_container
-      
-      when ::Magnets::Bindings::ClassBinding
-      
-        @__parent_binding__ = bound_container
-        @__bound_container__ = bound_container
-        @__bound_container_class__ = bound_container.__container_class__
-        
-    end
+    @__bound_container_class__ ||= bound_container
+    @__bound_container__ ||= bound_container
 
     if ancestor_binding
 
@@ -50,11 +38,11 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
       extend( container_class::ClassBindingMethods )
     end
 
-    __initialize_route__( bound_container )
-
     if block_given?
       __configure__( & configuration_proc )
     end
+
+    __initialize_route__
     
   end
 
@@ -111,7 +99,7 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
   #  __initialize_route__  #
   ##########################
   
-  def __initialize_route__( bound_container )
+  def __initialize_route__
     
     self.__route_with_name__ = route_with_name = [ __name__ ]
     self.__route_string__ = route_string = ::Magnets::Bindings.context_string( route_with_name )
@@ -148,5 +136,5 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
   attr_configuration  :__container_class__
 
   ccm.alias_module_and_instance_methods( self, :container_class, :__container_class__ )
-
+  
 end

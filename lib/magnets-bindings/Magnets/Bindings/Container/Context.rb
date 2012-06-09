@@ -10,11 +10,6 @@ module ::Magnets::Bindings::Container::Context
     current_context = starting_context
 
     binding_route.each_with_index do |this_binding_name, index|
-
-      if current_context.respond_to?( :__name__)
-        puts 'looking in self: ' + current_context.__name__.to_s
-        puts 'for binding: ' + this_binding_name.to_s
-      end
       
       if requested_context = current_context.__binding__( this_binding_name )
         

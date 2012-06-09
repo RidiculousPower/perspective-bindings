@@ -110,7 +110,9 @@ describe ::Magnets::Bindings::InstanceBinding do
     class_instance = ::Magnets::Bindings::AttributeContainer::Bindings::Text.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
     instance = ::Magnets::Bindings::AttributeContainer::Bindings::Text::InstanceBinding.new( class_instance, ::Magnets::Bindings::InstanceBinding::BoundContainerMock.new )
 
-    some_binding_instance = ::Magnets::Bindings::AttributeContainer::Bindings::Text::NestedClassBinding.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :some_binding )
+    nesting_instance = ::Magnets::Bindings::ClassBinding.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :nesting_binding_name )
+
+    some_binding_instance = ::Magnets::Bindings::AttributeContainer::Bindings::Text::NestedClassBinding.new( nesting_instance, :some_binding )
     class_instance.__bindings__[ :some_binding ] = some_binding_instance
     
     instance.__bindings__.is_a?( ::Hash ).should == true

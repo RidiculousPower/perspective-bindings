@@ -136,4 +136,25 @@ module ::Magnets::Bindings::Container::ObjectInstance
   
   alias_method  :autobind, :__autobind__
 
+  ######################
+  #  nested_route      #
+  #  __nested_route__  #
+  ######################
+
+  def __nested_route__( nested_binding )
+
+    nested_route = nil
+    
+    if @__parent_binding__
+      nested_route = @__parent_binding__.__nested_route__( nested_binding )
+    else
+      nested_route = nested_binding.__route__
+    end
+
+    return nested_route
+    
+  end
+  
+  alias_method  :nested_route, :__nested_route__
+
 end

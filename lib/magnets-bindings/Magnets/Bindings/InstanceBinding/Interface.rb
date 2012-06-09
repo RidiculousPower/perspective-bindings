@@ -70,7 +70,7 @@ module ::Magnets::Bindings::InstanceBinding::Interface
     @__bound_container__ = bound_container
         
   end
-
+  
   ###################
   #  container      #
   #  __container__  #

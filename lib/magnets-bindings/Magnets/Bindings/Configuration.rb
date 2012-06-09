@@ -16,71 +16,12 @@ module ::Magnets::Bindings::Configuration
 
   alias_method  :parent_binding, :__parent_binding__
 
-  ######################
-  #  nested_route      #
-  #  __nested_route__  #
-  ######################
-
-  def __nested_route__( nested_binding )
-
-    # our route: <root>-route-to-binding
-    # nested route: <root>-route-to-binding-nested-in-self
-    # result desired: nested-in-self
-    
-    nested_route_from_self = nil
-    
-    if route = __route__
-      
-      # our own route plus our name, which is part of the nested route but not part of our route
-      nested_depth_of_self = route.count + 1
-      
-      # route from root to nested binding
-      nested_route_from_root = nested_binding.__route__
-      nested_route_length = nested_route_from_root.count
-
-      # slice from the end of our own route to the end of nested route
-      remaining_route_length = nested_route_length - nested_depth_of_self
-      nested_route_from_self = nested_route_from_root.slice( nested_depth_of_self, 
-                                                             remaining_route_length )
-      
-    elsif respond_to?( :__name__ )
-      
-      nested_binding_route = nested_binding.__route__
-      nested_route_from_self = nested_binding_route.slice( 1, nested_binding_route.count - 1 )
-      
-    else
-      
-      nested_route_from_self = nested_binding.__route__
-      
-    end
-    
-
-    return nested_route_from_self
-    
-  end
-  
-  alias_method  :nested_route, :__nested_route__
-  
   ##################
   #  bindings      #
   #  __bindings__  #
   ##################
 
 	attr_configuration_hash  :__bindings__ do
-
-	  #=========================#
-	  #  initialize_for_parent  #
-	  #=========================#
-
-    def initialize_for_parent( parent )
-      
-      super
-      
-      if configuration_instance.respond_to?( :__configure_bindings__ )
-        configuration_instance.__configure_bindings__
-      end
-      
-    end
 
 	  #======================#
 	  #  child_pre_set_hook  #
@@ -104,7 +45,7 @@ module ::Magnets::Bindings::Configuration
 
           # Create a new binding without any settings - causes automatic lookup to superclass.
           # Container classes are always the base of their route.
-          child_instance = binding_instance.class.new( instance, nil, nil, binding_instance)
+          child_instance = binding_instance.class.new( instance, nil, nil, binding_instance )
 
         # We are attaching to a nested container class binding.
         when ::Magnets::Bindings::ClassBinding
@@ -113,7 +54,7 @@ module ::Magnets::Bindings::Configuration
           child_instance = binding_instance.class::NestedClassBinding.new( instance, 
                                                                            nil, 
                                                                            nil, 
-                                                                           binding_instance)
+                                                                           binding_instance )
 
         # We are attaching to a root container instance.
         # We know this because we haven't been extended as a nested instance.
@@ -171,17 +112,42 @@ module ::Magnets::Bindings::Configuration
 
 	attr_configuration_hash  :__local_aliases_to_bindings__ do
 
+	  #=========================#
+	  #  initialize_for_parent  #
+	  #=========================#
+
+    def initialize_for_parent( parent )
+      
+      super
+
+      if configuration_instance.respond_to?( :__configure_bindings__ )
+        configuration_instance.__configure_bindings__
+      end
+      
+    end
+
 	  #======================#
 	  #  child_pre_set_hook  #
 	  #======================#
 
 	  def child_pre_set_hook( local_alias_to_binding, binding_instance )
+      
+      binding_route = nil
+      
+      case instance = configuration_instance
+        
+        when ::Magnets::Bindings::Container::ClassInstance, ::Magnets::Bindings::ClassBinding
 
-      # get the shared instance from the same route in self
-      nested_binding_route = configuration_instance.__nested_route__( binding_instance )
-
+          binding_route = binding_instance.__route__
+          
+        when ::Magnets::Bindings::Container::ObjectInstance, ::Magnets::Bindings::InstanceBinding
+          
+          binding_route = binding_instance.__nested_route__( instance )
+                  
+      end
+      
       child_instance = ::Magnets::Bindings.aliased_binding_in_context( configuration_instance, 
-                                                                       nested_binding_route,
+                                                                       binding_route,
                                                                        binding_instance.__name__,
                                                                        local_alias_to_binding,
                                                                        binding_instance )

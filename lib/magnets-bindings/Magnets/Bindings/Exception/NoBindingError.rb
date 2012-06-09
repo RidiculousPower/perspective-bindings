@@ -34,8 +34,22 @@ class ::Magnets::Bindings::Exception::NoBindingError < ::ArgumentError
 
       exception_string << "\n\n" <<
                        'Aliased binding ' << local_alias_binding_instance.__route_print_string__
-      exception_string << ' (defined in ' << local_alias_binding_instance.__bound_container__.to_s
-      exception_string << ') could not be reached.'
+      
+      if parent_binding = local_alias_binding_instance.__parent_binding__
+
+        exception_string << ' (defined in ' 
+        exception_string << parent_binding.__bound_container__.to_s
+        exception_string << ') '
+        
+      else
+
+        exception_string << ' (defined in ' 
+        exception_string << local_alias_binding_instance.__bound_container__.to_s
+        exception_string << ') '
+        
+      end
+
+      exception_string << 'could not be reached.'
     
     end
     
