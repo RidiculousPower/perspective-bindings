@@ -1,5 +1,5 @@
 
-module ::Magnets::Bindings::ClassBinding::Interface
+module ::Magnets::Bindings::ClassBinding::ObjectInstance
 
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Array::Unique

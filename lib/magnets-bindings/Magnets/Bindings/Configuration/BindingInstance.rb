@@ -59,7 +59,7 @@ module ::Magnets::Bindings::Configuration::BindingInstance
   
   attr_configuration  :permits_multiple? => :__permits_multiple__=
 
-  ccm.alias_instance_method( self, :permits_multiple, :__permits_multiple__ )
+  ccm.alias_instance_method( self, :permits_multiple=, :__permits_multiple__= )
   
   self.__permits_multiple__ = false
   

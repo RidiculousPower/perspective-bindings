@@ -39,7 +39,8 @@ files = [
   'Configuration/BindingInstance',
   'Configuration',
   
-  'ClassBinding/Interface',
+  'ClassBinding/ClassInstance',
+  'ClassBinding/ObjectInstance',
   'ClassBinding/NestedClassBinding',
   'ClassBinding',
 
