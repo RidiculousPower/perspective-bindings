@@ -2,6 +2,7 @@
 module ::Magnets::Bindings::Container::ClassInstance
 
   include ::Magnets::Bindings::Configuration
+
   include ::Magnets::Bindings::Container::ClassAndObjectInstance
 
   ::Magnets::Bindings::Attributes.define_container_type( :bindings ) do

@@ -31,6 +31,8 @@ module ::Magnets::Bindings::InstanceBinding::Interface
     
       container_instance = container_class.new
 
+      container_instance.__initialize_for_parent_binding__( self )
+      
       self.__container__ = container_instance
     
       extend( container_class::InstanceBindingMethods )

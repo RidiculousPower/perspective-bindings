@@ -2,6 +2,7 @@
 module ::Magnets::Bindings::Container::ObjectInstance
 
   include ::Magnets::Bindings::Configuration
+
   include ::Magnets::Bindings::Container::ClassAndObjectInstance
   
   ##############
@@ -46,7 +47,7 @@ module ::Magnets::Bindings::Container::ObjectInstance
   def __initialize_for_parent_binding__( parent_binding )
 
     @__parent_binding__ = parent_binding
-        
+
   end
 
   ##################

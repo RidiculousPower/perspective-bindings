@@ -8,6 +8,8 @@ describe ::Magnets::Bindings::InstanceBinding do
       def self.__bindings__
         return @__bindings__ ||= { }
       end
+      def self.__route_with_name__
+      end
     end
     class ::Magnets::Bindings::InstanceBinding::ContainerMock
       def self.__bindings__
@@ -104,12 +106,13 @@ describe ::Magnets::Bindings::InstanceBinding do
   it 'can return sub-bindings that define containers nested inside this binding container class' do
     ::Magnets::Bindings::InstanceBinding.instance_method( :bindings ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__bindings__ )
     ::Magnets::Bindings::InstanceBinding.instance_method( :binding ).should == ::Magnets::Bindings::InstanceBinding.instance_method( :__binding__ )
-    class_instance = ::Magnets::Bindings::ClassBinding.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
-    instance = ::Magnets::Bindings::InstanceBinding.new( class_instance, Object.new )
-    # mock reference to InstanceBinding from ClassBinding
-    ::Magnets::Bindings::ClassBinding::InstanceBinding = ::Magnets::Bindings::InstanceBinding
-    some_binding_instance = ::Magnets::Bindings::ClassBinding.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :some_binding )
+    
+    class_instance = ::Magnets::Bindings::AttributeContainer::Bindings::Text.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
+    instance = ::Magnets::Bindings::AttributeContainer::Bindings::Text::InstanceBinding.new( class_instance, ::Magnets::Bindings::InstanceBinding::BoundContainerMock.new )
+
+    some_binding_instance = ::Magnets::Bindings::AttributeContainer::Bindings::Text::NestedClassBinding.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :some_binding )
     class_instance.__bindings__[ :some_binding ] = some_binding_instance
+    
     instance.__bindings__.is_a?( ::Hash ).should == true
     instance.__bindings__[ :some_binding ].is_a?( ::Magnets::Bindings::InstanceBinding ).should == true
     instance.__binding__( :some_binding ).parent_binding.should == some_binding_instance
@@ -131,17 +134,17 @@ describe ::Magnets::Bindings::InstanceBinding do
 
     class_instance = ::Magnets::Bindings::ClassBinding.new( ::Magnets::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Magnets::Bindings::InstanceBinding::ContainerMock )
     instance = ::Magnets::Bindings::InstanceBinding.new( class_instance, ::Magnets::Bindings::InstanceBinding::BoundContainerMock.new )
-    #instance.__value__.should == nil
-    #instance.binding_value_valid?( :some_value ).should == false
-    #Proc.new { instance.__value__ = :some_value }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
-    #instance.extend( ::Magnets::Bindings::Attributes::Text )
-    #instance.binding_value_valid?( :some_value ).should == true
-    #instance.__value__ = :some_value
-    #instance.__value__.should == :some_value
-    #instance.__value__ = nil
-    #instance.__required__ = true
-    #Proc.new { instance.__value__ = 42 }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
-    #instance.__container__.content.should == instance.__value__
+    instance.__value__.should == nil
+    instance.binding_value_valid?( :some_value ).should == false
+    Proc.new { instance.__value__ = :some_value }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    instance.extend( ::Magnets::Bindings::Attributes::Text )
+    instance.binding_value_valid?( :some_value ).should == true
+    instance.__value__ = :some_value
+    instance.__value__.should == :some_value
+    instance.__value__ = nil
+    instance.__required__ = true
+    Proc.new { instance.__value__ = 42 }.should raise_error( ::Magnets::Bindings::Exception::BindingInstanceInvalidType )
+    instance.__container__.content.should == instance.__value__
 
     instance.__permits_multiple__ = true
     instance.extend( ::Magnets::Bindings::Attributes::Text )
