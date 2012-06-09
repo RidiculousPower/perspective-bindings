@@ -81,8 +81,8 @@ describe ::Magnets::Bindings::AttributeContainer do
   #  define_instance_binding_class    #
   #  class_binding_class              #
   #  instance_binding_class           #
-  #  class_nested_binding_class     #
-  #  instance_nested_binding_class  #
+  #  nested_class_binding_class     #
+  #  nested_instance_binding_class  #
   #####################################
 
   it 'can define and return a class binding class for a given type' do
@@ -95,8 +95,8 @@ describe ::Magnets::Bindings::AttributeContainer do
     instance::LikeText::NestedClassBinding::InstanceBinding.is_a?( ::Class ).should == true
     instance.class_binding_class( 'like_text' ).should == instance::LikeText
     instance.instance_binding_class( 'like_text' ).should == instance::LikeText::InstanceBinding
-    instance.class_nested_binding_class( 'like_text' ).should == instance::LikeText::NestedClassBinding
-    instance.instance_nested_binding_class( 'like_text' ).should == instance::LikeText::NestedClassBinding::InstanceBinding
+    instance.nested_class_binding_class( 'like_text' ).should == instance::LikeText::NestedClassBinding
+    instance.nested_instance_binding_class( 'like_text' ).should == instance::LikeText::NestedClassBinding::InstanceBinding
   end
 
 	#######################################  Define Types  ###########################################

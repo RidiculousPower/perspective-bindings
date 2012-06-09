@@ -233,10 +233,11 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     @binding_types[ binding_type_name ] ||= [ ]
     @binding_types[ binding_type_name ].concat( instance_definition_modules )
     
-    instance_binding_class( binding_type_name ).module_eval do
+    class_binding_class = class_binding_class( binding_type_name )
+    
+    class_binding_class::InstanceBinding.module_eval do
       include *instance_definition_modules.reverse
     end
-        
   end
   
   #########################
@@ -260,22 +261,22 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
   end
 
   ################################
-  #  class_nested_binding_class  #
+  #  nested_class_binding_class  #
   ################################
   
-  def class_nested_binding_class( binding_type_name )
+  def nested_class_binding_class( binding_type_name )
     
     return class_binding_class( binding_type_name )::NestedClassBinding
     
   end
 
   ###################################
-  #  instance_nested_binding_class  #
+  #  nested_instance_binding_class  #
   ###################################
 
-  def instance_nested_binding_class( binding_type_name )
+  def nested_instance_binding_class( binding_type_name )
     
-    return class_nested_binding_class( binding_type_name )::InstanceBinding
+    return nested_class_binding_class( binding_type_name )::InstanceBinding
     
   end
 
@@ -305,7 +306,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
 
     nested_class_binding_extension_module = self::ClassBinding::NestedClassBinding
 
-    class_nested_binding_class = ::Class.new( class_binding_class ) do
+    nested_class_binding_class = ::Class.new( class_binding_class ) do
       
       include ::Magnets::Bindings::ClassBinding::NestedClassBinding
       
@@ -313,7 +314,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
       
     end
     
-    class_binding_class.const_set( :NestedClassBinding, class_nested_binding_class )
+    class_binding_class.const_set( :NestedClassBinding, nested_class_binding_class )
     
     return class_binding_class
     
@@ -357,7 +358,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     
     nested_instance_binding_extension_module = self::InstanceBinding::NestedInstanceBinding
     
-    instance_nested_binding_class = ::Class.new( instance_binding_class ) do
+    nested_instance_binding_class = ::Class.new( instance_binding_class ) do
       
       include ::Magnets::Bindings::InstanceBinding::NestedInstanceBinding
       
@@ -370,7 +371,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     # appending ::InstanceBinding to the class binding's class.
     #
     class_binding_class::NestedClassBinding.const_set( :NestedInstanceBinding, 
-                                                       instance_nested_binding_class )
+                                                       nested_instance_binding_class )
     
     return instance_binding_class
     
@@ -543,9 +544,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     method_name = required_single_binding_method_name( binding_method_name )
     
     single_binding_method_name = single_binding_method_name( binding_method_name )
-    
-    class_binding_class = class_binding_class( binding_type_name )
-    
+        
     #========================#
     #  attr_required_[type]  #
     #========================#
@@ -574,8 +573,6 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     method_name = required_multiple_binding_method_name( binding_method_name )
     
     multiple_binding_method_name = multiple_binding_method_name( binding_method_name )
-    
-    class_binding_class = class_binding_class( binding_type_name )
     
     #=========================#
     #  attr_required_[type]s  #

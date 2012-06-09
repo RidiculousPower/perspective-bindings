@@ -180,15 +180,6 @@ module ::Magnets::Bindings::Configuration
       # get the shared instance from the same route in self
       nested_binding_route = configuration_instance.__nested_route__( binding_instance )
 
-      puts 'self: ' + configuration_instance.to_s
-      puts 'self route: ' + configuration_instance.__route__.to_s
-      puts 'self name: ' + configuration_instance.__name__.to_s if configuration_instance.respond_to?( :__name__ )
-
-      puts 'nested binding name: ' + binding_instance.__name__.to_s
-      puts 'nested binding route: ' + binding_instance.__route__.to_s
-
-      puts 'nested route: ' + nested_binding_route.to_s
-
       child_instance = ::Magnets::Bindings.aliased_binding_in_context( configuration_instance, 
                                                                        nested_binding_route,
                                                                        binding_instance.__name__,

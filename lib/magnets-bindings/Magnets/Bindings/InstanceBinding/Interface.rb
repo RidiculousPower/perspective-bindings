@@ -142,6 +142,19 @@ module ::Magnets::Bindings::InstanceBinding::Interface
 
   alias_method  :value=, :__value__=
 
+	########################
+	#  autobind_value      #
+	#  __autobind_value__  #
+	########################
+	
+	def __autobind_value__( current_value = __value__ )
+	  
+    return current_value
+    
+  end
+  
+  alias_method  :autobind_value, :__autobind_value__
+
   ##################
   #  autobind      #
   #  __autobind__  #
@@ -155,16 +168,20 @@ module ::Magnets::Bindings::InstanceBinding::Interface
       case data_object
 
         when ::Array
-          
+                    
           if permits_multiple?
 
             if data_object.count - 1 > 0
+
+              binding_value_array = data_object.collect do |this_data_object|
+                __autobind_value__( this_data_object )
+              end
             
               case container
 
                 when ::Magnets::Bindings::Container::MultiContainerProxy
 
-                  container.__autobind__( *data_object, method_map_hash )
+                  container.__autobind__( *binding_value_array, method_map_hash )
 
                 else
 
@@ -176,7 +193,7 @@ module ::Magnets::Bindings::InstanceBinding::Interface
 
             else
 
-              container.__autobind__( data_object[ 0 ], method_map_hash )
+              container.__autobind__( __autobind_value__( data_object[ 0 ] ), method_map_hash )
 
             end
           
@@ -184,7 +201,7 @@ module ::Magnets::Bindings::InstanceBinding::Interface
           
         else
           
-          container.__autobind__( data_object, method_map_hash )
+          container.__autobind__( __autobind_value__( data_object ), method_map_hash )
           
       end
     

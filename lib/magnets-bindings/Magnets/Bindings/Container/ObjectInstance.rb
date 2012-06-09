@@ -75,13 +75,36 @@ module ::Magnets::Bindings::Container::ObjectInstance
         next unless method_name
         
         found_a_binding = true
-        this_binding_instance.__value__ = data_object.__send__( method_name )
+
+        data_source_name = method_name
 
       elsif data_object.respond_to?( this_binding_name )
 
         found_a_binding = true
-        this_binding_instance.__value__ = data_object.__send__( this_binding_name )
+        
+        data_source_name = this_binding_name
+        
+      end
+      
+      if data_source_name
+        
+        case data_object
+        
+          when ::Magnets::Bindings::Container
+        
+            binding_instance = data_object.__binding__( data_source_name )
+            this_binding_instance.__value__ = binding_instance.__render_value__
+        
+          when ::Magnets::Bindings::InstanceBinding
 
+            this_binding_instance.__value__ = data_object.__render_value__
+          
+          else
+
+            this_binding_instance.__value__ = data_object.__send__( data_source_name )
+        
+        end
+      
       end
       
     end
