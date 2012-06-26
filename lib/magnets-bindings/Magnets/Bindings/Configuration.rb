@@ -5,8 +5,6 @@ module ::Magnets::Bindings::Configuration
   include ::CascadingConfiguration::Array::Unique
   include ::CascadingConfiguration::Hash
 
-  ccm = ::CascadingConfiguration::Methods
-    
   ########################
   #  parent_binding      #
   #  __parent_binding__  #
@@ -94,7 +92,7 @@ module ::Magnets::Bindings::Configuration
     
   end
 
-  ccm.alias_module_and_instance_methods( self, :bindings, :__bindings__ )
+  Controller.alias_module_and_instance_methods( self, :bindings, :__bindings__ )
 
   #########################
   #  binding_aliases      #
@@ -103,7 +101,7 @@ module ::Magnets::Bindings::Configuration
 
 	attr_configuration_hash  :__binding_aliases__
 	
-  ccm.alias_module_method( self, :binding_aliases, :__binding_aliases__ )
+  Controller.alias_module_method( self, :binding_aliases, :__binding_aliases__ )
 
   ###################################
   #  local_aliases_to_bindings      #
@@ -117,6 +115,9 @@ module ::Magnets::Bindings::Configuration
 	  #=========================#
 
     def initialize_for_parent( parent )
+      
+      # make sure that :__bindings__ and :__binding_aliases__ are initialized first
+      # ensure_configurations_initialize_first :__bindings__, :__binding_aliases__
       
       super
 
@@ -158,7 +159,7 @@ module ::Magnets::Bindings::Configuration
   
   end
 
-  ccm.alias_module_and_instance_methods( self, :local_aliases_to_bindings, 
+  Controller.alias_module_and_instance_methods( self, :local_aliases_to_bindings, 
                                                :__local_aliases_to_bindings__ )
   
 	#################
@@ -219,7 +220,7 @@ module ::Magnets::Bindings::Configuration
                               
   attr_instance_configuration_unique_array  :__configuration_procs__
 
-  ccm.alias_module_and_instance_methods( self, :configuration_procs, :__configuration_procs__ )
+  Controller.alias_module_and_instance_methods( self, :configuration_procs, :__configuration_procs__ )
 
   ###################
   #  configure      #

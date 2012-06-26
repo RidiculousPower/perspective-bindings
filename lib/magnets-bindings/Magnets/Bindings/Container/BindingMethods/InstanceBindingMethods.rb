@@ -1,5 +1,6 @@
 
-module ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods
+class ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods < 
+      ::Magnets::Bindings::Container::BindingMethods
   
   ####################
   #  define_binding  #

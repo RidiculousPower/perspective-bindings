@@ -1,5 +1,5 @@
 
-module ::Magnets::Bindings::Container::BindingMethods
+class ::Magnets::Bindings::Container::BindingMethods <::CascadingConfiguration::Core::InstanceController::SupportModule
 
   ####################
   #  define_binding  #

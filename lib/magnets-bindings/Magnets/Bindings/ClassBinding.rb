@@ -6,7 +6,5 @@ class ::Magnets::Bindings::ClassBinding
     
   include ::Magnets::Bindings::ClassBinding::ObjectInstance
   extend ::Magnets::Bindings::ClassBinding::ClassInstance
-   
-  extend ::CascadingConfiguration::Inheritance::IncludeAlsoIncludesInChildren
     
 end

@@ -6,8 +6,6 @@ module ::Magnets::Bindings::Container
 
 	extend ::Magnets::Bindings::Container::Context
   
-  ccm_module = CascadingConfiguration::Methods::Module
-
 	include ::Magnets::Bindings::Container::ObjectInstance
 
 	include_or_extend_cascades_prepend_extends ::Magnets::Bindings::Container::ClassInstance
@@ -18,23 +16,21 @@ module ::Magnets::Bindings::Container
     # module, which holds the methods for our bindings. This is necessary to make the bindings
     # portable, so that they can be inserted in bindings as well.
     
-    # CascadingConfiguration::Methods maintains module inheritance structure to ensure
-    # that methods cascade.
-
-    ccm_module.create_support_module( class_or_module_instance, 
-                                      :ClassBindingMethods,
-                                      :class_bindings, 
-                                      false, 
-                                      true,
-                                      self::BindingMethods )
+    class_or_module_instance::Controller.create_support( :class_bindings, 
+                                                         :default,
+                                                         self::BindingMethods,
+                                                         false, 
+                                                         true,
+                                                         false,
+                                                         true )
     
-    ccm_module.create_support_module( class_or_module_instance, 
-                                      :InstanceBindingMethods,
-                                      :instance_bindings, 
-                                      true,
-                                      false,
-                                      self::BindingMethods,
-                                      self::BindingMethods::InstanceBindingMethods )
+    class_or_module_instance::Controller.create_support( :instance_bindings, 
+                                                         :default,
+                                                         self::BindingMethods::InstanceBindingMethods,
+                                                         true,
+                                                         false,
+                                                         true,
+                                                         false )
         
   end
   

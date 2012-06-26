@@ -4,8 +4,6 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Array::Unique
 
-  ccm = ::CascadingConfiguration::Methods
-
   ################
   #  initialize  #
   ################
@@ -79,7 +77,8 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
 
   def __initialize_defaults__( binding_name, container_class )
     
-    ::CascadingConfiguration::Variable.register_child_for_parent( self, self.class )
+    encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
+    encapsulation.register_child_for_parent( self, self.class )
 
     binding_name_validates?( binding_name )
 
@@ -87,7 +86,7 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
       __validate_container_class__( container_class )
       self.__container_class__ = container_class
       extend( container_class::ClassBindingMethods )
-      ::CascadingConfiguration::Variable.register_child_for_parent( self, container_class )
+      encapsulation.register_child_for_parent( self, container_class )
     end
     
     self.__name__ = binding_name
@@ -113,7 +112,8 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
   
   def __initialize_ancestor_configuration__( ancestor_binding = nil )
     
-    ::CascadingConfiguration::Variable.register_child_for_parent( self, ancestor_binding )
+    encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
+    encapsulation.register_child_for_parent( self, ancestor_binding )
 
   end
 
@@ -135,6 +135,6 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
 
   attr_configuration  :__container_class__
 
-  ccm.alias_module_and_instance_methods( self, :container_class, :__container_class__ )
+  Controller.alias_module_and_instance_methods( self, :container_class, :__container_class__ )
   
 end

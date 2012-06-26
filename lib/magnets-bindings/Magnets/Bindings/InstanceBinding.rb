@@ -6,6 +6,4 @@ class ::Magnets::Bindings::InstanceBinding
   
   include ::Magnets::Bindings::InstanceBinding::Interface
 
-  extend ::CascadingConfiguration::Inheritance::IncludeAlsoIncludesInChildren
-  
 end
