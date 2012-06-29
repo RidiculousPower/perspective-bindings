@@ -21,9 +21,9 @@ class ::Magnets::Bindings::Container::BindingMethods <::CascadingConfiguration::
   
   end
 
-  ###########################
+  ###################################
   #  define_local_alias_to_binding  #
-  ###########################
+  ###################################
   
   def define_local_alias_to_binding( binding_alias, binding_instance )
   
@@ -51,7 +51,7 @@ class ::Magnets::Bindings::Container::BindingMethods <::CascadingConfiguration::
     #================#
     
     define_method( binding_name ) do
-      
+
       return __bindings__[ binding_name ]
       
     end

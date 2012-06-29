@@ -49,10 +49,7 @@ module ::Magnets::Bindings::Configuration
         when ::Magnets::Bindings::ClassBinding
           
           # Create a new binding without any settings - causes automatic lookup to parent.
-          child_instance = binding_instance.class::NestedClassBinding.new( instance, 
-                                                                           nil, 
-                                                                           nil, 
-                                                                           binding_instance )
+          child_instance = binding_instance.class::NestedClassBinding.new( instance, nil, nil, binding_instance )
 
         # We are attaching to a root container instance.
         # We know this because we haven't been extended as a nested instance.
@@ -69,8 +66,7 @@ module ::Magnets::Bindings::Configuration
             when ::Magnets::Bindings::ClassBinding
 
               # We need instance bindings corresponding to the declared class bindings
-              child_instance = binding_instance.class::InstanceBinding.new( binding_instance, 
-                                                                            instance )
+              child_instance = binding_instance.class::InstanceBinding.new( binding_instance, instance )
 
           end
             
@@ -82,7 +78,7 @@ module ::Magnets::Bindings::Configuration
         
         else
 
-          raise ::RuntimeError, 'Unexpected binding type (' + instance.to_s + ')!'
+          raise ::RuntimeError, 'Unexpected binding container type (' + instance.to_s + ')!'
           
       end
       
@@ -92,7 +88,7 @@ module ::Magnets::Bindings::Configuration
     
   end
 
-  Controller.alias_module_and_instance_methods( self, :bindings, :__bindings__ )
+  Controller.alias_module_and_instance_methods( :bindings, :__bindings__ )
 
   #########################
   #  binding_aliases      #
@@ -101,7 +97,7 @@ module ::Magnets::Bindings::Configuration
 
 	attr_configuration_hash  :__binding_aliases__
 	
-  Controller.alias_module_method( self, :binding_aliases, :__binding_aliases__ )
+  Controller.alias_module_method( :binding_aliases, :__binding_aliases__ )
 
   ###################################
   #  local_aliases_to_bindings      #
@@ -159,8 +155,7 @@ module ::Magnets::Bindings::Configuration
   
   end
 
-  Controller.alias_module_and_instance_methods( self, :local_aliases_to_bindings, 
-                                               :__local_aliases_to_bindings__ )
+  Controller.alias_module_and_instance_methods( :local_aliases_to_bindings, :__local_aliases_to_bindings__ )
   
 	#################
   #  binding      #
@@ -220,7 +215,7 @@ module ::Magnets::Bindings::Configuration
                               
   attr_instance_configuration_unique_array  :__configuration_procs__
 
-  Controller.alias_module_and_instance_methods( self, :configuration_procs, :__configuration_procs__ )
+  Controller.alias_instance_method( :configuration_procs, :__configuration_procs__ )
 
   ###################
   #  configure      #

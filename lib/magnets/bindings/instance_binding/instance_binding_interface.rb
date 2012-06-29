@@ -16,7 +16,7 @@ module ::Magnets::Bindings::InstanceBinding::Interface
 
     # register parent class binding as ancestor for configurations
     encapsulation.register_child_for_parent( self, @__parent_binding__ )
-
+    
     @__bound_container__ = bound_container_instance
 
   end
@@ -28,14 +28,14 @@ module ::Magnets::Bindings::InstanceBinding::Interface
   def __initialize_container__
     
     if container_class = @__parent_binding__.__container_class__
-    
+
       container_instance = container_class.new
 
       container_instance.__initialize_for_parent_binding__( self )
       
       self.__container__ = container_instance
     
-      extend( container_class::InstanceBindingMethods )
+      extend( container_class::Controller::InstanceBindingMethods )
 
       encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
     
@@ -80,7 +80,7 @@ module ::Magnets::Bindings::InstanceBinding::Interface
 
   attr_instance_configuration  :__container__
 
-  Controller.alias_instance_method( self, :container, :__container__ )
+  Controller.alias_instance_method( :container, :__container__ )
 
   def __container__
     

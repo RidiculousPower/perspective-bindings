@@ -34,9 +34,9 @@ class ::Magnets::Bindings::Container::BindingMethods::InstanceBindingMethods <
   
   end
 
-  ###########################
+  ###################################
   #  define_local_alias_to_binding  #
-  ###########################
+  ###################################
   
   def define_local_alias_to_binding( binding_alias, binding_instance )
     

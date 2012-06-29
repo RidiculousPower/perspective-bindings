@@ -10,7 +10,7 @@ module ::Magnets::Bindings::Configuration::BindingInstance
   
   attr_instance_configuration  :__name__
 
-  Controller.alias_instance_method( self, :name, :__name__ )
+  Controller.alias_instance_method( :name, :__name__ ).to_s
 
   ###############
   #  route      #
@@ -19,7 +19,7 @@ module ::Magnets::Bindings::Configuration::BindingInstance
 
   attr_instance_configuration  :__route__
 
-  Controller.alias_instance_method( self, :route, :__route__ )
+  Controller.alias_instance_method( :route, :__route__ )
 
   #########################
   #  route_with_name      #
@@ -28,7 +28,7 @@ module ::Magnets::Bindings::Configuration::BindingInstance
 
   attr_instance_configuration  :__route_with_name__
 
-  Controller.alias_instance_method( self, :route_with_name, :__route_with_name__ )
+  Controller.alias_instance_method( :route_with_name, :__route_with_name__ )
 
   ######################
   #  route_string      #
@@ -37,7 +37,7 @@ module ::Magnets::Bindings::Configuration::BindingInstance
 
   attr_instance_configuration  :__route_string__
 
-  Controller.alias_instance_method( self, :route_string, :__route_string__ )
+  Controller.alias_instance_method( :route_string, :__route_string__ )
 
   ############################
   #  route_print_string      #
@@ -46,7 +46,7 @@ module ::Magnets::Bindings::Configuration::BindingInstance
 
   attr_configuration  :__route_print_string__
 
-  Controller.alias_instance_method( self, :route_print_string, :__route_print_string__ )
+  Controller.alias_instance_method( :route_print_string, :__route_print_string__ )
 
   self.__route_print_string__ = ::Magnets::Bindings.context_print_string
 
@@ -57,7 +57,7 @@ module ::Magnets::Bindings::Configuration::BindingInstance
   
   attr_configuration  :permits_multiple? => :__permits_multiple__=
 
-  Controller.alias_instance_method( self, :permits_multiple=, :__permits_multiple__= )
+  Controller.alias_instance_method( :permits_multiple=, :__permits_multiple__= )
   
   self.__permits_multiple__ = false
   
@@ -78,7 +78,7 @@ module ::Magnets::Bindings::Configuration::BindingInstance
 
   attr_instance_configuration  :required? => :__required__=
 
-  Controller.alias_instance_method( self, :required=, :__required__= )
+  Controller.alias_instance_method( :required=, :__required__= )
 
   ###############
   #  optional?  #

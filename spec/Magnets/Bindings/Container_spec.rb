@@ -1,5 +1,5 @@
 
-require_relative '../../../lib/magnets-bindings.rb'
+require_relative '../../../lib/magnets/bindings.rb'
 
 describe ::Magnets::Bindings::Container do
 
@@ -84,6 +84,7 @@ describe ::Magnets::Bindings::Container do
 
       has_binding?( :some_other_binding ).should == true
       respond_to?( :some_other_binding ).should == true
+
       some_other_binding.is_a?( ::Magnets::Bindings::ClassBinding ).should == true
 
     end
@@ -102,6 +103,11 @@ describe ::Magnets::Bindings::Container do
       respond_to?( :another_binding ).should == true
       method_defined?( :another_binding ).should == true
       method_defined?( :another_binding= ).should == true
+      
+      another_binding.has_binding?( :some_other_binding ).should == true
+      another_binding.respond_to?( :some_other_binding ).should == true
+      another_binding.__bindings__[ :some_other_binding ].is_a?( ::Magnets::Bindings::ClassBinding ).should == true
+      another_binding.some_other_binding.is_a?( ::Magnets::Bindings::ClassBinding ).should == true
 
       has_binding?( :some_other_binding ).should == true
       __binding__( :some_other_binding ).required?.should == false

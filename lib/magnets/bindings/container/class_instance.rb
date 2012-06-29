@@ -19,7 +19,7 @@ module ::Magnets::Bindings::Container::ClassInstance
     define_binding_type( :regexp,         ::Magnets::Bindings::Attributes::Regexp )
     define_binding_type( :text,           ::Magnets::Bindings::Attributes::Text )
     define_binding_type( :text_or_number, ::Magnets::Bindings::Attributes::Text,
-                                               ::Magnets::Bindings::Attributes::Number )
+                                          ::Magnets::Bindings::Attributes::Number )
     define_binding_type( :true_false,     ::Magnets::Bindings::Attributes::TrueFalse )
     define_binding_type( :uri,            ::Magnets::Bindings::Attributes::URI )
   
@@ -116,8 +116,8 @@ module ::Magnets::Bindings::Container::ClassInstance
 	  
     __binding_aliases__[ binding_alias ] = existing_binding_name
     
-		self::ClassBindingMethods.define_binding_alias( binding_alias, existing_binding_name )
-    self::InstanceBindingMethods.define_binding_alias( binding_alias, existing_binding_name )
+		self::Controller::ClassBindingMethods.define_binding_alias( binding_alias, existing_binding_name )
+    self::Controller::InstanceBindingMethods.define_binding_alias( binding_alias, existing_binding_name )
     
   end
 
@@ -129,8 +129,8 @@ module ::Magnets::Bindings::Container::ClassInstance
 
     __local_aliases_to_bindings__[ binding_alias ] = binding_instance
 
-		self::ClassBindingMethods.define_local_alias_to_binding( binding_alias, binding_instance )
-    self::InstanceBindingMethods.define_local_alias_to_binding( binding_alias, binding_instance )
+		self::Controller::ClassBindingMethods.define_local_alias_to_binding( binding_alias, binding_instance )
+    self::Controller::InstanceBindingMethods.define_local_alias_to_binding( binding_alias, binding_instance )
 
   end
 

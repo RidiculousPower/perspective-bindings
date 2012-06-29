@@ -21,6 +21,8 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
 
       __initialize_ancestor_configuration__( ancestor_binding )
 
+      __initialize_route__
+
       if container_class
         __validate_container_class__( container_class )
         self.__container_class__ = container_class
@@ -33,14 +35,12 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
     end
 
     if container_class or container_class = __container_class__
-      extend( container_class::ClassBindingMethods )
+      extend( container_class::Controller::ClassBindingMethods )
     end
 
     if block_given?
       __configure__( & configuration_proc )
     end
-
-    __initialize_route__
     
   end
 
@@ -77,6 +77,11 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
 
   def __initialize_defaults__( binding_name, container_class )
     
+    self.__name__ = binding_name
+    self.__required__ = false    
+    
+    __initialize_route__
+    
     encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
     encapsulation.register_child_for_parent( self, self.class )
 
@@ -85,13 +90,10 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
     if container_class
       __validate_container_class__( container_class )
       self.__container_class__ = container_class
-      extend( container_class::ClassBindingMethods )
+      extend( container_class::Controller::ClassBindingMethods )
       encapsulation.register_child_for_parent( self, container_class )
     end
     
-    self.__name__ = binding_name
-    self.__required__ = false    
-
   end
 
   ##########################
@@ -135,6 +137,6 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
 
   attr_configuration  :__container_class__
 
-  Controller.alias_module_and_instance_methods( self, :container_class, :__container_class__ )
+  Controller.alias_module_and_instance_methods( :container_class, :__container_class__ )
   
 end

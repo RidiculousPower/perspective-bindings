@@ -10,6 +10,6 @@ module ::Magnets::Bindings::ClassBinding::ClassInstance
 
   attr_configuration  :__container_class__
 
-  Controller.alias_module_and_instance_methods( self, :container_class, :__container_class__ )
+  Controller.alias_module_and_instance_methods( :container_class, :__container_class__ )
 
 end

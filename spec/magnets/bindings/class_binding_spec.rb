@@ -1,5 +1,5 @@
 
-require_relative '../../../lib/magnets-bindings.rb'
+require_relative '../../../lib/magnets/bindings.rb'
 
 describe ::Magnets::Bindings::ClassBinding do
 
@@ -11,25 +11,41 @@ describe ::Magnets::Bindings::ClassBinding do
     class ::Magnets::Bindings::ClassBinding::ContainerMock1
       def self.__bindings__
       end
-      module ClassBindingMethods
+      module Controller
+        module ClassBindingMethods
+        end
+        module InstanceBindingMethods
+        end
       end
     end
     class ::Magnets::Bindings::ClassBinding::ContainerMock2
       def self.__bindings__
       end
-      module ClassBindingMethods
+      module Controller
+        module ClassBindingMethods
+        end
+        module InstanceBindingMethods
+        end
       end
     end
     class ::Magnets::Bindings::ClassBinding::ContainerMock3
       def self.__bindings__
       end
-      module ClassBindingMethods
+      module Controller
+        module ClassBindingMethods
+        end
+        module InstanceBindingMethods
+        end
       end
     end
     class ::Magnets::Bindings::ClassBinding::ContainerMock4
       def self.__bindings__
       end
-      module ClassBindingMethods
+      module Controller
+        module ClassBindingMethods
+        end
+        module InstanceBindingMethods
+        end
       end
     end
   end

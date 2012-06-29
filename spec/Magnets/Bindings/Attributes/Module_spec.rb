@@ -1,5 +1,5 @@
 
-require_relative '../../../../lib/magnets-bindings.rb'
+require_relative '../../../../lib/magnets/bindings.rb'
 
 describe ::Magnets::Bindings::Attributes::Module do
 

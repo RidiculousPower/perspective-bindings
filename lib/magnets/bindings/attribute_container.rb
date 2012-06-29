@@ -484,8 +484,8 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
                                                     & configuration_proc )
         new_bindings.push( this_new_binding )
         __bindings__[ this_binding_name ] = this_new_binding
-        self::ClassBindingMethods.define_binding( this_binding_name )
-        self::InstanceBindingMethods.define_binding( this_binding_name )
+        self::Controller::ClassBindingMethods.define_binding( this_binding_name )
+        self::Controller::InstanceBindingMethods.define_binding( this_binding_name )
       end
       
       return new_bindings
@@ -524,8 +524,8 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
         this_new_binding.__permits_multiple__ = true
         new_bindings.push( this_new_binding )
         __bindings__[ this_binding_name ] = this_new_binding
-        self::ClassBindingMethods.define_binding( this_binding_name )
-        self::InstanceBindingMethods.define_binding( this_binding_name )
+        self::Controller::ClassBindingMethods.define_binding( this_binding_name )
+        self::Controller::InstanceBindingMethods.define_binding( this_binding_name )
       end
       
       return new_bindings

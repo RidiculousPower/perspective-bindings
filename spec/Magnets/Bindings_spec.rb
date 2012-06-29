@@ -1,5 +1,5 @@
 
-require_relative '../../lib/magnets-bindings.rb'
+require_relative '../../lib/magnets/bindings.rb'
 
 describe ::Magnets::Bindings do
   
@@ -60,7 +60,7 @@ describe ::Magnets::Bindings do
       __binding__( :text1 ).__route__.should == nil
       __binding__( :text2 ).__route__.should == nil
     end
-    
+
     class ::Magnets::Bindings::MockNestedC2
       include ::Magnets::Bindings
       attr_binding :e, ::Magnets::Bindings::MockNestedE
@@ -528,6 +528,7 @@ describe ::Magnets::Bindings do
     
     class ::Magnets::Bindings::MockClass2
       include ::Magnets::Bindings::MockModule2
+
     end
 
     ::Magnets::Bindings::MockClass2.module_eval do

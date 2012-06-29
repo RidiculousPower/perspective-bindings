@@ -14,7 +14,7 @@ module ::Magnets::Bindings::ClassBinding::NestedClassBinding
     @__parent_binding__ = bound_container
     @__bound_container__ = bound_container
     @__bound_container_class__ = bound_container.__container_class__
-    
+
     super
         
   end

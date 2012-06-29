@@ -1,20 +1,29 @@
 
-require_relative '../../../lib/magnets-bindings.rb'
+require_relative '../../../lib/magnets/bindings.rb'
 
 describe ::Magnets::Bindings::InstanceBinding do
 
   before :all do
+
     class ::Magnets::Bindings::InstanceBinding::BoundContainerMock
+
       def self.__bindings__
         return @__bindings__ ||= { }
       end
       def self.__route_with_name__
       end
     end
+
     class ::Magnets::Bindings::InstanceBinding::ContainerMock
+
+      instances_identify_as!( ::Magnets::Bindings::Container::ObjectInstance )
+      identifies_as!( ::Magnets::Bindings::Container::ObjectInstance )
+
       def self.__bindings__
       end
+
       attr_accessor :content, :__parent_binding__
+
       def __autobind__( data_object, hash = nil )
         @content = data_object
         @__called_autobind__ = true
@@ -26,16 +35,20 @@ describe ::Magnets::Bindings::InstanceBinding do
       end
       def __initialize_for_parent_binding__( parent )
       end
-      module ClassBindingMethods
-      end
-      module InstanceBindingMethods
+
+      module Controller
+        module ClassBindingMethods
+        end
+        module InstanceBindingMethods
+        end
       end
       
       include ::Magnets::Bindings::Attributes::Text
       
     end
-  end
 
+  end
+  
   ########################
   #  initialize          #
   #  parent_binding      #

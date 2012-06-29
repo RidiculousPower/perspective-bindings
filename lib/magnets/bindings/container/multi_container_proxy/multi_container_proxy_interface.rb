@@ -27,7 +27,7 @@ module ::Magnets::Bindings::Container::MultiContainerProxy::Interface
   ########################
 
   attr_reader :__parent_binding__
-
+  
   ###########
   #  class  #
   ###########
