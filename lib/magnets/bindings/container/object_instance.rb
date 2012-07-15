@@ -2,6 +2,7 @@
 module ::Magnets::Bindings::Container::ObjectInstance
 
   include ::Magnets::Bindings::Configuration
+  include ::Magnets::Bindings::Configuration::ObjectAndBindingInstance
 
   include ::Magnets::Bindings::Container::ClassAndObjectInstance
   
@@ -25,18 +26,6 @@ module ::Magnets::Bindings::Container::ObjectInstance
     end
     
     return name
-    
-  end
-  
-  ############################
-  #  __configure_bindings__  #
-  ############################
-
-  def __configure_bindings__
-    
-    __bindings__.each do |this_binding_name, this_binding_instance|
-      this_binding_instance.__configure_container__
-    end
     
   end
   

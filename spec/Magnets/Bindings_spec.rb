@@ -85,7 +85,9 @@ describe ::Magnets::Bindings do
       __binding__( :e ).has_binding?( :text2 ).should == true
       __binding__( :e ).is_a?( ::Magnets::Bindings::InstanceBinding ).should == true
       __binding__( :e ).is_a?( ::Magnets::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      __binding__( :e ).__binding__( :text1 ).is_a?( ::Magnets::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      $blah = true
+      binding_e = __binding__( :e )
+      binding_e.__binding__( :text1 ).is_a?( ::Magnets::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
       __binding__( :e ).__binding__( :text2 ).is_a?( ::Magnets::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
       __route__.should == nil
       __binding__( :e ).__route__.should == nil
@@ -528,7 +530,6 @@ describe ::Magnets::Bindings do
     
     class ::Magnets::Bindings::MockClass2
       include ::Magnets::Bindings::MockModule2
-
     end
 
     ::Magnets::Bindings::MockClass2.module_eval do

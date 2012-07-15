@@ -1,7 +1,7 @@
 
 begin ; require 'development' ; rescue ::LoadError ; end
 
-require 'magnets-configuration'
+require 'magnets/configuration'
 
 # namespaces that have to be declared ahead of time for proper load order
 require_relative './namespaces'

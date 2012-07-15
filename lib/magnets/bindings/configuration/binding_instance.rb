@@ -1,6 +1,8 @@
 
 module ::Magnets::Bindings::Configuration::BindingInstance
 
+  include ::Magnets::Bindings::Configuration::ObjectAndBindingInstance
+
   include ::CascadingConfiguration::Setting
 
   ##############

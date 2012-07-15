@@ -10,6 +10,7 @@ files = [
 
   'constants',
 
+  'configuration/object_and_binding_instance',
   'configuration/binding_instance',
   'configuration',
   
