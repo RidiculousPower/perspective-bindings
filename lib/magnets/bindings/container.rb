@@ -1,16 +1,18 @@
 
 module ::Magnets::Bindings::Container
   
-	extend ::ModuleCluster
-  extend ::ModuleCluster::Define::Block::CascadingClassOrModule
+	extend ::Module::Cluster
 
 	extend ::Magnets::Bindings::Container::Context
   
 	include ::Magnets::Bindings::Container::ObjectInstance
 
-	include_or_extend_cascades_prepend_extends ::Magnets::Bindings::Container::ClassInstance
+  cluster = cluster( :magnets )
 
-  cascading_prepend_class_or_module_include do |class_or_module_instance|
+  cascade = cluster.before_include_or_extend.cascade
+  cascade.extend( ::Magnets::Bindings::Container::ClassInstance )
+  
+  cluster.before_include.cascade do |class_or_module_instance|
     
     # Any time we are included in or cascade to a class we need to create our BindingMethods
     # module, which holds the methods for our bindings. This is necessary to make the bindings

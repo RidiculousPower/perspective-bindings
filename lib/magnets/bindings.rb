@@ -1,9 +1,7 @@
 
-require 'uri'
+begin ; require 'development' ; rescue ::LoadError ; end
 
-require 'accessor-utilities'
-
-require_relative '../../../configuration/lib/magnets-configuration.rb'
+require 'magnets-configuration'
 
 # namespaces that have to be declared ahead of time for proper load order
 require_relative './namespaces'

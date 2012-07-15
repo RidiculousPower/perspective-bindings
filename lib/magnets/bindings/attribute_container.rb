@@ -44,7 +44,7 @@ class ::Magnets::Bindings::AttributeContainer < ::Module
     # 
     # This should be all we need to permit multiple parents.
     # 
-    @parents ||= ::CompositingArray::Unique.new( nil, self )
+    @parents ||= ::Array::Unique.new( self )
     
     unless parent_containers.empty?
 
