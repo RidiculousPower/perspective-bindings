@@ -11,7 +11,7 @@ module ::Magnets::Bindings::InstanceBinding::Interface
   def initialize( parent_class_binding, bound_container_instance )
         
     @__parent_binding__ = parent_class_binding
-
+    
     encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
 
     # register parent class binding as ancestor for configurations
@@ -19,6 +19,14 @@ module ::Magnets::Bindings::InstanceBinding::Interface
     
     @__bound_container__ = bound_container_instance
 
+    if container_class = @__parent_binding__.__container_class__
+      extend( container_class::Controller::InstanceBindingMethods )
+    end
+    
+    __bindings__.each do |this_binding_name, this_binding_instance|
+      this_binding_instance.__configure_container__
+    end
+    
   end
 
   ##############################
@@ -26,7 +34,7 @@ module ::Magnets::Bindings::InstanceBinding::Interface
   ##############################
   
   def __initialize_container__
-    
+
     if container_class = @__parent_binding__.__container_class__
 
       container_instance = container_class.new
@@ -34,8 +42,6 @@ module ::Magnets::Bindings::InstanceBinding::Interface
       container_instance.__initialize_for_parent_binding__( self )
       
       self.__container__ = container_instance
-    
-      extend( container_class::Controller::InstanceBindingMethods )
 
       encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
     
@@ -60,6 +66,8 @@ module ::Magnets::Bindings::InstanceBinding::Interface
 		__configuration_procs__.each do |this_configuration_proc|
       bound_container.instance_exec( self, & this_configuration_proc )
 	  end
+	  
+	  return self
     
   end
   
@@ -87,9 +95,9 @@ module ::Magnets::Bindings::InstanceBinding::Interface
     container_instance = nil
 
     unless container_instance = super
-      
+
       if container_class = @__parent_binding__.__container_class__
-    
+
         container_instance = __initialize_container__
       
       end

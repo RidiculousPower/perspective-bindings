@@ -58,7 +58,6 @@ module ::Magnets::Bindings::Configuration::ObjectAndBindingInstance
 
               # We need instance bindings corresponding to the declared class bindings
               child_instance = binding_instance.class::InstanceBinding.new( binding_instance, instance )
-              child_instance.__configure_container__
 
           end
             
@@ -67,14 +66,13 @@ module ::Magnets::Bindings::Configuration::ObjectAndBindingInstance
           
           binding_class = binding_instance.class::NestedInstanceBinding
           child_instance = binding_class.new( binding_instance, instance.__container__ )
-          child_instance.__configure_container__
 
         else
 
           raise ::RuntimeError, ( 'Unexpected binding container type (' << instance.to_s ) << ')!'
           
       end
-      
+
       return child_instance
 
     end

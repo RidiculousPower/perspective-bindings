@@ -26,16 +26,13 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
       if container_class
         __validate_container_class__( container_class )
         self.__container_class__ = container_class
+        extend( container_class::Controller::ClassBindingMethods )
       end
 
     else
 
       __initialize_defaults__( binding_name, container_class )
 
-    end
-
-    if container_class or container_class = __container_class__
-      extend( container_class::Controller::ClassBindingMethods )
     end
 
     if block_given?
@@ -87,7 +84,7 @@ module ::Magnets::Bindings::ClassBinding::ObjectInstance
 
     binding_name_validates?( binding_name )
 
-    if container_class
+    if container_class or container_class = __container_class__
       __validate_container_class__( container_class )
       self.__container_class__ = container_class
       extend( container_class::Controller::ClassBindingMethods )
