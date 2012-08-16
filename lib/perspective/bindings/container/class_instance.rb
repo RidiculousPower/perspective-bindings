@@ -26,6 +26,30 @@ module ::Perspective::Bindings::Container::ClassInstance
   end
 
   include ::Perspective::Bindings::AttributeContainer::Bindings
+  
+  #########
+  #  new  #
+  #########
+  
+  def new( *args )
+    
+    # We add this here instead of in #initialize - where it usually would go - so that
+    # we can avoid requiring #initialize to call super.
+    #
+    # This is clearly an odd thing to do, but perhaps it can be defended on the basis
+    # that the class instance is already acting as a controller for instances, not
+    # only in terms of creating them (as always) but also in terms of bindings.
+    #
+    
+    instance = super
+    
+    instance.__bindings__.each do |this_binding_name, this_binding_instance|
+      this_binding_instance.__configure_container__
+    end
+    
+    return instance
+    
+  end
 
   ###############
   #  configure  #

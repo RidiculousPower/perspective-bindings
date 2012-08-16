@@ -6,6 +6,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
   include ::Perspective::Bindings::Container::ClassAndObjectInstance
   
+  
   ##############
   #  name      #
   #  __name__  #
