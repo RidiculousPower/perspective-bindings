@@ -8,7 +8,7 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Rational do
       include ::Perspective::Bindings::Container
       class Container
         include ::Perspective::Bindings::Container
-        attr_accessor :content
+        attr_binding :content
       end
     end
   end
@@ -46,9 +46,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Rational do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_rational = [ Object ] }.should raise_error
-    Proc.new { instance.some_rational = :some_value }.should raise_error
-    instance.some_rational = Rational( 1, 2 )
+    Proc.new { instance.some_rational.value = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_rational.value = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_rational.value = Rational( 1, 2 )
     
   end
 
@@ -69,11 +69,11 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Rational do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_rationals = [ :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_rationals = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_rationals = Rational( 1, 4 )
-    instance.some_rationals = [ Rational( 4, 2 ), Rational( 2, 3 ) ]
-    Proc.new { instance.some_rationals = [ Object, :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_rationals.value = [ :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_rationals.value = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_rationals.value = Rational( 1, 4 )
+    instance.some_rationals.value = [ Rational( 4, 2 ), Rational( 2, 3 ) ]
+    Proc.new { instance.some_rationals.value = [ Object, :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
     
   end  
 
@@ -94,9 +94,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Rational do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_rational = [ Rational( 4, 2 ), :some_other_value ] }.should raise_error
-    instance.some_required_rational = Rational( 4, 2 )
-    instance.some_required_rational = nil
+    Proc.new { instance.some_required_rational.value = [ Rational( 4, 2 ), :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_rational.value = Rational( 4, 2 )
+    instance.some_required_rational.value = nil
     
   end  
 
@@ -117,12 +117,12 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Rational do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_rationals = [ Rational( 4, 2 ), :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_rationals = [ Object, Rational( 4, 2 ) ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_rationals = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_rationals = [ Rational( 4, 2 ), Rational( 3, 7 ) ]
-    instance.some_required_rationals = Rational( 4, 2 )
-    instance.some_required_rationals = nil
+    Proc.new { instance.some_required_rationals.value = [ Rational( 4, 2 ), :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_rationals.value = [ Object, Rational( 4, 2 ) ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_rationals.value = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_rationals.value = [ Rational( 4, 2 ), Rational( 3, 7 ) ]
+    instance.some_required_rationals.value = Rational( 4, 2 )
+    instance.some_required_rationals.value = nil
     
   end  
 

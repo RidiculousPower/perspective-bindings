@@ -8,7 +8,7 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
       include ::Perspective::Bindings::Container
       class Container
         include ::Perspective::Bindings::Container
-        attr_accessor :content
+        attr_binding :content
       end
     end
   end
@@ -46,9 +46,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_regexp = [ Object ] }.should raise_error
-    Proc.new { instance.some_regexp = Object }.should raise_error
-    instance.some_regexp = /regexp/
+    Proc.new { instance.some_regexp.value = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_regexp.value = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_regexp.value = /regexp/
 
   end
 
@@ -69,11 +69,11 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_regexps = [ :object, 32 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_regexps = Class }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_regexps = /regexp/
-    instance.some_regexps = [ /regexp/, /other/ ]
-    Proc.new { instance.some_regexps = [ Object, :regexp ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_regexps.value = [ :object, 32 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_regexps.value = Class }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_regexps.value = /regexp/
+    instance.some_regexps.value = [ /regexp/, /other/ ]
+    Proc.new { instance.some_regexps.value = [ Object, :regexp ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -94,9 +94,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_regexp = [ 42, :some_other_value ] }.should raise_error
-    instance.some_required_regexp = /regexp/
-    instance.some_required_regexp = nil
+    Proc.new { instance.some_required_regexp.value = [ 42, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_regexp.value = /regexp/
+    instance.some_required_regexp.value = nil
 
   end  
 
@@ -117,12 +117,12 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_regexps = [ 42, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_regexps = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_regexps = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_regexps = /regexp/
-    instance.some_required_regexps = [ /regexp/, /other/ ]
-    instance.some_required_regexps = nil
+    Proc.new { instance.some_required_regexps.value = [ 42, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_regexps.value = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_regexps.value = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_regexps.value = /regexp/
+    instance.some_required_regexps.value = [ /regexp/, /other/ ]
+    instance.some_required_regexps.value = nil
 
   end  
 

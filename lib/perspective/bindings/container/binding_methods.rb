@@ -1,5 +1,6 @@
 
-class ::Perspective::Bindings::Container::BindingMethods <::CascadingConfiguration::Core::InstanceController::SupportModule
+class ::Perspective::Bindings::Container::BindingMethods <
+      ::CascadingConfiguration::Core::InstanceController::SupportModule
 
   ####################
   #  define_binding  #
@@ -76,15 +77,15 @@ class ::Perspective::Bindings::Container::BindingMethods <::CascadingConfigurati
     
   end
 
-  ##################################
+  ##########################################
   #  define_local_alias_to_binding_getter  #
-  ##################################
+  ##########################################
   
   def define_local_alias_to_binding_getter( binding_alias, binding_instance )
     
-    #=======================#
+    #===============================#
     #  local_alias_to_binding_name  #
-    #=======================#
+    #===============================#
 
     define_method( binding_alias ) do
 

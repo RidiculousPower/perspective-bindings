@@ -9,7 +9,7 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Module do
       include ::Perspective::Bindings::Container
       class Container
         include ::Perspective::Bindings::Container
-        attr_accessor :content
+        attr_binding :content
       end
     end
   end
@@ -47,9 +47,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Module do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_module = [ Object ] }.should raise_error
-    Proc.new { instance.some_module = :some_value }.should raise_error
-    instance.some_module = Kernel
+    Proc.new { instance.some_module.value = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_module.value = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_module.value = Kernel
     
   end
 
@@ -70,11 +70,11 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Module do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_modules = [ :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_modules = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_modules = Kernel
-    instance.some_modules = [ Kernel, Kernel ]
-    Proc.new { instance.some_modules = [ Kernel, :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_modules.value = [ :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_modules.value = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_modules.value = Kernel
+    instance.some_modules.value = [ Kernel, Kernel ]
+    Proc.new { instance.some_modules.value = [ Kernel, :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
     
   end  
 
@@ -95,10 +95,10 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Module do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_module = [ :some_value, Kernel ] }.should raise_error
-    Proc.new { instance.some_required_module = :some_value }.should raise_error
-    instance.some_required_module = Kernel
-    instance.some_required_module = nil
+    Proc.new { instance.some_required_module.value = [ :some_value, Kernel ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_module.value = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_module.value = Kernel
+    instance.some_required_module.value = nil
     
   end  
 
@@ -119,12 +119,12 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Module do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_modules = [ :object, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_modules = [ Kernel, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_modules = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_modules = [ Kernel, Kernel ]
-    instance.some_required_modules = Kernel
-    instance.some_required_modules = nil
+    Proc.new { instance.some_required_modules.value = [ :object, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_modules.value = [ Kernel, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_modules.value = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_modules.value = [ Kernel, Kernel ]
+    instance.some_required_modules.value = Kernel
+    instance.some_required_modules.value = nil
     
   end  
 

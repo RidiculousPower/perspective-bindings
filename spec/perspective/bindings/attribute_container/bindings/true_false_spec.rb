@@ -9,7 +9,7 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TrueFalse do
       include ::Perspective::Bindings::Container
       class Container
         include ::Perspective::Bindings::Container
-        attr_accessor :content
+        attr_binding :content
       end
     end
   end
@@ -47,10 +47,10 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TrueFalse do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_true_false = [ Object ] }.should raise_error
-    Proc.new { instance.some_true_false = Object }.should raise_error
-    instance.some_true_false = true
-    instance.some_true_false = false
+    Proc.new { instance.some_true_false.value = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_true_false.value = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_true_false.value = true
+    instance.some_true_false.value = false
 
   end
 
@@ -71,12 +71,12 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TrueFalse do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_true_falses = [ :object, 32, false ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_true_falses = Class }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_true_falses = true
-    instance.some_true_falses = false
-    instance.some_true_falses = [ true, true, false ]
-    Proc.new { instance.some_true_falses = [ Object, :true_false, true ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_true_falses.value = [ :object, 32, false ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_true_falses.value = Class }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_true_falses.value = true
+    instance.some_true_falses.value = false
+    instance.some_true_falses.value = [ true, true, false ]
+    Proc.new { instance.some_true_falses.value = [ Object, :true_false, true ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -97,10 +97,10 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TrueFalse do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_true_false = [ 42, :some_other_value ] }.should raise_error
-    instance.some_required_true_false = true
-    instance.some_required_true_false = false
-    instance.some_required_true_false = nil
+    Proc.new { instance.some_required_true_false.value = [ 42, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_true_false.value = true
+    instance.some_required_true_false.value = false
+    instance.some_required_true_false.value = nil
 
   end  
 
@@ -121,13 +121,13 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TrueFalse do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_true_falses = [ 42, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_true_falses = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_true_falses = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_true_falses = true
-    instance.some_required_true_falses = false
-    instance.some_required_true_falses = [ true, false ]
-    instance.some_required_true_falses = nil
+    Proc.new { instance.some_required_true_falses.value = [ 42, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_true_falses.value = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_true_falses.value = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_true_falses.value = true
+    instance.some_required_true_falses.value = false
+    instance.some_required_true_falses.value = [ true, false ]
+    instance.some_required_true_falses.value = nil
 
   end  
 

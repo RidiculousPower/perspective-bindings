@@ -34,7 +34,7 @@ module ::Perspective::Bindings::Container
     
     instance_controller.create_support( :instance_binding_methods, 
                                         :default,
-                                        self::BindingMethods::InstanceBindingMethods,
+                                        self::BindingMethods,
                                         true,
                                         false,
                                         true,

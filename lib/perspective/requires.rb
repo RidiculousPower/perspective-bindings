@@ -46,7 +46,6 @@ files = [
   'container/multi_container_proxy/multi_container_proxy_interface',
   'container/multi_container_proxy',
   'container/binding_methods',
-  'container/binding_methods/instance_binding_methods',
   'container/class_and_object_instance',
   'container/class_instance',
   'container/object_instance',

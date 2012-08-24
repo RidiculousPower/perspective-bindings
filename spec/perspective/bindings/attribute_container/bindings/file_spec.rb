@@ -8,7 +8,7 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::File do
       include ::Perspective::Bindings::Container
       class Container
         include ::Perspective::Bindings::Container
-        attr_accessor :content
+        attr_binding :content
       end
     end
   end
@@ -46,9 +46,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::File do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_file = [ Object ] }.should raise_error
-    Proc.new { instance.some_file = :some_value }.should raise_error
-    instance.some_file = File.open( __FILE__ )
+    Proc.new { instance.some_file.value = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_file.value = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_file.value = File.open( __FILE__ )
     
   end
 
@@ -69,11 +69,11 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::File do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_files = [ :object, File.open( __FILE__ ) ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_files = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_files = File.open( __FILE__ )
-    instance.some_files = [ File.open( __FILE__ ), File.open( __FILE__ ) ]
-    Proc.new { instance.some_files = [ Object, :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_files.value = [ :object, File.open( __FILE__ ) ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_files.value = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_files.value = File.open( __FILE__ )
+    instance.some_files.value = [ File.open( __FILE__ ), File.open( __FILE__ ) ]
+    Proc.new { instance.some_files.value = [ Object, :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
     
   end  
 
@@ -94,9 +94,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::File do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_file = [ File.open( __FILE__ ), :some_other_value ] }.should raise_error
-    instance.some_required_file = File.open( __FILE__ )
-    instance.some_required_file = nil
+    Proc.new { instance.some_required_file.value = [ File.open( __FILE__ ), :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_file.value = File.open( __FILE__ )
+    instance.some_required_file.value = nil
 
   end  
 
@@ -117,12 +117,12 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::File do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_files = [ File.open( __FILE__ ), :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_files = [ Object, File.open( __FILE__ ) ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_files = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_files = [ File.open( __FILE__ ), File.open( __FILE__ ) ]
-    instance.some_required_files = File.open( __FILE__ )
-    instance.some_required_files = nil
+    Proc.new { instance.some_required_files.value = [ File.open( __FILE__ ), :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_files.value = [ Object, File.open( __FILE__ ) ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_files.value = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_files.value = [ File.open( __FILE__ ), File.open( __FILE__ ) ]
+    instance.some_required_files.value = File.open( __FILE__ )
+    instance.some_required_files.value = nil
     
   end  
 

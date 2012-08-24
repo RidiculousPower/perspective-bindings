@@ -8,7 +8,7 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Binding do
       include ::Perspective::Bindings::Container
       class Container
         include ::Perspective::Bindings::Container
-        attr_accessor :content
+        attr_binding :content
         def autobind( object )
         end
       end
@@ -65,12 +65,12 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Binding do
     
     instance = ::Perspective::Bindings::AttributeContainer::Bindings::Binding::Mock.new
 
-    Proc.new { instance.some_binding = [ :some_value, :some_other_value ] }.should raise_error
-    instance.some_binding = :some_value
+    Proc.new { instance.some_binding.value = [ :some_value, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_binding.value = :some_value
     
     # prove corresponding containers work - this should only be necessary to prove once
     instance.__binding__( :some_binding )
-    instance.some_other_binding = :some_value
+    instance.some_other_binding.value = :some_value
     
   end
 
@@ -91,8 +91,8 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Binding do
     end
     
     instance = ::Perspective::Bindings::AttributeContainer::Bindings::Binding::Mock.new
-    instance.some_bindings = [ :some_value, :some_other_value ]
-    instance.some_bindings = :some_value
+    instance.some_bindings.value = [ :some_value, :some_other_value ]
+    instance.some_bindings.value = :some_value
         
   end  
 
@@ -113,9 +113,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Binding do
     end
     
     instance = ::Perspective::Bindings::AttributeContainer::Bindings::Binding::Mock.new
-    Proc.new { instance.some_required_binding = [ :some_value, :some_other_value ] }.should raise_error
-    instance.some_required_binding = :some_value
-    instance.some_required_binding = nil
+    Proc.new { instance.some_required_binding.value = [ :some_value, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_binding.value = :some_value
+    instance.some_required_binding.value = nil
     
   end  
 
@@ -136,9 +136,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Binding do
     end
     
     instance = ::Perspective::Bindings::AttributeContainer::Bindings::Binding::Mock.new
-    instance.some_required_bindings = [ :some_value, :some_other_value ]
-    instance.some_required_bindings = :some_value
-    instance.some_required_bindings = nil
+    instance.some_required_bindings.value = [ :some_value, :some_other_value ]
+    instance.some_required_bindings.value = :some_value
+    instance.some_required_bindings.value = nil
     
   end  
 

@@ -102,7 +102,6 @@ describe ::Perspective::Bindings::Container do
       __binding__( :another_binding ).required?.should == false
       respond_to?( :another_binding ).should == true
       method_defined?( :another_binding ).should == true
-      method_defined?( :another_binding= ).should == true
       
       another_binding.has_binding?( :some_other_binding ).should == true
       another_binding.respond_to?( :some_other_binding ).should == true
@@ -113,7 +112,6 @@ describe ::Perspective::Bindings::Container do
       __binding__( :some_other_binding ).required?.should == false
       respond_to?( :some_other_binding ).should == true
       method_defined?( :some_other_binding ).should == true
-      method_defined?( :some_other_binding= ).should == true
 
       some_other_binding.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
       some_other_binding.should == another_binding.some_other_binding
@@ -131,7 +129,7 @@ describe ::Perspective::Bindings::Container do
 
     instance = ::Perspective::Bindings::Container::Mock::ContentBindingView.new    
     instance.__autobind__( :one )
-    instance.content.should == :one
+    instance.content.value.should == :one
 
     instance = ::Perspective::Bindings::Container::Mock::AutobindMultibindingsView.new
     data_object = Object.new
@@ -142,8 +140,8 @@ describe ::Perspective::Bindings::Container do
       :two
     end
     instance.__autobind__( data_object )
-    instance.binding_one.should == :one
-    instance.binding_two.should == :two
+    instance.binding_one.value.should == :one
+    instance.binding_two.value.should == :two
     
   end
 

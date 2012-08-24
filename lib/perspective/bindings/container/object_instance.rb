@@ -101,7 +101,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
     unless found_a_binding
       
       if respond_to?( :content )
-        self.content = data_object
+        content.__value__ = data_object
       else
         if method_map_hash
           raise ::Perspective::Bindings::Exception::AutobindFailed, 

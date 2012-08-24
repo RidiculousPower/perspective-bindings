@@ -8,7 +8,7 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TextOrNumber do
       include ::Perspective::Bindings::Container
       class Container
         include ::Perspective::Bindings::Container
-        attr_accessor :content
+        attr_binding :content
       end
     end
   end
@@ -46,14 +46,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TextOrNumber do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_text_or_number = [ Object ] }.should raise_error
-    Proc.new { instance.some_text_or_number = Object }.should raise_error
-    instance.some_text_or_number = 'text'
-    instance.some_text_or_number = :text
-    instance.some_text_or_number = 42
-    instance.some_text_or_number = 42.0
-    instance.some_text_or_number = Rational( 1, 2 )
-    instance.some_text_or_number = Complex( 1, 2 )
+    Proc.new { instance.some_text_or_number.value = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_text_or_number.value = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_text_or_number.value = 'text'
+    instance.some_text_or_number.value = :text
+    instance.some_text_or_number.value = 42
+    instance.some_text_or_number.value = 42.0
+    instance.some_text_or_number.value = Rational( 1, 2 )
+    instance.some_text_or_number.value = Complex( 1, 2 )
 
   end
 
@@ -74,17 +74,17 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TextOrNumber do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_text_or_numbers = [ :object, Class ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_text_or_numbers = Class }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_text_or_numbers = 'text'
-    instance.some_text_or_numbers = :text
-    instance.some_text_or_numbers = [ 'text', :text, 12, 37.0 ]
-    instance.some_text_or_numbers = 42
-    instance.some_text_or_numbers = 42.0
-    instance.some_text_or_numbers = Rational( 1, 2 )
-    instance.some_text_or_numbers = Complex( 1, 2 )
+    Proc.new { instance.some_text_or_numbers.value = [ :object, Class ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_text_or_numbers.value = Class }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_text_or_numbers.value = 'text'
+    instance.some_text_or_numbers.value = :text
+    instance.some_text_or_numbers.value = [ 'text', :text, 12, 37.0 ]
+    instance.some_text_or_numbers.value = 42
+    instance.some_text_or_numbers.value = 42.0
+    instance.some_text_or_numbers.value = Rational( 1, 2 )
+    instance.some_text_or_numbers.value = Complex( 1, 2 )
     
-    Proc.new { instance.some_text_or_numbers = [ Object, :text ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_text_or_numbers.value = [ Object, :text ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -105,14 +105,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TextOrNumber do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_text_or_number = [ Class, :some_other_value ] }.should raise_error
-    instance.some_required_text_or_number = 'text'
-    instance.some_required_text_or_number = :text
-    instance.some_required_text_or_number = 42
-    instance.some_required_text_or_number = 42.0
-    instance.some_required_text_or_number = Rational( 1, 2 )
-    instance.some_required_text_or_number = Complex( 1, 2 )
-    instance.some_required_text_or_number = nil
+    Proc.new { instance.some_required_text_or_number.value = [ Class, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_text_or_number.value = 'text'
+    instance.some_required_text_or_number.value = :text
+    instance.some_required_text_or_number.value = 42
+    instance.some_required_text_or_number.value = 42.0
+    instance.some_required_text_or_number.value = Rational( 1, 2 )
+    instance.some_required_text_or_number.value = Complex( 1, 2 )
+    instance.some_required_text_or_number.value = nil
     
   end  
 
@@ -133,17 +133,17 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TextOrNumber do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_text_or_numbers = [ Class, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_text_or_numbers = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_text_or_numbers = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_text_or_numbers = 'text'
-    instance.some_required_text_or_numbers = :text
-    instance.some_required_text_or_numbers = [ 'text', :text, 42, 23.0 ]
-    instance.some_required_text_or_numbers = 42
-    instance.some_required_text_or_numbers = 42.0
-    instance.some_required_text_or_numbers = Rational( 1, 2 )
-    instance.some_required_text_or_numbers = Complex( 1, 2 )
-    instance.some_required_text_or_numbers = nil
+    Proc.new { instance.some_required_text_or_numbers.value = [ Class, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_text_or_numbers.value = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_text_or_numbers.value = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_text_or_numbers.value = 'text'
+    instance.some_required_text_or_numbers.value = :text
+    instance.some_required_text_or_numbers.value = [ 'text', :text, 42, 23.0 ]
+    instance.some_required_text_or_numbers.value = 42
+    instance.some_required_text_or_numbers.value = 42.0
+    instance.some_required_text_or_numbers.value = Rational( 1, 2 )
+    instance.some_required_text_or_numbers.value = Complex( 1, 2 )
+    instance.some_required_text_or_numbers.value = nil
 
   end  
 

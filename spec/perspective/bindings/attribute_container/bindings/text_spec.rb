@@ -8,7 +8,7 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Text do
       include ::Perspective::Bindings::Container
       class Container
         include ::Perspective::Bindings::Container
-        attr_accessor :content
+        attr_binding :content
       end
     end
   end
@@ -46,10 +46,10 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Text do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_text = [ Object ] }.should raise_error
-    Proc.new { instance.some_text = Object }.should raise_error
-    instance.some_text = 'text'
-    instance.some_text = :text
+    Proc.new { instance.some_text.value = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_text.value = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_text.value = 'text'
+    instance.some_text.value = :text
 
   end
 
@@ -70,12 +70,12 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Text do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_texts = [ :object, 32 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_texts = Class }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_texts = 'text'
-    instance.some_texts = :text
-    instance.some_texts = [ 'text', :text ]
-    Proc.new { instance.some_texts = [ Object, :text ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_texts.value = [ :object, 32 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_texts.value = Class }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_texts.value = 'text'
+    instance.some_texts.value = :text
+    instance.some_texts.value = [ 'text', :text ]
+    Proc.new { instance.some_texts.value = [ Object, :text ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -96,10 +96,10 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Text do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_text = [ 42, :some_other_value ] }.should raise_error
-    instance.some_required_text = 'text'
-    instance.some_required_text = :text
-    instance.some_required_text = nil
+    Proc.new { instance.some_required_text.value = [ 42, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_text.value = 'text'
+    instance.some_required_text.value = :text
+    instance.some_required_text.value = nil
 
   end  
 
@@ -120,13 +120,13 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Text do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_texts = [ 42, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_texts = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_texts = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_texts = 'text'
-    instance.some_required_texts = :text
-    instance.some_required_texts = [ 'text', :text ]
-    instance.some_required_texts = nil
+    Proc.new { instance.some_required_texts.value = [ 42, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_texts.value = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_texts.value = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_texts.value = 'text'
+    instance.some_required_texts.value = :text
+    instance.some_required_texts.value = [ 'text', :text ]
+    instance.some_required_texts.value = nil
 
   end  
 
