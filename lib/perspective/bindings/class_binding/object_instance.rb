@@ -34,10 +34,22 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
       __initialize_defaults__( binding_name, container_class )
 
     end
+    
+    __store_binding_in_bound_container__
 
     if block_given?
       __configure__( & configuration_proc )
     end
+    
+  end
+
+  ##########################################
+  #  __store_binding_in_bound_container__  #
+  ##########################################
+
+  def __store_binding_in_bound_container__
+    
+    __bound_container__.__bindings__[ __name__ ] = self
     
   end
 

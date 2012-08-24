@@ -107,21 +107,32 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
       
       case instance = configuration_instance
         
-        when ::Perspective::Bindings::Container::ClassInstance, ::Perspective::Bindings::ClassBinding
+        when ::Perspective::Bindings::Container::ObjectInstance,
+             ::Perspective::Bindings::InstanceBinding
+
+          binding_route = binding_instance.__nested_route__( instance )
+
+        when   ::Perspective::Bindings::ClassBinding::NestedClassBinding
+
+          binding_route = binding_instance.__nested_route__( instance )
+          
+          puts 'inst: ' + instance.__route_print_string__.to_s
+          puts 'binding: ' + binding_instance.__route_print_string__.to_s
+          
+          raise 'figure this out - nested class bindings probably need nested route, but not sure'
+          
+        when ::Perspective::Bindings::Container::ClassInstance, 
+             ::Perspective::Bindings::ClassBinding
 
           binding_route = binding_instance.__route__
           
-        when ::Perspective::Bindings::Container::ObjectInstance, ::Perspective::Bindings::InstanceBinding
-          
-          binding_route = binding_instance.__nested_route__( instance )
-                  
       end
-      
+
       child_instance = ::Perspective::Bindings.aliased_binding_in_context( configuration_instance, 
-                                                                       binding_route,
-                                                                       binding_instance.__name__,
-                                                                       local_alias_to_binding,
-                                                                       binding_instance )
+                                                                           binding_route,
+                                                                           binding_instance.__name__,
+                                                                           local_alias_to_binding,
+                                                                           binding_instance )
       
       return child_instance
 

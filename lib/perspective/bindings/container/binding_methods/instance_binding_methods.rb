@@ -128,7 +128,7 @@ class ::Perspective::Bindings::Container::BindingMethods::InstanceBindingMethods
     #================#
     
     define_method( binding_name ) do
-      
+
       return __bindings__[ binding_name ].__value__
       
     end

@@ -19,7 +19,7 @@ class ::Perspective::Bindings::Exception::NoBindingContext < ::ArgumentError
     end
     
     full_route_string = ::Perspective::Bindings.context_print_string( current_context_route, 
-                                                                  remaining_route )
+                                                                      remaining_route )
     exception_string << ' requested in route ' << full_route_string
     
     exception_string << '.'

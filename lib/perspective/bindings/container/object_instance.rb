@@ -6,7 +6,6 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
   include ::Perspective::Bindings::Container::ClassAndObjectInstance
   
-  
   ##############
   #  name      #
   #  __name__  #
@@ -111,9 +110,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
                   'respond to :' + :content.to_s + '.'
         else
           raise ::Perspective::Bindings::Exception::AutobindFailed, 
-                  ':autobind was called on ' + self.inspect + ' but data object did not respond ' +
-                  'to the name of any declared bindings in ' + self.inspect + 
-                  ', no method map was provided, and ' + self.inspect + 
+                  ':autobind was called on ' + self.to_s + ' but data object did not respond ' +
+                  'to the name of any declared bindings in ' + self.to_s + 
+                  ', no method map was provided, and ' + self.to_s + 
                   ' does not respond to :' + :content.to_s + '.'
         end
       end

@@ -21,10 +21,11 @@ module ::Perspective::Bindings::Container::Context
         if remaining_route_parts = binding_route.count - index 
           remaining_route = binding_route.slice( index + 1, remaining_route_parts - 1 )
         end
+
     		raise ::Perspective::Bindings::Exception::NoBindingContext.new( starting_context, 
-    		                                                            current_context, 
-    		                                                            this_binding_name,
-    		                                                            remaining_route )
+    		                                                                current_context, 
+    		                                                                this_binding_name,
+    		                                                                remaining_route )
       end
             
     end
@@ -68,10 +69,10 @@ module ::Perspective::Bindings::Container::Context
     unless binding_instance = binding_context.__binding__( binding_name )
 
   		raise ::Perspective::Bindings::Exception::NoBindingError.new( binding_context, 
-  		                                                          binding_name,
-  		                                                          starting_context,
-  		                                                          local_alias,
-  		                                                          local_alias_binding_instance )
+  		                                                              local_alias,
+  		                                                              starting_context,
+  		                                                              local_alias,
+  		                                                              local_alias_binding_instance )
 
     end
 
