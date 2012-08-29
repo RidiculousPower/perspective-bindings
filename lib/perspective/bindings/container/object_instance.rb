@@ -21,13 +21,72 @@ module ::Perspective::Bindings::Container::ObjectInstance
       
     else
       
-      name = ::Perspective::Bindings::RootString
+      name = __root_string__
       
     end
     
     return name
     
   end
+  
+  ##############
+  #  root      #
+  #  __root__  #
+  ##############
+  
+  def __root__
+    
+    root_instance = nil
+    
+    if @__bound_container__
+      root_instance = @__bound_container__.__root__
+    else
+      root_instance = self
+    end
+    
+    return root_instance
+    
+  end
+
+  alias_method  :root, :__root__
+
+  ###############
+  #  route      #
+  #  __route__  #
+  ###############
+  
+  def __route__
+    
+    route = nil
+    
+    if @__bound_container__
+      route = @__bound_container__.__route__
+    end
+    
+    return route
+    
+  end
+
+  alias_method  :route, :__route__
+
+  #########################
+  #  route_with_name      #
+  #  __route_with_name__  #
+  #########################
+  
+  def __route_with_name__
+    
+    route_with_name = nil
+    
+    if @__bound_container__
+      route_with_name = @__bound_container__.__route_with_name__
+    end
+    
+    return route_with_name
+    
+  end
+
+  alias_method  :route_with_name, :__route_with_name__
   
   #######################################
   #  __initialize_for_parent_binding__  #
@@ -36,7 +95,8 @@ module ::Perspective::Bindings::Container::ObjectInstance
   def __initialize_for_parent_binding__( parent_binding )
 
     @__parent_binding__ = parent_binding
-
+    @__bound_container__ = parent_binding
+    
   end
 
   ##################

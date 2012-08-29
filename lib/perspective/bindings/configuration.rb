@@ -9,7 +9,7 @@ module ::Perspective::Bindings::Configuration
   attr_reader  :__parent_binding__
 
   alias_method  :parent_binding, :__parent_binding__
-
+  
 	#################
   #  binding      #
   #  __binding__  #

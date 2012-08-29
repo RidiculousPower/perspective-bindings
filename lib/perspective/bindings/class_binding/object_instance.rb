@@ -14,8 +14,8 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
                   ancestor_binding = nil,
                   & configuration_proc )
 
-    @__bound_container_class__ ||= bound_container
-    @__bound_container__ ||= bound_container
+    @__bound_container_class__ = bound_container
+    @__bound_container__ = bound_container
 
     if ancestor_binding
 
@@ -98,10 +98,12 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
   ##########################
   
   def __initialize_route__
+
+    @__root__ = @__bound_container__.__root__
     
     self.__route_with_name__ = route_with_name = [ __name__ ]
     self.__route_string__ = route_string = ::Perspective::Bindings.context_string( route_with_name )
-    self.__route_print_string__ = ::Perspective::Bindings.context_print_string( route_string )
+    self.__route_print_string__ = ::Perspective::Bindings.context_print_string( @__root__, route_string )
     
   end
   

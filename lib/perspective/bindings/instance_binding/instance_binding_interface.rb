@@ -11,48 +11,50 @@ module ::Perspective::Bindings::InstanceBinding::Interface
   def initialize( parent_class_binding, bound_container_instance )
         
     @__parent_binding__ = parent_class_binding
-    
-    encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
-
-    # register parent class binding as ancestor for configurations
-    encapsulation.register_child_for_parent( self, @__parent_binding__ )
-    
     @__bound_container__ = bound_container_instance
-
-    if container_class = @__parent_binding__.__container_class__
-      extend( container_class::Controller::InstanceBindingMethods )
-    end
+        
+    @__root__ = @__bound_container__.__root__
     
-    __bindings__.each do |this_binding_name, this_binding_instance|
-      this_binding_instance.__configure_container__
+    # register parent class binding as ancestor for configurations
+    encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
+    encapsulation.register_child_for_parent( self, @__parent_binding__ )
+
+    self.__route_print_string__ = ::Perspective::Bindings.context_print_string( @__root__, __route_string__ )
+    
+    if container_class = @__parent_binding__.__container_class__
+    
+      extend( container_class::Controller::InstanceBindingMethods )
+
+      __bindings__.each do |this_binding_name, this_binding_instance|
+        this_binding_instance.__configure_container__
+      end
     end
     
   end
-
-  ##############################
-  #  __initialize_container__  #
-  ##############################
   
-  def __initialize_container__
+  #########################################
+  #  __initialize_container_from_class__  #
+  #########################################
+  
+  def __initialize_container_from_class__( container_class = nil )
 
-    if container_class = @__parent_binding__.__container_class__
+    if container_class || container_class = @__parent_binding__.__container_class__
 
       container_instance = container_class.new
-
-      container_instance.__initialize_for_parent_binding__( self )
       
-      self.__container__ = container_instance
+      container_instance.__initialize_for_parent_binding__( self )
+
+      __store_initialized_container_instance__( container_instance )
 
       encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
-    
       encapsulation.register_child_for_parent( container_instance, self )
-
+      
     end
     
     return container_instance
     
   end
-
+  
   #############################
   #  __configure_container__  #
   #############################
@@ -98,7 +100,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
 
       if container_class = @__parent_binding__.__container_class__
 
-        container_instance = __initialize_container__
+        container_instance = __initialize_container_from_class__
       
       end
     
@@ -109,6 +111,39 @@ module ::Perspective::Bindings::InstanceBinding::Interface
   end
 
   alias_method( :container, :__container__ )
+
+  ##############################################
+  #  container=                                #
+  #  __container__=                            #
+  #  __store_initialized_container_instance__  #
+  ##############################################
+  
+  alias_method :__store_initialized_container_instance__, :__container__=
+  
+  def __container__=( container_instance )
+    
+    super
+
+    container_instance.__initialize_for_parent_binding__( self )
+
+    if container_instance.is_a?( ::Perspective::Bindings::Container::MultiContainerProxy )
+      if container_instance.count > 0
+        extend( container_instance[0].class::Controller::InstanceBindingMethods )
+      end
+    else
+      extend( container_instance.class::Controller::InstanceBindingMethods )
+    end
+
+    # when the container is set by instance the binding is child of the container instead of other way around
+    encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
+    encapsulation.register_child_for_parent( self, container_instance )
+
+    # and we need to ensure all nested elements follow
+
+    
+  end
+
+  alias_method( :container=, :__container__= )
 
   ###############
   #  value      #
@@ -197,7 +232,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
 
                   new_multi_container = ::Perspective::Bindings::Container::
                                           MultiContainerProxy.new( self, *data_object )
-                  self.__container__ = new_multi_container
+                  self.__store_initialized_container_instance__( new_multi_container )
 
               end
 

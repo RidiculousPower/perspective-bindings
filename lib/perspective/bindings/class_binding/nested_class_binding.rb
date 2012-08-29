@@ -25,26 +25,21 @@ module ::Perspective::Bindings::ClassBinding::NestedClassBinding
   
   def __initialize_route__
     
+    @__root__ = @__bound_container__.__root__
+    
     # We need to track the route where this binding is nested - 
     # this is simply the binding path from the root container to this nested binding.
     
     base_route = nil
     route_with_name = nil
 
-    if container_route_with_name = @__parent_binding__.__route_with_name__
-      base_route = container_route_with_name.dup
-      route_with_name = base_route.dup
-    else
-      route_with_name = [ ]
-    end
+    self.__route__ = base_route = @__bound_container__.__route_with_name__.dup
+    self.__route_with_name__ = route_with_name = base_route.dup
 
     route_with_name.push( __name__ )
 
-    self.__route__ = base_route
-    self.__route_with_name__ = route_with_name
-
     self.__route_string__ = route_string = ::Perspective::Bindings.context_string( route_with_name )
-    self.__route_print_string__ = ::Perspective::Bindings.context_print_string( route_string )
+    self.__route_print_string__ = ::Perspective::Bindings.context_print_string( __root__, route_string )
     
   end
   

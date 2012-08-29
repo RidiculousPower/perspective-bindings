@@ -7,8 +7,6 @@ module ::Perspective::Bindings
 
   ContextPrintPrefix = ':'
   
-  RootString = '<root>'
-
   ProhibitedNames = {
     :new => true
   }

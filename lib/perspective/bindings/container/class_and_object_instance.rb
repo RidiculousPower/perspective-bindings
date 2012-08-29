@@ -1,43 +1,25 @@
 
 module ::Perspective::Bindings::Container::ClassAndObjectInstance
   
-  ###############
-  #  route      #
-  #  __route__  #
-  ###############
+  #####################
+  #  __root_string__  #
+  #####################
 
-  def __route__
+  def __root_string__
     
-    route = nil
+    # [root:<instance>]    
     
-    if @__parent_binding__
-      route = @__parent_binding__.__route__
+    root_string = nil
+    
+    if __root__ == self
+      root_string = @__root_string__ ||= '[' << __root__.to_s << ']'
+    else
+      root_string = __root__.__root_string__
     end
-    
-    return route
+
+    return root_string
     
   end
-
-  alias_method( :route, :__route__ )
-  
-  #########################
-  #  route_with_name      #
-  #  __route_with_name__  #
-  #########################
-
-  def __route_with_name__
-    
-    route = nil
-    
-    if @__parent_binding__
-      route = @__parent_binding__.__route_with_name__
-    end
-    
-    return route
-    
-  end
-
-  alias_method( :route_with_name, :__route_with_name__ )
 
   ######################
   #  route_string      #
@@ -46,13 +28,13 @@ module ::Perspective::Bindings::Container::ClassAndObjectInstance
 
   def __route_string__
     
-    route = nil
+    route_string = nil
     
     if @__parent_binding__
-      route = @__parent_binding__.__route_string__
+      route_string = @__parent_binding__.__route_string__
     end
     
-    return route
+    return route_string
     
   end
 
@@ -64,20 +46,26 @@ module ::Perspective::Bindings::Container::ClassAndObjectInstance
   ############################
 
   def __route_print_string__
-    
-    route = nil
+
+    route_print_string = nil
     
     if @__parent_binding__
-      route = @__parent_binding__.__route_print_string__
+      route_print_string = @__parent_binding__.__route_print_string__
     else
-      route = ::Perspective::Bindings::RootString
+      if __route_string__
+        @__route_print_string__ ||= ::Perspective::Bindings.context_print_string( __root__, __route_string__ )
+        route_print_string = @__route_print_string__
+      else
+        route_print_string = __root_string__
+      end
     end
     
-    return route
+    return route_print_string
     
   end
 
   alias_method( :route_print_string, :__route_print_string__ )
+  
   
 end
 

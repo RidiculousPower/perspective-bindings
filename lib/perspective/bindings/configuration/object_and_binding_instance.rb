@@ -64,8 +64,15 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
         # We are attaching to a nested instance binding
         when ::Perspective::Bindings::InstanceBinding
           
-          binding_class = binding_instance.class::NestedInstanceBinding
-          child_instance = binding_class.new( binding_instance, instance.__container__ )
+          case binding_instance
+            when ::Perspective::Bindings::ClassBinding
+              binding_class = binding_instance.class::NestedInstanceBinding
+              child_instance = binding_class.new( binding_instance, instance.__container__ )
+            when ::Perspective::Bindings::InstanceBinding
+              parent_binding = binding_instance.__parent_binding__
+              binding_class = parent_binding.class::NestedClassBinding::NestedInstanceBinding
+              child_instance = binding_class.new( parent_binding, instance.__container__ )
+          end
 
         else
 

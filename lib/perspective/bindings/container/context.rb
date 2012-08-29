@@ -129,11 +129,9 @@ module ::Perspective::Bindings::Container::Context
   #  context_print_string  #
   ##########################
   
-  def context_print_string( *contexts )
-    
-    print_string =  ::Perspective::Bindings::ContextPrintPrefix.dup
+  def context_print_string( current_context, *contexts )
 
-    print_string << ::Perspective::Bindings::RootString
+    print_string = ::Perspective::Bindings::ContextPrintPrefix.dup << current_context.__root_string__
 
     case contexts.count
       

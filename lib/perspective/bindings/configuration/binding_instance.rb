@@ -6,6 +6,27 @@ module ::Perspective::Bindings::Configuration::BindingInstance
   include ::CascadingConfiguration::Setting
 
   ##############
+  #  root      #
+  #  __root__  #
+  ##############
+  
+  attr_reader  :__root__
+
+  alias_method  :root, :__root__
+
+  #####################
+  #  __root_string__  #
+  #####################
+
+  def __root_string__
+    
+    # Binding is never root.
+    
+    return @__root__.__root_string__
+    
+  end
+
+  ##############
   #  name      #
   #  __name__  #
   ##############
@@ -46,11 +67,9 @@ module ::Perspective::Bindings::Configuration::BindingInstance
   #  __route_print_string__  #
   ############################
 
-  attr_configuration  :__route_print_string__
+  attr_instance_configuration  :__route_print_string__
 
   Controller.alias_instance_method( :route_print_string, :__route_print_string__ )
-
-  self.__route_print_string__ = ::Perspective::Bindings.context_print_string
 
   ##########################
   #  permits_multiple      #

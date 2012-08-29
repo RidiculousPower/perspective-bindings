@@ -12,6 +12,21 @@ describe ::Perspective::Bindings::InstanceBinding do
       end
       def self.__route_with_name__
       end
+
+      def self.__root__
+        return self
+      end
+      def self.__root_string__
+        return '[' << self.to_s << ']'
+      end
+
+      def __root__
+        return self
+      end
+      def __root_string__
+        return '[' << self.to_s << ']'
+      end
+
     end
 
     class ::Perspective::Bindings::InstanceBinding::ContainerMock
@@ -20,6 +35,20 @@ describe ::Perspective::Bindings::InstanceBinding do
       identifies_as!( ::Perspective::Bindings::Container::ObjectInstance )
 
       def self.__bindings__
+      end
+
+      def self.__root__
+        return self
+      end
+      def self.__root_string__
+        return '[' << self.to_s << ']'
+      end
+
+      def __root__
+        return self
+      end
+      def __root_string__
+        return '[' << self.to_s << ']'
       end
 
       attr_accessor :content, :__parent_binding__
@@ -70,7 +99,7 @@ describe ::Perspective::Bindings::InstanceBinding do
     ::Perspective::Bindings::InstanceBinding.instance_method( :route ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__route__ )
     ::Perspective::Bindings::InstanceBinding.instance_method( :route_string ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__route_string__ )
     class_instance = ::Perspective::Bindings::ClassBinding.new( ::Perspective::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Perspective::Bindings::InstanceBinding::ContainerMock )
-    instance = ::Perspective::Bindings::InstanceBinding.new( class_instance, Object.new )
+    instance = ::Perspective::Bindings::InstanceBinding.new( class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new )
     instance.__parent_binding__.should == class_instance
     instance.__name__.should == class_instance.__name__
     instance.__container__.class.should == class_instance.__container_class__
@@ -90,7 +119,7 @@ describe ::Perspective::Bindings::InstanceBinding do
     ::Perspective::Bindings::InstanceBinding.instance_method( :required= ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__required__= )
     
     class_instance = ::Perspective::Bindings::ClassBinding.new( ::Perspective::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Perspective::Bindings::InstanceBinding::ContainerMock )
-    instance = ::Perspective::Bindings::InstanceBinding.new( class_instance, Object.new )
+    instance = ::Perspective::Bindings::InstanceBinding.new( class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new )
 
     instance.required?.should == false
     instance.optional?.should == true
@@ -99,7 +128,7 @@ describe ::Perspective::Bindings::InstanceBinding do
     instance.optional?.should == false
     
     class_instance.__required__ = true
-    instance = ::Perspective::Bindings::InstanceBinding.new( class_instance, Object.new )
+    instance = ::Perspective::Bindings::InstanceBinding.new( class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new )
     instance.required?.should == true
     instance.optional?.should == false
     instance.__required__ = false
@@ -156,10 +185,10 @@ describe ::Perspective::Bindings::InstanceBinding do
     instance.binding_value_valid?( :some_value ).should == true
     instance.__value__ = :some_value
     instance.__value__.should == :some_value
+    instance.__container__.content.should == instance.__value__
     instance.__value__ = nil
     instance.__required__ = true
     Proc.new { instance.__value__ = 42 }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.__container__.content.should == instance.__value__
 
     instance.__permits_multiple__ = true
     instance.extend( ::Perspective::Bindings::Attributes::Text )
@@ -178,7 +207,7 @@ describe ::Perspective::Bindings::InstanceBinding do
     instance.__container__[ 3 ].content.should == :four
     
     second_class_instance = ::Perspective::Bindings::ClassBinding.new( ::Perspective::Bindings::InstanceBinding::BoundContainerMock, :other_binding_name, ::Perspective::Bindings::InstanceBinding::ContainerMock )
-    second_instance = ::Perspective::Bindings::InstanceBinding.new( second_class_instance, Object.new )
+    second_instance = ::Perspective::Bindings::InstanceBinding.new( second_class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new )
     second_instance.extend( ::Perspective::Bindings::Attributes::Text )
     second_instance.__value__ = :some_value
     instance.__value__ = second_instance

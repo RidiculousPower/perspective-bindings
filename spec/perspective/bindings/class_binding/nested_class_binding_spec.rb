@@ -12,6 +12,12 @@ describe ::Perspective::Bindings::ClassBinding::NestedClassBinding do
     class ::Perspective::Bindings::ClassBinding::ContainerMock
       include ::CascadingConfiguration::Setting
       attr_configuration :__route__, :__route_with_name__
+      def self.__root__
+        return self
+      end
+      def self.__root_string__
+        return '[' << self.to_s << ']'
+      end
       def self.__bindings__
         return @__bindings__ ||= {}
       end

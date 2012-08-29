@@ -51,6 +51,51 @@ module ::Perspective::Bindings::Container::ClassInstance
     
   end
 
+  ##############
+  #  root      #
+  #  __root__  #
+  ##############
+  
+  def __root__
+    
+    # class instance is always the root
+    # otherwise we have a class binding
+    
+    return self
+    
+  end
+
+  alias_method  :root, :__root__
+
+  ###############
+  #  route      #
+  #  __route__  #
+  ###############
+
+  def __route__
+    
+    # class instance is always the root
+    # otherwise we have a class binding
+    
+    return nil
+    
+  end
+
+  alias_method( :route, :__route__ )
+
+  #########################
+  #  route_with_name      #
+  #  __route_with_name__  #
+  #########################
+
+  def __route_with_name__
+    
+    return @__route_with_name__ ||= [ __name__ ]
+    
+  end
+
+  alias_method( :route_with_name, :__route_with_name__ )
+
   ###############
   #  configure  #
   #  render     #
