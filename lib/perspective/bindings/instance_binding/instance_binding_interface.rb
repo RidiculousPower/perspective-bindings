@@ -139,7 +139,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
     encapsulation.register_child_for_parent( self, container_instance )
 
     # and we need to ensure all nested elements follow
-
+    
     
   end
 

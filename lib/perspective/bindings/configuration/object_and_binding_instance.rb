@@ -16,7 +16,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
 	  #  child_pre_set_hook  #
 	  #======================#
 
-	  def child_pre_set_hook( binding_name, binding_instance )
+	  def child_pre_set_hook( binding_name, binding_instance, parent_instance )
 
       child_instance = nil
 

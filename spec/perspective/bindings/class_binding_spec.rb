@@ -7,6 +7,12 @@ describe ::Perspective::Bindings::ClassBinding do
     class ::Perspective::Bindings::ClassBinding::ContainerMock
       include ::CascadingConfiguration::Setting
       attr_configuration :__route__
+      def self.__root__
+        return self
+      end
+      def self.__root_string__
+        return '[' << self.to_s << ']'
+      end
     end
     class ::Perspective::Bindings::ClassBinding::ContainerMock1
       def self.__bindings__
@@ -54,7 +60,7 @@ describe ::Perspective::Bindings::ClassBinding do
   #  initialize                             #
   #  __initialize_ancestor_configuration__  #
   #  __initialize_defaults__                #
-  #  binding_name_validates?( binding_name )              #
+  #  binding_name_validates?                #
   #  __validate_container_class__           #
   #  __initialize_route__                   #
   #  name                                   #
