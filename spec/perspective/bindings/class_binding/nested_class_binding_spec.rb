@@ -66,7 +66,6 @@ describe ::Perspective::Bindings::ClassBinding::NestedClassBinding do
 
   ###########################################
   #  initialize                             #
-  #  __initialize_ancestor_configuration__  #
   #  __initialize_defaults__                #
   #  binding_name_validates?                #
   #  __validate_container_class__           #

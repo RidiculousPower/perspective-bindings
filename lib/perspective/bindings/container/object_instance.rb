@@ -18,7 +18,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
     if @__parent_binding__
       
       name = @__parent_binding__.__name__
-      
+
     else
       
       name = __root_string__
@@ -124,13 +124,11 @@ module ::Perspective::Bindings::Container::ObjectInstance
         next unless method_name
         
         found_a_binding = true
-
         data_source_name = method_name
 
       elsif data_object.respond_to?( this_binding_name )
 
         found_a_binding = true
-        
         data_source_name = this_binding_name
         
       end

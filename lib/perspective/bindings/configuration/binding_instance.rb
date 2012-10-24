@@ -93,12 +93,14 @@ module ::Perspective::Bindings::Configuration::BindingInstance
 
   ###################
   #  required?      #
+  #  __required__?  #
   #  required=      #
   #  __required__=  #
   ###################
 
-  attr_instance_configuration  :required? => :__required__=
+  attr_instance_configuration  :__required__? => :__required__=
 
+  Controller.alias_instance_method( :required?, :__required__? )
   Controller.alias_instance_method( :required=, :__required__= )
 
   ###############
@@ -107,7 +109,7 @@ module ::Perspective::Bindings::Configuration::BindingInstance
   
   def optional?
   
-    return ! required?
+    return ! __required__?
   
   end
   

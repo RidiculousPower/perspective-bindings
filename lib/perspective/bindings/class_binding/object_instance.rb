@@ -19,7 +19,7 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
 
     if ancestor_binding
 
-      __initialize_ancestor_configuration__( ancestor_binding )
+      ::CascadingConfiguration.register_parent( self, ancestor_binding )
 
       __initialize_route__
 
@@ -49,7 +49,8 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
   
     if ::Perspective::Bindings::ProhibitedNames.has_key?( binding_name.to_sym )
       raise ::ArgumentError, 'Cannot declare :' + binding_name.to_s + ' as a binding - ' +
-                             'prohibited to prevent errors that are very difficult to debug.'
+                             'prohibited for verbosity, since resulting errors are often not ' + 
+                             'self-explanatory and therefore very difficult to debug.'
     end
   
   end
@@ -79,8 +80,7 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
     
     __initialize_route__
     
-    encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
-    encapsulation.register_child_for_parent( self, self.class )
+    ::CascadingConfiguration.register_parent( self, self.class )
 
     binding_name_validates?( binding_name )
 
@@ -88,7 +88,7 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
       __validate_container_class__( container_class )
       self.__container_class__ = container_class
       extend( container_class::Controller::ClassBindingMethods )
-      encapsulation.register_child_for_parent( self, container_class )
+      ::CascadingConfiguration.register_parent( self, container_class )
     end
     
   end
@@ -105,17 +105,6 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
     self.__route_string__ = route_string = ::Perspective::Bindings.context_string( route_with_name )
     self.__route_print_string__ = ::Perspective::Bindings.context_print_string( @__root__, route_string )
     
-  end
-  
-  ###########################################
-  #  __initialize_ancestor_configuration__  #
-  ###########################################
-  
-  def __initialize_ancestor_configuration__( ancestor_binding = nil )
-    
-    encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
-    encapsulation.register_child_for_parent( self, ancestor_binding )
-
   end
 
   ###############################

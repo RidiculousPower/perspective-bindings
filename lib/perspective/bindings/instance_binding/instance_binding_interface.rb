@@ -16,8 +16,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
     @__root__ = @__bound_container__.__root__
     
     # register parent class binding as ancestor for configurations
-    encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
-    encapsulation.register_child_for_parent( self, @__parent_binding__ )
+    ::CascadingConfiguration.register_parent( self, @__parent_binding__ )
 
     self.__route_print_string__ = ::Perspective::Bindings.context_print_string( @__root__, __route_string__ )
     
@@ -46,8 +45,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
 
       __store_initialized_container_instance__( container_instance )
 
-      encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
-      encapsulation.register_child_for_parent( container_instance, self )
+      ::CascadingConfiguration.register_parent( container_instance, self )
       
     end
     
@@ -126,21 +124,24 @@ module ::Perspective::Bindings::InstanceBinding::Interface
 
     container_instance.__initialize_for_parent_binding__( self )
 
-    if container_instance.is_a?( ::Perspective::Bindings::Container::MultiContainerProxy )
-      if container_instance.count > 0
-        extend( container_instance[0].class::Controller::InstanceBindingMethods )
-      end
-    else
-      extend( container_instance.class::Controller::InstanceBindingMethods )
+    instance_binding_methods_class = nil
+    case container_instance
+      when ::Perspective::Bindings::Container::MultiContainerProxy
+        if container_instance.count > 0
+          instance_binding_methods_class = container_instance[0].class
+        end
+      else
+        instance_binding_methods_class = container_instance.class
     end
-
-    # when the container is set by instance the binding is child of the container instead of other way around
-    encapsulation = ::CascadingConfiguration::Core::Encapsulation.encapsulation( :default )
-    encapsulation.register_child_for_parent( self, container_instance )
-
-    # and we need to ensure all nested elements follow
     
+    extend( instance_binding_methods_class::Controller::InstanceBindingMethods )
     
+    # Normal inheritance when container class is defined on class binding is
+    # Class Instance => Class Binding => Instance Binding => Container Instance.
+    # When container instance is instead provided to instance binding then inheritance is
+    # Class Instance => Container Instance => Instance Binding
+    ::CascadingConfiguration.replace_parent( self, @__parent_binding__, container_instance )
+        
   end
 
   alias_method( :container=, :__container__= )
@@ -165,22 +166,22 @@ module ::Perspective::Bindings::InstanceBinding::Interface
       
       when ::Perspective::Bindings::InstanceBinding
 
-        self.__value__ = object.__value__
+        @__value__ = object.__value__
       
       else
 
         unless binding_value_valid?( object )
           raise ::Perspective::Bindings::Exception::BindingInstanceInvalidType, 
-                  'Invalid value ' +  object.inspect + ' assigned to binding :' + 
+                  'Invalid value ' <<  object.inspect + ' assigned to binding :' << 
                   __name__.to_s + '.'
         end
 
         @__value__ = object
         
-        __autobind__( object )
-
     end    
     
+    __autobind__( @__value__ )
+
     return object
     
   end

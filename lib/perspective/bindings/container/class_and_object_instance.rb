@@ -12,7 +12,7 @@ module ::Perspective::Bindings::Container::ClassAndObjectInstance
     root_string = nil
     
     if __root__ == self
-      root_string = @__root_string__ ||= '[' << to_s << ']'
+      root_string = @__root_string__ ||= '<root:' << to_s << '>'
     else
       root_string = __root__.__root_string__
     end

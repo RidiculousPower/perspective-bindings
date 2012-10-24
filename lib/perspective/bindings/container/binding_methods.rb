@@ -71,7 +71,7 @@ class ::Perspective::Bindings::Container::BindingMethods <
     
     define_method( binding_alias ) do
       
-      return __bindings__[ binding_alias ]
+      return __bindings__[ binding_name ]
       
     end
     
