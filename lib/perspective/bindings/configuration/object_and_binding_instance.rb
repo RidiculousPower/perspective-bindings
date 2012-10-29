@@ -10,68 +10,106 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
   #  __bindings__  #
   ##################
 
+  ###
+  # Binding initialization takes place in the process of cascading from
+  #   parent to child. Binding inheritance can occur in the following patterns:
+  #
+  #   * Class to Instance (root container)
+  #
+  #   * Class to Class Binding (nested in another container)
+  #
+  #   * Class Binding to Instance Binding (attached to root container)
+  #
+  #   * Class Binding to Nested Class Binding (nested in a container 
+  #     that is nested in a container)
+  #
+  #   * Nested Class Binding to Nested Instance Binding (instance nested 
+  #     in a container that is nested in a container)
+  #
+  #   * Instance Binding to Instance (class binding specified container class).
+  #
+  #   * Nested Instance Binding to Instance (class binding specified container 
+  #     class).
+  #
+  #   * Instance to Instance Binding (instance assigned to instance binding).
+  #
+  #     Note: this inverts typical inheritance relations such that the
+  #     binding will inherit from the instance rather than the instance
+  #     inheriting from the binding. 
+  #
+  #   * Instance to Nested Instance Binding (instance assigned to instance 
+  #     binding nested in a nested container)
+  #
+  #     Note: this inverts typical inheritance relations such that the
+  #     binding will inherit from the instance rather than the instance
+  #     inheriting from the binding.
+  #
 	attr_hash  :__bindings__ do
 	  
 	  #======================#
 	  #  child_pre_set_hook  #
 	  #======================#
 
-	  def child_pre_set_hook( binding_name, binding_instance, parent_instance )
+	  def child_pre_set_hook( binding_name, binding_instance, parent_hash )
 
       child_instance = nil
 
-      # Pretty much all binding initialization takes place here.
-
       case instance = configuration_instance
 
-        # We are attaching to a root container class/module.
+        # Inheriting from a module included in a root container class/module or as a subclass.
         when ::Perspective::Bindings::Container::ClassInstance
 
-          # We have either a subclass of a class with class bindings or an included module
-          # with class bindings.
-          #
-          # We create class bindings that are children of the provided bindings.
-
-          # Create a new binding without any settings - causes automatic lookup to superclass.
-          # Container classes are always the base of their route.
+          # Container classes are always the base of their route, 
+          # which means new class bindings are not nested.
           child_instance = binding_instance.class.new( instance, nil, nil, binding_instance )
 
-        # We are attaching to a nested container class binding.
+        # Inheriting from a class or a class binding (nested or not).
         when ::Perspective::Bindings::ClassBinding
           
-          # Create a new binding without any settings - causes automatic lookup to parent.
+          # If we're attaching to a class binding we're at least 2 levels deep, 
+          # which means new class bindings are nested.
           child_instance = binding_instance.class::NestedClassBinding.new( instance, nil, nil, binding_instance )
-
-        # We are attaching to a root container instance.
-        # We know this because we haven't been extended as a nested instance.
+          
+        # Inheriting from a class or an instance binding (nested or not)
         when ::Perspective::Bindings::Container::ObjectInstance
+          
+          # What matters in this case is that we need instance bindings.
+          
+          case parent_instance = parent_hash.configuration_instance
+            
+            when ::Perspective::Bindings::Container::ClassInstance
 
-          case binding_instance
+              # We are inheriting as a root container instance.
+              # We need instance bindings corresponding to the declared class bindings
+              child_instance = binding_instance.class::InstanceBinding.new( binding_instance, instance )
             
             when ::Perspective::Bindings::InstanceBinding
 
+              # We were created by an instance binding.
+              #
               # We want the same instance bindings we attached to the instance binding that
               # this container is attached to.
               child_instance = binding_instance
 
-            when ::Perspective::Bindings::ClassBinding
-
-              # We need instance bindings corresponding to the declared class bindings
-              child_instance = binding_instance.class::InstanceBinding.new( binding_instance, instance )
-
           end
             
-        # We are attaching to a nested instance binding
+        # Inheriting from class binding (nested or not) or instance (assigned to instance binding)
         when ::Perspective::Bindings::InstanceBinding
           
-          case binding_instance
-            when ::Perspective::Bindings::ClassBinding
-              binding_class = binding_instance.class::NestedInstanceBinding
-              child_instance = binding_class.new( binding_instance, instance.__container__ )
-            when ::Perspective::Bindings::InstanceBinding
+          # What matters in this case is that we need instance bindings.
+
+          case parent_instance = parent_hash.configuration_instance
             
-              # if we are inheriting an instance binding from a container instance
-              # this happens when a container instance is assigned to an instance binding
+            when ::Perspective::Bindings::ClassBinding
+
+              # We are inheriting as a nested instance binding
+              child_instance = binding_instance.class::NestedInstanceBinding.new( binding_instance, 
+                                                                                  instance.__container__ )
+            
+            when ::Perspective::Bindings::Container::ObjectInstance
+            
+              # We are inheriting from an object instance that was assigned to this instance
+              # binding as its container.
               child_instance = binding_instance
               
           end
@@ -110,18 +148,22 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
 	  #  child_pre_set_hook  #
 	  #======================#
 
-	  def child_pre_set_hook( local_alias_to_binding, binding_instance )
+	  def child_pre_set_hook( local_alias_to_binding, binding_instance, parent_hash )
       
       binding_route = nil
+      
+      # We are instance C inheriting a shared binding, meaning an alias from instance B to binding in instance A.
+      # The inherited binding instance we want already exists in __bindings__ for instance C.
+      # We need the nested route for A in B, which will allow us to get A in C.
       
       case instance = configuration_instance
         
         when ::Perspective::Bindings::Container::ObjectInstance,
              ::Perspective::Bindings::InstanceBinding
+          
+          binding_route = instance.__nested_route__( binding_instance )
 
-          binding_route = binding_instance.__nested_route__( instance )
-
-        when   ::Perspective::Bindings::ClassBinding::NestedClassBinding
+        when ::Perspective::Bindings::ClassBinding::NestedClassBinding
 
           binding_route = binding_instance.__nested_route__( instance )
           
@@ -137,7 +179,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
           
       end
 
-      child_instance = ::Perspective::Bindings.aliased_binding_in_context( configuration_instance, 
+      child_instance = ::Perspective::Bindings.aliased_binding_in_context( instance, 
                                                                            binding_route,
                                                                            binding_instance.__name__,
                                                                            local_alias_to_binding,

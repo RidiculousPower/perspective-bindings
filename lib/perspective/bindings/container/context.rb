@@ -140,10 +140,12 @@ module ::Perspective::Bindings::Container::Context
         # nothing more to do
       
       when 1
-
-        print_string << ::Perspective::Bindings::RouteDelimiter
-        print_string << contexts[ 0 ]
-
+        
+        unless contexts[ 0 ].nil?
+          print_string << ::Perspective::Bindings::RouteDelimiter
+          print_string << contexts[ 0 ]
+        end
+          
       else
 
         contexts.each do |this_context|

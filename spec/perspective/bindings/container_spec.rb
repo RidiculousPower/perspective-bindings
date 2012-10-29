@@ -52,14 +52,14 @@ describe ::Perspective::Bindings::Container do
 
     Perspective::Bindings::Container::Mock.__bindings__.is_a?( ::Hash ).should == true
     Perspective::Bindings::Container::Mock.__bindings__[ :text_binding ].is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-    Perspective::Bindings::Container::Mock.__binding__( :text_binding ).should == Perspective::Bindings::Container::Mock.__bindings__[ :text_binding ]
+    Perspective::Bindings::Container::Mock.text_binding.should == Perspective::Bindings::Container::Mock.__bindings__[ :text_binding ]
     Perspective::Bindings::Container::Mock.has_binding?( :text_binding ).should == true
 
     instance = ::Perspective::Bindings::Container::Mock.new    
     
     instance.__bindings__.is_a?( ::Hash ).should == true
     instance.__bindings__[ :text_binding ].is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-    instance.__binding__( :text_binding ).should == instance.__bindings__[ :text_binding ]
+    instance.text_binding.should == instance.__bindings__[ :text_binding ]
     instance.has_binding?( :text_binding ).should == true
     
   end
@@ -96,10 +96,10 @@ describe ::Perspective::Bindings::Container do
       attr_alias :some_other_binding, another_binding.some_other_binding
 
       has_binding?( :aliased_binding_name ).should == true
-      __binding__( :aliased_binding_name ).required?.should == false
+      aliased_binding_name.required?.should == false
 
       has_binding?( :another_binding ).should == true
-      __binding__( :another_binding ).required?.should == false
+      another_binding.required?.should == false
       respond_to?( :another_binding ).should == true
       method_defined?( :another_binding ).should == true
       
@@ -109,7 +109,7 @@ describe ::Perspective::Bindings::Container do
       another_binding.some_other_binding.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
 
       has_binding?( :some_other_binding ).should == true
-      __binding__( :some_other_binding ).required?.should == false
+      some_other_binding.required?.should == false
       respond_to?( :some_other_binding ).should == true
       method_defined?( :some_other_binding ).should == true
 

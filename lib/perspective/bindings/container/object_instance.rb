@@ -16,13 +16,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     name = nil
     
     if @__parent_binding__
-      
       name = @__parent_binding__.__name__
-
     else
-      
       name = __root_string__
-      
     end
     
     return name
@@ -59,8 +55,8 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
     route = nil
     
-    if @__bound_container__
-      route = @__bound_container__.__route__
+    if @__parent_binding__
+      route = @__parent_binding__.__route__
     end
     
     return route
@@ -78,8 +74,8 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
     route_with_name = nil
     
-    if @__bound_container__
-      route_with_name = @__bound_container__.__route_with_name__
+    if @__parent_binding__
+      route_with_name = @__parent_binding__.__route_with_name__
     end
     
     return route_with_name

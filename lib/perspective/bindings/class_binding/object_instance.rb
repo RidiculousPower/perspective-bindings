@@ -14,7 +14,6 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
                   ancestor_binding = nil,
                   & configuration_proc )
 
-    @__bound_container_class__ = bound_container
     @__bound_container__ = bound_container
 
     if ancestor_binding
@@ -23,12 +22,8 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
 
       __initialize_route__
 
-      if container_class
-        __validate_container_class__( container_class )
-        self.__container_class__ = container_class
-        extend( container_class::Controller::ClassBindingMethods )
-      end
-
+      __initialize_for_container_class__( container_class )
+      
     else
 
       __initialize_defaults__( binding_name, container_class )
@@ -76,21 +71,36 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
   def __initialize_defaults__( binding_name, container_class )
     
     self.__name__ = binding_name
-    self.__required__ = false    
+    self.__required__ = false
     
     __initialize_route__
     
     ::CascadingConfiguration.register_parent( self, self.class )
 
     binding_name_validates?( binding_name )
-
-    if container_class or container_class = __container_class__
-      __validate_container_class__( container_class )
-      self.__container_class__ = container_class
-      extend( container_class::Controller::ClassBindingMethods )
-      ::CascadingConfiguration.register_parent( self, container_class )
-    end
     
+    __initialize_for_container_class__( container_class )
+    
+  end
+  
+  ########################################
+  #  __initialize_for_container_class__  #
+  ########################################
+  
+  def __initialize_for_container_class__( container_class )
+  
+    if container_class or container_class = __container_class__
+    
+      __validate_container_class__( container_class )
+
+      self.__container_class__ = container_class
+
+      extend( container_class::Controller::ClassBindingMethods )
+
+      ::CascadingConfiguration.register_parent( self, container_class )
+
+    end
+  
   end
 
   ##########################

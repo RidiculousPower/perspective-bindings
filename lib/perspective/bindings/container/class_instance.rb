@@ -43,6 +43,13 @@ module ::Perspective::Bindings::Container::ClassInstance
     
     instance = super
     
+    # call to #each causes __bindings__ to populate
+    # as each binding is created, any sub-bindings it has are created
+    # this means that the most-nested bindings are configured first
+    # which means the top-level configurations haven't happened yet
+    
+    # we need the entire tree to be created first then initialized top-down
+    
     instance.__bindings__.each do |this_binding_name, this_binding_instance|
       this_binding_instance.__configure_container__
     end

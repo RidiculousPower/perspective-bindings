@@ -20,14 +20,12 @@ module ::Perspective::Bindings::InstanceBinding::Interface
 
     self.__route_print_string__ = ::Perspective::Bindings.context_print_string( @__root__, __route_string__ )
     
-    if container_class = @__parent_binding__.__container_class__
-    
+    if container_class = @__parent_binding__.__container_class__    
       extend( container_class::Controller::InstanceBindingMethods )
-
-      __bindings__.each do |this_binding_name, this_binding_instance|
-        this_binding_instance.__configure_container__
-      end
     end
+        
+    # cause nested bindings to populate
+    __bindings__.load_parent_state
     
   end
   
@@ -58,8 +56,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
   #############################
   
   def __configure_container__
-
-    container_instance = __container__
+      
     bound_container = __bound_container__
 
     # run configuration proc for each binding instance
@@ -67,10 +64,14 @@ module ::Perspective::Bindings::InstanceBinding::Interface
       bound_container.instance_exec( self, & this_configuration_proc )
 	  end
 	  
+    __bindings__.each do |this_binding_name, this_binding_instance|
+      this_binding_instance.__configure_container__
+    end
+	  
 	  return self
     
   end
-  
+
   ########################################
   #  __initialize_for_bound_container__  #
   ########################################

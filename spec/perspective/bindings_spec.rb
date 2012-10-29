@@ -13,24 +13,24 @@ describe ::Perspective::Bindings do
     ::Perspective::Bindings::MockNestedE.module_eval do
       has_binding?( :text1 ).should == true
       has_binding?( :text2 ).should == true
-      __binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      __binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      __binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
-      __binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      text1.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      text2.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
       __route__.should == nil
-      __binding__( :text1 ).__route__.should == nil
-      __binding__( :text2 ).__route__.should == nil
+      text1.__route__.should == nil
+      text2.__route__.should == nil
     end
     ::Perspective::Bindings::MockNestedE.new.instance_eval do
       has_binding?( :text1 ).should == true
       has_binding?( :text2 ).should == true
-      __binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-      __binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-      __binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      __binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      text1.is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
+      text2.is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
+      text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
       __route__.should == nil
-      __binding__( :text1 ).__route__.should == nil
-      __binding__( :text2 ).__route__.should == nil
+      text1.__route__.should == nil
+      text2.__route__.should == nil
     end
 
     class ::Perspective::Bindings::MockNestedD
@@ -41,24 +41,24 @@ describe ::Perspective::Bindings do
     ::Perspective::Bindings::MockNestedD.module_eval do
       has_binding?( :text1 ).should == true
       has_binding?( :text2 ).should == true
-      __binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      __binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      __binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
-      __binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      text1.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      text2.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
       __route__.should == nil
-      __binding__( :text1 ).__route__.should == nil
-      __binding__( :text2 ).__route__.should == nil
+      text1.__route__.should == nil
+      text2.__route__.should == nil
     end
     ::Perspective::Bindings::MockNestedD.new.instance_eval do
       has_binding?( :text1 ).should == true
       has_binding?( :text2 ).should == true
-      __binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-      __binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-      __binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      __binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      text1.is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
+      text2.is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
+      text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
       __route__.should == nil
-      __binding__( :text1 ).__route__.should == nil
-      __binding__( :text2 ).__route__.should == nil
+      text1.__route__.should == nil
+      text2.__route__.should == nil
     end
 
     class ::Perspective::Bindings::MockNestedC2
@@ -68,30 +68,30 @@ describe ::Perspective::Bindings do
 
     ::Perspective::Bindings::MockNestedC2.module_eval do
       has_binding?( :e ).should == true
-      __binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :e ).is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      __binding__( :e ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
-      __binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      e.has_binding?( :text1 ).should == true
+      e.has_binding?( :text2 ).should == true
+      e.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      e.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
       __route__.should == nil
-      __binding__( :e ).__route__.should == nil
-      __binding__( :e ).__binding__( :text1 ).__route__.should == [ :e ]
-      __binding__( :e ).__binding__( :text2 ).__route__.should == [ :e ]
+      e.__route__.should == nil
+      e.text1.__route__.should == [ :e ]
+      e.text2.__route__.should == [ :e ]
     end
     ::Perspective::Bindings::MockNestedC2.new.instance_eval do
       has_binding?( :e ).should == true
-      __binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :e ).is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-      __binding__( :e ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      binding_e = __binding__( :e )
-      binding_e.__binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      e.has_binding?( :text1 ).should == true
+      e.has_binding?( :text2 ).should == true
+      e.is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
+      e.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      binding_e = e
+      binding_e.text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      e.text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
       __route__.should == nil
-      __binding__( :e ).__route__.should == nil
-      __binding__( :e ).__binding__( :text1 ).__route__.should == [ :e ]
-      __binding__( :e ).__binding__( :text2 ).__route__.should == [ :e ]
+      e.__route__.should == nil
+      e.text1.__route__.should == [ :e ]
+      e.text2.__route__.should == [ :e ]
     end
     
     class ::Perspective::Bindings::MockNestedC1
@@ -101,29 +101,29 @@ describe ::Perspective::Bindings do
 
     ::Perspective::Bindings::MockNestedC1.module_eval do
       has_binding?( :d ).should == true
-      __binding__( :d ).is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      __binding__( :d ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
-      __binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      d.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      d.has_binding?( :text1 ).should == true
+      d.has_binding?( :text2 ).should == true
+      d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
       __route__.should == nil
-      __binding__( :d ).__route__.should == nil
-      __binding__( :d ).__binding__( :text1 ).__route__.should == [ :d ]
-      __binding__( :d ).__binding__( :text2 ).__route__.should == [ :d ]
+      d.__route__.should == nil
+      d.text1.__route__.should == [ :d ]
+      d.text2.__route__.should == [ :d ]
     end
     ::Perspective::Bindings::MockNestedC1.new.instance_eval do
       has_binding?( :d ).should == true
-      __binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :d ).is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-      __binding__( :d ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      __binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      d.has_binding?( :text1 ).should == true
+      d.has_binding?( :text2 ).should == true
+      d.is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
+      d.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      d.text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      d.text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
       __route__.should == nil
-      __binding__( :d ).__route__.should == nil
-      __binding__( :d ).__binding__( :text1 ).__route__.should == [ :d ]
-      __binding__( :d ).__binding__( :text2 ).__route__.should == [ :d ]
+      d.__route__.should == nil
+      d.text1.__route__.should == [ :d ]
+      d.text2.__route__.should == [ :d ]
     end
 
     class ::Perspective::Bindings::MockNestedB
@@ -135,58 +135,58 @@ describe ::Perspective::Bindings do
     ::Perspective::Bindings::MockNestedB.module_eval do
       has_binding?( :c1 ).should == true
       has_binding?( :c2 ).should == true
-      __binding__( :c1 ).is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      __binding__( :c1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
-      __binding__( :c2 ).is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      __binding__( :c2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
-      __binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      c1.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      c1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      c2.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      c1.has_binding?( :d ).should == true
+      c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      c1.d.has_binding?( :text1 ).should == true
+      c1.d.has_binding?( :text2 ).should == true
+      c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      c2.has_binding?( :e ).should == true
+      c2.e.has_binding?( :text1 ).should == true
+      c2.e.has_binding?( :text2 ).should == true
+      c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
       __route__.should == nil
-      __binding__( :c1 ).__route__.should == nil
-      __binding__( :c1 ).__binding__( :d ).__route__.should == [ :c1 ]
-      __binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :c1, :d ]
-      __binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :c1, :d ]
-      __binding__( :c2 ).__route__.should == nil
-      __binding__( :c2 ).__binding__( :e ).__route__.should == [ :c2 ]
-      __binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :c2, :e ]
-      __binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :c2, :e ]
+      c1.__route__.should == nil
+      c1.d.__route__.should == [ :c1 ]
+      c1.d.text1.__route__.should == [ :c1, :d ]
+      c1.d.text2.__route__.should == [ :c1, :d ]
+      c2.__route__.should == nil
+      c2.e.__route__.should == [ :c2 ]
+      c2.e.text1.__route__.should == [ :c2, :e ]
+      c2.e.text2.__route__.should == [ :c2, :e ]
     end
     ::Perspective::Bindings::MockNestedB.new.instance_eval do
       has_binding?( :c1 ).should == true
       has_binding?( :c2 ).should == true
-      __binding__( :c1 ).is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-      __binding__( :c1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      __binding__( :c2 ).is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-      __binding__( :c2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      __binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      c1.is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
+      c1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      c2.is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
+      c2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      c1.has_binding?( :d ).should == true
+      c1.d.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      c1.d.has_binding?( :text1 ).should == true
+      c1.d.has_binding?( :text2 ).should == true
+      c1.d.text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      c1.d.text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      c2.has_binding?( :e ).should == true
+      c2.e.has_binding?( :text1 ).should == true
+      c2.e.has_binding?( :text2 ).should == true
+      c2.e.text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      c2.e.text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
       __route__.should == nil
-      __binding__( :c1 ).__route__.should == nil
-      __binding__( :c1 ).__binding__( :d ).__route__.should == [ :c1 ]
-      __binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :c1, :d ]
-      __binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :c1, :d ]
-      __binding__( :c2 ).__route__.should == nil
-      __binding__( :c2 ).__binding__( :e ).__route__.should == [ :c2 ]
-      __binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :c2, :e ]
-      __binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :c2, :e ]
+      c1.__route__.should == nil
+      c1.d.__route__.should == [ :c1 ]
+      c1.d.text1.__route__.should == [ :c1, :d ]
+      c1.d.text2.__route__.should == [ :c1, :d ]
+      c2.__route__.should == nil
+      c2.e.__route__.should == [ :c2 ]
+      c2.e.text1.__route__.should == [ :c2, :e ]
+      c2.e.text2.__route__.should == [ :c2, :e ]
     end
     
     class ::Perspective::Bindings::MockNestedA
@@ -196,61 +196,61 @@ describe ::Perspective::Bindings do
 
     ::Perspective::Bindings::MockNestedA.module_eval do
       has_binding?( :b ).should == true
-      __binding__( :b ).is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      __binding__( :b ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
-      __binding__( :b ).has_binding?( :c1 ).should == true
-      __binding__( :b ).has_binding?( :c2 ).should == true
-      __binding__( :b ).__binding__( :c2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :b ).__binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :b ).__binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      b.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      b.has_binding?( :c1 ).should == true
+      b.has_binding?( :c2 ).should == true
+      b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      b.c1.has_binding?( :d ).should == true
+      b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      b.c1.d.has_binding?( :text1 ).should == true
+      b.c1.d.has_binding?( :text2 ).should == true
+      b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      b.c2.has_binding?( :e ).should == true
+      b.c2.e.has_binding?( :text1 ).should == true
+      b.c2.e.has_binding?( :text2 ).should == true
+      b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
       __route__.should == nil
-      __binding__( :b ).__route__.should == nil
-      __binding__( :b ).__binding__( :c1 ).__route__.should == [ :b ]
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).__route__.should == [ :b, :c1 ]
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :b, :c1, :d ]
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :b, :c1, :d ]
-      __binding__( :b ).__binding__( :c2 ).__route__.should == [ :b ]
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).__route__.should == [ :b, :c2 ]
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :b, :c2, :e ]
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :b, :c2, :e ]
+      b.__route__.should == nil
+      b.c1.__route__.should == [ :b ]
+      b.c1.d.__route__.should == [ :b, :c1 ]
+      b.c1.d.text1.__route__.should == [ :b, :c1, :d ]
+      b.c1.d.text2.__route__.should == [ :b, :c1, :d ]
+      b.c2.__route__.should == [ :b ]
+      b.c2.e.__route__.should == [ :b, :c2 ]
+      b.c2.e.text1.__route__.should == [ :b, :c2, :e ]
+      b.c2.e.text2.__route__.should == [ :b, :c2, :e ]
     end
     ::Perspective::Bindings::MockNestedA.new.instance_eval do
       has_binding?( :b ).should == true
-      __binding__( :b ).is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-      __binding__( :b ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      __binding__( :b ).has_binding?( :c1 ).should == true
-      __binding__( :b ).has_binding?( :c2 ).should == true
-      __binding__( :b ).__binding__( :c2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :b ).__binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :b ).__binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      b.is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
+      b.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      b.has_binding?( :c1 ).should == true
+      b.has_binding?( :c2 ).should == true
+      b.c2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      b.c1.has_binding?( :d ).should == true
+      b.c1.d.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      b.c1.d.has_binding?( :text1 ).should == true
+      b.c1.d.has_binding?( :text2 ).should == true
+      b.c1.d.text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      b.c1.d.text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      b.c2.has_binding?( :e ).should == true
+      b.c2.e.has_binding?( :text1 ).should == true
+      b.c2.e.has_binding?( :text2 ).should == true
+      b.c2.e.text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      b.c2.e.text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
       __route__.should == nil
-      __binding__( :b ).__route__.should == nil
-      __binding__( :b ).__binding__( :c1 ).__route__.should == [ :b ]
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).__route__.should == [ :b, :c1 ]
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :b, :c1, :d ]
-      __binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :b, :c1, :d ]
-      __binding__( :b ).__binding__( :c2 ).__route__.should == [ :b ]
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).__route__.should == [ :b, :c2 ]
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :b, :c2, :e ]
-      __binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :b, :c2, :e ]
+      b.__route__.should == nil
+      b.c1.__route__.should == [ :b ]
+      b.c1.d.__route__.should == [ :b, :c1 ]
+      b.c1.d.text1.__route__.should == [ :b, :c1, :d ]
+      b.c1.d.text2.__route__.should == [ :b, :c1, :d ]
+      b.c2.__route__.should == [ :b ]
+      b.c2.e.__route__.should == [ :b, :c2 ]
+      b.c2.e.text1.__route__.should == [ :b, :c2, :e ]
+      b.c2.e.text2.__route__.should == [ :b, :c2, :e ]
     end
     
     class ::Perspective::Bindings::MockWithNested
@@ -260,67 +260,67 @@ describe ::Perspective::Bindings do
 
     ::Perspective::Bindings::MockWithNested.module_eval do
       has_binding?( :a ).should == true
-      __binding__( :a ).is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      __binding__( :a ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
-      __binding__( :a ).has_binding?( :b ).should == true
-      __binding__( :a ).__binding__( :b ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :a ).__binding__( :b ).has_binding?( :c1 ).should == true
-      __binding__( :a ).__binding__( :b ).has_binding?( :c2 ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      a.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      a.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      a.has_binding?( :b ).should == true
+      a.b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      a.b.has_binding?( :c1 ).should == true
+      a.b.has_binding?( :c2 ).should == true
+      a.b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      a.b.c1.has_binding?( :d ).should == true
+      a.b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      a.b.c1.d.has_binding?( :text1 ).should == true
+      a.b.c1.d.has_binding?( :text2 ).should == true
+      a.b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      a.b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      a.b.c2.has_binding?( :e ).should == true
+      a.b.c2.e.has_binding?( :text1 ).should == true
+      a.b.c2.e.has_binding?( :text2 ).should == true
+      a.b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      a.b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
       __route__.should == nil
-      __binding__( :a ).__route__.should == nil
-      __binding__( :a ).__binding__( :b ).__route__.should == [ :a ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__route__.should == [ :a, :b ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__route__.should == [ :a, :b, :c1 ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :a, :b, :c1, :d ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :a, :b, :c1, :d ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__route__.should == [ :a, :b ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__route__.should == [ :a, :b, :c2 ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :a, :b, :c2, :e ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :a, :b, :c2, :e ]
+      a.__route__.should == nil
+      a.b.__route__.should == [ :a ]
+      a.b.c1.__route__.should == [ :a, :b ]
+      a.b.c1.d.__route__.should == [ :a, :b, :c1 ]
+      a.b.c1.d.text1.__route__.should == [ :a, :b, :c1, :d ]
+      a.b.c1.d.text2.__route__.should == [ :a, :b, :c1, :d ]
+      a.b.c2.__route__.should == [ :a, :b ]
+      a.b.c2.e.__route__.should == [ :a, :b, :c2 ]
+      a.b.c2.e.text1.__route__.should == [ :a, :b, :c2, :e ]
+      a.b.c2.e.text2.__route__.should == [ :a, :b, :c2, :e ]
     end
     ::Perspective::Bindings::MockWithNested.new.instance_eval do
       has_binding?( :a ).should == true
-      __binding__( :a ).is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-      __binding__( :a ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      __binding__( :a ).has_binding?( :b ).should == true
-      __binding__( :a ).__binding__( :b ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :a ).__binding__( :b ).has_binding?( :c1 ).should == true
-      __binding__( :a ).__binding__( :b ).has_binding?( :c2 ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      a.is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
+      a.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      a.has_binding?( :b ).should == true
+      a.b.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      a.b.has_binding?( :c1 ).should == true
+      a.b.has_binding?( :c2 ).should == true
+      a.b.c2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      a.b.c1.has_binding?( :d ).should == true
+      a.b.c1.d.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      a.b.c1.d.has_binding?( :text1 ).should == true
+      a.b.c1.d.has_binding?( :text2 ).should == true
+      a.b.c1.d.text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      a.b.c1.d.text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      a.b.c2.has_binding?( :e ).should == true
+      a.b.c2.e.has_binding?( :text1 ).should == true
+      a.b.c2.e.has_binding?( :text2 ).should == true
+      a.b.c2.e.text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      a.b.c2.e.text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
       __route__.should == nil
-      __binding__( :a ).__route__.should == nil
-      __binding__( :a ).__binding__( :b ).__route__.should == [ :a ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__route__.should == [ :a, :b ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__route__.should == [ :a, :b, :c1 ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :a, :b, :c1, :d ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :a, :b, :c1, :d ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__route__.should == [ :a, :b ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__route__.should == [ :a, :b, :c2 ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :a, :b, :c2, :e ]
-      __binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :a, :b, :c2, :e ]
+      a.__route__.should == nil
+      a.b.__route__.should == [ :a ]
+      a.b.c1.__route__.should == [ :a, :b ]
+      a.b.c1.d.__route__.should == [ :a, :b, :c1 ]
+      a.b.c1.d.text1.__route__.should == [ :a, :b, :c1, :d ]
+      a.b.c1.d.text2.__route__.should == [ :a, :b, :c1, :d ]
+      a.b.c2.__route__.should == [ :a, :b ]
+      a.b.c2.e.__route__.should == [ :a, :b, :c2 ]
+      a.b.c2.e.text1.__route__.should == [ :a, :b, :c2, :e ]
+      a.b.c2.e.text2.__route__.should == [ :a, :b, :c2, :e ]
     end
     
     module ::Perspective::Bindings::MockModule
@@ -336,36 +336,36 @@ describe ::Perspective::Bindings do
       has_binding?( :some_text ).should == true
       has_binding?( :some_numbers ).should == true
       has_binding?( :nested ).should == true
-      __binding__( :nested ).has_binding?( :a ).should == true
-      __binding__( :nested ).__binding__( :a ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).has_binding?( :b ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.has_binding?( :a ).should == true
+      nested.a.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.has_binding?( :b ).should == true
+      nested.a.b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.has_binding?( :c1 ).should == true
+      nested.a.b.has_binding?( :c2 ).should == true
+      nested.a.b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.has_binding?( :d ).should == true
+      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.has_binding?( :text1 ).should == true
+      nested.a.b.c1.d.has_binding?( :text2 ).should == true
+      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.has_binding?( :e ).should == true
+      nested.a.b.c2.e.has_binding?( :text1 ).should == true
+      nested.a.b.c2.e.has_binding?( :text2 ).should == true
+      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
       __route__.should == nil
-      __binding__( :nested ).__route__.should == nil
-      __binding__( :nested ).__binding__( :a ).__route__.should == [ :nested ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__route__.should == [ :nested, :a ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__route__.should == [ :nested, :a, :b, :c1 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__route__.should == [ :nested, :a, :b, :c2 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.__route__.should == nil
+      nested.a.__route__.should == [ :nested ]
+      nested.a.b.__route__.should == [ :nested, :a ]
+      nested.a.b.c1.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c1.d.__route__.should == [ :nested, :a, :b, :c1 ]
+      nested.a.b.c1.d.text1.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c1.d.text2.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c2.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c2.e.__route__.should == [ :nested, :a, :b, :c2 ]
+      nested.a.b.c2.e.text1.__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.a.b.c2.e.text2.__route__.should == [ :nested, :a, :b, :c2, :e ]
     end
 
     module ::Perspective::Bindings::MockModule2
@@ -377,36 +377,36 @@ describe ::Perspective::Bindings do
       has_binding?( :some_text ).should == true
       has_binding?( :some_numbers ).should == true
       has_binding?( :nested ).should == true
-      __binding__( :nested ).has_binding?( :a ).should == true
-      __binding__( :nested ).__binding__( :a ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).has_binding?( :b ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.has_binding?( :a ).should == true
+      nested.a.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.has_binding?( :b ).should == true
+      nested.a.b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.has_binding?( :c1 ).should == true
+      nested.a.b.has_binding?( :c2 ).should == true
+      nested.a.b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.has_binding?( :d ).should == true
+      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.has_binding?( :text1 ).should == true
+      nested.a.b.c1.d.has_binding?( :text2 ).should == true
+      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.has_binding?( :e ).should == true
+      nested.a.b.c2.e.has_binding?( :text1 ).should == true
+      nested.a.b.c2.e.has_binding?( :text2 ).should == true
+      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
       __route__.should == nil
-      __binding__( :nested ).__route__.should == nil
-      __binding__( :nested ).__binding__( :a ).__route__.should == [ :nested ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__route__.should == [ :nested, :a ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__route__.should == [ :nested, :a, :b, :c1 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__route__.should == [ :nested, :a, :b, :c2 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.__route__.should == nil
+      nested.a.__route__.should == [ :nested ]
+      nested.a.b.__route__.should == [ :nested, :a ]
+      nested.a.b.c1.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c1.d.__route__.should == [ :nested, :a, :b, :c1 ]
+      nested.a.b.c1.d.text1.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c1.d.text2.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c2.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c2.e.__route__.should == [ :nested, :a, :b, :c2 ]
+      nested.a.b.c2.e.text1.__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.a.b.c2.e.text2.__route__.should == [ :nested, :a, :b, :c2, :e ]
     end
 
     class ::Perspective::Bindings::MockClass
@@ -418,72 +418,72 @@ describe ::Perspective::Bindings do
       has_binding?( :some_text ).should == true
       has_binding?( :some_numbers ).should == true
       has_binding?( :nested ).should == true
-      __binding__( :nested ).has_binding?( :a ).should == true
-      __binding__( :nested ).__binding__( :a ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).has_binding?( :b ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.has_binding?( :a ).should == true
+      nested.a.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.has_binding?( :b ).should == true
+      nested.a.b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.has_binding?( :c1 ).should == true
+      nested.a.b.has_binding?( :c2 ).should == true
+      nested.a.b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.has_binding?( :d ).should == true
+      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.has_binding?( :text1 ).should == true
+      nested.a.b.c1.d.has_binding?( :text2 ).should == true
+      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.has_binding?( :e ).should == true
+      nested.a.b.c2.e.has_binding?( :text1 ).should == true
+      nested.a.b.c2.e.has_binding?( :text2 ).should == true
+      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
       __route__.should == nil
-      __binding__( :nested ).__route__.should == nil
-      __binding__( :nested ).__binding__( :a ).__route__.should == [ :nested ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__route__.should == [ :nested, :a ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__route__.should == [ :nested, :a, :b, :c1 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__route__.should == [ :nested, :a, :b, :c2 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.__route__.should == nil
+      nested.a.__route__.should == [ :nested ]
+      nested.a.b.__route__.should == [ :nested, :a ]
+      nested.a.b.c1.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c1.d.__route__.should == [ :nested, :a, :b, :c1 ]
+      nested.a.b.c1.d.text1.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c1.d.text2.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c2.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c2.e.__route__.should == [ :nested, :a, :b, :c2 ]
+      nested.a.b.c2.e.text1.__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.a.b.c2.e.text2.__route__.should == [ :nested, :a, :b, :c2, :e ]
     end
     ::Perspective::Bindings::MockClass.new.instance_eval do
       has_binding?( :some_binding ).should == true
       has_binding?( :some_text ).should == true
       has_binding?( :some_numbers ).should == true
       has_binding?( :nested ).should == true
-      __binding__( :nested ).has_binding?( :a ).should == true
-      __binding__( :nested ).__binding__( :a ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).has_binding?( :b ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.has_binding?( :a ).should == true
+      nested.a.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.has_binding?( :b ).should == true
+      nested.a.b.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.has_binding?( :c1 ).should == true
+      nested.a.b.has_binding?( :c2 ).should == true
+      nested.a.b.c2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c1.has_binding?( :d ).should == true
+      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c1.d.has_binding?( :text1 ).should == true
+      nested.a.b.c1.d.has_binding?( :text2 ).should == true
+      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c2.has_binding?( :e ).should == true
+      nested.a.b.c2.e.has_binding?( :text1 ).should == true
+      nested.a.b.c2.e.has_binding?( :text2 ).should == true
+      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
       __route__.should == nil
-      __binding__( :nested ).__route__.should == nil
-      __binding__( :nested ).__binding__( :a ).__route__.should == [ :nested ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__route__.should == [ :nested, :a ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__route__.should == [ :nested, :a, :b, :c1 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__route__.should == [ :nested, :a, :b, :c2 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.__route__.should == nil
+      nested.a.__route__.should == [ :nested ]
+      nested.a.b.__route__.should == [ :nested, :a ]
+      nested.a.b.c1.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c1.d.__route__.should == [ :nested, :a, :b, :c1 ]
+      nested.a.b.c1.d.text1.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c1.d.text2.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c2.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c2.e.__route__.should == [ :nested, :a, :b, :c2 ]
+      nested.a.b.c2.e.text1.__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.a.b.c2.e.text2.__route__.should == [ :nested, :a, :b, :c2, :e ]
     end
 
     module ::Perspective::Bindings::MockModule2
@@ -495,36 +495,36 @@ describe ::Perspective::Bindings do
       has_binding?( :some_text ).should == true
       has_binding?( :some_numbers ).should == true
       has_binding?( :nested ).should == true
-      __binding__( :nested ).has_binding?( :a ).should == true
-      __binding__( :nested ).__binding__( :a ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).has_binding?( :b ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.has_binding?( :a ).should == true
+      nested.a.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.has_binding?( :b ).should == true
+      nested.a.b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.has_binding?( :c1 ).should == true
+      nested.a.b.has_binding?( :c2 ).should == true
+      nested.a.b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.has_binding?( :d ).should == true
+      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.has_binding?( :text1 ).should == true
+      nested.a.b.c1.d.has_binding?( :text2 ).should == true
+      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.has_binding?( :e ).should == true
+      nested.a.b.c2.e.has_binding?( :text1 ).should == true
+      nested.a.b.c2.e.has_binding?( :text2 ).should == true
+      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
       __route__.should == nil
-      __binding__( :nested ).__route__.should == nil
-      __binding__( :nested ).__binding__( :a ).__route__.should == [ :nested ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__route__.should == [ :nested, :a ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__route__.should == [ :nested, :a, :b, :c1 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__route__.should == [ :nested, :a, :b, :c2 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.__route__.should == nil
+      nested.a.__route__.should == [ :nested ]
+      nested.a.b.__route__.should == [ :nested, :a ]
+      nested.a.b.c1.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c1.d.__route__.should == [ :nested, :a, :b, :c1 ]
+      nested.a.b.c1.d.text1.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c1.d.text2.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c2.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c2.e.__route__.should == [ :nested, :a, :b, :c2 ]
+      nested.a.b.c2.e.text1.__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.a.b.c2.e.text2.__route__.should == [ :nested, :a, :b, :c2, :e ]
     end
     
     class ::Perspective::Bindings::MockClass2
@@ -536,72 +536,72 @@ describe ::Perspective::Bindings do
       has_binding?( :some_text ).should == true
       has_binding?( :some_numbers ).should == true
       has_binding?( :nested ).should == true
-      __binding__( :nested ).has_binding?( :a ).should == true
-      __binding__( :nested ).__binding__( :a ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).has_binding?( :b ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.has_binding?( :a ).should == true
+      nested.a.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.has_binding?( :b ).should == true
+      nested.a.b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.has_binding?( :c1 ).should == true
+      nested.a.b.has_binding?( :c2 ).should == true
+      nested.a.b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.has_binding?( :d ).should == true
+      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.has_binding?( :text1 ).should == true
+      nested.a.b.c1.d.has_binding?( :text2 ).should == true
+      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.has_binding?( :e ).should == true
+      nested.a.b.c2.e.has_binding?( :text1 ).should == true
+      nested.a.b.c2.e.has_binding?( :text2 ).should == true
+      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
       __route__.should == nil
-      __binding__( :nested ).__route__.should == nil
-      __binding__( :nested ).__binding__( :a ).__route__.should == [ :nested ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__route__.should == [ :nested, :a ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__route__.should == [ :nested, :a, :b, :c1 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__route__.should == [ :nested, :a, :b, :c2 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.__route__.should == nil
+      nested.a.__route__.should == [ :nested ]
+      nested.a.b.__route__.should == [ :nested, :a ]
+      nested.a.b.c1.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c1.d.__route__.should == [ :nested, :a, :b, :c1 ]
+      nested.a.b.c1.d.text1.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c1.d.text2.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c2.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c2.e.__route__.should == [ :nested, :a, :b, :c2 ]
+      nested.a.b.c2.e.text1.__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.a.b.c2.e.text2.__route__.should == [ :nested, :a, :b, :c2, :e ]
     end
     ::Perspective::Bindings::MockClass2.new.instance_eval do
       has_binding?( :some_binding ).should == true
       has_binding?( :some_text ).should == true
       has_binding?( :some_numbers ).should == true
       has_binding?( :nested ).should == true
-      __binding__( :nested ).has_binding?( :a ).should == true
-      __binding__( :nested ).__binding__( :a ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).has_binding?( :b ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).has_binding?( :c2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).has_binding?( :d ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).has_binding?( :e ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text1 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).has_binding?( :text2 ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.has_binding?( :a ).should == true
+      nested.a.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.has_binding?( :b ).should == true
+      nested.a.b.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.has_binding?( :c1 ).should == true
+      nested.a.b.has_binding?( :c2 ).should == true
+      nested.a.b.c2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c1.has_binding?( :d ).should == true
+      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c1.d.has_binding?( :text1 ).should == true
+      nested.a.b.c1.d.has_binding?( :text2 ).should == true
+      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c2.has_binding?( :e ).should == true
+      nested.a.b.c2.e.has_binding?( :text1 ).should == true
+      nested.a.b.c2.e.has_binding?( :text2 ).should == true
+      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
       __route__.should == nil
-      __binding__( :nested ).__route__.should == nil
-      __binding__( :nested ).__binding__( :a ).__route__.should == [ :nested ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__route__.should == [ :nested, :a ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__route__.should == [ :nested, :a, :b, :c1 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c1 ).__binding__( :d ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c1, :d ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__route__.should == [ :nested, :a, :b ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__route__.should == [ :nested, :a, :b, :c2 ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text1 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
-      __binding__( :nested ).__binding__( :a ).__binding__( :b ).__binding__( :c2 ).__binding__( :e ).__binding__( :text2 ).__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.__route__.should == nil
+      nested.a.__route__.should == [ :nested ]
+      nested.a.b.__route__.should == [ :nested, :a ]
+      nested.a.b.c1.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c1.d.__route__.should == [ :nested, :a, :b, :c1 ]
+      nested.a.b.c1.d.text1.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c1.d.text2.__route__.should == [ :nested, :a, :b, :c1, :d ]
+      nested.a.b.c2.__route__.should == [ :nested, :a, :b ]
+      nested.a.b.c2.e.__route__.should == [ :nested, :a, :b, :c2 ]
+      nested.a.b.c2.e.text1.__route__.should == [ :nested, :a, :b, :c2, :e ]
+      nested.a.b.c2.e.text2.__route__.should == [ :nested, :a, :b, :c2, :e ]
     end
     
   end

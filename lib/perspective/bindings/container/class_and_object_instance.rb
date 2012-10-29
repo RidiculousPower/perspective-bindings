@@ -11,10 +11,10 @@ module ::Perspective::Bindings::Container::ClassAndObjectInstance
     
     root_string = nil
     
-    if __root__ == self
-      root_string = @__root_string__ ||= '<root:' << to_s << '>'
-    else
+    if @__bound_container__
       root_string = __root__.__root_string__
+    else
+      root_string = @__root_string__ ||= '<root:' << to_s << '>'
     end
 
     return root_string
@@ -52,11 +52,9 @@ module ::Perspective::Bindings::Container::ClassAndObjectInstance
     if @__parent_binding__
       route_print_string = @__parent_binding__.__route_print_string__
     else
-      if __route_string__
+      unless route_print_string = __route_string__
         @__route_print_string__ ||= ::Perspective::Bindings.context_print_string( __root__, __route_string__ )
         route_print_string = @__route_print_string__
-      else
-        route_print_string = __root_string__
       end
     end
     
