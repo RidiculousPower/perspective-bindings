@@ -75,10 +75,6 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
           
           # What matters in this case is that we need instance bindings.
           
-          if $blah and defined?( ::Perspective::HTML::Form::MockB ) and instance.is_a?( ::Perspective::HTML::Form::MockB )
-            puts 'FUCK: ' + parent_hash.configuration_instance.to_s
-          end
-                              
           case parent_instance = parent_hash.configuration_instance
             
             when ::Perspective::Bindings::Container::ClassInstance
@@ -106,9 +102,12 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
             
             when ::Perspective::Bindings::ClassBinding
 
+              # it's looping b/c we are an instance binding iheriting from a class binding
+              # and when we create a new instance binding, it is also inheriting from a class binding
+              # so we never stop creating new nested bindings b/c each attempt to finish inheritance creates a new one
               # We are inheriting as a nested instance binding
               child_instance = binding_instance.class::NestedInstanceBinding.new( binding_instance, 
-                                                                                  parent_instance )
+                                                                                  instance )
             
             when ::Perspective::Bindings::Container::ObjectInstance
             
@@ -123,7 +122,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
           raise ::RuntimeError, ( 'Unexpected binding container type (' << instance.to_s ) << ')!'
           
       end
-
+            
       return child_instance
 
     end

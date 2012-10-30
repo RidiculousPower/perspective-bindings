@@ -9,6 +9,9 @@ describe ::Perspective::Bindings::Container::MultiContainerProxy do
       class View
         include ::Perspective::Bindings::Container
         attr_text :content
+        def self.non_nested_class
+          return ::Perspective::Bindings::Container::MultiContainerProxy::MockContainer::View
+        end
       end
       include ::Perspective::Bindings::Container
       attr_text :some_text, ::Perspective::Bindings::Container::MultiContainerProxy::MockContainer::View

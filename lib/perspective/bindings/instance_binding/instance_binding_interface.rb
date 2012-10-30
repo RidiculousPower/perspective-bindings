@@ -12,7 +12,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
         
     @__parent_binding__ = parent_class_binding
     @__bound_container__ = bound_container_instance
-        
+    
     @__root__ = @__bound_container__.__root__
     
     # register parent class binding as ancestor for configurations
@@ -35,7 +35,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
   
   def __initialize_container_from_class__( container_class = nil )
 
-    if container_class || container_class = @__parent_binding__.__container_class__
+    if container_class ||= @__parent_binding__.__container_class__
 
       container_instance = container_class::Nested.new( self )
       
@@ -53,9 +53,9 @@ module ::Perspective::Bindings::InstanceBinding::Interface
   #  __configure_container__  #
   #############################
   
-  def __configure_container__
+  def __configure_container__( bound_container = nil )
       
-    bound_container = __bound_container__
+    bound_container ||= __bound_container__
 
     # run configuration proc for each binding instance
 		__configuration_procs__.each do |this_configuration_proc|

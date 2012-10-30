@@ -15,5 +15,15 @@ module ::Perspective::Bindings::Container::Nested::ObjectInstance
     super( *superclass_args )
     
   end
+  
+  ###########
+  #  class  #
+  ###########
+
+  def class
+  
+    return super.non_nested_class
+    
+  end
 
 end
