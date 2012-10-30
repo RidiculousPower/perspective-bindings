@@ -78,15 +78,10 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::Interface
       this_container_instance = nil
 
       if __count__ > this_index
-
         this_container_instance = self[ this_index ]
-
       else
-
-        this_container_instance = __create_new_view_for_autobind__
-
+        this_container_instance = @__container_class__.non_nested_class.new
         __push__( this_container_instance )
-
       end
 
       this_container_instance.__autobind__( this_object )
@@ -98,20 +93,6 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::Interface
   end
 
   alias_method :autobind, :__autobind__
-
-  ######################################
-  #  __create_new_view_for_autobind__  #
-  ######################################
-
-  def __create_new_view_for_autobind__
-
-    new_container_instance = @__container_class__.new
-    parent_class_binding = @__parent_binding__.__parent_binding__
-    new_container_instance.__initialize_for_parent_binding__( parent_class_binding )
-
-    return new_container_instance
-
-  end
 
   #########################
   #  __container_class__  #

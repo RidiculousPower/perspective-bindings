@@ -75,6 +75,10 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
           
           # What matters in this case is that we need instance bindings.
           
+          if $blah and defined?( ::Perspective::HTML::Form::MockB ) and instance.is_a?( ::Perspective::HTML::Form::MockB )
+            puts 'FUCK: ' + parent_hash.configuration_instance.to_s
+          end
+                              
           case parent_instance = parent_hash.configuration_instance
             
             when ::Perspective::Bindings::Container::ClassInstance
@@ -104,7 +108,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
 
               # We are inheriting as a nested instance binding
               child_instance = binding_instance.class::NestedInstanceBinding.new( binding_instance, 
-                                                                                  instance.__container__ )
+                                                                                  parent_instance )
             
             when ::Perspective::Bindings::Container::ObjectInstance
             

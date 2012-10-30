@@ -30,6 +30,18 @@ describe ::Perspective::Bindings::InstanceBinding do
     end
 
     class ::Perspective::Bindings::InstanceBinding::ContainerMock
+    
+      class Nested < self
+      
+        def self.non_nested_class
+          return ::Perspective::Bindings::InstanceBinding::ContainerMock
+        end
+      
+        def initialize( parent, *args )
+          super( *args )
+        end
+        
+      end
 
       instances_identify_as!( ::Perspective::Bindings::Container::ObjectInstance )
       identifies_as!( ::Perspective::Bindings::Container::ObjectInstance )
@@ -61,8 +73,6 @@ describe ::Perspective::Bindings::InstanceBinding do
         called_autobind = @__called_autobind__
         @__called_autobind__ = true
         return called_autobind
-      end
-      def __initialize_for_parent_binding__( parent )
       end
 
       module Controller
@@ -102,7 +112,7 @@ describe ::Perspective::Bindings::InstanceBinding do
     instance = ::Perspective::Bindings::InstanceBinding.new( class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new )
     instance.__parent_binding__.should == class_instance
     instance.__name__.should == class_instance.__name__
-    instance.__container__.class.should == class_instance.__container_class__
+    instance.__container__.class.should == class_instance.__container_class__::Nested
     instance.__route__.should == class_instance.__route__
     instance.__route_string__.should == class_instance.__route_string__
   end

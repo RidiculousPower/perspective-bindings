@@ -47,6 +47,8 @@ files = [
   'container/multi_container_proxy',
   'container/binding_methods',
   'container/class_and_object_instance',
+  'container/nested/class_instance',
+  'container/nested/object_instance',
   'container/class_instance',
   'container/object_instance',
   'container',

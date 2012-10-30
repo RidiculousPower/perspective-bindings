@@ -7,6 +7,8 @@ module ::Perspective::Bindings
   class InstanceBinding
   end
   module Container
+    module Nested
+    end
 		module ClassInstance
       module Methods
       end

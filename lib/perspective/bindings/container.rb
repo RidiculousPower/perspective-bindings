@@ -24,6 +24,7 @@ module ::Perspective::Bindings::Container
                               InstanceController.create_instance_controller( class_or_module_instance )
     end
     
+    # Module for class methods
     instance_controller.create_support( :class_binding_methods, 
                                         :default,
                                         self::BindingMethods,
@@ -32,6 +33,7 @@ module ::Perspective::Bindings::Container
                                         false,
                                         true )
     
+    # Module for instance methods
     instance_controller.create_support( :instance_binding_methods, 
                                         :default,
                                         self::BindingMethods,
@@ -39,7 +41,37 @@ module ::Perspective::Bindings::Container
                                         false,
                                         true,
                                         false )
+    
+    # And if we're including in a class instance, we need a Nested subclass.
+    #
+    # This class will live at including_class::Nested, and as parameters takes: 
+    #
+    #   #new( parent_instance_binding, *args )
+    # 
+    # where parent is the InstanceBinding instance from which configurations are to inherit,
+    # and *args will be passed to including_class#new via super( *args ). 
+    #
+    unless class_or_module_instance.const_defined?( :Nested ) or
+          ! class_or_module_instance.is_a?( ::Class ) or
+          class_or_module_instance.is_a?( ::Perspective::Bindings::Container::Nested::ClassInstance )
         
+      # we need to disable this cluster so that we don't loop
+      perspective_cluster = class_or_module_instance.cluster( :perspective )
+      perspective_cluster.disable
+      nested_class_instance = ::Class.new( class_or_module_instance )
+      perspective_cluster.enable
+
+      class_or_module_instance.const_set( :Nested, nested_class_instance )
+      
+      nested_class_instance.extend( ::Perspective::Bindings::Container::Nested::ClassInstance )
+      nested_class_instance.class_eval do
+        include( ::Perspective::Bindings::Container::Nested::ObjectInstance )
+      end
+
+      nested_class_instance.non_nested_class = class_or_module_instance
+
+    end
+    
   end
   
 end

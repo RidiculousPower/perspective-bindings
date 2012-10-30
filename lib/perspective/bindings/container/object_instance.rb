@@ -83,17 +83,6 @@ module ::Perspective::Bindings::Container::ObjectInstance
   end
 
   alias_method  :route_with_name, :__route_with_name__
-  
-  #######################################
-  #  __initialize_for_parent_binding__  #
-  #######################################
-  
-  def __initialize_for_parent_binding__( parent_binding )
-
-    @__parent_binding__ = parent_binding
-    @__bound_container__ = parent_binding
-    
-  end
 
   ##################
   #  autobind      #

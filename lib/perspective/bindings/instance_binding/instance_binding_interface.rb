@@ -37,14 +37,12 @@ module ::Perspective::Bindings::InstanceBinding::Interface
 
     if container_class || container_class = @__parent_binding__.__container_class__
 
-      container_instance = container_class.new
+      container_instance = container_class::Nested.new( self )
       
-      container_instance.__initialize_for_parent_binding__( self )
-
+      # :__store_initialized_container_instance__ is used instead of 
+      # __container__= so that we can store without any overloaded effects.
       __store_initialized_container_instance__( container_instance )
 
-      ::CascadingConfiguration.register_parent( container_instance, self )
-      
     end
     
     return container_instance
@@ -70,16 +68,6 @@ module ::Perspective::Bindings::InstanceBinding::Interface
 	  
 	  return self
     
-  end
-
-  ########################################
-  #  __initialize_for_bound_container__  #
-  ########################################
-  
-  def __initialize_for_bound_container__( bound_container )
-    
-    @__bound_container__ = bound_container
-        
   end
   
   ###################
@@ -122,8 +110,6 @@ module ::Perspective::Bindings::InstanceBinding::Interface
   def __container__=( container_instance )
     
     super
-
-    container_instance.__initialize_for_parent_binding__( self )
 
     instance_binding_methods_class = nil
     case container_instance

@@ -55,7 +55,7 @@ describe ::Perspective::Bindings::Container::MultiContainerProxy do
   it 'can autobind' do
     container = ::Perspective::Bindings::Container::MultiContainerProxy::MockContainer.new
     instance = ::Perspective::Bindings::Container::MultiContainerProxy.new( container.__binding__( :some_text ) )
-    instance.__autobind__( :one, :two, :three, :four )
+    instance.__autobind__( :one , :two , :three, :four )
     instance[ 0 ].content.value.should == :one
     instance[ 1 ].content.value.should == :two
     instance[ 2 ].content.value.should == :three
