@@ -122,7 +122,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
           raise ::RuntimeError, ( 'Unexpected binding container type (' << instance.to_s ) << ')!'
           
       end
-            
+      
       return child_instance
 
     end
@@ -164,7 +164,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
         when ::Perspective::Bindings::Container::ObjectInstance,
              ::Perspective::Bindings::InstanceBinding
           
-          binding_route = instance.__nested_route__( binding_instance )
+          binding_route = binding_instance.__nested_route__( instance )
 
         when ::Perspective::Bindings::ClassBinding::NestedClassBinding
 

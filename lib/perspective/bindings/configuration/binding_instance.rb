@@ -33,7 +33,7 @@ module ::Perspective::Bindings::Configuration::BindingInstance
   
   attr_instance_configuration  :__name__
 
-  Controller.alias_instance_method( :name, :__name__ ).to_s
+  Controller.alias_instance_method( :name, :__name__ )
 
   ###############
   #  route      #
