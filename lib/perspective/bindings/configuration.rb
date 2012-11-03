@@ -39,12 +39,12 @@ module ::Perspective::Bindings::Configuration
   alias_method  :binding, :__binding__
 
   ##################
-  #  has_binding?  #
+  #  __has_binding__?  #
   ##################
 
-  # has_binding? :name, ...
+  # __has_binding__? :name, ...
   # 
-	def has_binding?( binding_name )
+	def __has_binding__?( binding_name )
 		
 		has_binding = false
 		

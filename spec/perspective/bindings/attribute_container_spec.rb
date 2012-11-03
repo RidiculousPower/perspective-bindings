@@ -177,23 +177,23 @@ describe ::Perspective::Bindings::AttributeContainer do
       new_bindings = attr_also_alot_like_text :some_binding, ::Perspective::Bindings::AttributeContainer::NestedContainerMock
       new_binding = new_bindings[ 0 ]
       new_binding.is_a?( instance::AlsoAlotLikeText ).should == true
-      new_binding.required?.should == false
+      new_binding.__required__?.should == false
 
       new_bindings = attr_also_alot_like_texts :some_bindings, ::Perspective::Bindings::AttributeContainer::NestedContainerMock
       new_binding = new_bindings[ 0 ]
-      new_binding.permits_multiple?.should == true
-      new_binding.required?.should == false
+      new_binding.__permits_multiple__?.should == true
+      new_binding.__required__?.should == false
 
       new_bindings = attr_required_also_alot_like_text :some_required_binding, ::Perspective::Bindings::AttributeContainer::NestedContainerMock
       new_binding = new_bindings[ 0 ]
 
       new_binding.is_a?( instance::AlsoAlotLikeText ).should == true
-      new_binding.required?.should == true
+      new_binding.__required__?.should == true
 
       new_bindings = attr_required_also_alot_like_texts :some_required_bindings, ::Perspective::Bindings::AttributeContainer::NestedContainerMock
       new_binding = new_bindings[ 0 ]
-      new_binding.permits_multiple?.should == true
-      new_binding.required?.should == true
+      new_binding.__permits_multiple__?.should == true
+      new_binding.__required__?.should == true
 
     end
 

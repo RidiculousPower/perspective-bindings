@@ -3,22 +3,26 @@ module ::Perspective::Bindings::Attributes::Text
 
   extend ::Perspective::Bindings::AttributeDefinitionModule
 
-  ##########################
-  #  binding_value_valid?  #
-  ##########################
+  ##############################
+  #  __binding_value_valid__?  #
+  ##############################
 
-  def binding_value_valid?( binding_value )
+  def __binding_value_valid__?( binding_value )
     
     binding_value_valid = false
-    
-    if binding_value.is_a?( ::String ) or binding_value.is_a?( ::Symbol )
+
+    case binding_value
       
-      binding_value_valid = true
+      when ::String, ::Symbol
+
+        binding_value_valid = true
       
-    elsif defined?( super )
-      
-      binding_value_valid = super
-      
+      else
+
+        if defined?( super )
+          binding_value_valid = super
+        end
+
     end
     
     return binding_value_valid

@@ -34,14 +34,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
 
       binding_instance = __binding__( :some_regexp )
 
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
       respond_to?( :some_regexp ).should == true
       method_defined?( :some_regexp ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
       binding_instance.__container_class__.should == ::Perspective::Bindings::Container::ClassInstance::Mock::Container
 
-      has_binding?( :some_regexp ).should == true
+      __has_binding__?( :some_regexp ).should == true
 
     end
 
@@ -62,9 +62,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
 
       attr_regexps :some_regexps
 
-      has_binding?( :some_regexps ).should == true
+      __has_binding__?( :some_regexps ).should == true
       binding_instance = __binding__( :some_regexps )
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
 
     end
 
@@ -87,9 +87,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
 
       attr_required_regexp :some_required_regexp
 
-      has_binding?( :some_required_regexp ).should == true
+      __has_binding__?( :some_required_regexp ).should == true
       binding_instance = __binding__( :some_required_regexp )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
 
@@ -110,9 +110,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
 
       attr_required_regexps :some_required_regexps
 
-      has_binding?( :some_required_regexps ).should == true
+      __has_binding__?( :some_required_regexps ).should == true
       binding_instance = __binding__( :some_required_regexps )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
 

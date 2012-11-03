@@ -129,16 +129,12 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
     
   end
 
-  Controller.alias_module_and_instance_methods( :bindings, :__bindings__ )
-
   #########################
   #  binding_aliases      #
   #  __binding_aliases__  #
   #########################
 
 	attr_hash  :__binding_aliases__
-	
-  Controller.alias_module_method( :binding_aliases, :__binding_aliases__ )
 
   ###################################
   #  local_aliases_to_bindings      #
@@ -193,8 +189,6 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
     end
   
   end
-
-  Controller.alias_module_and_instance_methods( :local_aliases_to_bindings, :__local_aliases_to_bindings__ )
 
   #############################
   #  configuration_procs      #

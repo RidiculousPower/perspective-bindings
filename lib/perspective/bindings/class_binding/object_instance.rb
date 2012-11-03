@@ -37,10 +37,10 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
   end
 
   #############################
-  #  binding_name_validates?  #
+  #  __binding_name_validates__?  #
   #############################
 
-  def binding_name_validates?( binding_name )
+  def __binding_name_validates__?( binding_name )
   
     if ::Perspective::Bindings::ProhibitedNames.has_key?( binding_name.to_sym )
       raise ::ArgumentError, 'Cannot declare :' + binding_name.to_s + ' as a binding - ' +
@@ -77,7 +77,7 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
     
     ::CascadingConfiguration.register_parent( self, self.class )
 
-    binding_name_validates?( binding_name )
+    __binding_name_validates__?( binding_name )
     
     __initialize_for_container_class__( container_class )
     

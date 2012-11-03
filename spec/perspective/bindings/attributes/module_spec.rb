@@ -4,7 +4,7 @@ require_relative '../../../../lib/perspective/bindings.rb'
 describe ::Perspective::Bindings::Attributes::Module do
 
   ##########################
-  #  binding_value_valid?  #
+  #  __binding_value_valid__?  #
   ##########################
   
   it 'can ensure class instances are valid binding objects' do
@@ -13,33 +13,33 @@ describe ::Perspective::Bindings::Attributes::Module do
     end
     ::Perspective::Bindings::Attributes::Module::Mock.new.instance_eval do
       # class
-      binding_value_valid?( Object ).should == false
+      __binding_value_valid__?( Object ).should == false
       # module
-      binding_value_valid?( Kernel ).should == true
+      __binding_value_valid__?( Kernel ).should == true
       # file
-      binding_value_valid?( File.new( __FILE__ ) ).should == false
+      __binding_value_valid__?( File.new( __FILE__ ) ).should == false
       # integer
-      binding_value_valid?( 42 ).should == false
+      __binding_value_valid__?( 42 ).should == false
       # float
-      binding_value_valid?( 42.0 ).should == false
+      __binding_value_valid__?( 42.0 ).should == false
       # complex
-      binding_value_valid?( Complex( 1, 2 ) ).should == false
+      __binding_value_valid__?( Complex( 1, 2 ) ).should == false
       # rational
-      binding_value_valid?( Rational( 1, 2 ) ).should == false
+      __binding_value_valid__?( Rational( 1, 2 ) ).should == false
       # [ number ] - integer, float, complex, rational
       # regexp
-      binding_value_valid?( /some_regexp/ ).should == false
+      __binding_value_valid__?( /some_regexp/ ).should == false
       # text
-      binding_value_valid?( 'string' ).should == false
-      binding_value_valid?( :symbol ).should == false
+      __binding_value_valid__?( 'string' ).should == false
+      __binding_value_valid__?( :symbol ).should == false
       # true_false
-      binding_value_valid?( true ).should == false
-      binding_value_valid?( false ).should == false
+      __binding_value_valid__?( true ).should == false
+      __binding_value_valid__?( false ).should == false
       # uri
-      binding_value_valid?( 'http://some.uri' ).should == false
-      binding_value_valid?( URI.parse( 'http://some.uri' ) ).should == false
+      __binding_value_valid__?( 'http://some.uri' ).should == false
+      __binding_value_valid__?( URI.parse( 'http://some.uri' ) ).should == false
       # multiple
-      binding_value_valid?( [ Object ] ).should == false
+      __binding_value_valid__?( [ Object ] ).should == false
     end
   end
   

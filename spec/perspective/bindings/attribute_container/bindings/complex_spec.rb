@@ -34,14 +34,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Complex do
       
       binding_instance = __binding__( :some_complex )
       
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
       respond_to?( :some_complex ).should == true
       method_defined?( :some_complex ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
       binding_instance.__container_class__.should == ::Perspective::Bindings::Container::ClassInstance::Mock::Container
             
-      has_binding?( :some_complex ).should == true
+      __has_binding__?( :some_complex ).should == true
 
     end
     
@@ -62,9 +62,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Complex do
       
       attr_complexes :some_complexes
       
-      has_binding?( :some_complexes ).should == true
+      __has_binding__?( :some_complexes ).should == true
       binding_instance = __binding__( :some_complexes )
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
 
     end
     
@@ -87,9 +87,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Complex do
       
       attr_required_complex :some_required_complex
       
-      has_binding?( :some_required_complex ).should == true
+      __has_binding__?( :some_required_complex ).should == true
       binding_instance = __binding__( :some_required_complex )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
     
@@ -110,9 +110,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Complex do
       
       attr_required_complexes :some_required_complexes
       
-      has_binding?( :some_required_complexes ).should == true
+      __has_binding__?( :some_required_complexes ).should == true
       binding_instance = __binding__( :some_required_complexes )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
     

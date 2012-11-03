@@ -28,7 +28,7 @@ describe ::Perspective::Bindings::Container::MultiContainerProxy do
   it 'can be created to contain multiple containers and relay instructions to them' do
     container = ::Perspective::Bindings::Container::MultiContainerProxy::MockContainer.new
     instance = ::Perspective::Bindings::Container::MultiContainerProxy.new( container.__binding__( :some_text ) )
-    instance.__parent_binding__.should == container.__binding__( :some_text )
+    instance.__parent_binding__.__id__.should == container.__binding__( :some_text ).__id__
     instance.__storage_array__.is_a?( ::Array ).should == true
     instance.__storage_array__.should == [ container.__binding__( :some_text ).__container__ ]
     instance.__container_class__.should == container.__binding__( :some_text ).__container__.class

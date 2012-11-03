@@ -67,7 +67,7 @@ describe ::Perspective::Bindings::ClassBinding::NestedClassBinding do
   ###########################################
   #  initialize                             #
   #  __initialize_defaults__                #
-  #  binding_name_validates?                #
+  #  __binding_name_validates__?                #
   #  __validate_container_class__           #
   #  __initialize_route__                   #
   #  name                                   #
@@ -180,8 +180,8 @@ describe ::Perspective::Bindings::ClassBinding::NestedClassBinding do
   end
 
   ###################
-  #  required?      #
-  #  optional?      #
+  #  __required__?      #
+  #  __optional__?      #
   #  required=      #
   #  __required__=  #
   ###################
@@ -191,11 +191,11 @@ describe ::Perspective::Bindings::ClassBinding::NestedClassBinding do
     nesting_instance = ::Perspective::Bindings::ClassBinding.new( ::Perspective::Bindings::ClassBinding::ContainerMock, :nesting_binding_name )
 
     instance = ::Perspective::Bindings::ClassBinding::NestedClassBindingMock.new( nesting_instance, :binding_name )
-    instance.required?.should == false
-    instance.optional?.should == true
+    instance.__required__?.should == false
+    instance.__optional__?.should == true
     instance.__required__ = true
-    instance.required?.should == true
-    instance.optional?.should == false
+    instance.__required__?.should == true
+    instance.__optional__?.should == false
   end
 
   #############################
@@ -229,7 +229,7 @@ describe ::Perspective::Bindings::ClassBinding::NestedClassBinding do
   #  __bindings__  #
   #  binding       #
   #  __binding__   #
-  #  has_binding?  #
+  #  __has_binding__?  #
   ##################
 
   it 'can return sub-bindings that define containers nested inside this binding container class' do
@@ -239,7 +239,7 @@ describe ::Perspective::Bindings::ClassBinding::NestedClassBinding do
     instance.__bindings__.is_a?( ::Hash ).should == true
     instance.__bindings__[ :some_binding ] = some_binding_instance
     instance.__binding__( :some_binding ).should == some_binding_instance
-    instance.has_binding?( :some_binding ).should == true
+    instance.__has_binding__?( :some_binding ).should == true
   end
 
 end

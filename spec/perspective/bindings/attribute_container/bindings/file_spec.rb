@@ -34,14 +34,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::File do
       
       binding_instance = __binding__( :some_file )
       
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
       respond_to?( :some_file ).should == true
       method_defined?( :some_file ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
       binding_instance.__container_class__.should == ::Perspective::Bindings::Container::ClassInstance::Mock::Container
             
-      has_binding?( :some_file ).should == true
+      __has_binding__?( :some_file ).should == true
 
     end
     
@@ -62,9 +62,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::File do
       
       attr_files :some_files
       
-      has_binding?( :some_files ).should == true
+      __has_binding__?( :some_files ).should == true
       binding_instance = __binding__( :some_files )
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
 
     end
     
@@ -87,9 +87,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::File do
       
       attr_required_file :some_required_file
       
-      has_binding?( :some_required_file ).should == true
+      __has_binding__?( :some_required_file ).should == true
       binding_instance = __binding__( :some_required_file )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
     
@@ -110,9 +110,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::File do
       
       attr_required_files :some_required_files
       
-      has_binding?( :some_required_files ).should == true
+      __has_binding__?( :some_required_files ).should == true
       binding_instance = __binding__( :some_required_files )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
     

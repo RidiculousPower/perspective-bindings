@@ -34,14 +34,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Rational do
       
       binding_instance = __binding__( :some_rational )
       
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
       respond_to?( :some_rational ).should == true
       method_defined?( :some_rational ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
       binding_instance.__container_class__.should == ::Perspective::Bindings::Container::ClassInstance::Mock::Container
             
-      has_binding?( :some_rational ).should == true
+      __has_binding__?( :some_rational ).should == true
 
     end
     
@@ -62,9 +62,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Rational do
       
       attr_rationals :some_rationals
       
-      has_binding?( :some_rationals ).should == true
+      __has_binding__?( :some_rationals ).should == true
       binding_instance = __binding__( :some_rationals )
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
 
     end
     
@@ -87,9 +87,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Rational do
       
       attr_required_rational :some_required_rational
       
-      has_binding?( :some_required_rational ).should == true
+      __has_binding__?( :some_required_rational ).should == true
       binding_instance = __binding__( :some_required_rational )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
     
@@ -110,9 +110,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Rational do
       
       attr_required_rationals :some_required_rationals
       
-      has_binding?( :some_required_rationals ).should == true
+      __has_binding__?( :some_required_rationals ).should == true
       binding_instance = __binding__( :some_required_rationals )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
     

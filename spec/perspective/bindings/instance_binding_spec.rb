@@ -90,24 +90,14 @@ describe ::Perspective::Bindings::InstanceBinding do
   
   ########################
   #  initialize          #
-  #  parent_binding      #
   #  __parent_binding__  #
-  #  name                #
   #  __name__            #
-  #  container           #
   #  __container__       #
-  #  route               #
   #  __route__           #
-  #  route_string        #
   #  __route_string__    #
   ########################
 
   it 'can initialize as a child of a class binding' do
-    ::Perspective::Bindings::InstanceBinding.instance_method( :parent_binding ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__parent_binding__ )
-    ::Perspective::Bindings::InstanceBinding.instance_method( :name ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__name__ )
-    ::Perspective::Bindings::InstanceBinding.instance_method( :container ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__container__ )
-    ::Perspective::Bindings::InstanceBinding.instance_method( :route ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__route__ )
-    ::Perspective::Bindings::InstanceBinding.instance_method( :route_string ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__route_string__ )
     class_instance = ::Perspective::Bindings::ClassBinding.new( ::Perspective::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Perspective::Bindings::InstanceBinding::ContainerMock )
     instance = ::Perspective::Bindings::InstanceBinding.new( class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new )
     instance.__parent_binding__.should == class_instance
@@ -117,47 +107,40 @@ describe ::Perspective::Bindings::InstanceBinding do
     instance.__route_string__.should == class_instance.__route_string__
   end
 
-  #########################
-  #  required?            #
-  #  optional?            #
-  #  required=            #
-  #  __required__=        #
-  #########################
+  ###################
+  #  __required__?  #
+  #  __optional__?  #
+  #  __required__=  #
+  ###################
 
   it 'can be optional or required and report valid for rendering (which is presently required only but could be other checks later)' do
-    
-    ::Perspective::Bindings::InstanceBinding.instance_method( :required= ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__required__= )
     
     class_instance = ::Perspective::Bindings::ClassBinding.new( ::Perspective::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Perspective::Bindings::InstanceBinding::ContainerMock )
     instance = ::Perspective::Bindings::InstanceBinding.new( class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new )
 
-    instance.required?.should == false
-    instance.optional?.should == true
+    instance.__required__?.should == false
+    instance.__optional__?.should == true
     instance.__required__ = true
-    instance.required?.should == true
-    instance.optional?.should == false
+    instance.__required__?.should == true
+    instance.__optional__?.should == false
     
     class_instance.__required__ = true
     instance = ::Perspective::Bindings::InstanceBinding.new( class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new )
-    instance.required?.should == true
-    instance.optional?.should == false
+    instance.__required__?.should == true
+    instance.__optional__?.should == false
     instance.__required__ = false
-    instance.required?.should == false
-    instance.optional?.should == true
+    instance.__required__?.should == false
+    instance.__optional__?.should == true
 
   end
 
-  ##################
-  #  bindings      #
-  #  __bindings__  #
-  #  binding       #
-  #  __binding__   #
-  #  has_binding?  #
-  ##################
+  ######################
+  #  __bindings__      #
+  #  __binding__       #
+  #  __has_binding__?  #
+  ######################
 
   it 'can return sub-bindings that define containers nested inside this binding container class' do
-    ::Perspective::Bindings::InstanceBinding.instance_method( :bindings ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__bindings__ )
-    ::Perspective::Bindings::InstanceBinding.instance_method( :binding ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__binding__ )
     
     class_instance = ::Perspective::Bindings::AttributeContainer::Bindings::Text.new( ::Perspective::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Perspective::Bindings::InstanceBinding::ContainerMock )
     instance = ::Perspective::Bindings::AttributeContainer::Bindings::Text::InstanceBinding.new( class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new )
@@ -168,31 +151,26 @@ describe ::Perspective::Bindings::InstanceBinding do
     class_instance.__bindings__[ :some_binding ] = some_binding_instance
     
     instance.__bindings__.is_a?( ::Hash ).should == true
-    instance.__bindings__[ :some_binding ].is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-    instance.__binding__( :some_binding ).parent_binding.should == some_binding_instance
-    instance.has_binding?( :some_binding ).should == true
+    instance.__bindings__[ :some_binding ].__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
+    instance.__binding__( :some_binding ).__parent_binding__.should == some_binding_instance
+    instance.__has_binding__?( :some_binding ).should == true
   end
 
-  ##########################
-  #  value                 #
-  #  __value__             #
-  #  value=                #
-  #  __value__=            #
-  #  binding_value_valid?  #
-  ##########################
+  ##############################
+  #  __value__                 #
+  #  __value__=                #
+  #  __binding_value_valid__?  #
+  ##############################
 
   it 'can report whether a binding value is valid for assignment to this binding and accept and return a value, performing this check and raising an exception if it fails and finally translate this value to a string for final output' do
-
-    ::Perspective::Bindings::InstanceBinding.instance_method( :value ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__value__ )
-    ::Perspective::Bindings::InstanceBinding.instance_method( :value= ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :__value__= )
 
     class_instance = ::Perspective::Bindings::ClassBinding.new( ::Perspective::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Perspective::Bindings::InstanceBinding::ContainerMock )
     instance = ::Perspective::Bindings::InstanceBinding.new( class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new )
     instance.__value__.should == nil
-    instance.binding_value_valid?( :some_value ).should == false
+    instance.__binding_value_valid__?( :some_value ).should == false
     Proc.new { instance.__value__ = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.extend( ::Perspective::Bindings::Attributes::Text )
-    instance.binding_value_valid?( :some_value ).should == true
+    instance.__extend__( ::Perspective::Bindings::Attributes::Text )
+    instance.__binding_value_valid__?( :some_value ).should == true
     instance.__value__ = :some_value
     instance.__value__.should == :some_value
     instance.__container__.content.should == instance.__value__
@@ -201,7 +179,7 @@ describe ::Perspective::Bindings::InstanceBinding do
     Proc.new { instance.__value__ = 42 }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
 
     instance.__permits_multiple__ = true
-    instance.extend( ::Perspective::Bindings::Attributes::Text )
+    instance.__extend__( ::Perspective::Bindings::Attributes::Text )
 
     instance.__value__ = [ :one, :two, :three, :four ]
     instance.__value__.should == [ :one, :two, :three, :four ]
@@ -218,53 +196,53 @@ describe ::Perspective::Bindings::InstanceBinding do
     
     second_class_instance = ::Perspective::Bindings::ClassBinding.new( ::Perspective::Bindings::InstanceBinding::BoundContainerMock, :other_binding_name, ::Perspective::Bindings::InstanceBinding::ContainerMock )
     second_instance = ::Perspective::Bindings::InstanceBinding.new( second_class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new )
-    second_instance.extend( ::Perspective::Bindings::Attributes::Text )
+    second_instance.__extend__( ::Perspective::Bindings::Attributes::Text )
     second_instance.__value__ = :some_value
     instance.__value__ = second_instance
     instance.__value__.should == :some_value
     
   end
 
-  ##########################
-  #  binding_value_valid?  #
-  ##########################
+  ##############################
+  #  __binding_value_valid__?  #
+  ##############################
   
   it 'can ensure class instances are valid binding objects' do
     class_instance = ::Perspective::Bindings::ClassBinding.new( ::Perspective::Bindings::InstanceBinding::BoundContainerMock, :binding_name, ::Perspective::Bindings::InstanceBinding::ContainerMock )
     class_instance.__permits_multiple__ = true
-    ::Perspective::Bindings::InstanceBinding.new( class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new ).instance_eval do
-      extend ::Perspective::Bindings::Attributes::Class
-      extend ::Perspective::Bindings::Attributes::Integer
-      extend ::Perspective::Bindings::Attributes::Float
+    ::Perspective::Bindings::InstanceBinding.new( class_instance, ::Perspective::Bindings::InstanceBinding::BoundContainerMock.new ).__instance_eval__ do
+      __extend__ ::Perspective::Bindings::Attributes::Class
+      __extend__ ::Perspective::Bindings::Attributes::Integer
+      __extend__ ::Perspective::Bindings::Attributes::Float
       # class
-      binding_value_valid?( Object ).should == true
+      __binding_value_valid__?( Object ).should == true
       # module
-      binding_value_valid?( Kernel ).should == false
+      __binding_value_valid__?( Kernel ).should == false
       # file
-      binding_value_valid?( File.new( __FILE__ ) ).should == false
+      __binding_value_valid__?( File.new( __FILE__ ) ).should == false
       # integer
-      binding_value_valid?( 42 ).should == true
+      __binding_value_valid__?( 42 ).should == true
       # float
-      binding_value_valid?( 42.0 ).should == true
+      __binding_value_valid__?( 42.0 ).should == true
       # complex
-      binding_value_valid?( Complex( 1, 2 ) ).should == false
+      __binding_value_valid__?( Complex( 1, 2 ) ).should == false
       # rational
-      binding_value_valid?( Rational( 1, 2 ) ).should == false
+      __binding_value_valid__?( Rational( 1, 2 ) ).should == false
       # [ number ] - integer, float, complex, rational
       # regexp
-      binding_value_valid?( /some_regexp/ ).should == false
+      __binding_value_valid__?( /some_regexp/ ).should == false
       # text
-      binding_value_valid?( 'string' ).should == false
-      binding_value_valid?( :symbol ).should == false
+      __binding_value_valid__?( 'string' ).should == false
+      __binding_value_valid__?( :symbol ).should == false
       # true_false
-      binding_value_valid?( true ).should == false
-      binding_value_valid?( false ).should == false
+      __binding_value_valid__?( true ).should == false
+      __binding_value_valid__?( false ).should == false
       # uri
-      binding_value_valid?( 'http://some.uri' ).should == false
-      binding_value_valid?( URI.parse( 'http://some.uri' ) ).should == false
+      __binding_value_valid__?( 'http://some.uri' ).should == false
+      __binding_value_valid__?( URI.parse( 'http://some.uri' ) ).should == false
       # multiple
-      self.permits_multiple?.should == true
-      binding_value_valid?( [ Object, 12, 42.0 ] ).should == true
+      __permits_multiple__?.should == true
+      __binding_value_valid__?( [ Object, 12, 42.0 ] ).should == true
     end
   end
 

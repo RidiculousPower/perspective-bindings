@@ -1,8 +1,86 @@
 
-module ::Perspective::Bindings::InstanceBinding::Interface
+module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
 
   include ::CascadingConfiguration::Setting
-  include ::CascadingConfiguration::Hash
+  include ::CascadingConfiguration::Hash  
+
+  extend ::Module::Cluster
+  
+  cluster( :instance_binding_forwarding ).before_include.cascade_to( :class ) do |hooked_instance|
+    
+    hooked_instance.class_eval do
+
+      # These have to be manually renamed or we have to call :send to use them.
+      # For instance :__==__ is a legitimate method name, but not legitimate Ruby syntax,
+      # so it can only be called via object.send( :"__==__", *args ).
+
+      alias_method( :__equals__, :== )
+      undef_method( :== )
+
+      alias_method( :__compare__, :"<=>" )
+      undef_method( :"<=>" )
+
+      alias_method( :__not__, :"!" )
+      undef_method( :"!" )
+
+      alias_method( :__not_equal__, :"!=" )
+      undef_method( :"!=" )
+
+      alias_method( :__regexp__, :"=~" )
+      undef_method( :"=~" )
+
+      alias_method( :__case_equals__, :=== )
+      undef_method( :=== )
+
+      alias_method( :__regexp_equals__, :"!~" )
+      undef_method( :"!~" )
+
+      alias_method( :__object_id__, :object_id )
+      
+      
+      # Rename all methods to __method__.
+      # Special characters (?!) get moved to the end: __method__?!.
+      instance_methods.each do |this_method|
+        
+        next if this_method == :object_id
+        
+        this_method = this_method.to_s
+        
+        ends_with_special_char = false
+        
+        case this_method[ 0 ]
+          when '_'
+            next
+        end
+        
+        case this_method[ -1 ]
+          when '?', '!', '='
+            ends_with_special_char = this_method[ -1 ]
+            this_method = this_method.slice( 0, this_method.length - 1 )
+        end
+        
+        if this_method.empty?
+          alias_name = '__'
+        else
+          alias_name = '__' + this_method.to_s + '__'
+        end
+        
+        if ends_with_special_char
+          alias_name += ends_with_special_char
+          this_method += ends_with_special_char
+        end
+        
+        # Create new method name
+        alias_method( alias_name, this_method )
+        
+        # Remove old method name
+        undef_method( this_method )
+        
+      end
+
+    end
+    
+  end
 
   ################
   #  initialize  #
@@ -21,7 +99,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
     self.__route_print_string__ = ::Perspective::Bindings.context_print_string( @__root__, __route_string__ )
     
     if container_class = @__parent_binding__.__container_class__    
-      extend( container_class::Controller::InstanceBindingMethods )
+      __extend__( container_class::Controller::InstanceBindingMethods )
     end
         
     # cause nested bindings to populate
@@ -33,19 +111,29 @@ module ::Perspective::Bindings::InstanceBinding::Interface
   #  __initialize_container_from_class__  #
   #########################################
   
-  def __initialize_container_from_class__( container_class = nil )
+  def __initialize_container_from_class__( container_class = @__parent_binding__.__container_class__ )
 
-    if container_class ||= @__parent_binding__.__container_class__
-
-      container_instance = container_class::Nested.new( self )
-      
-      # :__store_initialized_container_instance__ is used instead of 
-      # __container__= so that we can store without any overloaded effects.
-      __store_initialized_container_instance__( container_instance )
-
-    end
+    container_instance = container_class::Nested.new( self )
+    
+    # :__store_initialized_container_instance__ is used instead of :__container__= 
+    # so that we can store without any overloaded effects.
+    __store_initialized_container_instance__( container_instance )
     
     return container_instance
+    
+  end
+  
+  ####################
+  #  method_missing  #
+  ####################
+  
+  def method_missing( method, *args, & block )
+
+    begin
+      return __value__.__send__( method, *args, & block )
+    rescue ::Exception => exception
+      exception.reraise( 2 )
+    end
     
   end
   
@@ -53,10 +141,8 @@ module ::Perspective::Bindings::InstanceBinding::Interface
   #  __configure_container__  #
   #############################
   
-  def __configure_container__( bound_container = nil )
+  def __configure_container__( bound_container = __bound_container__ )
       
-    bound_container ||= __bound_container__
-
     # run configuration proc for each binding instance
 		__configuration_procs__.each do |this_configuration_proc|
       bound_container.instance_exec( self, & this_configuration_proc )
@@ -121,7 +207,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
         instance_binding_methods_class = container_instance.class
     end
     
-    extend( instance_binding_methods_class::Controller::InstanceBindingMethods )
+    __extend__( instance_binding_methods_class::Controller::InstanceBindingMethods )
     
     # Normal inheritance when container class is defined on class binding is
     # Class Instance => Class Binding => Instance Binding => Container Instance.
@@ -157,7 +243,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
       
       else
 
-        unless binding_value_valid?( object )
+        unless __binding_value_valid__?( object )
           raise ::Perspective::Bindings::Exception::BindingInstanceInvalidType, 
                   'Invalid value ' <<  object.inspect + ' assigned to binding :' << 
                   __name__.to_s + '.'
@@ -176,7 +262,6 @@ module ::Perspective::Bindings::InstanceBinding::Interface
   alias_method  :value=, :__value__=
 
 	########################
-	#  autobind_value      #
 	#  __autobind_value__  #
 	########################
 	
@@ -186,10 +271,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
     
   end
   
-  alias_method  :autobind_value, :__autobind_value__
-
   ##################
-  #  autobind      #
   #  __autobind__  #
   ##################
   
@@ -202,7 +284,7 @@ module ::Perspective::Bindings::InstanceBinding::Interface
 
         when ::Array
                     
-          if permits_multiple?
+          if __permits_multiple__?
 
             if data_object.count - 1 > 0
 
@@ -244,20 +326,20 @@ module ::Perspective::Bindings::InstanceBinding::Interface
   
   alias_method  :autobind, :__autobind__
 
-  ##########################
-  #  binding_value_valid?  #
-  ##########################
+  ##############################
+  #  __binding_value_valid__?  #
+  ##############################
 
-  def binding_value_valid?( binding_value )
+  def __binding_value_valid__?( binding_value )
 
     binding_value_valid = false
     
-    if binding_value.is_a?( ::Array ) and permits_multiple?
+    if binding_value.is_a?( ::Array ) and __permits_multiple__?
     
       # ensure each member value is valid
       binding_value.each do |this_member|
         
-        break unless binding_value_valid = binding_value_valid?( this_member )
+        break unless binding_value_valid = __binding_value_valid__?( this_member )
         
       end
     

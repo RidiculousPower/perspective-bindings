@@ -34,14 +34,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Integer do
 
       binding_instance = __binding__( :some_integer )
 
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
       respond_to?( :some_integer ).should == true
       method_defined?( :some_integer ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
       binding_instance.__container_class__.should == ::Perspective::Bindings::Container::ClassInstance::Mock::Container
 
-      has_binding?( :some_integer ).should == true
+      __has_binding__?( :some_integer ).should == true
 
     end
 
@@ -62,9 +62,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Integer do
 
       attr_integers :some_integers
 
-      has_binding?( :some_integers ).should == true
+      __has_binding__?( :some_integers ).should == true
       binding_instance = __binding__( :some_integers )
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
 
     end
 
@@ -87,9 +87,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Integer do
 
       attr_required_integer :some_required_integer
 
-      has_binding?( :some_required_integer ).should == true
+      __has_binding__?( :some_required_integer ).should == true
       binding_instance = __binding__( :some_required_integer )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
 
@@ -110,9 +110,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Integer do
 
       attr_required_integers :some_required_integers
 
-      has_binding?( :some_required_integers ).should == true
+      __has_binding__?( :some_required_integers ).should == true
       binding_instance = __binding__( :some_required_integers )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
 

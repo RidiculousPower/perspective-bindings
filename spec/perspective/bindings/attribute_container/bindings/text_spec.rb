@@ -34,14 +34,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Text do
 
       binding_instance = __binding__( :some_text )
 
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
       respond_to?( :some_text ).should == true
       method_defined?( :some_text ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
       binding_instance.__container_class__.should == ::Perspective::Bindings::Container::ClassInstance::Mock::Container
 
-      has_binding?( :some_text ).should == true
+      __has_binding__?( :some_text ).should == true
 
     end
 
@@ -63,9 +63,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Text do
 
       attr_texts :some_texts
 
-      has_binding?( :some_texts ).should == true
+      __has_binding__?( :some_texts ).should == true
       binding_instance = __binding__( :some_texts )
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
 
     end
 
@@ -89,9 +89,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Text do
 
       attr_required_text :some_required_text
 
-      has_binding?( :some_required_text ).should == true
+      __has_binding__?( :some_required_text ).should == true
       binding_instance = __binding__( :some_required_text )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
 
@@ -113,9 +113,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Text do
 
       attr_required_texts :some_required_texts
 
-      has_binding?( :some_required_texts ).should == true
+      __has_binding__?( :some_required_texts ).should == true
       binding_instance = __binding__( :some_required_texts )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
 

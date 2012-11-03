@@ -34,14 +34,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Float do
 
       binding_instance = __binding__( :some_float )
 
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
       respond_to?( :some_float ).should == true
       method_defined?( :some_float ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
       binding_instance.__container_class__.should == ::Perspective::Bindings::Container::ClassInstance::Mock::Container
 
-      has_binding?( :some_float ).should == true
+      __has_binding__?( :some_float ).should == true
 
     end
 
@@ -62,9 +62,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Float do
 
       attr_floats :some_floats
 
-      has_binding?( :some_floats ).should == true
+      __has_binding__?( :some_floats ).should == true
       binding_instance = __binding__( :some_floats )
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
 
     end
 
@@ -87,9 +87,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Float do
 
       attr_required_float :some_required_float
 
-      has_binding?( :some_required_float ).should == true
+      __has_binding__?( :some_required_float ).should == true
       binding_instance = __binding__( :some_required_float )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
 
@@ -110,9 +110,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Float do
 
       attr_required_floats :some_required_floats
 
-      has_binding?( :some_required_floats ).should == true
+      __has_binding__?( :some_required_floats ).should == true
       binding_instance = __binding__( :some_required_floats )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
 

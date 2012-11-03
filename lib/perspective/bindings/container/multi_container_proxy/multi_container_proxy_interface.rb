@@ -1,5 +1,5 @@
 
-module ::Perspective::Bindings::Container::MultiContainerProxy::Interface
+module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerProxyInterface
 
   ################
   #  initialize  #

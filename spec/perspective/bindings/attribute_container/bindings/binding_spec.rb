@@ -21,7 +21,7 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Binding do
 
   ###########################
   #  attr_binding           #
-  #  has_binding?           #
+  #  __has_binding__?           #
   #  binding_configuration  #
   ###########################
   
@@ -37,21 +37,21 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Binding do
       attr_binding :some_binding, & config_proc
       attr_binding :some_other_binding, ::Perspective::Bindings::AttributeContainer::Bindings::Binding::Mock::Container, & config_proc
       
-      has_binding?( :some_binding ).should == true
-      __binding__( :some_binding ).required?.should == false
+      __has_binding__?( :some_binding ).should == true
+      __binding__( :some_binding ).__required__?.should == false
       respond_to?( :some_binding ).should == true
       method_defined?( :some_binding ).should == true
 
-      has_binding?( :some_other_binding ).should == true
-      __binding__( :some_other_binding ).required?.should == false
+      __has_binding__?( :some_other_binding ).should == true
+      __binding__( :some_other_binding ).__required__?.should == false
       respond_to?( :some_other_binding ).should == true
       method_defined?( :some_other_binding ).should == true
 
-      has_binding?( :another_binding ).should == false      
+      __has_binding__?( :another_binding ).should == false      
 
       config = __binding__( :some_binding )
       config.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      config.required?.should == false
+      config.__required__?.should == false
       config.__configuration_procs__.should == [ config_proc ]
       config.__container_class__.should == nil
 
@@ -59,7 +59,7 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Binding do
       other_config.__container_class__.should == ::Perspective::Bindings::AttributeContainer::Bindings::Binding::Mock::Container
       some_other_binding.__container_class__.should == other_config.__container_class__
       
-      has_binding?( :some_binding ).should == true
+      __has_binding__?( :some_binding ).should == true
 
     end
     
@@ -84,9 +84,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Binding do
       
       attr_bindings :some_bindings
 
-      has_binding?( :some_bindings ).should == true
+      __has_binding__?( :some_bindings ).should == true
       binding_instance = __binding__( :some_bindings )
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
 
     end
     
@@ -106,9 +106,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Binding do
       
       attr_required_binding :some_required_binding
       
-      has_binding?( :some_required_binding ).should == true
+      __has_binding__?( :some_required_binding ).should == true
       binding_instance = __binding__( :some_required_binding )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
     
@@ -129,9 +129,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Binding do
       
       attr_required_bindings :some_required_bindings
 
-      has_binding?( :some_required_bindings ).should == true
+      __has_binding__?( :some_required_bindings ).should == true
       binding_instance = __binding__( :some_required_bindings )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
     

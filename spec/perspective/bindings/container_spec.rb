@@ -38,30 +38,26 @@ describe ::Perspective::Bindings::Container do
     
   end
 
-  ##################
-  #  bindings      #
-  #  __bindings__  #
-  #  binding       #
-  #  __binding__   #
-  #  has_binding?  #
-  ##################
+  ######################
+  #  __bindings__      #
+  #  __binding__       #
+  #  __has_binding__?  #
+  ######################
 
   it 'can return sub-bindings that define containers nested inside this binding container class' do
-    ::Perspective::Bindings::Container.instance_method( :bindings ).should == ::Perspective::Bindings::Container.instance_method( :__bindings__ )
-    ::Perspective::Bindings::Container.instance_method( :binding ).should == ::Perspective::Bindings::Container.instance_method( :__binding__ )
 
     Perspective::Bindings::Container::Mock.__bindings__.is_a?( ::Hash ).should == true
     Perspective::Bindings::Container::Mock.__bindings__[ :text_binding ].is_a?( ::Perspective::Bindings::ClassBinding ).should == true
     Perspective::Bindings::Container::Mock.text_binding.should == Perspective::Bindings::Container::Mock.__bindings__[ :text_binding ]
-    Perspective::Bindings::Container::Mock.has_binding?( :text_binding ).should == true
+    Perspective::Bindings::Container::Mock.__has_binding__?( :text_binding ).should == true
 
     instance = ::Perspective::Bindings::Container::Mock.new    
     
     instance.__bindings__.is_a?( ::Hash ).should == true
-    instance.__bindings__[ :text_binding ].is_a?( ::Perspective::Bindings::InstanceBinding ).should == true
-    instance.text_binding.should == instance.__bindings__[ :text_binding ]
-    instance.has_binding?( :text_binding ).should == true
-    
+    instance.__bindings__[ :text_binding ].__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
+    instance.text_binding.__id__.should == instance.__bindings__[ :text_binding ].__id__
+    instance.__has_binding__?( :text_binding ).should == true
+
   end
 
   ################
@@ -82,7 +78,7 @@ describe ::Perspective::Bindings::Container do
       
       attr_binding :some_other_binding
 
-      has_binding?( :some_other_binding ).should == true
+      __has_binding__?( :some_other_binding ).should == true
       respond_to?( :some_other_binding ).should == true
 
       some_other_binding.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
@@ -95,21 +91,21 @@ describe ::Perspective::Bindings::Container do
       attr_binding :another_binding, ::Perspective::Bindings::Container::OtherMock
       attr_alias :some_other_binding, another_binding.some_other_binding
 
-      has_binding?( :aliased_binding_name ).should == true
-      aliased_binding_name.required?.should == false
+      __has_binding__?( :aliased_binding_name ).should == true
+      aliased_binding_name.__required__?.should == false
 
-      has_binding?( :another_binding ).should == true
-      another_binding.required?.should == false
+      __has_binding__?( :another_binding ).should == true
+      another_binding.__required__?.should == false
       respond_to?( :another_binding ).should == true
       method_defined?( :another_binding ).should == true
       
-      another_binding.has_binding?( :some_other_binding ).should == true
+      another_binding.__has_binding__?( :some_other_binding ).should == true
       another_binding.respond_to?( :some_other_binding ).should == true
       another_binding.__bindings__[ :some_other_binding ].is_a?( ::Perspective::Bindings::ClassBinding ).should == true
       another_binding.some_other_binding.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
 
-      has_binding?( :some_other_binding ).should == true
-      some_other_binding.required?.should == false
+      __has_binding__?( :some_other_binding ).should == true
+      some_other_binding.__required__?.should == false
       respond_to?( :some_other_binding ).should == true
       method_defined?( :some_other_binding ).should == true
 

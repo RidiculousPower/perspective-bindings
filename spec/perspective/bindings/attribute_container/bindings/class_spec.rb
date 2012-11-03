@@ -34,14 +34,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Class do
       
       binding_instance = __binding__( :some_class )
       
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
       respond_to?( :some_class ).should == true
       method_defined?( :some_class ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
       binding_instance.__container_class__.should == ::Perspective::Bindings::Container::ClassInstance::Mock::Container
       
-      has_binding?( :some_class ).should == true
+      __has_binding__?( :some_class ).should == true
 
     end
     
@@ -62,9 +62,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Class do
       
       attr_classes :some_classes
       
-      has_binding?( :some_classes ).should == true
+      __has_binding__?( :some_classes ).should == true
       binding_instance = __binding__( :some_classes )
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
 
     end
     
@@ -87,9 +87,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Class do
       
       attr_required_class :some_required_class
       
-      has_binding?( :some_required_class ).should == true
+      __has_binding__?( :some_required_class ).should == true
       binding_instance = __binding__( :some_required_class )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
     
@@ -111,9 +111,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Class do
       
       attr_required_classes :some_required_classes
       
-      has_binding?( :some_required_classes ).should == true
+      __has_binding__?( :some_required_classes ).should == true
       binding_instance = __binding__( :some_required_classes )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
     

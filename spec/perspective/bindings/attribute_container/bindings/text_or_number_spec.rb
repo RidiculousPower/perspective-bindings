@@ -34,14 +34,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TextOrNumber do
 
       binding_instance = __binding__( :some_text_or_number )
 
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
       respond_to?( :some_text_or_number ).should == true
       method_defined?( :some_text_or_number ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
       binding_instance.__container_class__.should == ::Perspective::Bindings::Container::ClassInstance::Mock::Container
 
-      has_binding?( :some_text_or_number ).should == true
+      __has_binding__?( :some_text_or_number ).should == true
 
     end
 
@@ -67,9 +67,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TextOrNumber do
 
       attr_text_or_numbers :some_text_or_numbers
 
-      has_binding?( :some_text_or_numbers ).should == true
+      __has_binding__?( :some_text_or_numbers ).should == true
       binding_instance = __binding__( :some_text_or_numbers )
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
 
     end
 
@@ -98,9 +98,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TextOrNumber do
 
       attr_required_text_or_number :some_required_text_or_number
 
-      has_binding?( :some_required_text_or_number ).should == true
+      __has_binding__?( :some_required_text_or_number ).should == true
       binding_instance = __binding__( :some_required_text_or_number )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
 
@@ -126,9 +126,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TextOrNumber do
 
       attr_required_text_or_numbers :some_required_text_or_numbers
 
-      has_binding?( :some_required_text_or_numbers ).should == true
+      __has_binding__?( :some_required_text_or_numbers ).should == true
       binding_instance = __binding__( :some_required_text_or_numbers )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
 

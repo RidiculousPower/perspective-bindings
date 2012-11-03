@@ -1,6 +1,7 @@
 
 require 'uri'
 require 'accessor_utilities'
+require 'reraise'
 
 basepath = 'bindings'
 
@@ -46,6 +47,7 @@ files = [
   'container/multi_container_proxy/multi_container_proxy_interface',
   'container/multi_container_proxy',
   'container/binding_methods',
+  'container/binding_methods/instance_binding_methods',
   'container/class_and_object_instance',
   'container/nested/class_instance',
   'container/nested/object_instance',

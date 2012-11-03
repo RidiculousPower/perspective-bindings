@@ -35,14 +35,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TrueFalse do
 
       binding_instance = __binding__( :some_true_false )
 
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
       respond_to?( :some_true_false ).should == true
       method_defined?( :some_true_false ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
       binding_instance.__container_class__.should == ::Perspective::Bindings::Container::ClassInstance::Mock::Container
 
-      has_binding?( :some_true_false ).should == true
+      __has_binding__?( :some_true_false ).should == true
 
     end
 
@@ -64,9 +64,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TrueFalse do
 
       attr_true_falses :some_true_falses
 
-      has_binding?( :some_true_falses ).should == true
+      __has_binding__?( :some_true_falses ).should == true
       binding_instance = __binding__( :some_true_falses )
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
 
     end
 
@@ -90,9 +90,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TrueFalse do
 
       attr_required_true_false :some_required_true_false
 
-      has_binding?( :some_required_true_false ).should == true
+      __has_binding__?( :some_required_true_false ).should == true
       binding_instance = __binding__( :some_required_true_false )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
 
@@ -114,9 +114,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::TrueFalse do
 
       attr_required_true_falses :some_required_true_falses
 
-      has_binding?( :some_required_true_falses ).should == true
+      __has_binding__?( :some_required_true_falses ).should == true
       binding_instance = __binding__( :some_required_true_falses )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
 

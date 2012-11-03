@@ -35,14 +35,14 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Module do
       
       binding_instance = __binding__( :some_module )
       
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
       respond_to?( :some_module ).should == true
       method_defined?( :some_module ).should == true
 
       binding_instance.__configuration_procs__.should == [ config_proc ]
       binding_instance.__container_class__.should == ::Perspective::Bindings::Container::ClassInstance::Mock::Container
             
-      has_binding?( :some_module ).should == true
+      __has_binding__?( :some_module ).should == true
 
     end
     
@@ -63,9 +63,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Module do
       
       attr_modules :some_modules
       
-      has_binding?( :some_modules ).should == true
+      __has_binding__?( :some_modules ).should == true
       binding_instance = __binding__( :some_modules )
-      binding_instance.required?.should == false
+      binding_instance.__required__?.should == false
 
     end
     
@@ -88,9 +88,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Module do
       
       attr_required_module :some_required_module
       
-      has_binding?( :some_required_module ).should == true
+      __has_binding__?( :some_required_module ).should == true
       binding_instance = __binding__( :some_required_module )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
     
@@ -112,9 +112,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Module do
       
       attr_required_modules :some_required_modules
       
-      has_binding?( :some_required_modules ).should == true
+      __has_binding__?( :some_required_modules ).should == true
       binding_instance = __binding__( :some_required_modules )
-      binding_instance.required?.should == true
+      binding_instance.__required__?.should == true
 
     end
     
