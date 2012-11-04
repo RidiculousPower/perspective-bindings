@@ -46,9 +46,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_regexp.value = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_regexp.value = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_regexp.value = /regexp/
+    Proc.new { instance.some_regexp.__value__ = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_regexp.__value__ = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_regexp.__value__ = /regexp/
 
   end
 
@@ -69,11 +69,11 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_regexps.value = [ :object, 32 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_regexps.value = Class }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_regexps.value = /regexp/
-    instance.some_regexps.value = [ /regexp/, /other/ ]
-    Proc.new { instance.some_regexps.value = [ Object, :regexp ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_regexps.__value__ = [ :object, 32 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_regexps.__value__ = Class }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_regexps.__value__ = /regexp/
+    instance.some_regexps.__value__ = [ /regexp/, /other/ ]
+    Proc.new { instance.some_regexps.__value__ = [ Object, :regexp ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -94,9 +94,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_regexp.value = [ 42, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_regexp.value = /regexp/
-    instance.some_required_regexp.value = nil
+    Proc.new { instance.some_required_regexp.__value__ = [ 42, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_regexp.__value__ = /regexp/
+    instance.some_required_regexp.__value__ = nil
 
   end  
 
@@ -117,12 +117,12 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Regexp do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_regexps.value = [ 42, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_regexps.value = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_regexps.value = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_regexps.value = /regexp/
-    instance.some_required_regexps.value = [ /regexp/, /other/ ]
-    instance.some_required_regexps.value = nil
+    Proc.new { instance.some_required_regexps.__value__ = [ 42, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_regexps.__value__ = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_regexps.__value__ = Object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_regexps.__value__ = /regexp/
+    instance.some_required_regexps.__value__ = [ /regexp/, /other/ ]
+    instance.some_required_regexps.__value__ = nil
 
   end  
 

@@ -147,6 +147,7 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
   def method_missing( method, *args, & block )
 
     begin
+      # Forward method call to value
       return __value__.__send__( method, *args, & block )
     rescue ::Exception => exception
       exception.reraise( 2 )
@@ -275,8 +276,6 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
     return object
     
   end
-
-  alias_method  :value=, :__value__=
 
 	########################
 	#  __autobind_value__  #

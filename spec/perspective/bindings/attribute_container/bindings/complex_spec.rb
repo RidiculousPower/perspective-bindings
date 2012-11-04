@@ -46,9 +46,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Complex do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_complex.value = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_complex.value = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_complex.value = Complex( 1, 2 )
+    Proc.new { instance.some_complex.__value__ = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_complex.__value__ = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_complex.__value__ = Complex( 1, 2 )
     
   end
 
@@ -69,11 +69,11 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Complex do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_complexes.value = [ :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_complexes.value = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_complexes.value = Complex( 1, 0 )
-    instance.some_complexes.value = [ Complex( 4, 2 ), Complex( 2, 3 ) ]
-    Proc.new { instance.some_complexes.value = [ Object, :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_complexes.__value__ = [ :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_complexes.__value__ = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_complexes.__value__ = Complex( 1, 0 )
+    instance.some_complexes.__value__ = [ Complex( 4, 2 ), Complex( 2, 3 ) ]
+    Proc.new { instance.some_complexes.__value__ = [ Object, :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
     
   end  
 
@@ -94,9 +94,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Complex do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_complex.value = [ Complex( 4, 2 ), :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_complex.value = Complex( 4, 2 )
-    instance.some_required_complex.value = nil
+    Proc.new { instance.some_required_complex.__value__ = [ Complex( 4, 2 ), :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_complex.__value__ = Complex( 4, 2 )
+    instance.some_required_complex.__value__ = nil
 
   end  
 
@@ -117,12 +117,12 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Complex do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_complexes.value = [ Complex( 4, 2 ), :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_complexes.value = [ Object, Complex( 4, 2 ) ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_complexes.value = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_complexes.value = [ Complex( 4, 2 ), Complex( 3, 7 ) ]
-    instance.some_required_complexes.value = Complex( 4, 2 )
-    instance.some_required_complexes.value = nil
+    Proc.new { instance.some_required_complexes.__value__ = [ Complex( 4, 2 ), :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_complexes.__value__ = [ Object, Complex( 4, 2 ) ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_complexes.__value__ = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_complexes.__value__ = [ Complex( 4, 2 ), Complex( 3, 7 ) ]
+    instance.some_required_complexes.__value__ = Complex( 4, 2 )
+    instance.some_required_complexes.__value__ = nil
     
   end  
 

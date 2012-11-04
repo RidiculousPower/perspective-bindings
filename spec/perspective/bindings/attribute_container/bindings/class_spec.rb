@@ -46,9 +46,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Class do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_class.value = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_class.value = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_class.value = Object
+    Proc.new { instance.some_class.__value__ = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_class.__value__ = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_class.__value__ = Object
     
   end
 
@@ -69,11 +69,11 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Class do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_classes.value = [ :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_classes.value = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_classes.value = Object
-    instance.some_classes.value = [ Object, Class ]
-    Proc.new { instance.some_classes.value = [ Object, :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_classes.__value__ = [ :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_classes.__value__ = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_classes.__value__ = Object
+    instance.some_classes.__value__ = [ Object, Class ]
+    Proc.new { instance.some_classes.__value__ = [ Object, :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
     
   end  
 
@@ -94,10 +94,10 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Class do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_class.value = [ :some_value, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_class.value = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_class.value = Class
-    instance.some_required_class.value = nil
+    Proc.new { instance.some_required_class.__value__ = [ :some_value, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_class.__value__ = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_class.__value__ = Class
+    instance.some_required_class.__value__ = nil
     
   end  
 
@@ -118,12 +118,12 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Class do
     end
     
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_classes.value = [ :object, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_classes.value = [ Object, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_classes.value = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_classes.value = [ Object, Class ]
-    instance.some_required_classes.value = Object
-    instance.some_required_classes.value = nil
+    Proc.new { instance.some_required_classes.__value__ = [ :object, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_classes.__value__ = [ Object, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_classes.__value__ = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_classes.__value__ = [ Object, Class ]
+    instance.some_required_classes.__value__ = Object
+    instance.some_required_classes.__value__ = nil
     
   end  
 

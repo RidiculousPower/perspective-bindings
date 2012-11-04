@@ -46,9 +46,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Integer do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_integer.value = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_integer.value = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_integer.value = 42
+    Proc.new { instance.some_integer.__value__ = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_integer.__value__ = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_integer.__value__ = 42
 
   end
 
@@ -69,11 +69,11 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Integer do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_integers.value = [ :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_integers.value = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_integers.value = 42
-    instance.some_integers.value = [ 42, 42 ]
-    Proc.new { instance.some_integers.value = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_integers.__value__ = [ :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_integers.__value__ = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_integers.__value__ = 42
+    instance.some_integers.__value__ = [ 42, 42 ]
+    Proc.new { instance.some_integers.__value__ = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -94,9 +94,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Integer do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_integer.value = [ 42, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_integer.value = 42
-    instance.some_required_integer.value = nil
+    Proc.new { instance.some_required_integer.__value__ = [ 42, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_integer.__value__ = 42
+    instance.some_required_integer.__value__ = nil
 
   end  
 
@@ -117,12 +117,12 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Integer do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_integers.value = [ 42, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_integers.value = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_integers.value = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_integers.value = [ 42, 42 ]
-    instance.some_required_integers.value = 42
-    instance.some_required_integers.value = nil
+    Proc.new { instance.some_required_integers.__value__ = [ 42, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_integers.__value__ = [ Object, 42 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_integers.__value__ = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_integers.__value__ = [ 42, 42 ]
+    instance.some_required_integers.__value__ = 42
+    instance.some_required_integers.__value__ = nil
 
   end  
 

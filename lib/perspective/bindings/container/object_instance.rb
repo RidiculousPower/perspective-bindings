@@ -6,6 +6,16 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
   include ::Perspective::Bindings::Container::ClassAndObjectInstance
   
+  ##############################
+  #  __initialize_for_index__  #
+  ##############################
+  
+  def __initialize_for_index__( index )
+    
+    # nothing to do - implemented to permit overriding
+    
+  end
+  
   ##############
   #  name      #
   #  __name__  #

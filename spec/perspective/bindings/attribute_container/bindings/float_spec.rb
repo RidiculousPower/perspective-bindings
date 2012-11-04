@@ -46,9 +46,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Float do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_float.value = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_float.value = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_float.value = 42.0
+    Proc.new { instance.some_float.__value__ = [ Object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_float.__value__ = :some_value }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_float.__value__ = 42.0
 
   end
 
@@ -69,11 +69,11 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Float do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_floats.value = [ :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_floats.value = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_floats.value = 42.0
-    instance.some_floats.value = [ 42.0, 42.0 ]
-    Proc.new { instance.some_floats.value = [ Object, 42.0 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_floats.__value__ = [ :object ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_floats.__value__ = :object }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_floats.__value__ = 42.0
+    instance.some_floats.__value__ = [ 42.0, 42.0 ]
+    Proc.new { instance.some_floats.__value__ = [ Object, 42.0 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
 
   end  
 
@@ -94,9 +94,9 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Float do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_float.value = [ 42.0, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_float.value = 42.0
-    instance.some_required_float.value = nil
+    Proc.new { instance.some_required_float.__value__ = [ 42.0, :some_other_value ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_float.__value__ = 42.0
+    instance.some_required_float.__value__ = nil
 
   end  
 
@@ -117,12 +117,12 @@ describe ::Perspective::Bindings::AttributeContainer::Bindings::Float do
     end
 
     instance = ::Perspective::Bindings::Container::ClassInstance::Mock.new
-    Proc.new { instance.some_required_floats.value = [ 42.0, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_floats.value = [ Object, 42.0 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    Proc.new { instance.some_required_floats.value = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
-    instance.some_required_floats.value = [ 42.0, 42.0 ]
-    instance.some_required_floats.value = 42.0
-    instance.some_required_floats.value = nil
+    Proc.new { instance.some_required_floats.__value__ = [ 42.0, :other ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_floats.__value__ = [ Object, 42.0 ] }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    Proc.new { instance.some_required_floats.__value__ = :other }.should raise_error( ::Perspective::Bindings::Exception::BindingInstanceInvalidType )
+    instance.some_required_floats.__value__ = [ 42.0, 42.0 ]
+    instance.some_required_floats.__value__ = 42.0
+    instance.some_required_floats.__value__ = nil
 
   end  
 

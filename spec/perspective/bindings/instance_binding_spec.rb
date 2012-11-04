@@ -40,7 +40,7 @@ describe ::Perspective::Bindings::InstanceBinding do
         def initialize( parent, *args )
           super( *args )
         end
-        
+                
       end
 
       instances_identify_as!( ::Perspective::Bindings::Container::ObjectInstance )
@@ -54,6 +54,9 @@ describe ::Perspective::Bindings::InstanceBinding do
       end
       def self.__root_string__
         return '[' << self.to_s << ']'
+      end
+
+      def __initialize_for_index__( index )
       end
 
       def __root__
