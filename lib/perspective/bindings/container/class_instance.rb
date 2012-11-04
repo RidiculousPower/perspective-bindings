@@ -43,16 +43,35 @@ module ::Perspective::Bindings::Container::ClassInstance
     instance = super
     
     # Call to #each causes __bindings__ to populate.
+    #
     # As each binding is created, any sub-bindings it has are created.
-    # This means that the most-nested bindings are configured first,
-    # which means the top-level configurations haven't happened yet.
-    # We need the entire tree to be created first then initialized top-down.
-    	  
+    #
+    # We need the entire tree to be created first then initialized top-down, otherwise
+    # we end up with most-nested bindings configuring first.
+    #
+    # We also need to initialize each binding's container before configuring any bindings,
+    # otherwise odd initialization loops can happen, resulting in configuration happening
+    # against a nil container, which is not only wrong but confusing to debug.
+    
+    initialize_bindings( instance )
+    
+    return instance
+    
+  end
+
+  #########################
+  #  initialize_bindings  #
+  #########################
+  
+  def initialize_bindings( instance )
+
+    instance.__bindings__.each do |this_binding_name, this_binding_instance|
+      this_binding_instance.__initialize_container__
+	  end
+  	  
     instance.__bindings__.each do |this_binding_name, this_binding_instance|
       this_binding_instance.__configure_container__
     end
-    
-    return instance
     
   end
   

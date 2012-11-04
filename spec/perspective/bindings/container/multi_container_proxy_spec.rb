@@ -59,10 +59,10 @@ describe ::Perspective::Bindings::Container::MultiContainerProxy do
     container = ::Perspective::Bindings::Container::MultiContainerProxy::MockContainer.new
     instance = ::Perspective::Bindings::Container::MultiContainerProxy.new( container.__binding__( :some_text ) )
     instance.__autobind__( :one , :two , :three, :four )
-    instance[ 0 ].content.value.should == :one
-    instance[ 1 ].content.value.should == :two
-    instance[ 2 ].content.value.should == :three
-    instance[ 3 ].content.value.should == :four
+    instance[ 0 ].content.should == :one
+    instance[ 1 ].content.should == :two
+    instance[ 2 ].content.should == :three
+    instance[ 3 ].content.should == :four
   end
 
   #################

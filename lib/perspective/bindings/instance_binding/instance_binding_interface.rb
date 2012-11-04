@@ -57,7 +57,9 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
       instance_methods.each do |this_method|
         
         case this_method
-          when :method_missing, :object_id, :hash, :equal?, :class, :to_html_node
+          when :method_missing, :object_id, :hash, 
+               :equal?, :class, 
+               :view, :view=, :container, :container=, :to_html_node
             next
         end
         
@@ -140,6 +142,22 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
     
   end
   
+  ##############################
+  #  __initialize_container__  #
+  ##############################
+  
+  def __initialize_container__
+    
+    # ensure container is created
+    __container__
+    
+    # cascade
+    __bindings__.each do |this_binding_name, this_binding_instance|
+      this_binding_instance.__initialize_container__
+    end
+    
+  end
+  
   ####################
   #  method_missing  #
   ####################
@@ -163,7 +181,7 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
       
     # run configuration proc for each binding instance
 		__configuration_procs__.each do |this_configuration_proc|
-      bound_container.instance_exec( self, & this_configuration_proc )
+      bound_container.__instance_exec__( self, & this_configuration_proc )
 	  end
 	  
     __bindings__.each do |this_binding_name, this_binding_instance|

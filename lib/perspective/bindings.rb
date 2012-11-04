@@ -9,6 +9,9 @@ require_relative './namespaces'
 # source file requires
 require_relative './requires.rb'
 
+# post-require setup
+require_relative './setup.rb'
+
 module ::Perspective::Bindings
 
   extend ::Perspective::Bindings::ParseBindingDeclarationArgs

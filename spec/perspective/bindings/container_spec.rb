@@ -125,7 +125,7 @@ describe ::Perspective::Bindings::Container do
 
     instance = ::Perspective::Bindings::Container::Mock::ContentBindingView.new    
     instance.__autobind__( :one )
-    instance.content.value.should == :one
+    instance.content.should == :one
 
     instance = ::Perspective::Bindings::Container::Mock::AutobindMultibindingsView.new
     data_object = Object.new
@@ -136,8 +136,8 @@ describe ::Perspective::Bindings::Container do
       :two
     end
     instance.__autobind__( data_object )
-    instance.binding_one.value.should == :one
-    instance.binding_two.value.should == :two
+    instance.binding_one.should == :one
+    instance.binding_two.should == :two
     
   end
 
