@@ -2,11 +2,24 @@
 class ::Perspective::Bindings::Container::BindingMethods::InstanceBindingMethods <
       ::Perspective::Bindings::Container::BindingMethods
 
+  
+  ####################
+  #  define_binding  #
+  ####################
+  
+  def define_binding( binding_name )
+  
+    super
+    
+    define_binding_value_setter( binding_name )
+  
+  end
+  
   #################################
   #  define_binding_value_setter  #
   #################################
   
-  def define_binding_value_setter( binding_alias, binding_name )
+  def define_binding_value_setter( binding_name )
     
     #=================#
     #  binding_name=  #

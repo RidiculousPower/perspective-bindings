@@ -47,12 +47,22 @@ module ::Perspective::Bindings::Container::ClassInstance
     # This means that the most-nested bindings are configured first,
     # which means the top-level configurations haven't happened yet.
     # We need the entire tree to be created first then initialized top-down.
-    
+    	  
     instance.__bindings__.each do |this_binding_name, this_binding_instance|
       this_binding_instance.__configure_container__
     end
     
     return instance
+    
+  end
+  
+  ######################
+  #  non_nested_class  #
+  ######################
+  
+  def non_nested_class
+    
+    return self
     
   end
 

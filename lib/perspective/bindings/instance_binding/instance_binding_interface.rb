@@ -14,26 +14,40 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
       # For instance :__==__ is a legitimate method name, but not legitimate Ruby syntax,
       # so it can only be called via object.send( :"__==__", *args ).
 
-      alias_method( :__equals__, :== )
-      undef_method( :== )
+      if method_defined?( :== )
+        alias_method( :__equals__, :== )
+        undef_method( :== )
+      end
+      
+      if method_defined?( :"<=>" )
+        alias_method( :__compare__, :"<=>" )
+        undef_method( :"<=>" )
+      end
 
-      alias_method( :__compare__, :"<=>" )
-      undef_method( :"<=>" )
+      if method_defined?( :! )
+        alias_method( :__not__, :"!" )
+        undef_method( :"!" )
+      end
 
-      alias_method( :__not__, :"!" )
-      undef_method( :"!" )
+      if method_defined?( :!= )
+        alias_method( :__not_equal__, :"!=" )
+        undef_method( :"!=" )
+      end
 
-      alias_method( :__not_equal__, :"!=" )
-      undef_method( :"!=" )
+      if method_defined?( :=~ )
+        alias_method( :__regexp__, :"=~" )
+        undef_method( :"=~" )
+      end
 
-      alias_method( :__regexp__, :"=~" )
-      undef_method( :"=~" )
+      if method_defined?( :=== )
+        alias_method( :__case_equals__, :=== )
+        undef_method( :=== )
+      end
 
-      alias_method( :__case_equals__, :=== )
-      undef_method( :=== )
-
-      alias_method( :__regexp_equals__, :"!~" )
-      undef_method( :"!~" )
+      if method_defined?( :"!~" )
+        alias_method( :__regexp_equals__, :"!~" )
+        undef_method( :"!~" )
+      end
 
       alias_method( :__object_id__, :object_id )
       
@@ -42,7 +56,10 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
       # Special characters (?!) get moved to the end: __method__?!.
       instance_methods.each do |this_method|
         
-        next if this_method == :object_id
+        case this_method
+          when :method_missing, :object_id, :hash, :equal?, :class, :to_html_node
+            next
+        end
         
         this_method = this_method.to_s
         
@@ -299,10 +316,8 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
                   container.__autobind__( *binding_value_array, method_map_hash )
 
                 else
-
-                  new_multi_container = ::Perspective::Bindings::Container::
-                                          MultiContainerProxy.new( self, *data_object )
-                  self.__store_initialized_container_instance__( new_multi_container )
+                  
+                  __create_multi_container_proxy__( data_object )
 
               end
 
@@ -325,6 +340,20 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
   end
   
   alias_method  :autobind, :__autobind__
+
+  ######################################
+  #  __create_multi_container_proxy__  #
+  ######################################
+  
+  def __create_multi_container_proxy__( data_object )
+
+    multi_proxy = ::Perspective::Bindings::Container::MultiContainerProxy.new( self, *data_object )
+
+    self.__store_initialized_container_instance__( multi_proxy )
+    
+    return multi_proxy
+    
+  end
 
   ##############################
   #  __binding_value_valid__?  #

@@ -21,7 +21,7 @@ module ::Perspective::Bindings::Container::Nested::ObjectInstance
   ###########
 
   def class
-  
+
     return super.non_nested_class
     
   end

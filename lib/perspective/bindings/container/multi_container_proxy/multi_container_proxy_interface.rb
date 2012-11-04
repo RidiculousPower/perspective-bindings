@@ -80,8 +80,7 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
       if __count__ > this_index
         this_container_instance = self[ this_index ]
       else
-        this_container_instance = @__container_class__.non_nested_class.new
-        __push__( this_container_instance )
+        this_container_instance = __create_additional_container__( this_index )
       end
 
       this_container_instance.__autobind__( this_object )
@@ -94,16 +93,30 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
 
   alias_method :autobind, :__autobind__
 
+  #####################################
+  #  __create_additional_container__  #
+  #####################################
+
+  def __create_additional_container__( index )
+    
+    new_container_instance = @__container_class__.non_nested_class.new
+
+    ::CascadingConfiguration.register_parent( new_container_instance, @__parent_binding__ )
+
+    __push__( new_container_instance )
+    
+    new_container_instance.__initialize_for_index__( index )
+
+    return new_container_instance
+    
+  end
+
   #########################
   #  __container_class__  #
   #########################
 
   # returns class of container it expects to be addressing
-  def __container_class__
-
-    return @__container_class__
-
-  end
+  attr_reader :__container_class__
 
   #######################
   #  __storage_array__  # 
