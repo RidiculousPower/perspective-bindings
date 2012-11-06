@@ -14,10 +14,10 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
       # For instance :__==__ is a legitimate method name, but not legitimate Ruby syntax,
       # so it can only be called via object.send( :"__==__", *args ).
 
-      if method_defined?( :== )
-        alias_method( :__equals__, :== )
-        undef_method( :== )
-      end
+      #if method_defined?( :== )
+      #  alias_method( :__equals__, :== )
+      #  undef_method( :== )
+      #end
       
       if method_defined?( :"<=>" )
         alias_method( :__compare__, :"<=>" )
@@ -57,7 +57,7 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
       instance_methods.each do |this_method|
         
         case this_method
-          when :method_missing, :object_id, :hash, 
+          when :method_missing, :object_id, :hash, :==,
                :equal?, :class, 
                :view, :view=, :container, :container=, :to_html_node
             next
@@ -96,7 +96,7 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
         undef_method( this_method )
         
       end
-
+      
     end
     
   end
@@ -120,10 +120,13 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
     if container_class = @__parent_binding__.__container_class__    
       __extend__( container_class::Controller::InstanceBindingMethods )
     end
+
+    extension_modules = @__parent_binding__.__extension_modules__
+    unless extension_modules.empty?
+      extension_modules.load_parent_state
+      __extend__( *extension_modules )
+    end
         
-    # cause nested bindings to populate
-    __bindings__.load_parent_state
-    
   end
   
   #########################################
@@ -275,14 +278,21 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
       
       when ::Perspective::Bindings::InstanceBinding
 
-        @__value__ = object.__value__
+        if __is_a__?( ::Perspective::Bindings::ReferenceBinding )
+
+          @__value__ = object
+          
+        else
+
+          @__value__ = object.__value__
+
+        end
       
       else
 
         unless __binding_value_valid__?( object )
           raise ::Perspective::Bindings::Exception::BindingInstanceInvalidType, 
-                  'Invalid value ' <<  object.inspect + ' assigned to binding :' << 
-                  __name__.to_s + '.'
+                  'Invalid value ' <<  object.inspect + ' assigned to binding :' << __name__.to_s + '.'
         end
 
         @__value__ = object
@@ -292,6 +302,31 @@ module ::Perspective::Bindings::InstanceBinding::InstanceBindingInterface
     __autobind__( @__value__ )
 
     return object
+    
+  end
+
+	########
+	#  ==  #
+	########
+  
+  alias_method :__equals__?, :==
+  
+  def ==( object )
+    
+    is_equal = nil
+    
+    if __is_a__?( ::Perspective::Bindings::ReferenceBinding ) and
+       @__value__.__is_a__?( ::Perspective::Bindings::InstanceBinding )
+
+      is_equal = @__value__.__equals__?( object )
+
+    else
+
+      is_equal = @__value__ == object
+
+    end
+    
+    return is_equal
     
   end
 

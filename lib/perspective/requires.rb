@@ -66,7 +66,9 @@ files = [
   'exception/binding_order_empty',
   'exception/no_binding_error',
   'exception/container_class_lacks_bindings',
-  'exception/autobind_failed'
+  'exception/autobind_failed',
+
+  'reference_binding'
   
 ]
 

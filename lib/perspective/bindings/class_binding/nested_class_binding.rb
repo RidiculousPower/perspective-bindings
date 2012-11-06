@@ -11,7 +11,7 @@ module ::Perspective::Bindings::ClassBinding::NestedClassBinding
                   ancestor_binding = nil,
                   & configuration_proc )
         
-    @__parent_binding__ = bound_container
+    @__parent_binding__ = ancestor_binding
     @__bound_container__ = bound_container
 
     super

@@ -36,9 +36,40 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
     
   end
 
-  #############################
+  ################
+  #  __extend__  #
+  ################
+  
+  ###
+  # Original #extend method for extending this class binding instance. Renamed to permit
+  #   #extend to be used for configuring corresponding instance bindings.
+  #
+  alias_method( :__extend__, :extend )
+
+  ###########################
+  #  __extension_modules__  #
+  ###########################
+
+  attr_unique_array :__extension_modules__
+  
+  ############
+  #  extend  #
+  ############
+  
+  ###
+  # Cause instance bindings corresponding to this class binding to be extended by provided module(s).
+  #  
+  def extend( *modules )
+    
+    # Store the modules somewhere so that instances can use them.
+    # We keep youngest first so that we can extend( *__extension_modules__ ) later.
+    __extension_modules__.unshift( *modules )
+  
+  end
+
+  #################################
   #  __binding_name_validates__?  #
-  #############################
+  #################################
 
   def __binding_name_validates__?( binding_name )
   
@@ -95,7 +126,7 @@ module ::Perspective::Bindings::ClassBinding::ObjectInstance
 
       self.__container_class__ = container_class
 
-      extend( container_class::Controller::ClassBindingMethods )
+      __extend__( container_class::Controller::ClassBindingMethods )
 
       ::CascadingConfiguration.register_parent( self, container_class )
 
