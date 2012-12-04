@@ -8,16 +8,8 @@ module ::Perspective::Bindings::Container::ClassAndObjectInstance
   def __root_string__
     
     # [root:<instance>]    
-    
-    root_string = nil
-    
-    if @__bound_container__
-      root_string = __root__.__root_string__
-    else
-      root_string = @__root_string__ ||= '<root:' << to_s << '>'
-    end
 
-    return root_string
+    return @__root_string__ ||= '<root:' << to_s << '>'
     
   end
 

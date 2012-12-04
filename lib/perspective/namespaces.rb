@@ -2,9 +2,15 @@
 module ::Perspective::Bindings
   module Configuration
   end
-  class ClassBinding
+  module BindingDefinitions
   end
-  class InstanceBinding
+  class BindingTypeContainer < ::Module
+    class BindingBase < ::Module
+    end
+    class BindingType
+    end
+  end
+  module BindingBase
   end
   module Container
     module Nested

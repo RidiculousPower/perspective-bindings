@@ -13,10 +13,10 @@ describe ::Perspective::Bindings do
     ::Perspective::Bindings::MockNestedE.module_eval do
       __has_binding__?( :text1 ).should == true
       __has_binding__?( :text2 ).should == true
-      text1.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      text2.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
-      text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      text1.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
+      text2.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
+      text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == false
+      text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == false
       __route__.should == nil
       text1.__route__.should == nil
       text2.__route__.should == nil
@@ -24,10 +24,10 @@ describe ::Perspective::Bindings do
     ::Perspective::Bindings::MockNestedE.new.instance_eval do
       __has_binding__?( :text1 ).should == true
       __has_binding__?( :text2 ).should == true
-      text1.__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
-      text2.__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
-      text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      text1.__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
+      text2.__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
+      text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == false
+      text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == false
       __route__.should == nil
       text1.__route__.should == nil
       text2.__route__.should == nil
@@ -41,10 +41,10 @@ describe ::Perspective::Bindings do
     ::Perspective::Bindings::MockNestedD.module_eval do
       __has_binding__?( :text1 ).should == true
       __has_binding__?( :text2 ).should == true
-      text1.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      text2.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
-      text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      text1.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
+      text2.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
+      text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == false
+      text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == false
       __route__.should == nil
       text1.__route__.should == nil
       text2.__route__.should == nil
@@ -52,10 +52,10 @@ describe ::Perspective::Bindings do
     ::Perspective::Bindings::MockNestedD.new.instance_eval do
       __has_binding__?( :text1 ).should == true
       __has_binding__?( :text2 ).should == true
-      text1.__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
-      text2.__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
-      text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      text1.__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
+      text2.__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
+      text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == false
+      text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == false
       __route__.should == nil
       text1.__route__.should == nil
       text2.__route__.should == nil
@@ -70,10 +70,10 @@ describe ::Perspective::Bindings do
       __has_binding__?( :e ).should == true
       e.__has_binding__?( :text1 ).should == true
       e.__has_binding__?( :text2 ).should == true
-      e.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      e.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
-      e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      e.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
+      e.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == false
+      e.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      e.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       __route__.should == nil
       e.__route__.should == nil
       e.text1.__route__.should == [ :e ]
@@ -83,10 +83,10 @@ describe ::Perspective::Bindings do
       __has_binding__?( :e ).should == true
       e.__has_binding__?( :text1 ).should == true
       e.__has_binding__?( :text2 ).should == true
-      e.__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
-      e.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      e.text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      e.text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      e.__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
+      e.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == false
+      e.text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
+      e.text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       __route__.should == nil
       e.__route__.should == nil
       e.text1.__route__.should == [ :e ]
@@ -100,12 +100,12 @@ describe ::Perspective::Bindings do
 
     ::Perspective::Bindings::MockNestedC1.module_eval do
       __has_binding__?( :d ).should == true
-      d.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      d.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
+      d.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == false
       d.__has_binding__?( :text1 ).should == true
       d.__has_binding__?( :text2 ).should == true
-      d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      d.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      d.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       __route__.should == nil
       d.__route__.should == nil
       d.text1.__route__.should == [ :d ]
@@ -115,10 +115,10 @@ describe ::Perspective::Bindings do
       __has_binding__?( :d ).should == true
       d.__has_binding__?( :text1 ).should == true
       d.__has_binding__?( :text2 ).should == true
-      d.__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
-      d.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      d.text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      d.text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      d.__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
+      d.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == false
+      d.text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
+      d.text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       __route__.should == nil
       d.__route__.should == nil
       d.text1.__route__.should == [ :d ]
@@ -134,21 +134,21 @@ describe ::Perspective::Bindings do
     ::Perspective::Bindings::MockNestedB.module_eval do
       __has_binding__?( :c1 ).should == true
       __has_binding__?( :c2 ).should == true
-      c1.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      c1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
-      c2.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      c1.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
+      c1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == false
+      c2.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
+      c2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == false
       c1.__has_binding__?( :d ).should == true
-      c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      c1.d.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       c1.d.__has_binding__?( :text1 ).should == true
       c1.d.__has_binding__?( :text2 ).should == true
-      c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      c1.d.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      c1.d.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       c2.__has_binding__?( :e ).should == true
       c2.e.__has_binding__?( :text1 ).should == true
       c2.e.__has_binding__?( :text2 ).should == true
-      c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      c2.e.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      c2.e.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       __route__.should == nil
       c1.__route__.should == nil
       c1.d.__route__.should == [ :c1 ]
@@ -162,21 +162,21 @@ describe ::Perspective::Bindings do
     ::Perspective::Bindings::MockNestedB.new.instance_eval do
       __has_binding__?( :c1 ).should == true
       __has_binding__?( :c2 ).should == true
-      c1.__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
-      c1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
-      c2.__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
-      c2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      c1.__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
+      c1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == false
+      c2.__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
+      c2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == false
       c1.__has_binding__?( :d ).should == true
-      c1.d.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      c1.d.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       c1.d.__has_binding__?( :text1 ).should == true
       c1.d.__has_binding__?( :text2 ).should == true
-      c1.d.text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      c1.d.text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      c1.d.text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
+      c1.d.text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       c2.__has_binding__?( :e ).should == true
       c2.e.__has_binding__?( :text1 ).should == true
       c2.e.__has_binding__?( :text2 ).should == true
-      c2.e.text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      c2.e.text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      c2.e.text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
+      c2.e.text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       __route__.should == nil
       c1.__route__.should == nil
       c1.d.__route__.should == [ :c1 ]
@@ -195,22 +195,22 @@ describe ::Perspective::Bindings do
 
     ::Perspective::Bindings::MockNestedA.module_eval do
       __has_binding__?( :b ).should == true
-      b.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      b.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
+      b.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == false
       b.__has_binding__?( :c1 ).should == true
       b.__has_binding__?( :c2 ).should == true
-      b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      b.c2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       b.c1.__has_binding__?( :d ).should == true
-      b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      b.c1.d.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       b.c1.d.__has_binding__?( :text1 ).should == true
       b.c1.d.__has_binding__?( :text2 ).should == true
-      b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      b.c1.d.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      b.c1.d.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       b.c2.__has_binding__?( :e ).should == true
       b.c2.e.__has_binding__?( :text1 ).should == true
       b.c2.e.__has_binding__?( :text2 ).should == true
-      b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      b.c2.e.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      b.c2.e.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       __route__.should == nil
       b.__route__.should == nil
       b.c1.__route__.should == [ :b ]
@@ -224,22 +224,22 @@ describe ::Perspective::Bindings do
     end
     ::Perspective::Bindings::MockNestedA.new.instance_eval do
       __has_binding__?( :b ).should == true
-      b.__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
-      b.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      b.__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
+      b.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == false
       b.__has_binding__?( :c1 ).should == true
       b.__has_binding__?( :c2 ).should == true
-      b.c2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      b.c2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       b.c1.__has_binding__?( :d ).should == true
-      b.c1.d.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      b.c1.d.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       b.c1.d.__has_binding__?( :text1 ).should == true
       b.c1.d.__has_binding__?( :text2 ).should == true
-      b.c1.d.text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      b.c1.d.text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      b.c1.d.text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
+      b.c1.d.text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       b.c2.__has_binding__?( :e ).should == true
       b.c2.e.__has_binding__?( :text1 ).should == true
       b.c2.e.__has_binding__?( :text2 ).should == true
-      b.c2.e.text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      b.c2.e.text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      b.c2.e.text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
+      b.c2.e.text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       __route__.should == nil
       b.__route__.should == nil
       b.c1.__route__.should == [ :b ]
@@ -259,24 +259,24 @@ describe ::Perspective::Bindings do
 
     ::Perspective::Bindings::MockWithNested.module_eval do
       __has_binding__?( :a ).should == true
-      a.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      a.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == false
+      a.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
+      a.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == false
       a.__has_binding__?( :b ).should == true
-      a.b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      a.b.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       a.b.__has_binding__?( :c1 ).should == true
       a.b.__has_binding__?( :c2 ).should == true
-      a.b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      a.b.c2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       a.b.c1.__has_binding__?( :d ).should == true
-      a.b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      a.b.c1.d.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       a.b.c1.d.__has_binding__?( :text1 ).should == true
       a.b.c1.d.__has_binding__?( :text2 ).should == true
-      a.b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      a.b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      a.b.c1.d.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      a.b.c1.d.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       a.b.c2.__has_binding__?( :e ).should == true
       a.b.c2.e.__has_binding__?( :text1 ).should == true
       a.b.c2.e.__has_binding__?( :text2 ).should == true
-      a.b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      a.b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      a.b.c2.e.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      a.b.c2.e.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       __route__.should == nil
       a.__route__.should == nil
       a.b.__route__.should == [ :a ]
@@ -291,24 +291,24 @@ describe ::Perspective::Bindings do
     end
     ::Perspective::Bindings::MockWithNested.new.instance_eval do
       __has_binding__?( :a ).should == true
-      a.__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
-      a.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == false
+      a.__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
+      a.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == false
       a.__has_binding__?( :b ).should == true
-      a.b.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      a.b.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       a.b.__has_binding__?( :c1 ).should == true
       a.b.__has_binding__?( :c2 ).should == true
-      a.b.c2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      a.b.c2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       a.b.c1.__has_binding__?( :d ).should == true
-      a.b.c1.d.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      a.b.c1.d.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       a.b.c1.d.__has_binding__?( :text1 ).should == true
       a.b.c1.d.__has_binding__?( :text2 ).should == true
-      a.b.c1.d.text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      a.b.c1.d.text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      a.b.c1.d.text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
+      a.b.c1.d.text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       a.b.c2.__has_binding__?( :e ).should == true
       a.b.c2.e.__has_binding__?( :text1 ).should == true
       a.b.c2.e.__has_binding__?( :text2 ).should == true
-      a.b.c2.e.text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      a.b.c2.e.text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      a.b.c2.e.text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
+      a.b.c2.e.text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       __route__.should == nil
       a.__route__.should == nil
       a.b.__route__.should == [ :a ]
@@ -336,23 +336,23 @@ describe ::Perspective::Bindings do
       __has_binding__?( :some_numbers ).should == true
       __has_binding__?( :nested ).should == true
       nested.__has_binding__?( :a ).should == true
-      nested.a.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.__has_binding__?( :b ).should == true
-      nested.a.b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.__has_binding__?( :c1 ).should == true
       nested.a.b.__has_binding__?( :c2 ).should == true
-      nested.a.b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c1.__has_binding__?( :d ).should == true
-      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c1.d.__has_binding__?( :text1 ).should == true
       nested.a.b.c1.d.__has_binding__?( :text2 ).should == true
-      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c2.__has_binding__?( :e ).should == true
       nested.a.b.c2.e.__has_binding__?( :text1 ).should == true
       nested.a.b.c2.e.__has_binding__?( :text2 ).should == true
-      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       __route__.should == nil
       nested.__route__.should == nil
       nested.a.__route__.should == [ :nested ]
@@ -377,23 +377,23 @@ describe ::Perspective::Bindings do
       __has_binding__?( :some_numbers ).should == true
       __has_binding__?( :nested ).should == true
       nested.__has_binding__?( :a ).should == true
-      nested.a.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.__has_binding__?( :b ).should == true
-      nested.a.b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.__has_binding__?( :c1 ).should == true
       nested.a.b.__has_binding__?( :c2 ).should == true
-      nested.a.b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c1.__has_binding__?( :d ).should == true
-      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c1.d.__has_binding__?( :text1 ).should == true
       nested.a.b.c1.d.__has_binding__?( :text2 ).should == true
-      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c2.__has_binding__?( :e ).should == true
       nested.a.b.c2.e.__has_binding__?( :text1 ).should == true
       nested.a.b.c2.e.__has_binding__?( :text2 ).should == true
-      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       __route__.should == nil
       nested.__route__.should == nil
       nested.a.__route__.should == [ :nested ]
@@ -418,23 +418,23 @@ describe ::Perspective::Bindings do
       __has_binding__?( :some_numbers ).should == true
       __has_binding__?( :nested ).should == true
       nested.__has_binding__?( :a ).should == true
-      nested.a.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.__has_binding__?( :b ).should == true
-      nested.a.b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.__has_binding__?( :c1 ).should == true
       nested.a.b.__has_binding__?( :c2 ).should == true
-      nested.a.b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c1.__has_binding__?( :d ).should == true
-      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c1.d.__has_binding__?( :text1 ).should == true
       nested.a.b.c1.d.__has_binding__?( :text2 ).should == true
-      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c2.__has_binding__?( :e ).should == true
       nested.a.b.c2.e.__has_binding__?( :text1 ).should == true
       nested.a.b.c2.e.__has_binding__?( :text2 ).should == true
-      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       __route__.should == nil
       nested.__route__.should == nil
       nested.a.__route__.should == [ :nested ]
@@ -454,23 +454,23 @@ describe ::Perspective::Bindings do
       __has_binding__?( :some_numbers ).should == true
       __has_binding__?( :nested ).should == true
       nested.__has_binding__?( :a ).should == true
-      nested.a.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       nested.a.__has_binding__?( :b ).should == true
-      nested.a.b.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       nested.a.b.__has_binding__?( :c1 ).should == true
       nested.a.b.__has_binding__?( :c2 ).should == true
-      nested.a.b.c2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       nested.a.b.c1.__has_binding__?( :d ).should == true
-      nested.a.b.c1.d.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c1.d.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       nested.a.b.c1.d.__has_binding__?( :text1 ).should == true
       nested.a.b.c1.d.__has_binding__?( :text2 ).should == true
-      nested.a.b.c1.d.text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      nested.a.b.c1.d.text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c1.d.text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
+      nested.a.b.c1.d.text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       nested.a.b.c2.__has_binding__?( :e ).should == true
       nested.a.b.c2.e.__has_binding__?( :text1 ).should == true
       nested.a.b.c2.e.__has_binding__?( :text2 ).should == true
-      nested.a.b.c2.e.text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      nested.a.b.c2.e.text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c2.e.text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
+      nested.a.b.c2.e.text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       __route__.should == nil
       nested.__route__.should == nil
       nested.a.__route__.should == [ :nested ]
@@ -495,23 +495,23 @@ describe ::Perspective::Bindings do
       __has_binding__?( :some_numbers ).should == true
       __has_binding__?( :nested ).should == true
       nested.__has_binding__?( :a ).should == true
-      nested.a.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.__has_binding__?( :b ).should == true
-      nested.a.b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.__has_binding__?( :c1 ).should == true
       nested.a.b.__has_binding__?( :c2 ).should == true
-      nested.a.b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c1.__has_binding__?( :d ).should == true
-      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c1.d.__has_binding__?( :text1 ).should == true
       nested.a.b.c1.d.__has_binding__?( :text2 ).should == true
-      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c2.__has_binding__?( :e ).should == true
       nested.a.b.c2.e.__has_binding__?( :text1 ).should == true
       nested.a.b.c2.e.__has_binding__?( :text2 ).should == true
-      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       __route__.should == nil
       nested.__route__.should == nil
       nested.a.__route__.should == [ :nested ]
@@ -536,23 +536,23 @@ describe ::Perspective::Bindings do
       __has_binding__?( :some_numbers ).should == true
       __has_binding__?( :nested ).should == true
       nested.__has_binding__?( :a ).should == true
-      nested.a.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.__has_binding__?( :b ).should == true
-      nested.a.b.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.__has_binding__?( :c1 ).should == true
       nested.a.b.__has_binding__?( :c2 ).should == true
-      nested.a.b.c2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c1.__has_binding__?( :d ).should == true
-      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c1.d.__has_binding__?( :text1 ).should == true
       nested.a.b.c1.d.__has_binding__?( :text2 ).should == true
-      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      nested.a.b.c1.d.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       nested.a.b.c2.__has_binding__?( :e ).should == true
       nested.a.b.c2.e.__has_binding__?( :text1 ).should == true
       nested.a.b.c2.e.__has_binding__?( :text2 ).should == true
-      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
-      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::ClassBinding::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text1.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
+      nested.a.b.c2.e.text2.is_a?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
       __route__.should == nil
       nested.__route__.should == nil
       nested.a.__route__.should == [ :nested ]
@@ -572,23 +572,23 @@ describe ::Perspective::Bindings do
       __has_binding__?( :some_numbers ).should == true
       __has_binding__?( :nested ).should == true
       nested.__has_binding__?( :a ).should == true
-      nested.a.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       nested.a.__has_binding__?( :b ).should == true
-      nested.a.b.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       nested.a.b.__has_binding__?( :c1 ).should == true
       nested.a.b.__has_binding__?( :c2 ).should == true
-      nested.a.b.c2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       nested.a.b.c1.__has_binding__?( :d ).should == true
-      nested.a.b.c1.d.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c1.d.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       nested.a.b.c1.d.__has_binding__?( :text1 ).should == true
       nested.a.b.c1.d.__has_binding__?( :text2 ).should == true
-      nested.a.b.c1.d.text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      nested.a.b.c1.d.text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c1.d.text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
+      nested.a.b.c1.d.text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       nested.a.b.c2.__has_binding__?( :e ).should == true
       nested.a.b.c2.e.__has_binding__?( :text1 ).should == true
       nested.a.b.c2.e.__has_binding__?( :text2 ).should == true
-      nested.a.b.c2.e.text1.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
-      nested.a.b.c2.e.text2.__is_a__?( ::Perspective::Bindings::InstanceBinding::NestedInstanceBinding ).should == true
+      nested.a.b.c2.e.text1.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
+      nested.a.b.c2.e.text2.__is_a__?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
       __route__.should == nil
       nested.__route__.should == nil
       nested.a.__route__.should == [ :nested ]

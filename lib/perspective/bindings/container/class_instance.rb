@@ -5,27 +5,7 @@ module ::Perspective::Bindings::Container::ClassInstance
 
   include ::Perspective::Bindings::Container::ClassAndObjectInstance
 
-  ::Perspective::Bindings::Attributes.define_container_type( :bindings ) do
-
-    define_binding_type( :binding,        ::Perspective::Bindings::Attributes::Binding )
-    define_binding_type( :class,          ::Perspective::Bindings::Attributes::Class )
-    define_binding_type( :complex,        ::Perspective::Bindings::Attributes::Complex )
-    define_binding_type( :file,           ::Perspective::Bindings::Attributes::File )
-    define_binding_type( :float,          ::Perspective::Bindings::Attributes::Float )
-    define_binding_type( :integer,        ::Perspective::Bindings::Attributes::Integer )
-    define_binding_type( :module,         ::Perspective::Bindings::Attributes::Module )
-    define_binding_type( :number,         ::Perspective::Bindings::Attributes::Number )
-    define_binding_type( :rational,       ::Perspective::Bindings::Attributes::Rational )
-    define_binding_type( :regexp,         ::Perspective::Bindings::Attributes::Regexp )
-    define_binding_type( :text,           ::Perspective::Bindings::Attributes::Text )
-    define_binding_type( :text_or_number, ::Perspective::Bindings::Attributes::Text,
-                                          ::Perspective::Bindings::Attributes::Number )
-    define_binding_type( :true_false,     ::Perspective::Bindings::Attributes::TrueFalse )
-    define_binding_type( :uri,            ::Perspective::Bindings::Attributes::URI )
-  
-  end
-
-  include ::Perspective::Bindings::AttributeContainer::Bindings
+  include ::Perspective::Bindings::BindingTypes::PropertyBindings
   
   #########
   #  new  #
@@ -214,7 +194,11 @@ module ::Perspective::Bindings::Container::ClassInstance
   def __create_name_alias__( binding_alias, existing_binding_name )
     
     unless __has_binding__?( existing_binding_name )
-  		raise ::Perspective::Bindings::Exception::NoBindingError.new( self, existing_binding_name )
+  		begin
+  		  raise ::Perspective::Bindings::Exception::NoBindingError.new( self, existing_binding_name )
+  		rescue ::Exception => exception
+  		  exception.reraise( 3 )
+  		end
     end
 	  
     __binding_aliases__[ binding_alias ] = existing_binding_name

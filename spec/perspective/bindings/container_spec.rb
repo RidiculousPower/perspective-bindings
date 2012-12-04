@@ -47,14 +47,14 @@ describe ::Perspective::Bindings::Container do
   it 'can return sub-bindings that define containers nested inside this binding container class' do
 
     Perspective::Bindings::Container::Mock.__bindings__.is_a?( ::Hash ).should == true
-    Perspective::Bindings::Container::Mock.__bindings__[ :text_binding ].is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+    Perspective::Bindings::Container::Mock.__bindings__[ :text_binding ].is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
     Perspective::Bindings::Container::Mock.text_binding.should == Perspective::Bindings::Container::Mock.__bindings__[ :text_binding ]
     Perspective::Bindings::Container::Mock.__has_binding__?( :text_binding ).should == true
 
     instance = ::Perspective::Bindings::Container::Mock.new    
     
     instance.__bindings__.is_a?( ::Hash ).should == true
-    instance.__bindings__[ :text_binding ].__is_a__?( ::Perspective::Bindings::InstanceBinding ).should == true
+    instance.__bindings__[ :text_binding ].__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
     instance.text_binding.__id__.should == instance.__bindings__[ :text_binding ].__id__
     instance.__has_binding__?( :text_binding ).should == true
 
@@ -81,7 +81,7 @@ describe ::Perspective::Bindings::Container do
       __has_binding__?( :some_other_binding ).should == true
       respond_to?( :some_other_binding ).should == true
 
-      some_other_binding.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      some_other_binding.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
 
     end
     
@@ -101,15 +101,15 @@ describe ::Perspective::Bindings::Container do
       
       another_binding.__has_binding__?( :some_other_binding ).should == true
       another_binding.respond_to?( :some_other_binding ).should == true
-      another_binding.__bindings__[ :some_other_binding ].is_a?( ::Perspective::Bindings::ClassBinding ).should == true
-      another_binding.some_other_binding.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      another_binding.__bindings__[ :some_other_binding ].is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
+      another_binding.some_other_binding.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
 
       __has_binding__?( :some_other_binding ).should == true
       some_other_binding.__required__?.should == false
       respond_to?( :some_other_binding ).should == true
       method_defined?( :some_other_binding ).should == true
 
-      some_other_binding.is_a?( ::Perspective::Bindings::ClassBinding ).should == true
+      some_other_binding.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
       some_other_binding.should == another_binding.some_other_binding
       
     end

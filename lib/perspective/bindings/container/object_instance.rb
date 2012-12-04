@@ -17,7 +17,6 @@ module ::Perspective::Bindings::Container::ObjectInstance
   end
   
   ##############
-  #  name      #
   #  __name__  #
   ##############
   
@@ -137,7 +136,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
             binding_instance = data_object.__binding__( data_source_name )
             this_binding_instance.__value__ = binding_instance.__render_value__
         
-          when ::Perspective::Bindings::InstanceBinding
+          when ::Perspective::Bindings::BindingBase::InstanceBinding
 
             this_binding_instance.__value__ = data_object.__render_value__
           

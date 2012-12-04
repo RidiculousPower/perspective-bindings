@@ -26,4 +26,14 @@ module ::Perspective::Bindings::Container::Nested::ObjectInstance
     
   end
 
+  #####################
+  #  __root_string__  #
+  #####################
+
+  def __root_string__
+    
+    return @__root__.__root_string__
+    
+  end
+
 end

@@ -38,9 +38,9 @@ module ::Perspective::Bindings::Configuration
   end
   alias_method  :binding, :__binding__
 
-  ##################
+  ######################
   #  __has_binding__?  #
-  ##################
+  ######################
 
   # __has_binding__? :name, ...
   # 
