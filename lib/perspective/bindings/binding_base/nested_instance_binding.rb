@@ -4,7 +4,6 @@ module ::Perspective::Bindings::BindingBase::NestedInstanceBinding
   include ::Perspective::Bindings::BindingBase::InstanceBinding
   
   ######################
-  #  nested_route      #
   #  __nested_route__  #
   ######################
 
