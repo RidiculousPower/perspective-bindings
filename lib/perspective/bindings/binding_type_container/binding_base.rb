@@ -1,4 +1,7 @@
 
+###
+# BindingBase is a common base class that creates modules to act as base modules for binding types.
+#
 class ::Perspective::Bindings::BindingTypeContainer::BindingBase < ::Module
 
   ################

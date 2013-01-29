@@ -34,17 +34,16 @@
 #   appropriately. 
 #
 #   This is accomplished by defining each binding container context as a BindingTypeContainer.
-#   A BindingTypeContainer holds 4 base container classes:
+#   A BindingTypeContainer holds 4 base container modules:
 #
 #   * ClassBindingBase
-#   * ClassNestedClassBindingBase
+#   * NestedClassBindingBase
 #   * InstanceBindingBase
-#   * InstanceNestedInstanceBindingBase
+#   * NestedInstanceBindingBase
 #
 #   Additionally, a BindingTypeContainer holds each type of binding defined for a given
-#   container type. Each BindingType inherits from the appropriate base container class, which is 
-#   a subclass of the single common base class. To facilitate ease of translation, the naming
-#   schema deployed for actual binding types is a little different (and may seem odd):
+#   container type. To facilitate ease of translation, the naming schema deployed for 
+#   actual binding types is a little different (and may seem odd):
 #
 #   * ClassBinding
 #   * NestedClassBinding
@@ -75,24 +74,44 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   #  initialize  #
   ################
   
-  def initialize( type_container_name, subclass_existing_bindings = true, *parent_containers, & module_define_block )
+  def initialize( type_container_name, parent_container = nil, subclass_existing_bindings = true, & module_block )
     
-    @name = type_container_name
+    @type_container_name = type_container_name
     
-    @subclass_existing_bindings = { }
+    @subclass_existing_bindings = subclass_existing_bindings
     
-    @binding_type_class = self.class::BindingType.new( self, nil )
-    
-    @class_binding_base           = self.class::BindingBase::ClassBindingBase.new( self )
-    @nested_class_binding_base    = self.class::BindingBase::NestedClassBindingBase.new( self )
-    @instance_binding_base        = self.class::BindingBase::InstanceBindingBase.new( self )
+    @class_binding_base = self.class::BindingBase::ClassBindingBase.new( self )
+    @nested_class_binding_base = self.class::BindingBase::NestedClassBindingBase.new( self )
+    @instance_binding_base = self.class::BindingBase::InstanceBindingBase.new( self )
     @nested_instance_binding_base = self.class::BindingBase::NestedInstanceBindingBase.new( self )
     
-    register_parents( subclass_existing_bindings, *parent_containers )
+    register_parent( parent_container, subclass_existing_bindings )
     
-    super( & module_define_block )
+    binding_type_superclass = parent_container ? parent_container.binding_type_class : self.class::BindingType
+    @binding_type_class = binding_type_superclass.new( self, nil )
+    const_set( :BindingTypeClass, @binding_type_class )
+    
+    super( & module_block )
     
   end
+
+  #########################
+  #  type_container_name  #
+  #########################
+  
+  attr_reader :type_container_name
+
+  ########################
+  #  binding_type_class  #
+  ########################
+  
+  attr_reader :binding_type_class
+  
+  ################################
+  #  subclass_existing_bindings  #
+  ################################
+  
+  attr_reader :subclass_existing_bindings
 
   ########################
   #  class_binding_base  #
@@ -118,53 +137,6 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
 
   attr_reader :nested_instance_binding_base
 
-  #####################
-  #  register_parent  #
-  #####################
-
-  def register_parent( subclass_existing_bindings, *parent_containers )
-    
-    # We are either Top Container or Container n.
-    # Top Container has CB/NCB/IB/NIB with explicit code as parents.
-    # Container n has Container n-1 as parents.
-    
-    # Register parent for self
-    # Register parent for each base module * 4 (CB, NCB, IB, NIB)
-    # Register parent for each type * 4
-    
-    parent_containers.each do |this_parent_container|
-      @subclass_existing_bindings[ this_parent_container ] = subclass_existing_bindings
-      ::CascadingConfiguration.register_parent( @class_binding_base, 
-                                                this_parent_container.class_binding_base )
-      ::CascadingConfiguration.register_parent( @nested_class_binding_base, 
-                                                this_parent_container.nested_class_binding_base )
-      ::CascadingConfiguration.register_parent( @instance_binding_base, 
-                                                this_parent_container.instance_binding_base )
-      ::CascadingConfiguration.register_parent( @nested_instance_binding_base, 
-                                                this_parent_container.nested_instance_binding_base )
-      ::CascadingConfiguration.register_parent( self, this_parent_container )
-    end
-    
-    return self
-    
-  end
-  
-  ######################
-  #  register_parents  #
-  ######################
-  
-  alias_method :register_parents, :register_parent
-  
-  #################################
-  #  subclass_existing_bindings?  #
-  #################################
-  
-  def subclass_existing_bindings?( parent_container )
-    
-    return @subclass_existing_bindings[ parent_container ]
-    
-  end
-
   ###################
   #  binding_types  #
   ###################
@@ -178,8 +150,8 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     def child_pre_set_hook( binding_type_name, parent_binding_type_instance, parent_hash )
       
       child_instance = nil
-      
-      if configuration_instance.subclass_existing_bindings?( parent_hash.configuration_instance )
+
+      if configuration_instance.subclass_existing_bindings
         child_instance = parent_binding_type_instance.new_binding_type_subclass( self, 
                                                                                  binding_type_name, 
                                                                                  parent_binding_type_instance )
@@ -223,11 +195,8 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
       # * otherwise we look up the name being defined in parent container
       else
         if @parent_container
-          if ancestor_type
-            parent_type_instance = @parent_container.binding_types[ ancestor_type.to_sym ]
-          else
-            parent_type_instance = @parent_container.binding_types[ binding_type_name ]
-          end
+          parent_type_instance = ancestor_type ? @parent_container.binding_types[ ancestor_type.to_sym ]
+                                               : @parent_container.binding_types[ binding_type_name ]
         end
     end
     
@@ -254,9 +223,78 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     
     binding_aliases[ alias_name ] = binding_type_name
     
-    const_set( alias_name.to_camel_case, binding_types[ binding_type_name ] )
+    binding_alias_constant_name = alias_name.to_s.to_camel_case
+    aliased_type_instance = binding_types[ binding_type_name ]
+    const_set( binding_alias_constant_name, aliased_type_instance )
     
     define_binding_methods( alias_name, binding_type_name )
+
+    return self
+    
+  end
+
+  ########################
+  #  new_class_bindings  #
+  ########################
+  
+  ###
+  # Create a new class binding for each binding name, each having the same configuration block. 
+  #
+  # 
+  #
+  def new_class_bindings( binding_type, bound_to_container, *binding_names, & configuration_proc )
+    
+    return binding_names.collect do |this_binding_name|
+      binding_type.class_binding_class.new( bound_to_container, this_binding_name, & configuration_proc )
+    end
+    
+  end
+
+  ##################################################################################################
+      private ######################################################################################
+  ##################################################################################################
+
+  #####################
+  #  register_parent  #
+  #####################
+
+  def register_parent( parent_container, subclass_existing_bindings = true )
+    
+    # We are either Top Container or Container n.
+    # Top Container has CB/NCB/IB/NIB with explicit code as parents.
+    # Container n has Container n-1 as parents.
+    
+    # Register parent for self
+    # Register parent for each base module * 4 (CB, NCB, IB, NIB)
+    # Register parent for each type * 4
+    
+    # child of parent
+    if @parent_container = parent_container
+      
+      @class_binding_base.module_eval           { include parent_container.class_binding_base }
+      @nested_class_binding_base.module_eval    { include parent_container.nested_class_binding_base }
+      @instance_binding_base.module_eval        { include parent_container.instance_binding_base }
+      @nested_instance_binding_base.module_eval { include parent_container.nested_instance_binding_base }
+      include parent_container
+      
+   # first parent
+    else
+      
+      @class_binding_base.module_eval           { include ::Perspective::Bindings::BindingBase::ClassBinding }
+      @nested_class_binding_base.module_eval    { include ::Perspective::Bindings::BindingBase::NestedClassBinding }
+      @instance_binding_base.module_eval        { include ::Perspective::Bindings::BindingBase::InstanceBinding }
+      @nested_instance_binding_base.module_eval { include ::Perspective::Bindings::BindingBase::NestedInstanceBinding }
+
+    end
+    
+    # and now nested containers include their non-nested equivalents
+    class_binding_base = @class_binding_base
+    @nested_class_binding_base.module_eval { include class_binding_base }
+
+    instance_binding_base = @instance_binding_base
+    @nested_instance_binding_base.module_eval { include instance_binding_base }
+    
+    return self
     
   end
 
@@ -294,6 +332,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   def multiple_binding_method_name( binding_type_name )
         
     # attr_[type]s or attr_[types]es
+
     method_name = ::Perspective::Bindings::BindingTypeContainer::MethodPrefix + '_' << binding_type_name.to_s
     if binding_type_name[ -1 ] =~ /[sx]/
       method_name << 'e'
@@ -311,6 +350,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   def required_single_binding_method_name( binding_type_name )
     
     # attr_required_[type]
+
     return ::Perspective::Bindings::BindingTypeContainer::MethodPrefix + '_required_' << binding_type_name.to_s
     
   end
@@ -322,6 +362,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   def required_multiple_binding_method_name( binding_type_name )
     
     # attr_required_[type]s or attr_required_[types]es
+
     method_name = ::Perspective::Bindings::BindingTypeContainer::MethodPrefix + '_required_' << binding_type_name.to_s
     if binding_type_name[ -1 ] =~ /[sx]/
       method_name << 'e'
@@ -339,8 +380,8 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   def define_single_binding_type( binding_method_name, binding_type_name = binding_method_name )
     
     method_name = single_binding_method_name( binding_method_name )
-    
     binding_type_instance = binding_types[ binding_type_name.to_sym ]
+    type_container = binding_type_instance.binding_type_container
     
     #===============#
     #  attr_[type]  #
@@ -348,23 +389,14 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     
     define_method( method_name ) do |*args, & block|
       
-      new_class_bindings = nil
-      
-      # type instance can define method, otherwise we use method in self
-      if binding_type_instance.respond_to?( :new_class_bindings )
-        new_class_bindings = binding_type_instance.new_class_bindings( *args, & block )
-      else
-        new_class_bindings = new_class_bindings( *args, & block )
-      end
-      
-      new_class_bindings.each do |this_new_class_binding|
+      new_class_bindings = type_container.new_class_bindings( binding_type_instance, self, *args, & block )
+
+      return new_class_bindings.each do |this_new_class_binding|
         this_new_binding_name = this_new_class_binding.__name__
         __bindings__[ this_new_binding_name ] = this_new_class_binding
         self::Controller::ClassBindingMethods.define_binding( this_new_binding_name )
         self::Controller::InstanceBindingMethods.define_binding( this_new_binding_name )
       end
-      
-      return new_class_bindings
     
     end
     
@@ -377,16 +409,15 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   def define_multiple_binding_type( binding_method_name, binding_type_name = binding_method_name )
         
     method_name = multiple_binding_method_name( binding_method_name )
-    
     single_binding_method_name = single_binding_method_name( binding_method_name )
         
     #================#
     #  attr_[type]s  #
     #================#
     
-    define_method( method_name ) do |*args, & configuration_proc|
+    define_method( method_name ) do |*args, & block|
     
-      new_class_bindings = __send__( single_binding_method_name, *args, & configuration_proc )
+      new_class_bindings = __send__( single_binding_method_name, *args, & block )
 
       new_class_bindings.each do |this_new_class_binding|
         this_new_class_binding.__permits_multiple__ = true
@@ -406,20 +437,16 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   def define_required_single_binding_type( binding_method_name, binding_type_name = binding_method_name )
         
     method_name = required_single_binding_method_name( binding_method_name )
-    
     single_binding_method_name = single_binding_method_name( binding_method_name )
         
     #========================#
     #  attr_required_[type]  #
     #========================#
     
-    define_method( method_name ) do |*args, & configuration_proc|
+    define_method( method_name ) do |*args, & block|
     
-      new_class_bindings = __send__( single_binding_method_name, *args, & configuration_proc )
-
-      new_class_bindings.each do |this_new_class_binding|
-        this_new_class_binding.__required__ = true
-      end
+      new_class_bindings = __send__( single_binding_method_name, *args, & block )
+      new_class_bindings.each { |this_new_class_binding| this_new_class_binding.__required__ = true }
     
       return new_class_bindings
     
@@ -434,20 +461,16 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   def define_required_multiple_binding_type( binding_method_name, binding_type_name = binding_method_name )
     
     method_name = required_multiple_binding_method_name( binding_method_name )
-    
     multiple_binding_method_name = multiple_binding_method_name( binding_method_name )
     
     #=========================#
     #  attr_required_[type]s  #
     #=========================#
     
-    define_method( method_name ) do |*args, & configuration_proc|
+    define_method( method_name ) do |*args, & block|
     
-      new_class_bindings = __send__( multiple_binding_method_name, *args, & configuration_proc )
-    
-      new_class_bindings.each do |this_new_class_binding|
-        this_new_class_binding.__required__ = true
-      end
+      new_class_bindings = __send__( multiple_binding_method_name, *args, & block )
+      new_class_bindings.each { |this_new_class_binding| this_new_class_binding.__required__ = true }
     
       return new_class_bindings
     

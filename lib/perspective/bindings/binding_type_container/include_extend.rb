@@ -4,7 +4,7 @@ module ::Perspective::Bindings::BindingTypeContainer::IncludeExtend
   include ::CascadingConfiguration::Array::Unique
   
   extend ::Module::Cluster
-  cluster = cluster( :binding_type_class_module )
+  cluster = cluster( :perspective__binding_type_class_module )
 
   ####################
   #  extend_modules  #
@@ -27,11 +27,7 @@ module ::Perspective::Bindings::BindingTypeContainer::IncludeExtend
   #   #include to be used for configuring corresponding bindings.
   #
   cluster.before_extend.cascade_to( :class ) do |hooked_class|    
-    hooked_class.class_eval do
-      class << self
-        alias_method( :__include__, :include )
-      end
-    end
+    hooked_class.class_eval { class << self ; alias_method( :__include__, :include ) ; end }
   end
 
   ################
@@ -43,11 +39,7 @@ module ::Perspective::Bindings::BindingTypeContainer::IncludeExtend
   #   #extend to be used for configuring corresponding bindings.
   #
   cluster.before_extend.cascade_to( :class ) do |hooked_class|    
-    hooked_class.class_eval do
-      class << self
-        alias_method( :__extend__, :extend )
-      end
-    end
+    hooked_class.class_eval { class << self ; alias_method( :__extend__, :extend ) ; end }
   end
 
   #############

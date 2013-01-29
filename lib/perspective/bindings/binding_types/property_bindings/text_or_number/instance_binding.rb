@@ -1,5 +1,5 @@
 
-class ::Perspective::Bindings::BindingTypes::PropertyBindings::TextOrNumberProperty::InstanceBinding
+module ::Perspective::Bindings::BindingTypes::PropertyBindings::TextOrNumberProperty::InstanceBinding
   
   include ::Perspective::Bindings::BindingDefinitions::Text
   include ::Perspective::Bindings::BindingDefinitions::Number

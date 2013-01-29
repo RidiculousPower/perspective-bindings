@@ -21,8 +21,8 @@ files = [
   'binding_type_container/binding_base',
   'binding_type_container/include_extend',
   'binding_type_container/binding_type/binding_type_interface',
-  'binding_type_container/binding_type/type',
   'binding_type_container/binding_type/binding_type_class',
+  'binding_type_container/binding_type/binding_type_module',
   'binding_type_container/binding_type',
   'binding_type_container',
 

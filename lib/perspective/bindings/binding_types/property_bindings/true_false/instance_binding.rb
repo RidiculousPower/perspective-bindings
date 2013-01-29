@@ -1,5 +1,5 @@
 
-class ::Perspective::Bindings::BindingTypes::PropertyBindings::TrueFalseProperty::InstanceBinding
+module ::Perspective::Bindings::BindingTypes::PropertyBindings::TrueFalseProperty::InstanceBinding
   
   include ::Perspective::Bindings::BindingDefinitions::TrueFalse
   

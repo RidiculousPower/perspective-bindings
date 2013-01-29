@@ -5,7 +5,7 @@
 #
 #   View bindings add view-related features to bindings.
 #
-::Perspective::Bindings::BindingTypes.define_container_type( :view_bindings, false )
+::Perspective::Bindings::BindingTypes.define_container_type( :view_bindings, :property_bindings, false )
 
 ###
 # For convenience we create a Constant ::Perspective::View::ViewBindings pointing to our 

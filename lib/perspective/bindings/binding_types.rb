@@ -14,15 +14,11 @@ module ::Perspective::Bindings::BindingTypes
   # Open container type for definition, creating if necessary.
   #
   def self.define_container_type( container_type,
+                                  parent_container_or_type = nil,
                                   subclass_existing_bindings = true,
-                                  *parent_container_or_types, 
                                   & definition_block )
     
     type_container_constant_name = container_type.to_s.to_camel_case
-    
-    if const_defined?( type_container_constant_name )
-      const_remove( type_container_constant_name )
-    end
     
     # We permit define to be called multiple times, so we check to see if 
     # we have already created our BindingTypeContainer instance for container_type.
@@ -34,14 +30,19 @@ module ::Perspective::Bindings::BindingTypes
 
     else
 
+      if const_defined?( type_container_constant_name )
+        const_remove( type_container_constant_name )
+      end
+
       type_container = create_container_type( container_type,
+                                              parent_container_or_type,
                                               subclass_existing_bindings,
-                                              *parent_container_or_types,
                                               & definition_block )
+      
+      const_set( type_container_constant_name, type_container )
       
     end
         
-    const_set( type_container_constant_name, type_container )
     
     return type_container
     
@@ -56,35 +57,28 @@ module ::Perspective::Bindings::BindingTypes
   #   belonging to container type.
   #
   def self.create_container_type( container_type, 
+                                  parent_container_or_type,
                                   subclass_existing_bindings = true,
-                                  *parent_container_or_types,
                                   & definition_block )
     
-    parent_containers = [ ]
-    
-    parent_container_or_types.each do |this_parent_container_or_type|
-
-      case this_parent_container_or_type
-    
-        when ::Module
-    
-          parent_containers.push( this_parent_container_or_type )
+    case parent_container_or_type
   
-        when ::Symbol, ::String
+      when ::Module
+  
+        # nothing to do
 
-          if this_parent_container = @type_containers[ this_parent_container_or_type ]
-            parent_containers.push( this_parent_container )
-          else
-            raise ::ArgumentError, 'No container defined by name :' + this_parent_container_or_type.to_s
-          end
-
-      end
+      when ::Symbol, ::String
+        
+        parent_container_type_name = parent_container_or_type
+        unless parent_container_or_type = @type_containers[ parent_container_type_name ]
+          raise ::ArgumentError, 'No container defined by name :' + parent_container_type_name.to_s
+        end
 
     end
 
     type_container = ::Perspective::Bindings::BindingTypeContainer.new( container_type, 
+                                                                        parent_container_or_type,
                                                                         subclass_existing_bindings, 
-                                                                        *parent_containers, 
                                                                         & definition_block )
     
     ::Perspective::Bindings::BindingDefinitions.const_set( container_type.to_s.to_camel_case, type_container )

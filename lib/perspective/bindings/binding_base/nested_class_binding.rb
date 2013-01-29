@@ -2,19 +2,6 @@
 module ::Perspective::Bindings::BindingBase::NestedClassBinding
 
   include ::Perspective::Bindings::BindingBase::ClassBinding
-  
-  ################
-  #  initialize  #
-  ################
-
-  def initialize( bound_container, binding_name, ancestor_binding = nil, & configuration_proc )
-    
-    @__parent_binding__ = ancestor_binding
-    @__bound_container__ = bound_container
-
-    super
-        
-  end
                 
   ##########################
   #  __initialize_route__  #
@@ -45,7 +32,7 @@ module ::Perspective::Bindings::BindingBase::NestedClassBinding
   ######################
 
   def __nested_route__( nested_in_binding )
-
+    
     # our route: <root>-route-to-binding
     # nested route: <root>-route-to-binding-nested-in-self
     # result desired: nested-in-self

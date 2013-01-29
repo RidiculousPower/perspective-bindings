@@ -1,5 +1,5 @@
 
-class ::Perspective::Bindings::BindingTypes::PropertyBindings::IntegerProperty::InstanceBinding
+module ::Perspective::Bindings::BindingTypes::PropertyBindings::IntegerProperty::InstanceBinding
   
   include ::Perspective::Bindings::BindingDefinitions::Integer
   

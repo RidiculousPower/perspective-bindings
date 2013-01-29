@@ -1,5 +1,5 @@
 
-class ::Perspective::Bindings::BindingTypes::PropertyBindings::FileProperty::InstanceBinding
+module ::Perspective::Bindings::BindingTypes::PropertyBindings::FileProperty::InstanceBinding
   
   include ::Perspective::Bindings::BindingDefinitions::File
   

@@ -1,5 +1,5 @@
 
-class ::Perspective::Bindings::BindingTypes::PropertyBindings::ComplexProperty::InstanceBinding
+module ::Perspective::Bindings::BindingTypes::PropertyBindings::ComplexProperty::InstanceBinding
   
   include ::Perspective::Bindings::BindingDefinitions::Complex
   

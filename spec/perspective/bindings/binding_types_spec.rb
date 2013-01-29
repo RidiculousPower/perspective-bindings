@@ -24,7 +24,7 @@ describe ::Perspective::Bindings::Attributes do
     parent_instance = instance
       
     # with parent container no base class specification
-    instance = ::Perspective::Bindings::BindingTypes.define_container_type( :container2, true, parent_instance, & define_proc )
+    instance = ::Perspective::Bindings::BindingTypes.define_container_type( :container2, parent_instance, true, & define_proc )
     instance.ancestors.include?( parent_instance ).should == true
     proc_ran.should == true
     proc_ran = false

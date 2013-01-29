@@ -15,6 +15,7 @@ module ::Perspective::Bindings::BindingBase::ClassBinding
     @__bound_container__ = bound_container
 
     if ancestor_binding
+      @__parent_binding__ = ancestor_binding
       ::CascadingConfiguration.register_parent( self, ancestor_binding )
       __initialize_route__
     else

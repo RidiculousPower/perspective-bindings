@@ -1,6 +1,6 @@
 
 class ::Perspective::Bindings::Container::BindingMethods <
-      ::CascadingConfiguration::Core::InstanceController::SupportModule
+      ::CascadingConfiguration::InstanceController::SupportModule
 
   ####################
   #  define_binding  #
