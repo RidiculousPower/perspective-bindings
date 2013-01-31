@@ -2,16 +2,12 @@
 module ::Perspective::Bindings::Configuration
 
   ########################
-  #  parent_binding      #
   #  __parent_binding__  #
   ########################
 
   attr_reader  :__parent_binding__
 
-  alias_method  :parent_binding, :__parent_binding__
-  
 	#################
-  #  binding      #
   #  __binding__  #
   #################
     
@@ -20,23 +16,16 @@ module ::Perspective::Bindings::Configuration
     binding_instance = nil
 
     unless binding_instance = __bindings__[ binding_name ]
-      
       if binding_alias = __binding_aliases__[ binding_name ]
-      
         binding_instance = __bindings__[ binding_alias ]
-
       else
-
         binding_instance = __local_aliases_to_bindings__[ binding_name ]
-
       end
-      
     end
     
     return binding_instance
     
   end
-  alias_method  :binding, :__binding__
 
   ######################
   #  __has_binding__?  #
@@ -46,23 +35,13 @@ module ::Perspective::Bindings::Configuration
   # 
 	def __has_binding__?( binding_name )
 		
-		has_binding = false
-		
-		# if we have binding, alias, or re-binding
-		if 	__bindings__.has_key?( binding_name )        or 
-		    __binding_aliases__.has_key?( binding_name ) or
-		    __local_aliases_to_bindings__.has_key?( binding_name )
-		
-			has_binding = true
-		
-		end
-		
-		return has_binding
+		return __bindings__.has_key?( binding_name )        || 
+		       __binding_aliases__.has_key?( binding_name ) ||
+		       __local_aliases_to_bindings__.has_key?( binding_name )
 		
 	end
 
   ###################
-  #  configure      #
   #  __configure__  #
   ###################
 
@@ -70,7 +49,13 @@ module ::Perspective::Bindings::Configuration
         
     __configuration_procs__.push( configuration_proc )
     
+    return self
+    
   end
+
+  ###############
+  #  configure  #
+  ###############
 
   alias_method( :configure, :__configure__ )
   

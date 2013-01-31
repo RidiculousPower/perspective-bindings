@@ -72,4 +72,35 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBindin
     
   end
   
+  ####################
+  #  method_missing  #
+  ####################
+  
+  def method_missing( method, *args, & block )
+
+    begin
+      # Forward method call to value
+      return __value__.__send__( method, *args, & block )
+    rescue ::Exception => exception
+      exception.reraise( 2 )
+    end
+    
+  end
+
+  #########################
+  #  respond_to_missing?  #
+  #########################
+  
+  def respond_to_missing?( method, include_private )
+    
+    responds = true
+
+    if ::Perspective::Bindings::BindingBase::InstanceBinding::NonForwardingMethods.has_key?( method )
+      responds = false
+    end
+    
+    return responds
+    
+  end
+
 end

@@ -1,46 +1,82 @@
 
 require_relative '../../../../lib/perspective/bindings.rb'
 
+require_relative '../../../support/class_binding_setup.rb'
+
 describe ::Perspective::Bindings::BindingBase::InstanceBinding do
 
-  before :all do
-    class ::Perspective::Bindings::BindingBase::InstanceBinding::BoundContainerMock
-      def self.__root__
-        return self
-      end
-      def self.__root_string__
-        return to_s
-      end
-      def __root__
-        return self
-      end
-      def __root_string__
-        return to_s
-      end
-    end
-    class ::Perspective::Bindings::BindingBase::InstanceBinding::ClassBindingMock
-      include ::Perspective::Bindings::BindingBase::ClassBinding
-    end
-    class ::Perspective::Bindings::BindingBase::InstanceBinding::InstanceBindingMock
-      include ::Perspective::Bindings::BindingBase::InstanceBinding
-    end
-    @configuration_proc = ::Proc.new { puts 'config!' }
-    @bound_container = ::Perspective::Bindings::BindingBase::InstanceBinding::BoundContainerMock
-    @bound_container_instance = @bound_container.new
-  end
+  setup_class_binding_tests
   
-  before :each do
-    @class_binding = ::Perspective::Bindings::BindingBase::InstanceBinding::ClassBindingMock.new( @bound_container, :binding_name, & @configuration_proc )
-    @instance_binding = ::Perspective::Bindings::BindingBase::InstanceBinding::InstanceBindingMock.new( @class_binding, @bound_container_instance )
+  let( :class_binding_class ) { ::Class.new { include( ::Perspective::Bindings::BindingBase::ClassBinding ) } }
+  let( :instance_binding_class ) do
+    ::Class.new do
+      include( ::Perspective::Bindings::BindingBase::InstanceBinding )
+      alias_method( :__extend__, :extend )
+    end
   end
 
+  let( :base_container_instance ) { base_container.new }
+  let( :first_nested_container_instance ) { first_nested_container.new }
+  let( :nth_nested_container_instance ) { nth_nested_container.new }
+  let( :sub_base_container_instance ) { sub_base_container.new }
+  let( :sub_first_nested_container_instance ) { sub_first_nested_container.new }
+  let( :sub_nth_nested_container_instance ) { sub_nth_nested_container.new }
+
+  let( :instance_binding_to_base ) { instance_binding_class.new( class_binding_to_base, base_container_instance ) }
+  let( :instance_binding_to_first_nested ) { instance_binding_class.new( class_binding_to_first_nested, instance_binding_to_base ) }
+  let( :instance_binding_to_nth_nested ) { instance_binding_class.new( class_binding_to_nth_nested, instance_binding_to_first_nested ) }
+
+  let( :subclass_instance_binding_to_base ) { instance_binding_class.new( subclass_class_binding_to_base, sub_base_container_instance ) }
+  let( :subclass_instance_binding_to_first_nested ) { instance_binding_class.new( subclass_class_binding_to_first_nested, subclass_instance_binding_to_base ) }
+  let( :subclass_instance_binding_to_nth_nested ) { instance_binding_class.new( subclass_class_binding_to_nth_nested, subclass_instance_binding_to_first_nested ) }
+
+  ########################
+  #  __parent_binding__  #
+  ########################
+  
+  context '#__parent_binding__' do
+    it 'bound to base container' do
+      instance_binding_to_base.__parent_binding__.should == class_binding_to_base
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__parent_binding__.should == class_binding_to_first_nested
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__parent_binding__.should == class_binding_to_nth_nested
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__parent_binding__.should == subclass_class_binding_to_base
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__parent_binding__.should == subclass_class_binding_to_first_nested
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__parent_binding__.should == subclass_class_binding_to_nth_nested
+    end
+  end
+  
   #########################
   #  __bound_container__  #
   #########################
   
   context '#__bound_container__' do
-    it 'binds to a container' do
-      @instance_binding.__bound_container__.should == @bound_container_instance
+    it 'bound to base container' do
+      instance_binding_to_base.__bound_container__.should be base_container_instance
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__bound_container__.should be instance_binding_to_base
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__bound_container__.should be instance_binding_to_first_nested
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__bound_container__.should be sub_base_container_instance
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__bound_container__.should be subclass_instance_binding_to_base
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__bound_container__.should be subclass_instance_binding_to_first_nested
     end
   end
 
@@ -49,8 +85,23 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   ##############
   
   context '#__name__' do
-    it 'has a name' do
-      @instance_binding.__name__.should == :binding_name
+    it 'bound to base container' do
+      instance_binding_to_base.__name__.should == instance_binding_to_base.__parent_binding__.__name__
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__name__.should == instance_binding_to_first_nested.__parent_binding__.__name__
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__name__.should == instance_binding_to_nth_nested.__parent_binding__.__name__
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__name__.should == subclass_instance_binding_to_base.__parent_binding__.__name__
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__name__.should == subclass_instance_binding_to_first_nested.__parent_binding__.__name__
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__name__.should == subclass_instance_binding_to_nth_nested.__parent_binding__.__name__
     end
   end
 
@@ -59,8 +110,23 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   ##############
   
   context '#__root__' do
-    it 'has a root container, which for a non-nested class binding is self' do
-      @instance_binding.__root__.should == @bound_container_instance
+    it 'bound to base container' do
+      instance_binding_to_base.__root__.should == base_container_instance
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__root__.should == base_container_instance
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__root__.should == base_container_instance
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__root__.should == sub_base_container_instance
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__root__.should == sub_base_container_instance
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__root__.should == sub_base_container_instance
     end
   end
 
@@ -69,8 +135,23 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   ###############
 
   context '#__route__' do
-    it 'it has a route, which for a non-nested class binding is nil' do
-      @instance_binding.__route__.should == nil
+    it 'bound to base container' do
+      instance_binding_to_base.__route__.should == nil
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__route__.should == [ instance_binding_to_base.__name__ ]
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__route__.should == [ instance_binding_to_base.__name__, instance_binding_to_first_nested.__name__ ]
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__route__.should == nil
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__route__.should == [ subclass_instance_binding_to_base.__name__ ]
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__route__.should == [ subclass_instance_binding_to_base.__name__, subclass_instance_binding_to_first_nested.__name__ ]
     end
   end
 
@@ -79,8 +160,52 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   #########################
 
   context '#__route_with_name__' do
-    it 'it has a route with name, which for a non-nested class binding is the name' do
-      @instance_binding.__route_with_name__.should == [ :binding_name ]
+    it 'bound to base container' do
+      instance_binding_to_base.__route_with_name__.should == [ instance_binding_to_base.__name__ ]
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__route_with_name__.should == [ instance_binding_to_base.__name__, instance_binding_to_first_nested.__name__ ]
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__route_with_name__.should == [ instance_binding_to_base.__name__, instance_binding_to_first_nested.__name__, instance_binding_to_nth_nested.__name__ ]
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__route_with_name__.should == [ subclass_instance_binding_to_base.__name__ ]
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__route_with_name__.should == [ subclass_instance_binding_to_base.__name__, subclass_instance_binding_to_first_nested.__name__ ]
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__route_with_name__.should == [ subclass_instance_binding_to_base.__name__, subclass_instance_binding_to_first_nested.__name__, subclass_instance_binding_to_nth_nested.__name__ ]
+    end
+  end
+
+  ######################
+  #  __nested_route__  #
+  ######################
+  
+  context '#__nested_route__' do
+    it 'bound to base container' do
+      instance_binding_to_base.__nested_route__( instance_binding_to_base ).should == nil
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__nested_route__( instance_binding_to_base ).should == nil
+      instance_binding_to_first_nested.__nested_route__( instance_binding_to_first_nested ).should == nil
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__nested_route__( instance_binding_to_base ).should == [ binding_to_first_nested_name ]
+      instance_binding_to_nth_nested.__nested_route__( instance_binding_to_first_nested ).should == nil
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__nested_route__( subclass_instance_binding_to_base ).should == nil
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__nested_route__( subclass_instance_binding_to_base ).should == nil
+      subclass_instance_binding_to_first_nested.__nested_route__( subclass_instance_binding_to_first_nested ).should == nil
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__nested_route__( instance_binding_to_base ).should == [ binding_to_first_nested_name ]
+      subclass_instance_binding_to_nth_nested.__nested_route__( instance_binding_to_first_nested ).should == nil
     end
   end
 
@@ -89,9 +214,23 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   ######################
 
   context '#__route_string__' do
-    it 'it has a route string, which for a non-nested class binding is the name' do
-      @instance_binding.__route_string__.should == ::Perspective::Bindings.context_string( @instance_binding.__route_with_name__ )
-
+    it 'bound to base container' do
+      instance_binding_to_base.__route_string__.should == ::Perspective::Bindings.context_string( instance_binding_to_base.__route_with_name__ )
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__route_string__.should == ::Perspective::Bindings.context_string( instance_binding_to_first_nested.__route_with_name__ )
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__route_string__.should == ::Perspective::Bindings.context_string( instance_binding_to_nth_nested.__route_with_name__ )
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__route_string__.should == ::Perspective::Bindings.context_string( subclass_instance_binding_to_base.__route_with_name__ )
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__route_string__.should == ::Perspective::Bindings.context_string( subclass_instance_binding_to_first_nested.__route_with_name__ )
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__route_string__.should == ::Perspective::Bindings.context_string( subclass_instance_binding_to_nth_nested.__route_with_name__ )
     end
   end
 
@@ -100,8 +239,23 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   ############################
 
   context '#__route_print_string__' do
-    it 'it has a route print string, which for a non-nested class binding is the root string plus the name' do
-      @instance_binding.__route_print_string__.should == ::Perspective::Bindings.context_print_string( @bound_container_instance, @instance_binding.__route_string__ )
+    it 'bound to base container' do
+      instance_binding_to_base.__route_print_string__.should == ::Perspective::Bindings.context_print_string( base_container_instance, instance_binding_to_base.__route_string__ )
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__route_print_string__.should == ::Perspective::Bindings.context_print_string( base_container_instance, instance_binding_to_first_nested.__route_string__ )
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__route_print_string__.should == ::Perspective::Bindings.context_print_string( base_container_instance, instance_binding_to_nth_nested.__route_string__ )
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__route_print_string__.should == ::Perspective::Bindings.context_print_string( sub_base_container_instance, subclass_instance_binding_to_base.__route_string__ )
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__route_print_string__.should == ::Perspective::Bindings.context_print_string( sub_base_container_instance, subclass_instance_binding_to_first_nested.__route_string__ )
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__route_print_string__.should == ::Perspective::Bindings.context_print_string( sub_base_container_instance, subclass_instance_binding_to_nth_nested.__route_string__ )
     end
   end
 
@@ -111,8 +265,35 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   ###########################
 
   context '#__permits_multiple__?, #__permits_multiple__=' do
-    it 'does not permit multiple by default' do
-      @instance_binding.__permits_multiple__?.should == false
+    it 'bound to base container' do
+      instance_binding_to_base.__permits_multiple__?.should be false
+      instance_binding_to_base.__permits_multiple__ = true
+      instance_binding_to_base.__permits_multiple__?.should be true
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__permits_multiple__?.should be false
+      instance_binding_to_first_nested.__permits_multiple__ = true
+      instance_binding_to_first_nested.__permits_multiple__?.should be true
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__permits_multiple__?.should be false
+      instance_binding_to_nth_nested.__permits_multiple__ = true
+      instance_binding_to_nth_nested.__permits_multiple__?.should be true
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__permits_multiple__?.should be false
+      subclass_instance_binding_to_base.__permits_multiple__ = true
+      subclass_instance_binding_to_base.__permits_multiple__?.should be true
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__permits_multiple__?.should be false
+      subclass_instance_binding_to_first_nested.__permits_multiple__ = true
+      subclass_instance_binding_to_first_nested.__permits_multiple__?.should be true
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__permits_multiple__?.should be false
+      subclass_instance_binding_to_nth_nested.__permits_multiple__ = true
+      subclass_instance_binding_to_nth_nested.__permits_multiple__?.should be true
     end
   end
 
@@ -122,10 +303,35 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   ###################
 
   context '#__required__?, #__required__=' do
-    it 'can report whether required' do
-      @instance_binding.__required__?.should == ! @instance_binding.__optional__?
-      @instance_binding.__required__ = ! @instance_binding.__required__?
-      @instance_binding.__required__?.should == ! @instance_binding.__optional__?
+    it 'bound to base container' do
+      instance_binding_to_base.__required__?.should be false
+      instance_binding_to_base.__required__ = true
+      instance_binding_to_base.__required__?.should be true
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__required__?.should be false
+      instance_binding_to_first_nested.__required__ = true
+      instance_binding_to_first_nested.__required__?.should be true
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__required__?.should be false
+      instance_binding_to_nth_nested.__required__ = true
+      instance_binding_to_nth_nested.__required__?.should be true
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__required__?.should be false
+      subclass_instance_binding_to_base.__required__ = true
+      subclass_instance_binding_to_base.__required__?.should be true
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__required__?.should be false
+      subclass_instance_binding_to_first_nested.__required__ = true
+      subclass_instance_binding_to_first_nested.__required__?.should be true
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__required__?.should be false
+      subclass_instance_binding_to_nth_nested.__required__ = true
+      subclass_instance_binding_to_nth_nested.__required__?.should be true
     end
   end
 
@@ -135,10 +341,35 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   ###################
 
   context '#__optional__?, #__optional__=' do
-    it 'can report whether optional' do
-      @instance_binding.__optional__?.should == ! @instance_binding.__required__?
-      @instance_binding.__optional__ = ! @instance_binding.__optional__?
-      @instance_binding.__optional__?.should == ! @instance_binding.__required__?
+    it 'bound to base container' do
+      instance_binding_to_base.__optional__?.should be true
+      instance_binding_to_base.__optional__ = false
+      instance_binding_to_base.__optional__?.should be false
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__optional__?.should be true
+      instance_binding_to_first_nested.__optional__ = false
+      instance_binding_to_first_nested.__optional__?.should be false
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__optional__?.should be true
+      instance_binding_to_nth_nested.__optional__ = false
+      instance_binding_to_nth_nested.__optional__?.should be false
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__optional__?.should be true
+      subclass_instance_binding_to_base.__optional__ = false
+      subclass_instance_binding_to_base.__optional__?.should be false
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__optional__?.should be true
+      subclass_instance_binding_to_first_nested.__optional__ = false
+      subclass_instance_binding_to_first_nested.__optional__?.should be false
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__optional__?.should be true
+      subclass_instance_binding_to_nth_nested.__optional__ = false
+      subclass_instance_binding_to_nth_nested.__optional__?.should be false
     end
   end
 
@@ -147,41 +378,113 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   ##############################
   
   context '#__binding_value_valid__?' do
-    it 'can ensure class instances are valid binding objects' do
-      @instance_binding.__permits_multiple__ = true
-      @instance_binding.__instance_eval__ do
-        __extend__ ::Perspective::Bindings::BindingDefinitions::Class
-        __extend__ ::Perspective::Bindings::BindingDefinitions::Integer
-        __extend__ ::Perspective::Bindings::BindingDefinitions::Float
-        # class
-        __binding_value_valid__?( Object ).should == true
-        # module
-        __binding_value_valid__?( Kernel ).should == false
-        # file
-        __binding_value_valid__?( File.new( __FILE__ ) ).should == false
-        # integer
-        __binding_value_valid__?( 42 ).should == true
-        # float
-        __binding_value_valid__?( 42.0 ).should == true
-        # complex
-        __binding_value_valid__?( Complex( 1, 2 ) ).should == false
-        # rational
-        __binding_value_valid__?( Rational( 1, 2 ) ).should == false
-        # [ number ] - integer, float, complex, rational
-        # regexp
-        __binding_value_valid__?( /some_regexp/ ).should == false
-        # text
-        __binding_value_valid__?( 'string' ).should == false
-        __binding_value_valid__?( :symbol ).should == false
-        # true_false
-        __binding_value_valid__?( true ).should == false
-        __binding_value_valid__?( false ).should == false
-        # uri
-        __binding_value_valid__?( 'http://some.uri' ).should == false
-        __binding_value_valid__?( URI.parse( 'http://some.uri' ) ).should == false
-        # multiple
-        __permits_multiple__?.should == true
-        __binding_value_valid__?( [ Object, 12, 42.0 ] ).should == true
+    let( :value ) { 'some value' }
+    let( :bad_value ) { 42 }
+    context 'without permitted value module(s)' do
+      it 'bound to base container' do
+        instance_binding_to_base.__binding_value_valid__?( value ).should be false
+        instance_binding_to_base.__binding_value_valid__?( bad_value ).should be false
+      end
+      it 'bound to first nested container' do
+        instance_binding_to_first_nested.__binding_value_valid__?( value ).should be false
+        instance_binding_to_first_nested.__binding_value_valid__?( bad_value ).should be false
+      end
+      it 'bound to nth nested container' do
+        instance_binding_to_nth_nested.__binding_value_valid__?( value ).should be false
+        instance_binding_to_nth_nested.__binding_value_valid__?( bad_value ).should be false
+      end
+      it 'bound to subclass of base container' do
+        subclass_instance_binding_to_base.__binding_value_valid__?( value ).should be false
+        subclass_instance_binding_to_base.__binding_value_valid__?( bad_value ).should be false
+      end
+      it 'bound to subclass of first nested container' do
+        subclass_instance_binding_to_first_nested.__binding_value_valid__?( value ).should be false
+        subclass_instance_binding_to_first_nested.__binding_value_valid__?( bad_value ).should be false
+      end
+      it 'bound to subclass of nth nested container' do
+        subclass_instance_binding_to_nth_nested.__binding_value_valid__?( value ).should be false
+        subclass_instance_binding_to_nth_nested.__binding_value_valid__?( bad_value ).should be false
+      end
+    end
+    context 'with permitted value module' do
+      let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Text }
+      before :each do
+        instance_binding_to_base.__extend__( permitted_value_module )
+        instance_binding_to_first_nested.__extend__( permitted_value_module )
+        instance_binding_to_nth_nested.__extend__( permitted_value_module )
+        subclass_instance_binding_to_base.__extend__( permitted_value_module )
+        subclass_instance_binding_to_first_nested.__extend__( permitted_value_module )
+        subclass_instance_binding_to_nth_nested.__extend__( permitted_value_module )
+      end
+      it 'bound to base container' do
+        instance_binding_to_base.__binding_value_valid__?( value ).should be true
+        instance_binding_to_base.__binding_value_valid__?( bad_value ).should be false
+      end
+      it 'bound to first nested container' do
+        instance_binding_to_first_nested.__binding_value_valid__?( value ).should be true
+        instance_binding_to_first_nested.__binding_value_valid__?( bad_value ).should be false
+      end
+      it 'bound to nth nested container' do
+        instance_binding_to_nth_nested.__binding_value_valid__?( value ).should be true
+        instance_binding_to_nth_nested.__binding_value_valid__?( bad_value ).should be false
+      end
+      it 'bound to subclass of base container' do
+        subclass_instance_binding_to_base.__binding_value_valid__?( value ).should be true
+        subclass_instance_binding_to_base.__binding_value_valid__?( bad_value ).should be false
+      end
+      it 'bound to subclass of first nested container' do
+        subclass_instance_binding_to_first_nested.__binding_value_valid__?( value ).should be true
+        subclass_instance_binding_to_first_nested.__binding_value_valid__?( bad_value ).should be false
+      end
+      it 'bound to subclass of nth nested container' do
+        subclass_instance_binding_to_nth_nested.__binding_value_valid__?( value ).should be true
+        subclass_instance_binding_to_nth_nested.__binding_value_valid__?( bad_value ).should be false
+      end
+      context 'when does not permit multiple and value is array' do
+        let( :value ) { [ :any_array ] }
+        it 'bound to base container' do
+          instance_binding_to_base.__binding_value_valid__?( value ).should be false
+        end
+        it 'bound to first nested container' do
+          instance_binding_to_first_nested.__binding_value_valid__?( value ).should be false
+        end
+        it 'bound to nth nested container' do
+          instance_binding_to_nth_nested.__binding_value_valid__?( value ).should be false
+        end
+        it 'bound to subclass of base container' do
+          subclass_instance_binding_to_base.__binding_value_valid__?( value ).should be false
+        end
+        it 'bound to subclass of first nested container' do
+          subclass_instance_binding_to_first_nested.__binding_value_valid__?( value ).should be false
+        end
+        it 'bound to subclass of nth nested container' do
+          subclass_instance_binding_to_nth_nested.__binding_value_valid__?( value ).should be false
+        end
+      end
+      context 'when permits multiple and value is array' do
+        before :each do
+          instance_binding_to_base.__permits_multiple__ = true
+          instance_binding_to_first_nested.__permits_multiple__ = true
+          instance_binding_to_nth_nested.__permits_multiple__ = true
+        end
+        it 'bound to base container' do
+          instance_binding_to_base.__binding_value_valid__?( value ).should be true
+        end
+        it 'bound to first nested container' do
+          instance_binding_to_first_nested.__binding_value_valid__?( value ).should be true
+        end
+        it 'bound to nth nested container' do
+          instance_binding_to_nth_nested.__binding_value_valid__?( value ).should be true
+        end
+        it 'bound to subclass of base container' do
+          subclass_instance_binding_to_base.__binding_value_valid__?( value ).should be true
+        end
+        it 'bound to subclass of first nested container' do
+          subclass_instance_binding_to_first_nested.__binding_value_valid__?( value ).should be true
+        end
+        it 'bound to subclass of nth nested container' do
+          subclass_instance_binding_to_nth_nested.__binding_value_valid__?( value ).should be true
+        end
       end
     end
   end
@@ -191,8 +494,53 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
 	#################
 
   context '#__equals__?' do
-    it 'has an alias to its original :== method' do
-      @instance_binding.__equals__?( @instance_binding ).should == true
+    it 'bound to base container' do
+      instance_binding_to_base.__equals__?( instance_binding_to_base ).should be true
+      instance_binding_to_base.__equals__?( instance_binding_to_first_nested ).should be false
+      instance_binding_to_base.__equals__?( instance_binding_to_nth_nested ).should be false
+      instance_binding_to_base.__equals__?( subclass_instance_binding_to_base ).should be false
+      instance_binding_to_base.__equals__?( subclass_instance_binding_to_first_nested ).should be false
+      instance_binding_to_base.__equals__?( subclass_instance_binding_to_nth_nested ).should be false
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.__equals__?( instance_binding_to_first_nested ).should be true
+      instance_binding_to_first_nested.__equals__?( instance_binding_to_base ).should be false
+      instance_binding_to_first_nested.__equals__?( instance_binding_to_nth_nested ).should be false
+      instance_binding_to_first_nested.__equals__?( subclass_instance_binding_to_base ).should be false
+      instance_binding_to_first_nested.__equals__?( subclass_instance_binding_to_first_nested ).should be false
+      instance_binding_to_first_nested.__equals__?( subclass_instance_binding_to_nth_nested ).should be false
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.__equals__?( instance_binding_to_nth_nested ).should be true
+      instance_binding_to_nth_nested.__equals__?( instance_binding_to_base ).should be false
+      instance_binding_to_nth_nested.__equals__?( instance_binding_to_first_nested ).should be false
+      instance_binding_to_nth_nested.__equals__?( subclass_instance_binding_to_base ).should be false
+      instance_binding_to_nth_nested.__equals__?( subclass_instance_binding_to_first_nested ).should be false
+      instance_binding_to_nth_nested.__equals__?( subclass_instance_binding_to_nth_nested ).should be false
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.__equals__?( subclass_instance_binding_to_base ).should be true
+      subclass_instance_binding_to_base.__equals__?( instance_binding_to_base ).should be false
+      subclass_instance_binding_to_base.__equals__?( instance_binding_to_first_nested ).should be false
+      subclass_instance_binding_to_base.__equals__?( instance_binding_to_nth_nested ).should be false
+      subclass_instance_binding_to_base.__equals__?( subclass_instance_binding_to_first_nested ).should be false
+      subclass_instance_binding_to_base.__equals__?( subclass_instance_binding_to_nth_nested ).should be false
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.__equals__?( subclass_instance_binding_to_first_nested ).should be true
+      subclass_instance_binding_to_first_nested.__equals__?( instance_binding_to_base ).should be false
+      subclass_instance_binding_to_first_nested.__equals__?( instance_binding_to_first_nested ).should be false
+      subclass_instance_binding_to_first_nested.__equals__?( instance_binding_to_nth_nested ).should be false
+      subclass_instance_binding_to_first_nested.__equals__?( subclass_instance_binding_to_base ).should be false
+      subclass_instance_binding_to_first_nested.__equals__?( subclass_instance_binding_to_nth_nested ).should be false
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.__equals__?( subclass_instance_binding_to_nth_nested ).should be true
+      subclass_instance_binding_to_nth_nested.__equals__?( instance_binding_to_base ).should be false
+      subclass_instance_binding_to_nth_nested.__equals__?( instance_binding_to_first_nested ).should be false
+      subclass_instance_binding_to_nth_nested.__equals__?( instance_binding_to_nth_nested ).should be false
+      subclass_instance_binding_to_nth_nested.__equals__?( subclass_instance_binding_to_base ).should be false
+      subclass_instance_binding_to_nth_nested.__equals__?( subclass_instance_binding_to_first_nested ).should be false
     end
   end
 
@@ -202,12 +550,67 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   ################
 
   context '#__value__, #__value__=' do
-    it 'can hold a value' do
-      ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :value ).should == ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :__value__ )
-      ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :value= ).should == ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :__value__= )
-      @instance_binding.__extend__ ::Perspective::Bindings::BindingDefinitions::Text
-      @instance_binding.__value__ = :some_value
-      @instance_binding.__value__.should == :some_value
+    let( :value ) { 'some value' }
+    context 'if __binding_value_valid__? is false' do
+      it 'bound to base container' do
+        ::Proc.new { instance_binding_to_base.__value__ = value }.should raise_error( ::ArgumentError )
+      end
+      it 'bound to first nested container' do
+        ::Proc.new { instance_binding_to_first_nested.__value__ = value }.should raise_error( ::ArgumentError )
+      end
+      it 'bound to nth nested container' do
+        ::Proc.new { instance_binding_to_nth_nested.__value__ = value }.should raise_error( ::ArgumentError )
+      end
+      it 'bound to subclass of base container' do
+        ::Proc.new { subclass_instance_binding_to_base.__value__ = value }.should raise_error( ::ArgumentError )
+      end
+      it 'bound to subclass of first nested container' do
+        ::Proc.new { subclass_instance_binding_to_first_nested.__value__ = value }.should raise_error( ::ArgumentError )
+      end
+      it 'bound to subclass of nth nested container' do
+        ::Proc.new { subclass_instance_binding_to_nth_nested.__value__ = value }.should raise_error( ::ArgumentError )
+      end
+    end
+    context 'if __binding_value_valid__? is true' do
+      let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Text }
+      before :all do
+        instance_binding_to_base.__extend__( permitted_value_module )
+        instance_binding_to_first_nested.__extend__( permitted_value_module )
+        instance_binding_to_nth_nested.__extend__( permitted_value_module )
+        subclass_instance_binding_to_base.__extend__( permitted_value_module )
+        subclass_instance_binding_to_first_nested.__extend__( permitted_value_module )
+        subclass_instance_binding_to_nth_nested.__extend__( permitted_value_module )
+      end
+      it 'bound to base container' do
+        instance_binding_to_base.__value__.should be nil
+        instance_binding_to_base.__value__ = value
+        instance_binding_to_base.__value__.should be value
+      end
+      it 'bound to first nested container' do
+        instance_binding_to_first_nested.__value__.should be nil
+        instance_binding_to_first_nested.__value__ = value
+        instance_binding_to_first_nested.__value__.should be value
+      end
+      it 'bound to nth nested container' do
+        instance_binding_to_nth_nested.__value__.should be nil
+        instance_binding_to_nth_nested.__value__ = value
+        instance_binding_to_nth_nested.__value__.should be value
+      end
+      it 'bound to subclass of base container' do
+        subclass_instance_binding_to_base.__value__.should be nil
+        subclass_instance_binding_to_base.__value__ = value
+        subclass_instance_binding_to_base.__value__.should be value
+      end
+      it 'bound to subclass of first nested container' do
+        subclass_instance_binding_to_first_nested.__value__.should be nil
+        subclass_instance_binding_to_first_nested.__value__ = value
+        subclass_instance_binding_to_first_nested.__value__.should be value
+      end
+      it 'bound to subclass of nth nested container' do
+        subclass_instance_binding_to_nth_nested.__value__.should be nil
+        subclass_instance_binding_to_nth_nested.__value__ = value
+        subclass_instance_binding_to_nth_nested.__value__.should be value
+      end
     end
   end
 
@@ -217,6 +620,7 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   
   context '#value' do
     it 'is an alias for #__value__' do
+      ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :value ).should == ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :__value__ )
     end
   end
 
@@ -226,6 +630,7 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
   
   context 'value=' do
     it 'is an alias for #__value__=' do
+      ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :value= ).should == ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :__value__= )
     end
   end
 
@@ -234,59 +639,35 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
 	########
 
   context '#==' do
-    it 'evaluates equality by its value rather than self' do
-      @instance_binding.__extend__ ::Perspective::Bindings::BindingDefinitions::Text
-      @instance_binding.__value__ = :some_value
-      @instance_binding.should == :some_value
+    let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Text }
+    let( :value ) { 'some value' }
+    before :all do
+      instance_binding_to_base.__extend__( permitted_value_module ).__value__ = value
+      instance_binding_to_first_nested.__extend__( permitted_value_module ).__value__ = value
+      instance_binding_to_nth_nested.__extend__( permitted_value_module ).__value__ = value
+      subclass_instance_binding_to_base.__extend__( permitted_value_module ).__value__ = value
+      subclass_instance_binding_to_first_nested.__extend__( permitted_value_module ).__value__ = value
+      subclass_instance_binding_to_nth_nested.__extend__( permitted_value_module ).__value__ = value
+      
+    end
+    it 'bound to base container' do
+      instance_binding_to_base.should == value
+    end
+    it 'bound to first nested container' do
+      instance_binding_to_first_nested.should == value
+    end
+    it 'bound to nth nested container' do
+      instance_binding_to_nth_nested.should == value
+    end
+    it 'bound to subclass of base container' do
+      subclass_instance_binding_to_base.should == value
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_instance_binding_to_first_nested.should == value
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_instance_binding_to_nth_nested.should == value
     end
   end
   
-  ####################
-  #  method_missing  #
-  ####################
-	
-  context '#method_missing' do
-  	it 'forwards almost all methods to its value' do
-  	  non_forwarded_methods = [ :method_missing, :object_id, :hash, :==,
-                                :equal?, :class, 
-                                :view, :view=, :container, :container=, :to_html_node ]
-      non_forwarded_methods.each do |this_method_name|
-        @instance_binding.__instance_eval__ do
-          respond_to_missing?( this_method_name, true ).should == false
-        end
-      end
-      @instance_binding.respond_to_missing?( :some_other_method, true ).should == true
-    end
-  end
-  
-  ######################
-  #  __nested_route__  #
-  ######################
-  
-  context '#__nested_route__' do
-    it 'can calculate the nested route under root' do
-      @class_binding.__route_with_name__ = [ ]
-      @nested_class_binding.__route_with_name__ = [ :nested, :in, :self, :other_binding_name ]
-      @nested_instance_binding.__nested_route__( @instance_binding ).should == [ :nested, :in, :self ]
-    end
-
-    it 'can calculate the nested route under a nested binding' do
-      @class_binding.__route_with_name__ = [ :route, :to, :binding, :binding_name ]
-      @nested_class_binding.__route_with_name__ = [ :route, :to, :binding, :binding_name, :nested, :in, :self, :other_binding_name ]
-      @nested_instance_binding.__nested_route__( @instance_binding ).should == [ :nested, :in, :self ]
-    end
-
-    it 'can calculate the nested route under self' do
-      @class_binding.__route_with_name__ = [ :route, :to, :binding, :binding_name ]
-      @nested_class_binding.__route_with_name__ = [ :route, :to, :binding, :binding_name, :other_binding_name ]
-      @nested_instance_binding.__nested_route__( @instance_binding ).should == [ ]
-    end
-
-    it 'can calculate the nested route under self as root' do
-      @class_binding.__route_with_name__ = [ ]
-      @nested_class_binding.__route_with_name__ = [ :binding_name ]
-      @nested_instance_binding.__nested_route__( @instance_binding ).should == [ ]
-    end
-  end
-
 end
