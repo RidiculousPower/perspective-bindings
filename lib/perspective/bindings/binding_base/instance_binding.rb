@@ -6,98 +6,6 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Hash  
 
-  extend ::Module::Cluster
-  
-  NonForwardingMethodsArray = [ :method_missing, :respond_to_missing?, :object_id, :hash, :==,
-                                :equal?, :class, 
-                                :view, :view=, :container, :container=, :to_html_node ]
-  
-  NonForwardingMethods = ::Hash[ ::Perspective::Bindings::BindingBase::InstanceBinding::NonForwardingMethodsArray.zip ]
-  
-  cluster( :instance_binding_forwarding ).before_include.cascade_to( :class ) do |hooked_instance|
-    
-    hooked_instance.class_eval do
-      
-      # These have to be manually renamed or we have to call :send to use them.
-      # For instance :__<=>__ is a legitimate method name, but not legitimate Ruby syntax,
-      # so it can only be called via object.send( :"__<=>__", *args ).
-
-      if method_defined?( :"<=>" )
-        alias_method( :__compare__, :"<=>" )
-        undef_method( :"<=>" )
-      end
-
-      if method_defined?( :! )
-        alias_method( :__not__, :"!" )
-        undef_method( :"!" )
-      end
-
-      if method_defined?( :!= )
-        alias_method( :__not_equal__, :"!=" )
-        undef_method( :"!=" )
-      end
-
-      if method_defined?( :=~ )
-        alias_method( :__regexp__, :"=~" )
-        undef_method( :"=~" )
-      end
-
-      if method_defined?( :=== )
-        alias_method( :__case_equals__, :=== )
-        undef_method( :=== )
-      end
-
-      if method_defined?( :"!~" )
-        alias_method( :__regexp_equals__, :"!~" )
-        undef_method( :"!~" )
-      end
-
-      alias_method( :__object_id__, :object_id )
-      
-      
-      # Rename all methods to __method__.
-      # Special characters (?!) get moved to the end: __method__?!.
-      instance_methods.each do |this_method|
-        
-        case this_method
-          when *::Perspective::Bindings::BindingBase::InstanceBinding::NonForwardingMethodsArray
-            next
-        end
-        
-        this_method = this_method.to_s
-        
-        ends_with_special_char = false
-        
-        case this_method[ 0 ]
-          when '_'
-            next
-        end
-        
-        case this_method[ -1 ]
-          when '?', '!', '='
-            ends_with_special_char = this_method[ -1 ]
-            this_method = this_method.slice( 0, this_method.length - 1 )
-        end
-        
-        alias_name = this_method.empty? ? '__' : ( '__' << this_method.to_s ) << '__'
-        
-        if ends_with_special_char
-          alias_name << ends_with_special_char
-          this_method << ends_with_special_char
-        end
-        
-        # Create new method name
-        alias_method( alias_name, this_method )
-        
-        # Remove old method name
-        undef_method( this_method )
-        
-      end
-      
-    end
-    
-  end
-
   ################
   #  initialize  #
   ################
@@ -147,6 +55,16 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
     
   end
 
+  ######################
+  #  __nested_route__  #
+  ######################
+
+  def __nested_route__( nested_in_binding )
+    
+    return @__parent_binding__.__nested_route__( nested_in_binding )
+    
+  end
+
   ##############################
   #  __binding_value_valid__?  #
   ##############################
@@ -156,17 +74,11 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
     binding_value_valid = false
     
     if binding_value.is_a?( ::Array ) and __permits_multiple__?
-    
       # ensure each member value is valid
-      binding_value.each do |this_member|
-        break unless binding_value_valid = __binding_value_valid__?( this_member )
-      end
-    
+      binding_value.each { |this_member| break unless binding_value_valid = __binding_value_valid__?( this_member ) }
     else
-      
       # if we got here (the top) then the only valid value is nil
       binding_value_valid = binding_value.nil?
-      
     end
     
     return binding_value_valid

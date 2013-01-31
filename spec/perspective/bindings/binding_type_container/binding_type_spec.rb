@@ -9,16 +9,10 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType do
     mock_binding_type_container = ::Class.new.name( :ParentMockBindingTypeContainer )
     mock_binding_type_container.class_eval do
       def self.class_binding_base
-        return @class_binding_base ||= ::Module.new.name( :ClassBindingBase )
-      end
-      def self.nested_class_binding_base
-        return @nested_class_binding_base ||= ::Module.new.name( :NestedClassBindingBase )
+        return @class_binding_base ||= ::Perspective::Bindings::BindingTypeContainer::BindingBase::ClassBindingBase.new( self ).name( :ClassBindingBase )
       end
       def self.instance_binding_base
-        return @instance_binding_base ||= ::Module.new.name( :InstanceBindingBase )
-      end
-      def self.nested_instance_binding_base
-        return @nested_instance_binding_base ||= ::Module.new.name( :NestedInstanceBindingBase )
+        return @instance_binding_base ||= ::Perspective::Bindings::BindingTypeContainer::BindingBase::InstanceBindingBase.new( self ).name( :InstanceBindingBase )
       end
     end
     mock_binding_type_container
@@ -36,9 +30,6 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType do
                                                                     parent_binding_type )
   end
 
-
-  let( :binding_type_container_instance ) { mock_binding_type_container.class.new }
-
   ###############
   #  type_name  #
   ###############
@@ -52,16 +43,16 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType do
     end
   end
 
-  ############################
-  #  binding_type_container  #
-  ############################
+  ####################
+  #  type_container  #
+  ####################
 
-  context '#binding_type_container' do
+  context '#type_container' do
     it 'parent instance belongs to the container that created it' do
-      parent_binding_type.binding_type_container.should == parent_mock_binding_type_container
+      parent_binding_type.type_container.should == parent_mock_binding_type_container
     end
     it 'child instance belongs to a container that subclassed parent instance container' do
-      child_binding_type.binding_type_container.should == child_mock_binding_type_container
+      child_binding_type.type_container.should == child_mock_binding_type_container
     end
   end
   
@@ -78,113 +69,98 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType do
     end
   end
 
-  ##########################
-  #  class_binding_module  #
-  ##########################
+  #########################
+  #  class_binding_class  #
+  #########################
 
   context '#class_binding_module' do
-    it 'parent has a class binding module that will be used to cascade features to inheriting binding type instances' do
-      parent_binding_type.class_binding_module.should be_a ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingTypeModule
+    it 'class and instance binding classes share a common base class' do
+      parent_binding_type.class_binding_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingClass ).should be true
     end
-    it 'has a class binding class used to create class binding instances' do
-      parent_binding_type.class_binding_module.binding_type_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingTypeClass ).should be true
+    it 'parent has a class binding class that will be used to create class binding instances' do
+      parent_binding_type.class_binding_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType::ClassBindingClass ).should be true
     end
-    it 'includes its class binding module' do
-      parent_binding_type.class_binding_module.binding_type_class.ancestors.include?( parent_binding_type.class_binding_module ).should be true
+    it 'each type container has a class binding base that each class binding class includes' do
+      parent_binding_type.class_binding_class.ancestors.include?( parent_mock_binding_type_container.class_binding_base ).should be true
     end
-    it 'child also has a class binding module' do
-      child_binding_type.class_binding_module.should be_a ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingTypeModule
+    it 'each class binding class includes the common class binding base' do
+      parent_binding_type.class_binding_class.ancestors.include?( ::Perspective::Bindings::BindingBase::ClassBinding ).should be true
+    end
+    it 'child also has a class binding class' do
+      child_binding_type.class_binding_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType::ClassBindingClass ).should be true
     end
     it 'child module is not the same as parent module' do
-      child_binding_type.class_binding_module.should_not be parent_binding_type.class_binding_module
+      child_binding_type.class_binding_class.should_not be parent_binding_type.class_binding_class
     end
     it 'child class binding module includes parent class binding module' do
-      child_binding_type.class_binding_module.ancestors.include?( parent_binding_type.class_binding_module ).should be true
+      child_binding_type.class_binding_class.ancestors.include?( parent_binding_type.class_binding_class ).should be true
     end
   end
 
-  #################################
-  #  nested_class_binding_module  #
-  #################################
-
-  context '#nested_module_binding_module' do
-    it 'parent has a nested class binding module that will be used to cascade features to inheriting binding type instances' do
-      parent_binding_type.nested_class_binding_module.should be_a ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingTypeModule
-    end
-    it 'has a nested class binding class used to create nested class binding instances' do
-      parent_binding_type.nested_class_binding_module.binding_type_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingTypeClass ).should be true
-    end
-    it 'includes its nested class binding module' do
-      parent_binding_type.nested_class_binding_module.binding_type_class.ancestors.include?( parent_binding_type.nested_class_binding_module ).should be true
-    end
-    it 'child also has a class binding module' do
-      child_binding_type.nested_class_binding_module.should be_a ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingTypeModule
-    end
-    it 'child module is not the same as parent module' do
-      child_binding_type.nested_class_binding_module.should_not be parent_binding_type.class_binding_module
-    end
-    it 'child class binding module includes parent class binding module' do
-      child_binding_type.nested_class_binding_module.ancestors.include?( parent_binding_type.nested_class_binding_module ).should be true
-    end
-  end
-
-  #############################
-  #  instance_binding_module  #
-  #############################
+  ############################
+  #  instance_binding_class  #
+  ############################
 
   context '#instance_binding_module' do
-    it 'parent has an instance binding module that will be used to cascade features to inheriting binding type instances' do
-      parent_binding_type.instance_binding_module.should be_a ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingTypeModule
+    it 'parent has an instance binding class that will be used to create instance binding instances' do
+      parent_binding_type.instance_binding_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBindingClass ).should be true
     end
-    it 'has an instance binding class used to create instance binding instances' do
-      parent_binding_type.instance_binding_module.binding_type_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingTypeClass ).should be true
+    it 'class and instance binding classes share a common base class' do
+      parent_binding_type.instance_binding_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingClass ).should be true
     end
-    it 'includes its instance binding module' do
-      parent_binding_type.instance_binding_module.binding_type_class.ancestors.include?( parent_binding_type.instance_binding_module ).should be true
+    it 'each type container has an instance binding base that each instance binding class includes' do
+      parent_binding_type.instance_binding_class.ancestors.include?( parent_mock_binding_type_container.instance_binding_base ).should be true
     end
-    it 'child also has a class binding module' do
-      child_binding_type.instance_binding_module.should be_a ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingTypeModule
+    it 'each instance binding class includes the common instance binding base' do
+      parent_binding_type.instance_binding_class.ancestors.include?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should be true
     end
-    it 'child module is not the same as parent module' do
-      child_binding_type.instance_binding_module.should_not be parent_binding_type.class_binding_module
+    it 'child also has an instance binding class' do
+      child_binding_type.instance_binding_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBindingClass ).should be true
     end
-    it 'child class binding module includes parent class binding module' do
-      child_binding_type.instance_binding_module.ancestors.include?( parent_binding_type.instance_binding_module ).should be true
+    it 'child class is not the same as parent class' do
+      child_binding_type.instance_binding_class.should_not be parent_binding_type.instance_binding_class
+    end
+    it 'child instance binding class includes parent instance binding class' do
+      child_binding_type.instance_binding_class.ancestors.include?( parent_binding_type.instance_binding_class ).should be true
     end
   end
 
-  ####################################
-  #  nested_instance_binding_module  #
-  ####################################
-
-  context '#nested_instance_binding_module' do
-    it 'parent has a nested instance binding module that will be used to cascade features to inheriting binding type instances' do
-      parent_binding_type.nested_instance_binding_module.should be_a ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingTypeModule
-    end
-    it 'has a nested instance binding class used to create nested instance binding instances' do
-      parent_binding_type.nested_instance_binding_module.binding_type_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingTypeClass ).should be true
-    end
-    it 'includes its nested instance binding module' do
-      parent_binding_type.nested_instance_binding_module.binding_type_class.ancestors.include?( parent_binding_type.nested_instance_binding_module ).should be true
-    end
-    it 'child also has a class binding module' do
-      child_binding_type.nested_instance_binding_module.should be_a ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingTypeModule
-    end
-    it 'child module is not the same as parent module' do
-      child_binding_type.nested_instance_binding_module.should_not be parent_binding_type.class_binding_module
-    end
-    it 'child class binding module includes parent class binding module' do
-      child_binding_type.nested_instance_binding_module.ancestors.include?( parent_binding_type.nested_instance_binding_module ).should be true
-    end
-  end
+  #############
+  #  include  #
+  #############
   
-  ########################
-  #  new_class_bindings  #
-  ########################
-
-  context '#new_class_bindings' do
-    it 'creates new class bindings for a container, a list of names, and an optional block' do
+  context '#include' do
+    let( :included_module ) { ::Module.new }
+    before :each do
+      _included_module = included_module
+      parent_binding_type.module_eval { include _included_module }
+    end
+    it 'will ensure it is re-included in class and instance binding classes and child binding types' do
+      parent_binding_type.class_binding_class.ancestors.include?( included_module ).should be true
+      parent_binding_type.instance_binding_class.ancestors.include?( included_module ).should be true
+      child_binding_type.ancestors.include?( included_module ).should be true
+      child_binding_type.class_binding_class.ancestors.include?( included_module ).should be true
+      child_binding_type.instance_binding_class.ancestors.include?( included_module ).should be true
     end
   end
-  
+
+  ############
+  #  extend  #
+  ############
+
+  context '#extend' do
+    let( :extended_module ) { ::Module.new }
+    before :each do
+      child_binding_type
+      parent_binding_type.extend( extended_module )
+    end
+    it 'will ensure it is re-extended in class and instance binding classes and child binding types' do
+      parent_binding_type.class_binding_class.is_a?( extended_module ).should be true
+      parent_binding_type.instance_binding_class.is_a?( extended_module ).should be true
+      child_binding_type.is_a?( extended_module ).should be true
+      child_binding_type.class_binding_class.is_a?( extended_module ).should be true
+      child_binding_type.instance_binding_class.is_a?( extended_module ).should be true
+    end
+  end
+
 end

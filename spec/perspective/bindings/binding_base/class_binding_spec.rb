@@ -3,124 +3,286 @@ require_relative '../../../../lib/perspective/bindings.rb'
 
 describe ::Perspective::Bindings::BindingBase::ClassBinding do
 
-  before :all do
-    class ::Perspective::Bindings::BindingBase::ClassBinding::BoundContainerMock
-      def self.__root__
-        return self
-      end
-      def self.__root_string__
-        return to_s
-      end
-    end
-    class ::Perspective::Bindings::BindingBase::ClassBinding::BoundContainerMockSub < ::Perspective::Bindings::BindingBase::ClassBinding::BoundContainerMock
-    end
-    class ::Perspective::Bindings::BindingBase::ClassBinding::ClassBindingMock
-      include ::Perspective::Bindings::BindingBase::ClassBinding
-    end
-    @configuration_proc = ::Proc.new { puts 'config!' }
-    @bound_container = ::Perspective::Bindings::BindingBase::ClassBinding::BoundContainerMock
-    @bound_container_two = ::Perspective::Bindings::BindingBase::ClassBinding::BoundContainerMockSub
-    @configuration_proc_two = ::Proc.new { puts 'config2!' }
-  end
-  
-  before :each do
-    @class_binding = ::Perspective::Bindings::BindingBase::ClassBinding::ClassBindingMock.new( @bound_container, :binding_name, & @configuration_proc )
-    @class_binding_with_ancestor = ::Perspective::Bindings::BindingBase::ClassBinding::ClassBindingMock.new( @bound_container_two, :binding_name, @class_binding, & @configuration_proc_two )
-  end
+  let( :class_binding_mock ) { ::Class.new { include( ::Perspective::Bindings::BindingBase::ClassBinding ) } }
 
-  #################################
-  #  __binding_name_validates__?  #
-  #################################
+  let( :mock_container_module ) do
+    ::Module.new do
+      def __root__ ; return self ; end
+      def __root_string__ ; return to_s ; end
+    end
+  end
   
-  it 'prohibits certain names from being used ' do
-    ::Perspective::Bindings::ProhibitedNames.has_key?( :new ).should == true
-    ::Proc.new { ::Perspective::Bindings::BindingBase::ClassBinding::ClassBindingMock.new( @bound_container, :new ) }.should raise_error( ::ArgumentError )
+  let( :base_container ) do
+    _mock_container_module = mock_container_module
+    ::Class.new { extend( _mock_container_module ) }
+  end
+  let( :first_nested_container ) do
+    _mock_container_module = mock_container_module
+    ::Class.new { extend( _mock_container_module ) }
+  end
+  let( :nth_nested_container ) do
+    _mock_container_module = mock_container_module
+    ::Class.new { extend( _mock_container_module ) }
+  end
+  let( :sub_base_container ) { ::Class.new( base_container ) }
+  let( :sub_first_nested_container ) { ::Class.new( first_nested_container ) }
+  let( :sub_nth_nested_container ) { ::Class.new( nth_nested_container ) }
+    
+  let( :binding_to_base_name ) { :binding_to_base }
+  let( :binding_to_first_nested_name ) { :binding_to_first_nested }
+  let( :binding_to_nth_nested_name ) { :binding_to_nth_nested }
+
+  let( :class_binding_to_base ) { class_binding_mock.new( base_container, binding_to_base_name, & base_proc ) }
+  let( :class_binding_to_first_nested ) { class_binding_mock.new( class_binding_to_base, binding_to_first_nested_name, & first_nested_proc ) }
+  let( :class_binding_to_nth_nested ) { class_binding_mock.new( class_binding_to_first_nested, binding_to_nth_nested_name, & nth_nested_proc ) }
+  
+  let( :base_proc ) { ::Proc.new { puts 'base_proc!' } }
+  let( :first_nested_proc ) { ::Proc.new { puts 'first_nested_proc!' } }
+  let( :nth_nested_proc ) { ::Proc.new { puts 'nth_nested_proc!' } }
+
+  let( :subclass_binding_to_base ) { class_binding_mock.new( sub_base_container, nil, class_binding_to_base ) }
+  let( :subclass_binding_to_first_nested ) { class_binding_mock.new( subclass_binding_to_base, nil, class_binding_to_first_nested ) }
+  let( :subclass_binding_to_nth_nested ) { class_binding_mock.new( subclass_binding_to_first_nested, nil, class_binding_to_nth_nested ) }
+  
+  ###############################
+  #  __validate_binding_name__  #
+  ###############################
+  
+  context '#__validate_binding_name__' do
+    shared_examples_for :__validate_binding_name__ do
+      let( :binding_to_base_name ) { binding_name }
+      let( :binding_to_first_nested_name ) { binding_name }
+      let( :binding_to_nth_nested_name ) { binding_name }
+      let( :__validate_binding_name__ ) { ::Proc.new { binding_instance } }
+      it 'prohibits :new' do
+        __validate_binding_name__.should raise_error( ::ArgumentError )
+      end
+    end
+    context 'binding name is :new' do
+      let( :binding_name ) { :new }
+      context 'bound to base container' do
+        it_behaves_like( :__validate_binding_name__ ) { let( :binding_instance ) { class_binding_to_base } }
+      end
+      context 'bound to first nested container' do
+        it_behaves_like( :__validate_binding_name__ ) { let( :binding_instance ) { class_binding_to_first_nested } }
+      end
+      context 'bound to nth nested container' do
+        it_behaves_like( :__validate_binding_name__ ) { let( :binding_instance ) { class_binding_to_nth_nested } }
+      end
+      context 'bound to subclass of base container' do
+        it_behaves_like( :__validate_binding_name__ ) { let( :binding_instance ) { subclass_binding_to_base } }
+      end
+      context 'bound to subclass of first nested container' do
+        it_behaves_like( :__validate_binding_name__ ) { let( :binding_instance ) { subclass_binding_to_first_nested } }
+      end
+      context 'bound to subclass of nth nested container' do
+        it_behaves_like( :__validate_binding_name__ ) { let( :binding_instance ) { subclass_binding_to_nth_nested } }
+      end
+    end
   end
 
   #########################
   #  __bound_container__  #
   #########################
   
-  it 'binds to a container' do
-    @class_binding.__bound_container__.should == @bound_container
-  end
-
-  it 'binds to a container when declared with an ancestor' do
-    @class_binding_with_ancestor.__bound_container__.should == @bound_container_two
+  context '#__bound_container__' do
+    it 'bound to base container' do
+      class_binding_to_base.__bound_container__.should == base_container
+    end
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__bound_container__.should == class_binding_to_base
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__bound_container__.should == class_binding_to_first_nested
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__bound_container__.should == sub_base_container
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__bound_container__.should == subclass_binding_to_base
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__bound_container__.should == subclass_binding_to_first_nested
+    end
   end
   
   ##############
   #  __name__  #
   ##############
   
-  it 'has a name' do
-    @class_binding.__name__.should == :binding_name
-  end
-
-  it 'has the same name as its ancestors' do
-    ::CascadingConfiguration.configuration( @class_binding_with_ancestor, :__name__ ).is_parent?( @class_binding ).should == true
-    @class_binding_with_ancestor.__name__.should == :binding_name
+  context '#__name__' do
+    it 'bound to base container' do
+      class_binding_to_base.__name__.should == binding_to_base_name
+    end
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__name__.should == binding_to_first_nested_name
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__name__.should == binding_to_nth_nested_name
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__name__.should == binding_to_base_name
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__name__.should == binding_to_first_nested_name
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__name__.should == binding_to_nth_nested_name
+    end
   end
   
   ##############
   #  __root__  #
   ##############
   
-  it 'has a root container, which for a non-nested class binding is self' do
-    @class_binding.__root__.should == @bound_container
-  end
-
-  it 'has a root container, which for a non-nested class binding with an ancestor is self' do
-    @class_binding_with_ancestor.__root__.should == @bound_container_two
+  context '#__root__' do
+    it 'bound to base container' do
+      class_binding_to_base.__root__.should == base_container
+    end
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__root__.should == base_container
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__root__.should == base_container
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__root__.should == sub_base_container
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__root__.should == sub_base_container
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__root__.should == sub_base_container
+    end
   end
   
   ###############
   #  __route__  #
   ###############
 
-  it 'it has a route, which for a non-nested class binding is nil' do
-    @class_binding.__route__.should == nil
-  end
-
-  it 'it has a route, which for a non-nested class binding with an ancestor is nil' do
-    @class_binding_with_ancestor.__route__.should == nil
+  context '#__route__' do
+    it 'bound to base container' do
+      class_binding_to_base.__route__.should == nil
+    end
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__route__.should == [ binding_to_base_name ]
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__route__.should == [ binding_to_base_name, binding_to_first_nested_name ]
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__route__.should == nil
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__route__.should == [ binding_to_base_name ]
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__route__.should == [ binding_to_base_name, binding_to_first_nested_name ]
+    end
   end
 
   #########################
   #  __route_with_name__  #
   #########################
 
-  it 'it has a route with name, which for a non-nested class binding is the name' do
-    @class_binding.__route_with_name__.should == [ :binding_name ]
-  end
-
-  it 'it has a route with name, which for a non-nested class binding with an ancestor is the name' do
-    @class_binding_with_ancestor.__route_with_name__.should == [ :binding_name ]
+  context '#__route_with_name__' do
+    it 'bound to base container' do
+      class_binding_to_base.__route_with_name__.should == [ binding_to_base_name ]
+    end
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__route_with_name__.should == [ binding_to_base_name, binding_to_first_nested_name ]
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__route_with_name__.should == [ binding_to_base_name, binding_to_first_nested_name, binding_to_nth_nested_name ]
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__route_with_name__.should == [ binding_to_base_name ]
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__route_with_name__.should == [ binding_to_base_name, binding_to_first_nested_name ]
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__route_with_name__.should == [ binding_to_base_name, binding_to_first_nested_name, binding_to_nth_nested_name ]
+    end
   end
 
   ######################
   #  __route_string__  #
   ######################
 
-  it 'it has a route string, which for a non-nested class binding is the name' do
-    @class_binding.__route_string__.should == ::Perspective::Bindings.context_string( @class_binding.__route_with_name__ )
-    
-  end
-
-  it 'it has a route string, which for a non-nested class binding with an ancestor is the name' do
-    @class_binding_with_ancestor.__route_string__.should == ::Perspective::Bindings.context_string( @class_binding_with_ancestor.__route_with_name__ )
+  context '#__route_string__' do
+    it 'bound to base container' do
+      class_binding_to_base.__route_string__.should == ::Perspective::Bindings.context_string( class_binding_to_base.__route_with_name__ )
+    end
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__route_string__.should == ::Perspective::Bindings.context_string( class_binding_to_first_nested.__route_with_name__ )
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__route_string__.should == ::Perspective::Bindings.context_string( class_binding_to_nth_nested.__route_with_name__ )
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__route_string__.should == ::Perspective::Bindings.context_string( subclass_binding_to_base.__route_with_name__ )
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__route_string__.should == ::Perspective::Bindings.context_string( subclass_binding_to_first_nested.__route_with_name__ )
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__route_string__.should == ::Perspective::Bindings.context_string( subclass_binding_to_nth_nested.__route_with_name__ )
+    end
   end
 
   ############################
   #  __route_print_string__  #
   ############################
 
-  it 'it has a route print string, which for a non-nested class binding is the root string plus the name' do
-    @class_binding.__route_print_string__.should == ::Perspective::Bindings.context_print_string( @bound_container, @class_binding.__route_string__ )
+  context '#__route_print_string__' do
+    it 'bound to base container' do
+      class_binding_to_base.__route_print_string__.should == ::Perspective::Bindings.context_print_string( class_binding_to_base.__root__, class_binding_to_base.__route_string__ )
+    end
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__route_print_string__.should == ::Perspective::Bindings.context_print_string( class_binding_to_base.__root__, class_binding_to_first_nested.__route_string__ )
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__route_print_string__.should == ::Perspective::Bindings.context_print_string( class_binding_to_base.__root__, class_binding_to_nth_nested.__route_string__ )
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__route_print_string__.should == ::Perspective::Bindings.context_print_string( subclass_binding_to_base.__root__, subclass_binding_to_base.__route_string__ )
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__route_print_string__.should == ::Perspective::Bindings.context_print_string( subclass_binding_to_base.__root__, subclass_binding_to_first_nested.__route_string__ )
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__route_print_string__.should == ::Perspective::Bindings.context_print_string( subclass_binding_to_base.__root__, subclass_binding_to_nth_nested.__route_string__ )
+    end
   end
 
-  it 'it has a route print string, which for a non-nested class binding with an ancestor is the root string plus the name' do
-    @class_binding_with_ancestor.__route_print_string__.should == ::Perspective::Bindings.context_print_string( @bound_container_two, @class_binding_with_ancestor.__route_string__ )
+  ######################
+  #  __nested_route__  #
+  ######################
+
+  context '#__nested_route__' do
+    it 'bound to base container' do
+      class_binding_to_base.__nested_route__( class_binding_to_base ).should == nil
+    end
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__nested_route__( class_binding_to_base ).should == nil
+      class_binding_to_first_nested.__nested_route__( class_binding_to_first_nested ).should == nil
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__nested_route__( class_binding_to_base ).should == [ binding_to_first_nested_name ]
+      class_binding_to_nth_nested.__nested_route__( class_binding_to_first_nested ).should == nil
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__nested_route__( subclass_binding_to_base ).should == nil
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__nested_route__( subclass_binding_to_base ).should == nil
+      subclass_binding_to_first_nested.__nested_route__( subclass_binding_to_first_nested ).should == nil
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__nested_route__( class_binding_to_base ).should == [ binding_to_first_nested_name ]
+      subclass_binding_to_nth_nested.__nested_route__( class_binding_to_first_nested ).should == nil
+    end
   end
 
   ###########################
@@ -128,15 +290,37 @@ describe ::Perspective::Bindings::BindingBase::ClassBinding do
   #  __permits_multiple__=  #
   ###########################
 
-  it 'does not permit multiple by default' do
-    @class_binding.__permits_multiple__?.should == false
-  end
-
-  it 'does not permit multiple by default but inherits from ancestor' do
-    ::CascadingConfiguration.configuration( @class_binding_with_ancestor, :__permits_multiple__? ).is_parent?( @class_binding ).should == true
-    @class_binding_with_ancestor.__permits_multiple__?.should == @class_binding.__permits_multiple__?
-    @class_binding.__permits_multiple__ = ! @class_binding.__permits_multiple__?
-    @class_binding_with_ancestor.__permits_multiple__?.should == @class_binding.__permits_multiple__?
+  context '#__permits_multiple__?, #__permits_multiple__=' do
+    it 'bound to base container' do
+      class_binding_to_base.__permits_multiple__?.should be false
+      class_binding_to_base.__permits_multiple__ = true
+      class_binding_to_base.__permits_multiple__?.should be true
+    end
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__permits_multiple__?.should be false
+      class_binding_to_first_nested.__permits_multiple__ = true
+      class_binding_to_first_nested.__permits_multiple__?.should be true
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__permits_multiple__?.should be false
+      class_binding_to_nth_nested.__permits_multiple__ = true
+      class_binding_to_nth_nested.__permits_multiple__?.should be true
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__permits_multiple__?.should be false
+      subclass_binding_to_base.__permits_multiple__ = true
+      subclass_binding_to_base.__permits_multiple__?.should be true
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__permits_multiple__?.should be false
+      subclass_binding_to_first_nested.__permits_multiple__ = true
+      subclass_binding_to_first_nested.__permits_multiple__?.should be true
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__permits_multiple__?.should be false
+      subclass_binding_to_nth_nested.__permits_multiple__ = true
+      subclass_binding_to_nth_nested.__permits_multiple__?.should be true
+    end
   end
   
   ###################
@@ -144,17 +328,37 @@ describe ::Perspective::Bindings::BindingBase::ClassBinding do
   #  __required__=  #
   ###################
 
-  it 'can report whether required' do
-    @class_binding.__required__?.should == ! @class_binding.__optional__?
-    @class_binding.__required__ = ! @class_binding.__required__?
-    @class_binding.__required__?.should == ! @class_binding.__optional__?
-  end
-
-  it 'can report whether required based on ancestor' do
-    ::CascadingConfiguration.configuration( @class_binding_with_ancestor, :__required__? ).is_parent?( @class_binding ).should == true
-    @class_binding_with_ancestor.__required__?.should == ! @class_binding_with_ancestor.__optional__?
-    @class_binding_with_ancestor.__required__ = ! @class_binding_with_ancestor.__required__?
-    @class_binding_with_ancestor.__required__?.should == ! @class_binding_with_ancestor.__optional__?
+  context '#__required__?, #__required__=' do
+    it 'bound to base container' do
+      class_binding_to_base.__required__?.should be false
+      class_binding_to_base.__required__ = true
+      class_binding_to_base.__required__?.should be true
+    end
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__required__?.should be false
+      class_binding_to_first_nested.__required__ = true
+      class_binding_to_first_nested.__required__?.should be true
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__required__?.should be false
+      class_binding_to_nth_nested.__required__ = true
+      class_binding_to_nth_nested.__required__?.should be true
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__required__?.should be false
+      subclass_binding_to_base.__required__ = true
+      subclass_binding_to_base.__required__?.should be true
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__required__?.should be false
+      subclass_binding_to_first_nested.__required__ = true
+      subclass_binding_to_first_nested.__required__?.should be true
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__required__?.should be false
+      subclass_binding_to_nth_nested.__required__ = true
+      subclass_binding_to_nth_nested.__required__?.should be true
+    end
   end
 
   ###################
@@ -162,42 +366,110 @@ describe ::Perspective::Bindings::BindingBase::ClassBinding do
   #  __optional__=  #
   ###################
 
-  it 'can report whether optional' do
-    @class_binding.__optional__?.should == ! @class_binding.__required__?
-    @class_binding.__optional__ = ! @class_binding.__optional__?
-    @class_binding.__optional__?.should == ! @class_binding.__required__?
-  end
-
-  it 'can report whether optional based on ancestor' do
-    @class_binding_with_ancestor.__optional__?.should == ! @class_binding_with_ancestor.__required__?
-    @class_binding_with_ancestor.__optional__ = ! @class_binding_with_ancestor.__optional__?
-    @class_binding_with_ancestor.__optional__?.should == ! @class_binding_with_ancestor.__required__?
+  context '#__optional__?, #__optional__=' do
+    it 'bound to base container' do
+      class_binding_to_base.__optional__?.should be true
+      class_binding_to_base.__optional__ = false
+      class_binding_to_base.__optional__?.should be false
+    end
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__optional__?.should be true
+      class_binding_to_first_nested.__optional__ = false
+      class_binding_to_first_nested.__optional__?.should be false
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__optional__?.should be true
+      class_binding_to_nth_nested.__optional__ = false
+      class_binding_to_nth_nested.__optional__?.should be false
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__optional__?.should be true
+      subclass_binding_to_base.__optional__ = false
+      subclass_binding_to_base.__optional__?.should be false
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__optional__?.should be true
+      subclass_binding_to_first_nested.__optional__ = false
+      subclass_binding_to_first_nested.__optional__?.should be false
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__optional__?.should be true
+      subclass_binding_to_nth_nested.__optional__ = false
+      subclass_binding_to_nth_nested.__optional__?.should be false
+    end
   end
 
   #############################
   #  __configuration_procs__  #
   #############################
 
-  it 'keeps track of configuration procs in an inheriting compositing array' do
-    @class_binding.__configuration_procs__.should == [ @configuration_proc ]
-  end
-
-  it 'keeps track of configuration procs in an inheriting compositing array, inheriting from ancestors' do
-    @class_binding_with_ancestor.__configuration_procs__.should == [ @configuration_proc, @configuration_proc_two ]
+  context '#__configuration_procs__' do
+    it 'bound to base container' do
+      class_binding_to_base.__configuration_procs__.should == [ base_proc ]
+    end
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__configuration_procs__.should == [ first_nested_proc ]
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__configuration_procs__.should == [ nth_nested_proc ]
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__configuration_procs__.should == [ base_proc ]
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__configuration_procs__.should == [ first_nested_proc ]
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__configuration_procs__.should == [ nth_nested_proc ]
+    end
   end
 
   ###################
-  #  configure      #
   #  __configure__  #
   ###################
 
-  it 'can add a block to the configuration procs' do
-    ::Perspective::Bindings::BindingBase::ClassBinding.instance_method( :configure ).should == ::Perspective::Bindings::BindingBase::ClassBinding.instance_method( :__configure__ )
-    another_proc = Proc.new do
-      puts 'another config'
+  context '#__configure__' do
+    let( :another_block ) { ::Proc.new { puts 'another block' } }
+    it 'bound to base container' do
+      class_binding_to_base.__configuration_procs__.should == [ base_proc ]
+      class_binding_to_base.__configure__( & another_block )
+      class_binding_to_base.__configuration_procs__.should == [ base_proc, another_block ]
     end
-    @class_binding.__configure__( & another_proc )
-    @class_binding.__configuration_procs__[ 1 ].should == another_proc
+    it 'bound to first nested container' do
+      class_binding_to_first_nested.__configuration_procs__.should == [ first_nested_proc ]
+      class_binding_to_first_nested.__configure__( & another_block )
+      class_binding_to_first_nested.__configuration_procs__.should == [ first_nested_proc, another_block ]
+    end
+    it 'bound to nth nested container' do
+      class_binding_to_nth_nested.__configuration_procs__.should == [ nth_nested_proc ]
+      class_binding_to_nth_nested.__configure__( & another_block )
+      class_binding_to_nth_nested.__configuration_procs__.should == [ nth_nested_proc, another_block ]
+    end
+    it 'bound to subclass of base container' do
+      subclass_binding_to_base.__configuration_procs__.should == [ base_proc ]
+      subclass_binding_to_base.__configure__( & another_block )
+      subclass_binding_to_base.__configuration_procs__.should == [ base_proc, another_block ]
+    end
+    it 'bound to subclass of first nested container' do
+      subclass_binding_to_first_nested.__configuration_procs__.should == [ first_nested_proc ]
+      subclass_binding_to_first_nested.__configure__( & another_block )
+      subclass_binding_to_first_nested.__configuration_procs__.should == [ first_nested_proc, another_block ]
+    end
+    it 'bound to subclass of nth nested container' do
+      subclass_binding_to_nth_nested.__configuration_procs__.should == [ nth_nested_proc ]
+      subclass_binding_to_nth_nested.__configure__( & another_block )
+      subclass_binding_to_nth_nested.__configuration_procs__.should == [ nth_nested_proc, another_block ]
+    end
+  end
+
+  ###############
+  #  configure  #
+  ###############
+  
+  context '#configure' do
+    it 'is an alias for #__configure__' do
+      ::Perspective::Bindings::BindingBase::ClassBinding.instance_method( :configure ).should == ::Perspective::Bindings::BindingBase::ClassBinding.instance_method( :__configure__ )
+    end
   end
 
 end

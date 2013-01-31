@@ -2,6 +2,7 @@
 require 'uri'
 require 'accessor_utilities'
 require 'reraise'
+require 'singleton_attr'
 
 basepath = 'bindings'
 
@@ -14,26 +15,21 @@ files = [
   'configuration/object_and_binding_instance',
   'configuration',
   
+  'binding_base',
+  'binding_base/class_binding',
+  'binding_base/instance_binding',
+  
   'binding_type_container/binding_base/class_binding_base',
   'binding_type_container/binding_base/instance_binding_base',
-  'binding_type_container/binding_base/nested_class_binding_base',
-  'binding_type_container/binding_base/nested_instance_binding_base',
   'binding_type_container/binding_base',
-  'binding_type_container/include_extend',
-  'binding_type_container/binding_type/binding_type_interface',
-  'binding_type_container/binding_type/binding_type_class',
-  'binding_type_container/binding_type/binding_type_module',
+  'binding_type_container/binding_type/binding_class',
+  'binding_type_container/binding_type/class_binding_class',
+  'binding_type_container/binding_type/instance_binding_class',
   'binding_type_container/binding_type',
   'binding_type_container',
 
   'binding_types',
 
-  'binding_base',
-  'binding_base/class_binding',
-  'binding_base/nested_class_binding',
-  'binding_base/instance_binding',
-  'binding_base/nested_instance_binding',
-  
   'binding_definitions/class',
   'binding_definitions/complex',
   'binding_definitions/file',

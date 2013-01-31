@@ -3,201 +3,392 @@ require_relative '../../../lib/perspective/bindings.rb'
 
 describe ::Perspective::Bindings::BindingTypeContainer do
   
-  before :all do
-    proc_ran = false
-    @init_with_type = ::Perspective::Bindings::BindingTypeContainer.new( :basic_type ) { proc_ran = true }
-    proc_ran.should == true
-    @init_with_type_and_parents = ::Perspective::Bindings::BindingTypeContainer.new( :sub_basic_type, @init_with_type, true )
-  end
+  let( :parent_type_container_name ) { :parent_type_container }
+  let( :child_type_container_name ) { :child_type_container }
+  let( :child_without_subclassing_type_container_name ) { :child_type_container }
+  let( :parent_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( parent_type_container_name ) }
+  let( :child_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( child_type_container_name, parent_type_container ) }
+  let( :child_without_subclassing_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( child_without_subclassing_type_container_name, parent_type_container, false ) }
   
   #########################
   #  type_container_name  #
   #########################
   
-  it 'it can report its type container name' do
-    @init_with_type.type_container_name.should == :basic_type
-  end
-  
-  it 'it can report its type container name when initialized with parents' do
-    @init_with_type_and_parents.type_container_name.should == :sub_basic_type
+  context '#type_container_name' do
+    context 'when parent' do
+      it 'has a unique name' do
+        parent_type_container.type_container_name.should == parent_type_container_name
+      end
+    end
+    context 'when child' do
+      it 'has a unique name' do
+        child_type_container.type_container_name.should == child_type_container_name
+      end
+    end
+    context 'when child without subclassing' do
+      it 'has a unique name' do
+        child_without_subclassing_type_container.type_container_name.should == child_without_subclassing_type_container_name
+      end
+    end
   end
 
-  ########################
-  #  binding_type_class  #
-  ########################
-  
-  it 'can return its binding type class, which is subclassed to create binding types' do
-    @init_with_type.binding_type_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType ).should == true
-  end
-  
   ################################
   #  subclass_existing_bindings  #
   ################################
   
-  it 'can report if it creates new bindings of local container binding type for bindings inherited from its parent' do
-    @init_with_type_and_parents.subclass_existing_bindings.should == true
+  context '#subclass_existing_bindings' do
+    context 'when parent' do
+      it 'will return whether it should subclass bindings from its parent when they are inherited' do
+        parent_type_container.subclass_existing_bindings.should be true
+      end
+    end
+    context 'when child' do
+      it 'will return whether it should subclass bindings from its parent when they are inherited' do
+        child_type_container.subclass_existing_bindings.should be true
+      end
+    end
+    context 'when child without subclassing' do
+      it 'will return whether it should subclass bindings from its parent when they are inherited' do
+        child_without_subclassing_type_container.subclass_existing_bindings.should be false
+      end
+    end
   end
   
   ########################
   #  class_binding_base  #
   ########################
 
-  it 'has a class binding base module used for all class binding types' do
-    @init_with_type.class_binding_base.ancestors.include?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
-  end
-
-  it 'inherits its parent class binding base module' do
-    @init_with_type_and_parents.class_binding_base.ancestors.include?( @init_with_type.class_binding_base ).should == true
+  context '#class_binding_base' do
+    it 'has a class binding base module used for all class binding types' do
+      parent_type_container.class_binding_base.ancestors.include?( ::Perspective::Bindings::BindingBase::ClassBinding ).should be true
+    end
+    it 'inherits its parent class binding base module' do
+      child_type_container.class_binding_base.ancestors.include?( parent_type_container.class_binding_base ).should be true
+    end
+    context 'include and extend' do
+      let( :include_extend_module ) { ::Module.new }
+      before :each do
+        parent_type_container.define_binding_type( :some_type )
+      end
+      it 'will ensure that includes are forwarded by re-including self in children' do
+        _include_extend_module = include_extend_module
+        parent_type_container.class_binding_base.module_eval { include _include_extend_module }
+        parent_type_container::SomeType.class_binding_class.ancestors.include?( include_extend_module ).should be true
+      end
+      it 'will ensure that extends are forwarded to children' do
+        parent_type_container.class_binding_base.extend( include_extend_module )
+        parent_type_container::SomeType.class_binding_class.is_a?( include_extend_module ).should be true
+      end
+    end
   end
 
   ###########################
   #  instance_binding_base  #
   ###########################
 
-  it 'has a instance binding base module used for all instance binding types' do
-    @init_with_type.instance_binding_base.ancestors.include?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
-  end
-
-  it 'inherits its parent instance binding base module' do
-    @init_with_type_and_parents.instance_binding_base.ancestors.include?( @init_with_type.instance_binding_base ).should == true    
-  end
-
-  ###############################
-  #  nested_class_binding_base  #
-  ###############################
-
-  it 'has a nested class binding base module used for all nested class binding types' do
-    @init_with_type.nested_class_binding_base.ancestors.include?( ::Perspective::Bindings::BindingBase::NestedClassBinding ).should == true
-  end
-
-  it 'inherits its parent nested class binding base module' do
-    @init_with_type_and_parents.nested_class_binding_base.ancestors.include?( @init_with_type.nested_class_binding_base ).should == true
-  end
-
-  ##################################
-  #  nested_instance_binding_base  #
-  ##################################
-
-  it 'has a nested instance binding base module used for all nested instance binding types' do
-    @init_with_type.nested_instance_binding_base.ancestors.include?( ::Perspective::Bindings::BindingBase::NestedInstanceBinding ).should == true
-  end
-
-  it 'inherits its parent nested instance binding base module' do
-    @init_with_type_and_parents.nested_instance_binding_base.ancestors.include?( @init_with_type.nested_instance_binding_base ).should == true
-  end
-  
-end
-
-describe ::Perspective::Bindings::BindingTypeContainer do
-
-  before :all do
-    @instance = ::Perspective::Bindings::BindingTypeContainer.new( :basic_type )
+  context '#instance_binding_base' do
+    it 'has an instance binding base module used for all class binding types' do
+      parent_type_container.instance_binding_base.ancestors.include?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should be true
+    end
+    it 'inherits its parent instance binding base module' do
+      child_type_container.instance_binding_base.ancestors.include?( parent_type_container.instance_binding_base ).should be true
+    end
+    context 'include and extend' do
+      let( :include_extend_module ) { ::Module.new }
+      before :each do
+        parent_type_container.define_binding_type( :some_type )
+      end
+      it 'will ensure that includes are forwarded by re-including self in children' do
+        _include_extend_module = include_extend_module
+        parent_type_container.instance_binding_base.module_eval { include _include_extend_module }
+        parent_type_container::SomeType.instance_binding_class.ancestors.include?( include_extend_module ).should be true
+      end
+      it 'will ensure that extends are forwarded to children' do
+        parent_type_container.instance_binding_base.extend( include_extend_module )
+        parent_type_container::SomeType.instance_binding_class.is_a?( include_extend_module ).should be true
+      end
+    end
   end
 
 	#######################################  Method Names  ###########################################
-
-  ################################
-  #  single_binding_method_name  #
-  ################################
   
-  it 'can return a method name for defining a single binding type: attr_[type]' do
-    @instance.instance_eval do
-      single_binding_method_name( 'text' ).should == 'attr_text'
+  context '================  Method Names  ================' do
+
+    let( :instance ) { parent_type_container }
+    let( :binding_name ) { 'text' }
+
+    ################################
+    #  single_binding_method_name  #
+    ################################
+  
+    context '#single_binding_method_name' do
+      let( :expected_binding_method_name ) { 'attr_text' }
+      let( :single_binding_method_name ) do
+        _binding_name = binding_name
+        instance.instance_eval { single_binding_method_name( _binding_name ) }
+      end
+      it 'will prepend attr_' do
+        single_binding_method_name.should == expected_binding_method_name
+      end
     end
-  end
   
-  ##################################
-  #  multiple_binding_method_name  #
-  ##################################
+    ##################################
+    #  multiple_binding_method_name  #
+    ##################################
   
-  it 'can return a method name for defining a single binding type: attr_[type]s or attr_[types]es' do
-    @instance.instance_eval do
-      multiple_binding_method_name( 'text' ).should == 'attr_texts'
+    context '#multiple_binding_method_name' do
+      let( :multiple_binding_method_name ) do
+        _binding_name = binding_name
+        instance.instance_eval { multiple_binding_method_name( _binding_name ) }
+      end
+      context 'when type ends with anything other than s or x' do
+        let( :expected_binding_method_name ) { 'attr_texts' }
+        it 'will prepend attr_ and append -s' do
+          multiple_binding_method_name.should == expected_binding_method_name
+        end
+      end
+      context 'when type ends with s' do
+        let( :binding_name ) { 'texts' }
+        let( :expected_binding_method_name ) { 'attr_textses' }
+        it 'it will prepend attr_ and append -es' do
+          multiple_binding_method_name.should == expected_binding_method_name
+        end
+      end
+      context 'when type ends with x' do
+        let( :binding_name ) { 'tex' }
+        let( :expected_binding_method_name ) { 'attr_texes' }
+        it 'it will prepend attr_ and append -es' do
+          multiple_binding_method_name.should == expected_binding_method_name
+        end
+      end
     end
-  end
   
-  #########################################
-  #  required_single_binding_method_name  #
-  #########################################
+    #########################################
+    #  required_single_binding_method_name  #
+    #########################################
   
-  it 'can return a method name for defining a single binding type: attr_required_[type]' do
-    @instance.instance_eval do
-      required_single_binding_method_name( 'text' ).should == 'attr_required_text'
+    context '#required_single_binding_method_name' do
+      let( :expected_binding_method_name ) { 'attr_required_text' }
+      let( :required_single_binding_method_name ) do
+        _binding_name = binding_name
+        instance.instance_eval { required_single_binding_method_name( _binding_name ) }
+      end
+      it 'will prepend attr_required_' do
+        required_single_binding_method_name.should == expected_binding_method_name
+      end
     end
-  end
   
-  ###########################################
-  #  required_multiple_binding_method_name  #
-  ###########################################
+    ###########################################
+    #  required_multiple_binding_method_name  #
+    ###########################################
 
-  it 'can return a method name for defining a single binding type: attr_required_[type]s or attr_required_[types]es' do
-    @instance.instance_eval do
-      required_multiple_binding_method_name( 'text' ).should == 'attr_required_texts'
+    context '#required_multiple_binding_method_name' do
+      let( :required_multiple_binding_method_name ) do
+        _binding_name = binding_name
+        instance.instance_eval { required_multiple_binding_method_name( _binding_name ) }
+      end
+      context 'when type ends with anything other than s or x' do
+        let( :expected_binding_method_name ) { 'attr_required_texts' }
+        it 'will prepend attr_ and append -s' do
+          required_multiple_binding_method_name.should == expected_binding_method_name
+        end
+      end
+      context 'when type ends with s' do
+        let( :binding_name ) { 'texts' }
+        let( :expected_binding_method_name ) { 'attr_required_textses' }
+        it 'it will prepend attr_ and append -es' do
+          required_multiple_binding_method_name.should == expected_binding_method_name
+        end
+      end
+      context 'when type ends with x' do
+        let( :binding_name ) { 'tex' }
+        let( :expected_binding_method_name ) { 'attr_required_texes' }
+        it 'it will prepend attr_ and append -es' do
+          required_multiple_binding_method_name.should == expected_binding_method_name
+        end
+      end
     end
-  end
-
-end
-
-describe ::Perspective::Bindings::BindingTypeContainer do
-
-  before :all do
-    @instance = ::Perspective::Bindings::BindingTypeContainer.new( :basic_type )
-    @instance.define_binding_type( :some_type )
-    @instance.alias_binding_type( :some_type_alias, :some_type )
-    @inheriting_instance = ::Perspective::Bindings::BindingTypeContainer.new( :sub_basic_type, @instance )
-  end
-
-  #########################
-  #  define_binding_type  #
-  #########################
   
-  it 'should define a binding type as a container for its modules and classes' do
-    @instance.binding_types[ :some_type ].ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType ).should == true
   end
   
-  it 'should inherit binding types' do
-    puts 'wtf: ' + ::CascadingConfiguration.configuration( @inheriting_instance, :binding_types ).parents.to_s
-    @inheriting_instance.binding_types[ :some_type ].ancestors.include?( @instance.binding_types[ :some_type ] ).should == true
-  end
+  context '================  Defining Bindings  ================' do
+
+    let( :binding_name ) { :some_type }
+    
+    ################################
+    #  define_single_binding_type  #
+    ################################
   
+    shared_examples_for :define_single_binding_type do
+      let( :method_name ) do
+        _binding_name = binding_name
+        parent_type_container.instance_eval { single_binding_method_name( _binding_name ) }.to_sym
+      end
+      it 'will define a method to create single-value bindings of type' do
+        parent_type_container.instance_methods.include?( method_name ).should be true
+      end
+      it 'will cause children to inherit the binding' do
+        child_type_container.instance_methods.include?( method_name ).should be true
+      end
+    end
+  
+    context '#define_single_binding_type' do
+      let( :define_single_binding_type ) do
+        _binding_name = binding_name
+        parent_type_container.instance_eval { define_single_binding_type( _binding_name ) }
+      end
+      it_behaves_like :define_single_binding_type
+      before :each do
+        define_single_binding_type
+      end
+    end
+
+    ##################################
+    #  define_multiple_binding_type  #
+    ##################################
+
+    shared_examples_for :define_multiple_binding_type do
+      let( :method_name ) do
+        _binding_name = binding_name
+        parent_type_container.instance_eval { multiple_binding_method_name( _binding_name ) }.to_sym
+      end
+      it 'will define a method to create single-value bindings of type' do
+        parent_type_container.instance_methods.include?( method_name ).should be true
+      end
+      it 'will cause children to inherit the binding' do
+        child_type_container.instance_methods.include?( method_name ).should be true
+      end
+    end
+    
+    context '#define_multiple_binding_type' do
+      let( :define_multiple_binding_type ) do
+        _binding_name = binding_name
+        parent_type_container.instance_eval { define_multiple_binding_type( _binding_name ) }
+      end
+      it_behaves_like :define_multiple_binding_type
+      before :each do
+        define_multiple_binding_type
+      end
+    end
+
+    #########################################
+    #  define_required_single_binding_type  #
+    #########################################
+
+    shared_examples_for :define_required_single_binding_type do
+      let( :method_name ) do
+        _binding_name = binding_name
+        parent_type_container.instance_eval { required_single_binding_method_name( _binding_name ) }.to_sym
+      end
+      it 'will define a method to create single-value bindings of type' do
+        parent_type_container.instance_methods.include?( method_name ).should be true
+      end
+      it 'will cause children to inherit the binding' do
+        child_type_container.instance_methods.include?( method_name ).should be true
+      end
+    end
+
+    context '#define_required_single_binding_type' do
+      let( :define_required_single_binding_type ) do
+        _binding_name = binding_name
+        parent_type_container.instance_eval { define_required_single_binding_type( _binding_name ) }
+      end
+      it_behaves_like :define_required_single_binding_type
+      before :each do
+        define_required_single_binding_type
+      end
+    end
+
+    ###########################################
+    #  define_required_multiple_binding_type  #
+    ###########################################
+
+    shared_examples_for :define_required_multiple_binding_type do
+      let( :method_name ) do
+        _binding_name = binding_name
+        parent_type_container.instance_eval { required_multiple_binding_method_name( _binding_name ) }.to_sym
+      end
+      it 'will define a method to create single-value bindings of type' do
+        parent_type_container.instance_methods.include?( method_name ).should be true
+      end
+      it 'will cause children to inherit the binding' do
+        child_type_container.instance_methods.include?( method_name ).should be true
+      end
+    end
+
+    context '#define_required_multiple_binding_type' do
+      let( :define_required_multiple_binding_type ) do
+        _binding_name = binding_name
+        parent_type_container.instance_eval { define_required_multiple_binding_type( _binding_name ) }
+      end
+      it_behaves_like :define_required_multiple_binding_type
+      before :each do
+        define_required_multiple_binding_type
+      end
+    end
+
+    #########################
+    #  define_binding_type  #
+    #########################
+  
+    context '#define_binding_type' do
+      let( :define_binding_type ) do
+        parent_type_container.define_binding_type( binding_name )
+      end
+      before :each do
+        define_binding_type
+      end
+      it_behaves_like :define_single_binding_type
+      it_behaves_like :define_multiple_binding_type
+      it_behaves_like :define_required_single_binding_type
+      it_behaves_like :define_required_multiple_binding_type
+    end
+  
+    ########################
+    #  alias_binding_type  #
+    ########################
+
+    context '#alias_binding_type' do
+      let( :alias_name ) { :binding_alias }
+      let( :binding_name ) { alias_name }
+      let( :binding_to_alias ) { :some_type }
+      let( :alias_binding_type ) do
+        parent_type_container.define_binding_type( binding_to_alias )
+        parent_type_container.alias_binding_type( alias_name, binding_to_alias )
+      end
+      before :each do
+        alias_binding_type
+      end
+      it_behaves_like :define_single_binding_type
+      it_behaves_like :define_multiple_binding_type
+      it_behaves_like :define_required_single_binding_type
+      it_behaves_like :define_required_multiple_binding_type
+    end
+
+  end
+
   ########################
-  #  alias_binding_type  #
+  #  new_class_bindings  #
   ########################
 
-  it 'can alias a defined type with a second name' do
-    @instance.binding_aliases[ :some_type_alias ].should == :some_type
+  context '#new_class_bindings' do
+    it 'creates new class bindings for a container, a list of names, and an optional block' do
+      binding_type = parent_type_container.define_binding_type( :some_type )
+      bound_container = ::Module.new do
+        def self.__root__
+          return self
+        end
+        def self.__root_string__
+          return @__root_string__ ||= '<root:' << to_s << '>'
+        end
+      end
+      new_bindings = parent_type_container.new_class_bindings( binding_type, bound_container, :some_name, :some_other_name, :another_name )
+      new_bindings.each do |this_binding|
+        this_binding.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should be true
+        this_binding.is_a?( parent_type_container::SomeType ).should be true
+        this_binding.__bound_container__.should be bound_container
+      end
+    end
   end
-
-  ################################
-  #  define_single_binding_type  #
-  ################################
   
-  it 'should define a method to create single-value bindings of type' do
-    @instance.instance_methods.include?( :attr_some_type ).should == true
-  end
-
-  ##################################
-  #  define_multiple_binding_type  #
-  ##################################
-
-  it 'should define a method to create multiple-value bindings of type' do
-    @instance.instance_methods.include?( :attr_some_types ).should == true
-  end
-
-  #########################################
-  #  define_required_single_binding_type  #
-  #########################################
-
-  it 'should define a method to create required single-value bindings of type' do
-    @instance.instance_methods.include?( :attr_required_some_type ).should == true
-  end
-
-  ###########################################
-  #  define_required_multiple_binding_type  #
-  ###########################################
-
-  it 'should define a method to create required multiple-value bindings of type' do
-    @instance.instance_methods.include?( :attr_required_some_types ).should == true
-  end
-
 end

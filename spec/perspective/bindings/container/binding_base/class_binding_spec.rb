@@ -68,7 +68,7 @@ describe ::Perspective::View::Bindings::BindingBase::ClassBinding do
   ##################################
   #  initialize                    #
   #  __initialize_defaults__       #
-  #  __binding_name_validates__?   #
+  #  __validate_binding_name__     #
   #  __validate_container_class__  #
   #  __initialize_route__          #
   #  __name__                      #

@@ -7,7 +7,7 @@ module ::Perspective::Bindings
   class BindingTypeContainer < ::Module
     class BindingBase < ::Module
     end
-    class BindingType
+    class BindingType < ::Module
     end
   end
   module BindingBase

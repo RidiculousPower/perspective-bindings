@@ -18,9 +18,7 @@
 #   a binding is attached to a container or another binding. We thus have:
 #
 #   * ClassBinding
-#   * NestedClassBinding
 #   * InstanceBinding
-#   * NestedInstanceBinding
 #
 #   We want to be able to support multiple types of containers. This means we want a
 #   given container to be able to inherit bindings from another container as well as
@@ -37,22 +35,17 @@
 #   A BindingTypeContainer holds 4 base container modules:
 #
 #   * ClassBindingBase
-#   * NestedClassBindingBase
 #   * InstanceBindingBase
-#   * NestedInstanceBindingBase
 #
 #   Additionally, a BindingTypeContainer holds each type of binding defined for a given
 #   container type. To facilitate ease of translation, the naming schema deployed for 
 #   actual binding types is a little different (and may seem odd):
 #
 #   * ClassBinding
-#   * NestedClassBinding
 #   * ClassBinding::InstanceBinding
-#   * NestedClassBinding::NestedInstanceBinding
 #
 #   This permits translations such as:
 #
-#   * class_binding.class::NestedClassBinding.new
 #   * class_binding.class::InstanceBinding.new
 #   * nested_class_binding.class::InstanceBinding.new
 #
@@ -61,8 +54,6 @@
 #
 class ::Perspective::Bindings::BindingTypeContainer < ::Module
 
-  include ::Perspective::Bindings::BindingTypeContainer::IncludeExtend
-  
   # If we add CascadingConfiguration modules that do not support multiple parents
   # then we will need to rethink the parent registration model to account for
   # separation of single and multiple parent configurations.
@@ -81,32 +72,20 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     @subclass_existing_bindings = subclass_existing_bindings
     
     @class_binding_base = self.class::BindingBase::ClassBindingBase.new( self )
-    @nested_class_binding_base = self.class::BindingBase::NestedClassBindingBase.new( self )
     @instance_binding_base = self.class::BindingBase::InstanceBindingBase.new( self )
-    @nested_instance_binding_base = self.class::BindingBase::NestedInstanceBindingBase.new( self )
     
     register_parent( parent_container, subclass_existing_bindings )
-    
-    binding_type_superclass = parent_container ? parent_container.binding_type_class : self.class::BindingType
-    @binding_type_class = binding_type_superclass.new( self, nil )
-    const_set( :BindingTypeClass, @binding_type_class )
     
     super( & module_block )
     
   end
-
+  
   #########################
   #  type_container_name  #
   #########################
   
   attr_reader :type_container_name
 
-  ########################
-  #  binding_type_class  #
-  ########################
-  
-  attr_reader :binding_type_class
-  
   ################################
   #  subclass_existing_bindings  #
   ################################
@@ -124,18 +103,6 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   ###########################
 
   attr_reader :instance_binding_base
-
-  ###############################
-  #  nested_class_binding_base  #
-  ###############################
-
-  attr_reader :nested_class_binding_base
-
-  ##################################
-  #  nested_instance_binding_base  #
-  ##################################
-
-  attr_reader :nested_instance_binding_base
 
   ###################
   #  binding_types  #
@@ -201,7 +168,9 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     end
     
     # create and store new binding type
-    new_binding_type = @binding_type_class.new( self, binding_type_name, parent_type_instance )
+    new_binding_type = ::Perspective::Bindings::BindingTypeContainer::BindingType.new( self, 
+                                                                                       binding_type_name, 
+                                                                                       parent_type_instance )
     const_set( binding_type_constant_name, new_binding_type )
     binding_types[ binding_type_name ] = new_binding_type
     
@@ -272,27 +241,16 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     if @parent_container = parent_container
       
       @class_binding_base.module_eval           { include parent_container.class_binding_base }
-      @nested_class_binding_base.module_eval    { include parent_container.nested_class_binding_base }
       @instance_binding_base.module_eval        { include parent_container.instance_binding_base }
-      @nested_instance_binding_base.module_eval { include parent_container.nested_instance_binding_base }
       include parent_container
       
    # first parent
     else
       
       @class_binding_base.module_eval           { include ::Perspective::Bindings::BindingBase::ClassBinding }
-      @nested_class_binding_base.module_eval    { include ::Perspective::Bindings::BindingBase::NestedClassBinding }
       @instance_binding_base.module_eval        { include ::Perspective::Bindings::BindingBase::InstanceBinding }
-      @nested_instance_binding_base.module_eval { include ::Perspective::Bindings::BindingBase::NestedInstanceBinding }
 
     end
-    
-    # and now nested containers include their non-nested equivalents
-    class_binding_base = @class_binding_base
-    @nested_class_binding_base.module_eval { include class_binding_base }
-
-    instance_binding_base = @instance_binding_base
-    @nested_instance_binding_base.module_eval { include instance_binding_base }
     
     return self
     
@@ -380,8 +338,6 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   def define_single_binding_type( binding_method_name, binding_type_name = binding_method_name )
     
     method_name = single_binding_method_name( binding_method_name )
-    binding_type_instance = binding_types[ binding_type_name.to_sym ]
-    type_container = binding_type_instance.binding_type_container
     
     #===============#
     #  attr_[type]  #
@@ -389,6 +345,9 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     
     define_method( method_name ) do |*args, & block|
       
+      binding_type_instance = binding_types[ binding_type_name.to_sym ]
+      type_container = binding_type_instance.type_container
+
       new_class_bindings = type_container.new_class_bindings( binding_type_instance, self, *args, & block )
 
       return new_class_bindings.each do |this_new_class_binding|

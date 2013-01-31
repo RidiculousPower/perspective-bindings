@@ -20,15 +20,15 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
   #
   #   * Class Binding to Instance Binding (attached to root container)
   #
-  #   * Class Binding to Nested Class Binding (nested in a container 
+  #   * Class Binding to nested Class Binding (nested in a container 
   #     that is nested in a container)
   #
-  #   * Nested Class Binding to Nested Instance Binding (instance nested 
+  #   * nested Class Binding to nested Instance Binding (instance nested 
   #     in a container that is nested in a container)
   #
   #   * Instance Binding to Instance (class binding specified container class).
   #
-  #   * Nested Instance Binding to Instance (class binding specified container 
+  #   * nested Instance Binding to Instance (class binding specified container 
   #     class).
   #
   #   * Instance to Instance Binding (instance assigned to instance binding).
@@ -37,7 +37,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
   #     binding will inherit from the instance rather than the instance
   #     inheriting from the binding. 
   #
-  #   * Instance to Nested Instance Binding (instance assigned to instance 
+  #   * Instance to nested Instance Binding (instance assigned to instance 
   #     binding nested in a nested container)
   #
   #     Note: this inverts typical inheritance relations such that the
@@ -68,7 +68,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
           
           # If we're attaching to a class binding we're at least 2 levels deep, 
           # which means new class bindings are nested.
-          child_instance = binding_instance.class::NestedClassBinding.new( instance, nil, nil, binding_instance )
+          child_instance = binding_instance.class::ClassBinding.new( instance, nil, nil, binding_instance )
           
         # Inheriting from a class or an instance binding (nested or not)
         when ::Perspective::Bindings::Container::ObjectInstance
@@ -106,7 +106,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
               # and when we create a new instance binding, it is also inheriting from a class binding
               # so we never stop creating new nested bindings b/c each attempt to finish inheritance creates a new one
               # We are inheriting as a nested instance binding
-              child_instance = binding_instance.class::NestedInstanceBinding.new( binding_instance, instance )
+              child_instance = binding_instance.class::InstanceBinding.new( binding_instance, instance )
             
             when ::Perspective::Bindings::Container::ObjectInstance
             
@@ -154,36 +154,13 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
       # The inherited binding instance we want already exists in __bindings__ for instance C.
       # We need the nested route for A in B, which will allow us to get A in C.
       
-      case instance = configuration_instance
-        
-        when ::Perspective::Bindings::Container::ObjectInstance,
-             ::Perspective::Bindings::BindingBase::InstanceBinding
-          
-          binding_route = binding_instance.__nested_route__( instance )
+      binding_route = binding_instance.__nested_route__( instance )
 
-        when ::Perspective::Bindings::BindingBase::NestedClassBinding
-
-          binding_route = binding_instance.__nested_route__( instance )
-          
-          puts 'inst: ' + instance.__route_print_string__.to_s
-          puts 'binding: ' + binding_instance.__route_print_string__.to_s
-          
-          raise 'figure this out - nested class bindings probably need nested route, but not sure'
-          
-        when ::Perspective::Bindings::Container::ClassInstance, 
-             ::Perspective::Bindings::BindingBase::ClassBinding
-
-          binding_route = binding_instance.__route__
-          
-      end
-
-      child_instance = ::Perspective::Bindings.aliased_binding_in_context( instance, 
-                                                                           binding_route,
-                                                                           binding_instance.__name__,
-                                                                           local_alias_to_binding,
-                                                                           binding_instance )
-      
-      return child_instance
+      return ::Perspective::Bindings.aliased_binding_in_context( instance, 
+                                                                 binding_route,
+                                                                 binding_instance.__name__,
+                                                                 local_alias_to_binding,
+                                                                 binding_instance )
 
     end
   
