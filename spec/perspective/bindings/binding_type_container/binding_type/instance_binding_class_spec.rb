@@ -3,13 +3,37 @@ require_relative '../../../../../lib/perspective/bindings.rb'
 
 require_relative '../../../../support/named_class_and_module.rb'
 
+require_relative '../../binding_base/instance_binding.rb'
+
 describe ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBindingClass do
+
+  before :all do
+    ::Perspective::Bindings::BindingTypes.define_container_type( :test_container ) do
+      define_binding_type( :test_binding )
+    end
+  end
+
+  let( :class_binding_class ) { ::Perspective::Bindings::BindingTypes::TestContainer::TestBinding::ClassBindingClass }
+  let( :instance_binding_class ) { ::Perspective::Bindings::BindingTypes::TestContainer::TestBinding::InstanceBindingClass }
+
+  it_behaves_like :instance_binding
+
+  setup_class_binding_tests
+  
+  let( :class_binding_instance ) { class_binding_to_base }
+  let( :bound_instance ) { base_container.new }
+  let( :instance_binding_instance ) { instance_binding_class.new( class_binding_to_base, bound_instance ) }
 
   #########################
   #  respond_to_missing?  #
   #########################
   
   context '#respond_to_missing?' do
+    it 'should not have any keys in non-forwarding-methods' do
+      instance_binding_class::NonForwardingMethodsArray.each do |this_key|
+        instance_binding_instance.respond_to_missing?( this_key, true ).should be false
+      end
+    end
   end
   
   ####################
@@ -18,15 +42,7 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBin
 	
   context '#method_missing' do
   	it 'forwards almost all methods to its value' do
-  	  non_forwarded_methods = [ :method_missing, :object_id, :hash, :==,
-                                :equal?, :class, 
-                                :view, :view=, :container, :container=, :to_html_node ]
-      non_forwarded_methods.each do |this_method_name|
-        @instance_binding.__instance_eval__ do
-          respond_to_missing?( this_method_name, true ).should == false
-        end
-      end
-      @instance_binding.respond_to_missing?( :some_other_method, true ).should == true
+      instance_binding_instance.respond_to_missing?( :some_other_method, true ).should == true
     end
   end
   

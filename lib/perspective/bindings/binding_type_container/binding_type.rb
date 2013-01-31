@@ -10,6 +10,8 @@
 #
 class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
 
+  include ::Perspective::Bindings::IncludeExtend
+
   ################
   #  initialize  #
   ################
@@ -19,8 +21,8 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
   #   the singleton, so we override #new to give us a subclass.
   #
   def initialize( type_container, type_name, parent_type_instance = nil )
-        
-    @child_binding_classes = ::Array::Unique.new( self )
+    
+    super()
     
     @type_container = type_container
     @type_name = type_name
@@ -30,8 +32,6 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
     
     if @parent_type = parent_type_instance
       include @parent_type
-      child_type = self
-      @parent_type.module_eval { @child_binding_classes.push( child_type ) }
       class_binding_class = @parent_type.class_binding_class
       instance_binding_class = @parent_type.instance_binding_class
     else
@@ -46,65 +46,6 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
     const_set( :InstanceBindingClass, @instance_binding_class )
         
   end
-
-  ##############
-  #  included  #
-  ##############
-  
-  def included( module_instance )
-    
-    @child_binding_classes.push( module_instance )
-    
-    super
-    
-  end
-  
-  #################
-  #  __include__  #
-  #################
-  
-  alias_method :__include__, :include
-  
-  #############
-  #  include  #
-  #############
-  
-  def include( *modules )
-    
-    super
-    
-    _binding_base = self
-
-    @child_binding_classes.each do |this_child_binding_class|
-      this_child_binding_class.module_eval { include( _binding_base ) }
-    end
-    
-    return self
-    
-  end
-
-  ################
-  #  __extend__  #
-  ################
-
-  alias_method :__extend__, :extend
-  
-  ############
-  #  extend  #
-  ############
-
-  def extend( *modules )
-
-    super
-
-    @child_binding_classes.each do |this_child_binding_class|
-      this_child_binding_class.extend( *modules )
-    end
-    
-    return self
-    
-  end
-
 
   ###############
   #  type_name  #

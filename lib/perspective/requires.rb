@@ -8,13 +8,16 @@ basepath = 'bindings'
 
 files = [
   
+  'include_extend',
+  'include_extend/initialize_instances',
+  
   'container/context',
 
   'constants',
 
   'configuration/object_and_binding_instance',
   'configuration',
-  
+
   'binding_base',
   'binding_base/class_binding',
   'binding_base/instance_binding',

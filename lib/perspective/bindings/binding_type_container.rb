@@ -144,38 +144,42 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   
   def define_binding_type( binding_type_name, ancestor_type = nil )
     
-    # Constant name is provided underscored name converted to camel case
-    binding_type_constant_name = binding_type_name.to_s.to_camel_case
-    # Method name is lower case version of type name
-    binding_method_name = binding_type_name.downcase.to_sym
-    # Storage name is provided type name as a symbol
-    binding_type_name = binding_type_name.to_sym
+    unless new_binding_type = binding_types[ binding_type_name ]
+
+      # Constant name is provided underscored name converted to camel case
+      binding_type_constant_name = binding_type_name.to_s.to_camel_case
+      # Method name is lower case version of type name
+      binding_method_name = binding_type_name.downcase.to_sym
+      # Storage name is provided type name as a symbol
+      binding_type_name = binding_type_name.to_sym
     
-    # get ancestor instance from ancestor parameter, which can be type name or instance
-    parent_type_instance = nil
-    case ancestor_type
-      # if ancestor_type is already a binding type we use it as the parent type instance
-      when ::Perspective::Bindings::BindingTypeContainer::BindingType
-        parent_type_instance = ancestor_type
-      # if we have a parent type container we can look up a parent type instance
-      # * if we have an ancestor type provided explicitly we use it
-      # * otherwise we look up the name being defined in parent container
-      else
-        if @parent_container
-          parent_type_instance = ancestor_type ? @parent_container.binding_types[ ancestor_type.to_sym ]
-                                               : @parent_container.binding_types[ binding_type_name ]
-        end
+      # get ancestor instance from ancestor parameter, which can be type name or instance
+      parent_type_instance = nil
+      case ancestor_type
+        # if ancestor_type is already a binding type we use it as the parent type instance
+        when ::Perspective::Bindings::BindingTypeContainer::BindingType
+          parent_type_instance = ancestor_type
+        # if we have a parent type container we can look up a parent type instance
+        # * if we have an ancestor type provided explicitly we use it
+        # * otherwise we look up the name being defined in parent container
+        else
+          if @parent_container
+            parent_type_instance = ancestor_type ? @parent_container.binding_types[ ancestor_type.to_sym ]
+                                                 : @parent_container.binding_types[ binding_type_name ]
+          end
+      end
+    
+      # create and store new binding type
+      new_binding_type = ::Perspective::Bindings::BindingTypeContainer::BindingType.new( self, 
+                                                                                         binding_type_name, 
+                                                                                         parent_type_instance )
+      const_set( binding_type_constant_name, new_binding_type )
+      binding_types[ binding_type_name ] = new_binding_type
+    
+      # define methods
+      define_binding_methods( binding_method_name, binding_type_name )
+
     end
-    
-    # create and store new binding type
-    new_binding_type = ::Perspective::Bindings::BindingTypeContainer::BindingType.new( self, 
-                                                                                       binding_type_name, 
-                                                                                       parent_type_instance )
-    const_set( binding_type_constant_name, new_binding_type )
-    binding_types[ binding_type_name ] = new_binding_type
-    
-    # define methods
-    define_binding_methods( binding_method_name, binding_type_name )
     
     return new_binding_type
     

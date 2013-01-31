@@ -95,7 +95,7 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBindin
     
     responds = true
 
-    if ::Perspective::Bindings::BindingBase::InstanceBinding::NonForwardingMethods.has_key?( method )
+    if self.class::NonForwardingMethods.has_key?( method )
       responds = false
     end
     

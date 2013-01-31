@@ -6,6 +6,8 @@ module ::Perspective::Bindings::BindingBase::ClassBinding
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Array::Unique
 
+  extend ::Perspective::Bindings::IncludeExtend
+
   ################
   #  initialize  #
   ################
