@@ -15,6 +15,30 @@ module ::Perspective::Bindings::Container::ObjectInstance
     # nothing to do - implemented to permit overriding
     
   end
+
+  #############################
+  #  __initialize_bindings__  #
+  #############################
+  
+  def __initialize_bindings__
+
+    __bindings__.each do |this_binding_name, this_binding_instance|
+      this_binding_instance.__initialize_container__
+	  end
+  	  
+  end
+  
+  ##############################
+  #  __configure_containers__  #
+  ##############################
+  
+  def __configure_containers__
+
+    __bindings__.each do |this_binding_name, this_binding_instance|
+      this_binding_instance.__configure_container__
+    end
+
+  end
   
   ##############
   #  __name__  #

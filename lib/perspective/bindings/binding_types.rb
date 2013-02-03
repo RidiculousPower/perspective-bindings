@@ -18,8 +18,6 @@ module ::Perspective::Bindings::BindingTypes
                                   subclass_existing_bindings = true,
                                   & definition_block )
     
-    type_container_constant_name = container_type.to_s.to_camel_case
-    
     # We permit define to be called multiple times, so we check to see if 
     # we have already created our BindingTypeContainer instance for container_type.
     if type_container = type_container( container_type, false )
@@ -30,16 +28,10 @@ module ::Perspective::Bindings::BindingTypes
 
     else
 
-      if const_defined?( type_container_constant_name )
-        const_remove( type_container_constant_name )
-      end
-
       type_container = create_container_type( container_type,
                                               parent_container_or_type,
                                               subclass_existing_bindings,
                                               & definition_block )
-      
-      const_set( type_container_constant_name, type_container )
       
     end
         
@@ -57,7 +49,7 @@ module ::Perspective::Bindings::BindingTypes
   #   belonging to container type.
   #
   def self.create_container_type( container_type, 
-                                  parent_container_or_type,
+                                  parent_container_or_type = nil,
                                   subclass_existing_bindings = true,
                                   & definition_block )
     
@@ -81,8 +73,10 @@ module ::Perspective::Bindings::BindingTypes
                                                                         subclass_existing_bindings, 
                                                                         & definition_block )
     
-    ::Perspective::Bindings::BindingDefinitions.const_set( container_type.to_s.to_camel_case, type_container )
     
+    type_container_constant_name = container_type.to_s.to_camel_case
+    remove_const( type_container_constant_name ) if const_defined?( type_container_constant_name )
+    const_set( type_container_constant_name, type_container )
     @type_containers[ container_type ] = type_container
     
     return type_container

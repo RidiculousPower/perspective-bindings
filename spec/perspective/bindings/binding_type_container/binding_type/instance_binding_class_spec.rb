@@ -9,12 +9,12 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBin
 
   before :all do
     ::Perspective::Bindings::BindingTypes.define_container_type( :test_container ) do
-      define_binding_type( :test_binding )
+      define_binding_type( :instance_binding_test_binding )
     end
   end
 
-  let( :class_binding_class ) { ::Perspective::Bindings::BindingTypes::TestContainer::TestBinding::ClassBindingClass }
-  let( :instance_binding_class ) { ::Perspective::Bindings::BindingTypes::TestContainer::TestBinding::InstanceBindingClass }
+  let( :class_binding_class ) { ::Perspective::Bindings::BindingTypes::TestContainer::InstanceBindingTestBinding::ClassBindingClass }
+  let( :instance_binding_class ) { ::Perspective::Bindings::BindingTypes::TestContainer::InstanceBindingTestBinding::InstanceBindingClass }
 
   it_behaves_like :instance_binding
 

@@ -1,5 +1,6 @@
 
 require 'uri'
+require 'forwardable'
 require 'accessor_utilities'
 require 'reraise'
 require 'singleton_attr'
@@ -29,6 +30,7 @@ files = [
   'binding_type_container/binding_type/class_binding_class',
   'binding_type_container/binding_type/instance_binding_class',
   'binding_type_container/binding_type',
+  'binding_type_container/types_controller',
   'binding_type_container',
 
   'binding_types',
@@ -68,8 +70,6 @@ files = [
   'container/binding_methods',
   'container/binding_methods/instance_binding_methods',
   'container/class_and_object_instance',
-  'container/nested/class_instance',
-  'container/nested/object_instance',
   'container/class_instance',
   'container/object_instance',
   'container',

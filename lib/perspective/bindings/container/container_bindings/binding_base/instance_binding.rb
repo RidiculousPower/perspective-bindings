@@ -24,7 +24,7 @@ module ::Perspective::View::Bindings::BindingBase::InstanceBinding
   
   def __initialize_container_from_class__( container_class = @__parent_binding__.__container_class__ )
 
-    container_instance = container_class::Nested.new( self )
+    container_instance = container_class.new_nested_instance( self )
     
     # :__store_initialized_container_instance__ is used instead of :__container__= 
     # so that we can store without any overloaded effects.

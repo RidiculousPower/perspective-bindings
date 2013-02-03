@@ -49,10 +49,10 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType do
 
   context '#type_container' do
     it 'parent instance belongs to the container that created it' do
-      parent_binding_type.type_container.should == parent_mock_binding_type_container
+      parent_binding_type.types_controller.should == parent_mock_binding_type_container
     end
     it 'child instance belongs to a container that subclassed parent instance container' do
-      child_binding_type.type_container.should == child_mock_binding_type_container
+      child_binding_type.types_controller.should == child_mock_binding_type_container
     end
   end
   

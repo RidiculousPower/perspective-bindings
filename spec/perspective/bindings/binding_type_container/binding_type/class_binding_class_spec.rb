@@ -9,12 +9,12 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType::ClassBindin
 
   before :all do
     ::Perspective::Bindings::BindingTypes.define_container_type( :test_container ) do
-      define_binding_type( :test_binding )
+      define_binding_type( :class_binding_test_binding )
     end
   end
 
   it_behaves_like :class_binding do
-    let( :class_binding_class ) { ::Perspective::Bindings::BindingTypes::TestContainer::TestBinding::ClassBindingClass }
+    let( :class_binding_class ) { ::Perspective::Bindings::BindingTypes::TestContainer::ClassBindingTestBinding::ClassBindingClass }
   end
   
 end

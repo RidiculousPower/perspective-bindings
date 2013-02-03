@@ -20,11 +20,11 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
   # We use a class so that singleton inheritance cascades. We do not want instances of
   #   the singleton, so we override #new to give us a subclass.
   #
-  def initialize( type_container, type_name, parent_type_instance = nil )
+  def initialize( types_controller, type_name, parent_type_instance = nil )
     
     super()
     
-    @type_container = type_container
+    @types_controller = types_controller
     @type_name = type_name
 
     class_binding_class = nil
@@ -39,8 +39,8 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
       instance_binding_class = ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBindingClass
     end
 
-    @class_binding_class = class_binding_class.new_subclass( self, @type_container.class_binding_base )
-    @instance_binding_class = instance_binding_class.new_subclass( self, @type_container.instance_binding_base )
+    @class_binding_class = class_binding_class.new_subclass( self, @types_controller.class_binding_base )
+    @instance_binding_class = instance_binding_class.new_subclass( self, @types_controller.instance_binding_base )
     
     const_set( :ClassBindingClass,    @class_binding_class )
     const_set( :InstanceBindingClass, @instance_binding_class )
@@ -60,11 +60,11 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
   #
   attr_reader :type_name
 
-  ####################
-  #  type_container  #
-  ####################
+  ######################
+  #  types_controller  #
+  ######################
   
-  attr_reader :type_container
+  attr_reader :types_controller
 
   #################
   #  parent_type  #

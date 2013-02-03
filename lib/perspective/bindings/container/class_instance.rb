@@ -11,57 +11,53 @@ module ::Perspective::Bindings::Container::ClassInstance
   #  new  #
   #########
   
-  def new( *args )
-    
-    # We add this here instead of in #initialize - where it usually would go - so that
-    # we can avoid requiring #initialize to call super.
-    #
-    # This is clearly an odd thing to do, but perhaps it can be defended on the basis
-    # that the class instance is already acting as a controller for instances, not
-    # only in terms of creating them (as always) but also in terms of bindings.
-    
-    instance = super
-    
-    # Call to #each causes __bindings__ to populate.
-    #
-    # As each binding is created, any sub-bindings it has are created.
-    #
-    # We need the entire tree to be created first then initialized top-down, otherwise
-    # we end up with most-nested bindings configuring first.
-    #
-    # We also need to initialize each binding's container before configuring any bindings,
-    # otherwise odd initialization loops can happen, resulting in configuration happening
-    # against a nil container, which is not only wrong but confusing to debug.
-    
-    initialize_bindings( instance )
-    
+  ###
+  # Ensure that instance bindings initialize prior to calling #initialize.
+  #
+  # We add this here instead of in #initialize - where it usually would go - so that
+  # we can avoid requiring #initialize to call super.
+  #
+  # As each binding is created, any sub-bindings it has are created. We need the entire tree 
+  # to be created first then initialized top-down, otherwise we end up with most-nested bindings 
+  # configuring before its parents have initialized. This also tends to cause odd initialization 
+  # loops, resulting in configuration happening against a nil container, which is not only wrong 
+  # but also quite confusing to debug.
+  #
+  def new( *args, & block )
+
+    __initialize_bindings__
+
+    initialize( *args, & block )
+
+    __configure_containers__
+
     return instance
     
   end
 
   #########################
-  #  initialize_bindings  #
+  #  new_nested_instance  #
   #########################
   
-  def initialize_bindings( instance )
+  ###
+  # When we have a nested object instance we need to ensure that parent configurations are
+  #   registered before initialization occurs.
+  #
+  def new_nested_instance( parent_binding_instance, *args, & block )
+    
+    return allocate.instance_eval do
 
-    instance.__bindings__.each do |this_binding_name, this_binding_instance|
-      this_binding_instance.__initialize_container__
-	  end
-  	  
-    instance.__bindings__.each do |this_binding_name, this_binding_instance|
-      this_binding_instance.__configure_container__
+      @__parent_binding__ = parent_binding_instance
+      @__bound_container__ = parent_binding_instance
+      ::CascadingConfiguration.register_parent( self, parent_binding_instance )
+
+      __initialize_bindings__
+
+      initialize( *args, & block )
+
+      __configure_containers__
+
     end
-    
-  end
-  
-  ######################
-  #  non_nested_class  #
-  ######################
-  
-  def non_nested_class
-    
-    return self
     
   end
 

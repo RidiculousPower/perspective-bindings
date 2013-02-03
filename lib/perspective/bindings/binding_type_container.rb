@@ -53,12 +53,9 @@
 #   for the code that utilizes this naming schema.
 #
 class ::Perspective::Bindings::BindingTypeContainer < ::Module
-
-  # If we add CascadingConfiguration modules that do not support multiple parents
-  # then we will need to rethink the parent registration model to account for
-  # separation of single and multiple parent configurations.
-  include ::CascadingConfiguration::Hash
   
+  extend ::Forwardable
+
   MethodPrefix = 'attr'
 
   ################
@@ -69,16 +66,25 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     
     @type_container_name = type_container_name
     
-    @subclass_existing_bindings = subclass_existing_bindings
-    
-    @class_binding_base = self.class::BindingBase::ClassBindingBase.new( self )
-    @instance_binding_base = self.class::BindingBase::InstanceBindingBase.new( self )
-    
-    register_parent( parent_container, subclass_existing_bindings )
+    @types = self.class::TypesController.new( parent_container ? parent_container.types : nil, subclass_existing_bindings )
+
+    include parent_container if @parent_container = parent_container
     
     super( & module_block )
-    
+
   end
+
+  ######################
+  #  parent_container  #
+  ######################
+  
+  attr_reader :parent_container
+
+  ###########
+  #  types  #
+  ###########
+  
+  attr_reader :types
   
   #########################
   #  type_container_name  #
@@ -86,57 +92,17 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   
   attr_reader :type_container_name
 
-  ################################
-  #  subclass_existing_bindings  #
-  ################################
-  
-  attr_reader :subclass_existing_bindings
-
-  ########################
-  #  class_binding_base  #
-  ########################
-
-  attr_reader :class_binding_base
-
-  ###########################
-  #  instance_binding_base  #
-  ###########################
-
-  attr_reader :instance_binding_base
-
   ###################
   #  binding_types  #
   ###################
-  
-  attr_hash :binding_types do
-    
-    #======================#
-    #  child_pre_set_hook  #
-    #======================#
-    
-    def child_pre_set_hook( binding_type_name, parent_binding_type_instance, parent_hash )
-      
-      child_instance = nil
 
-      if configuration_instance.subclass_existing_bindings
-        child_instance = parent_binding_type_instance.new_binding_type_subclass( self, 
-                                                                                 binding_type_name, 
-                                                                                 parent_binding_type_instance )
-      else
-        child_instance = parent_binding_type_instance
-      end
-      
-      return child_instance
-      
-    end
-    
-  end
+  def_delegator :@types, :binding_types
 
   #####################
   #  binding_aliases  #
   #####################
-  
-  attr_hash :binding_aliases
+
+  def_delegator :@types, :binding_aliases
 
   #########################
   #  define_binding_type  #
@@ -144,68 +110,42 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   
   def define_binding_type( binding_type_name, ancestor_type = nil )
     
-    unless new_binding_type = binding_types[ binding_type_name ]
+    new_binding_type = @types.define_binding_type( binding_type_name, ancestor_type )
 
-      # Constant name is provided underscored name converted to camel case
-      binding_type_constant_name = binding_type_name.to_s.to_camel_case
-      # Method name is lower case version of type name
-      binding_method_name = binding_type_name.downcase.to_sym
-      # Storage name is provided type name as a symbol
-      binding_type_name = binding_type_name.to_sym
+    binding_type_name = binding_type_name.to_s
+    binding_type_constant_name = binding_type_name.to_camel_case
+    binding_method_name = binding_type_name.downcase.to_sym
     
-      # get ancestor instance from ancestor parameter, which can be type name or instance
-      parent_type_instance = nil
-      case ancestor_type
-        # if ancestor_type is already a binding type we use it as the parent type instance
-        when ::Perspective::Bindings::BindingTypeContainer::BindingType
-          parent_type_instance = ancestor_type
-        # if we have a parent type container we can look up a parent type instance
-        # * if we have an ancestor type provided explicitly we use it
-        # * otherwise we look up the name being defined in parent container
-        else
-          if @parent_container
-            parent_type_instance = ancestor_type ? @parent_container.binding_types[ ancestor_type.to_sym ]
-                                                 : @parent_container.binding_types[ binding_type_name ]
-          end
-      end
+    remove_const( binding_type_constant_name ) if const_defined?( binding_type_constant_name )
+    const_set( binding_type_constant_name, new_binding_type )
     
-      # create and store new binding type
-      new_binding_type = ::Perspective::Bindings::BindingTypeContainer::BindingType.new( self, 
-                                                                                         binding_type_name, 
-                                                                                         parent_type_instance )
-      const_set( binding_type_constant_name, new_binding_type )
-      binding_types[ binding_type_name ] = new_binding_type
-    
-      # define methods
-      define_binding_methods( binding_method_name, binding_type_name )
-
-    end
+    define_binding_methods( binding_method_name, binding_type_name )
     
     return new_binding_type
     
   end
-
+  
   ########################
   #  alias_binding_type  #
   ########################
-  
+
   def alias_binding_type( alias_name, binding_type_name )
     
     alias_name = alias_name.to_sym
     binding_type_name = binding_type_name.to_sym
     
-    binding_aliases[ alias_name ] = binding_type_name
+    @types.alias_binding_type( alias_name, binding_type_name )
     
-    binding_alias_constant_name = alias_name.to_s.to_camel_case
     aliased_type_instance = binding_types[ binding_type_name ]
+    binding_alias_constant_name = alias_name.to_s.to_camel_case
     const_set( binding_alias_constant_name, aliased_type_instance )
     
     define_binding_methods( alias_name, binding_type_name )
-
-    return self
+    
+    return aliased_type_instance
     
   end
-
+  
   ########################
   #  new_class_bindings  #
   ########################
@@ -226,41 +166,6 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   ##################################################################################################
       private ######################################################################################
   ##################################################################################################
-
-  #####################
-  #  register_parent  #
-  #####################
-
-  def register_parent( parent_container, subclass_existing_bindings = true )
-    
-    # We are either Top Container or Container n.
-    # Top Container has CB/NCB/IB/NIB with explicit code as parents.
-    # Container n has Container n-1 as parents.
-    
-    # Register parent for self
-    # Register parent for each base module * 4 (CB, NCB, IB, NIB)
-    # Register parent for each type * 4
-    
-    # child of parent
-    if @parent_container = parent_container
-      
-      @class_binding_base.module_eval           { include parent_container.class_binding_base }
-      @instance_binding_base.module_eval        { include parent_container.instance_binding_base }
-      include parent_container
-      
-   # first parent
-    else
-      
-      @class_binding_base.module_eval           { include ::Perspective::Bindings::BindingBase::ClassBinding }
-      @instance_binding_base.module_eval        { include ::Perspective::Bindings::BindingBase::InstanceBinding }
-
-    end
-    
-    return self
-    
-  end
-
-	######################################  Define Methods  ##########################################
 
   ############################
   #  define_binding_methods  #

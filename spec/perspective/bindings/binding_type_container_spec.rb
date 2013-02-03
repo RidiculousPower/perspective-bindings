@@ -1,6 +1,9 @@
 
 require_relative '../../../lib/perspective/bindings.rb'
 
+###
+# Method controller for groups of binding types.
+#
 describe ::Perspective::Bindings::BindingTypeContainer do
   
   let( :parent_type_container_name ) { :parent_type_container }
@@ -10,108 +13,12 @@ describe ::Perspective::Bindings::BindingTypeContainer do
   let( :child_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( child_type_container_name, parent_type_container ) }
   let( :child_without_subclassing_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( child_without_subclassing_type_container_name, parent_type_container, false ) }
   
-  #########################
-  #  type_container_name  #
-  #########################
+  ##################################################################################################
+  #    private #####################################################################################
+  ##################################################################################################
   
-  context '#type_container_name' do
-    context 'when parent' do
-      it 'has a unique name' do
-        parent_type_container.type_container_name.should == parent_type_container_name
-      end
-    end
-    context 'when child' do
-      it 'has a unique name' do
-        child_type_container.type_container_name.should == child_type_container_name
-      end
-    end
-    context 'when child without subclassing' do
-      it 'has a unique name' do
-        child_without_subclassing_type_container.type_container_name.should == child_without_subclassing_type_container_name
-      end
-    end
-  end
-
-  ################################
-  #  subclass_existing_bindings  #
-  ################################
-  
-  context '#subclass_existing_bindings' do
-    context 'when parent' do
-      it 'will return whether it should subclass bindings from its parent when they are inherited' do
-        parent_type_container.subclass_existing_bindings.should be true
-      end
-    end
-    context 'when child' do
-      it 'will return whether it should subclass bindings from its parent when they are inherited' do
-        child_type_container.subclass_existing_bindings.should be true
-      end
-    end
-    context 'when child without subclassing' do
-      it 'will return whether it should subclass bindings from its parent when they are inherited' do
-        child_without_subclassing_type_container.subclass_existing_bindings.should be false
-      end
-    end
-  end
-  
-  ########################
-  #  class_binding_base  #
-  ########################
-
-  context '#class_binding_base' do
-    it 'has a class binding base module used for all class binding types' do
-      parent_type_container.class_binding_base.ancestors.include?( ::Perspective::Bindings::BindingBase::ClassBinding ).should be true
-    end
-    it 'inherits its parent class binding base module' do
-      child_type_container.class_binding_base.ancestors.include?( parent_type_container.class_binding_base ).should be true
-    end
-    context 'include and extend' do
-      let( :include_extend_module ) { ::Module.new }
-      before :each do
-        parent_type_container.define_binding_type( :some_type )
-      end
-      it 'will ensure that includes are forwarded by re-including self in children' do
-        _include_extend_module = include_extend_module
-        parent_type_container.class_binding_base.module_eval { include _include_extend_module }
-        parent_type_container::SomeType.class_binding_class.ancestors.include?( include_extend_module ).should be true
-      end
-      it 'will ensure that extends are forwarded to children' do
-        parent_type_container.class_binding_base.extend( include_extend_module )
-        parent_type_container::SomeType.class_binding_class.is_a?( include_extend_module ).should be true
-      end
-    end
-  end
-
-  ###########################
-  #  instance_binding_base  #
-  ###########################
-
-  context '#instance_binding_base' do
-    it 'has an instance binding base module used for all class binding types' do
-      parent_type_container.instance_binding_base.ancestors.include?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should be true
-    end
-    it 'inherits its parent instance binding base module' do
-      child_type_container.instance_binding_base.ancestors.include?( parent_type_container.instance_binding_base ).should be true
-    end
-    context 'include and extend' do
-      let( :include_extend_module ) { ::Module.new }
-      before :each do
-        parent_type_container.define_binding_type( :some_type )
-      end
-      it 'will ensure that includes are forwarded by re-including self in children' do
-        _include_extend_module = include_extend_module
-        parent_type_container.instance_binding_base.module_eval { include _include_extend_module }
-        parent_type_container::SomeType.instance_binding_class.ancestors.include?( include_extend_module ).should be true
-      end
-      it 'will ensure that extends are forwarded to children' do
-        parent_type_container.instance_binding_base.extend( include_extend_module )
-        parent_type_container::SomeType.instance_binding_class.is_a?( include_extend_module ).should be true
-      end
-    end
-  end
-
 	#######################################  Method Names  ###########################################
-  
+
   context '================  Method Names  ================' do
 
     let( :instance ) { parent_type_container }
@@ -211,7 +118,7 @@ describe ::Perspective::Bindings::BindingTypeContainer do
   
   end
   
-  context '================  Defining Bindings  ================' do
+  context '================  Defining Binding Methods  ================' do
 
     let( :binding_name ) { :some_type }
     
@@ -327,44 +234,32 @@ describe ::Perspective::Bindings::BindingTypeContainer do
       end
     end
 
-    #########################
-    #  define_binding_type  #
-    #########################
-  
-    context '#define_binding_type' do
-      let( :define_binding_type ) do
-        parent_type_container.define_binding_type( binding_name )
-      end
-      before :each do
-        define_binding_type
-      end
-      it_behaves_like :define_single_binding_type
-      it_behaves_like :define_multiple_binding_type
-      it_behaves_like :define_required_single_binding_type
-      it_behaves_like :define_required_multiple_binding_type
-    end
-  
-    ########################
-    #  alias_binding_type  #
-    ########################
+  end
 
-    context '#alias_binding_type' do
-      let( :alias_name ) { :binding_alias }
-      let( :binding_name ) { alias_name }
-      let( :binding_to_alias ) { :some_type }
-      let( :alias_binding_type ) do
-        parent_type_container.define_binding_type( binding_to_alias )
-        parent_type_container.alias_binding_type( alias_name, binding_to_alias )
+  ##################################################################################################
+  #    public ######################################################################################
+  ##################################################################################################
+  
+  #########################
+  #  type_container_name  #
+  #########################
+  
+  context '#type_container_name' do
+    context 'when parent' do
+      it 'has a unique name' do
+        parent_type_container.type_container_name.should == parent_type_container_name
       end
-      before :each do
-        alias_binding_type
-      end
-      it_behaves_like :define_single_binding_type
-      it_behaves_like :define_multiple_binding_type
-      it_behaves_like :define_required_single_binding_type
-      it_behaves_like :define_required_multiple_binding_type
     end
-
+    context 'when child' do
+      it 'has a unique name' do
+        child_type_container.type_container_name.should == child_type_container_name
+      end
+    end
+    context 'when child without subclassing' do
+      it 'has a unique name' do
+        child_without_subclassing_type_container.type_container_name.should == child_without_subclassing_type_container_name
+      end
+    end
   end
 
   ########################
@@ -390,5 +285,47 @@ describe ::Perspective::Bindings::BindingTypeContainer do
       end
     end
   end
-  
+
+  #########################
+  #  define_binding_type  #
+  #########################
+
+  context '#define_binding_type' do
+    let( :instance ) { parent_type_container }
+    let( :binding_name ) { 'text' }
+    let( :define_binding_type ) do
+      parent_type_container.define_binding_type( binding_name )
+    end
+    before :each do
+      define_binding_type
+    end
+    it_behaves_like :define_single_binding_type
+    it_behaves_like :define_multiple_binding_type
+    it_behaves_like :define_required_single_binding_type
+    it_behaves_like :define_required_multiple_binding_type
+  end
+
+  ########################
+  #  alias_binding_type  #
+  ########################
+
+  context '#alias_binding_type' do
+    let( :instance ) { parent_type_container }
+    let( :binding_name ) { 'text' }
+    let( :alias_name ) { :binding_alias }
+    let( :binding_name ) { alias_name }
+    let( :binding_to_alias ) { :some_type }
+    let( :alias_binding_type ) do
+      parent_type_container.define_binding_type( binding_to_alias )
+      parent_type_container.alias_binding_type( alias_name, binding_to_alias )
+    end
+    before :each do
+      alias_binding_type
+    end
+    it_behaves_like :define_single_binding_type
+    it_behaves_like :define_multiple_binding_type
+    it_behaves_like :define_required_single_binding_type
+    it_behaves_like :define_required_multiple_binding_type
+  end
+
 end
