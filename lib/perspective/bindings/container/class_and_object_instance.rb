@@ -14,7 +14,6 @@ module ::Perspective::Bindings::Container::ClassAndObjectInstance
   end
 
   ######################
-  #  route_string      #
   #  __route_string__  #
   ######################
 
@@ -30,10 +29,13 @@ module ::Perspective::Bindings::Container::ClassAndObjectInstance
     
   end
 
+  ##################
+  #  route_string  #
+  ##################
+
   alias_method( :route_string, :__route_string__ )
 
   ############################
-  #  route_print_string      #
   #  __route_print_string__  #
   ############################
 
@@ -53,6 +55,10 @@ module ::Perspective::Bindings::Container::ClassAndObjectInstance
     return route_print_string
     
   end
+
+  ########################
+  #  route_print_string  #
+  ########################
 
   alias_method( :route_print_string, :__route_print_string__ )
   

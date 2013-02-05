@@ -57,7 +57,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
       case instance = configuration_instance
 
         # Inheriting from a module included in a root container class/module or as a subclass.
-        when ::Perspective::Bindings::Container::ClassInstance
+        when ::Perspective::Bindings::Container::SingletonInstance
 
           # Container classes are always the base of their route, 
           # which means new class bindings are not nested.
@@ -77,7 +77,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
           
           case parent_instance = parent_hash.configuration_instance
             
-            when ::Perspective::Bindings::Container::ClassInstance
+            when ::Perspective::Bindings::Container::SingletonInstance
 
               # We are inheriting as a root container instance.
               # We need instance bindings corresponding to the declared class bindings

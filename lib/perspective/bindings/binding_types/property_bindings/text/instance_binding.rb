@@ -1,5 +1,5 @@
 
-module ::Perspective::Bindings::BindingTypes::PropertyBindings::TextProperty::InstanceBinding
+class ::Perspective::Bindings::BindingTypes::PropertyBindings::TextProperty::InstanceBinding
   
   include ::Perspective::Bindings::BindingDefinitions::Text
   

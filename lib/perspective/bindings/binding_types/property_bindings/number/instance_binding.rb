@@ -1,5 +1,5 @@
 
-module ::Perspective::Bindings::BindingTypes::PropertyBindings::NumberProperty::InstanceBinding
+class ::Perspective::Bindings::BindingTypes::PropertyBindings::NumberProperty::InstanceBinding
   
   include ::Perspective::Bindings::BindingDefinitions::Number
   

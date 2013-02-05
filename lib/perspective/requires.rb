@@ -16,6 +16,7 @@ files = [
 
   'constants',
 
+  'configuration/class_and_class_binding_instance',
   'configuration/object_and_binding_instance',
   'configuration',
 
@@ -69,7 +70,10 @@ files = [
   'container/multi_container_proxy',
   'container/binding_methods',
   'container/binding_methods/instance_binding_methods',
+  'container/binding_type_container_interface',
+  'container/container_bindings',
   'container/class_and_object_instance',
+  'container/singleton_instance',
   'container/class_instance',
   'container/object_instance',
   'container',

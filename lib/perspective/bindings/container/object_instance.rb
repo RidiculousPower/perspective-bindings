@@ -49,6 +49,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
     name = nil
     
     if @__parent_binding__
+      puts 'HERE'
       name = @__parent_binding__.__name__
     else
       name = __root_string__
@@ -59,7 +60,6 @@ module ::Perspective::Bindings::Container::ObjectInstance
   end
   
   ##############
-  #  root      #
   #  __root__  #
   ##############
   
@@ -77,13 +77,16 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
 
+  ##########
+  #  root  #
+  ##########
+
   alias_method  :root, :__root__
 
   ###############
-  #  route      #
   #  __route__  #
   ###############
-  
+
   def __route__
     
     route = nil
@@ -96,13 +99,16 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
 
+  ###########
+  #  route  #
+  ###########
+  
   alias_method  :route, :__route__
 
-  #########################
-  #  route_with_name      #
-  #  __route_with_name__  #
-  #########################
-  
+  #####################
+  #  route_with_name  #
+  #####################
+
   def __route_with_name__
     
     route_with_name = nil
@@ -115,10 +121,13 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
 
+  #########################
+  #  __route_with_name__  #
+  #########################
+  
   alias_method  :route_with_name, :__route_with_name__
 
   ##################
-  #  autobind      #
   #  __autobind__  #
   ##################
 
@@ -136,73 +145,60 @@ module ::Perspective::Bindings::Container::ObjectInstance
     # method_map_hash permits name of method in data_object to be overridden from binding_name
     __bindings__.each do |this_binding_name, this_binding_instance|
 
-      if method_map_hash and method_name = method_map_hash[ this_binding_name ]
-        
+      if method_map_hash and method_map_hash.has_key?( this_binding_name )
         # if we are given false/nil instead of a method name, don't look for this binding
-        next unless method_name
-        
+        next unless method_name = method_map_hash[ this_binding_name ]
         found_a_binding = true
         data_source_name = method_name
-
       elsif data_object.respond_to?( this_binding_name )
-
         found_a_binding = true
         data_source_name = this_binding_name
-        
       end
       
       if data_source_name
-        
         case data_object
-        
           when ::Perspective::Bindings::Container
-        
             binding_instance = data_object.__binding__( data_source_name )
             this_binding_instance.__value__ = binding_instance.__render_value__
-        
           when ::Perspective::Bindings::BindingBase::InstanceBinding
-
             this_binding_instance.__value__ = data_object.__render_value__
-          
           else
-
             this_binding_instance.__value__ = data_object.__send__( data_source_name )
-        
         end
-      
       end
       
     end
     
     unless found_a_binding
-      
       if respond_to?( :content )
         content.__value__ = data_object
       else
         if method_map_hash
           raise ::Perspective::Bindings::Exception::AutobindFailed, 
-                  'Data object did not respond to the name of any declared bindings in ' + 
-                  self.inspect + ' or provided method map and ' + self.inspect + ' does not ' +
-                  'respond to :' + :content.to_s + '.'
+                  'Data object did not respond to the name of any declared bindings in ' << 
+                  self.inspect << ' or provided method map and ' << self.inspect << ' does not ' <<
+                  'respond to :' << :content.to_s << '.'
         else
           raise ::Perspective::Bindings::Exception::AutobindFailed, 
-                  ':autobind was called on ' + self.to_s + ' but data object did not respond ' +
-                  'to the name of any declared bindings in ' + self.to_s + 
-                  ', no method map was provided, and ' + self.to_s + 
-                  ' does not respond to :' + :content.to_s + '.'
+                  ':autobind was called on ' << self.to_s << ' but data object did not respond ' <<
+                  'to the name of any declared bindings in ' << self.to_s << 
+                  ', no method map was provided, and ' << self.to_s << 
+                  ' does not respond to :' << :content.to_s << '.'
         end
       end
-      
     end
     
     return self
     
   end
   
+  ##############
+  #  autobind  #
+  ##############
+  
   alias_method  :autobind, :__autobind__
 
   ######################
-  #  nested_route      #
   #  __nested_route__  #
   ######################
 
@@ -219,6 +215,10 @@ module ::Perspective::Bindings::Container::ObjectInstance
     return nested_route
     
   end
+  
+  ##################
+  #  nested_route  #
+  ##################
   
   alias_method  :nested_route, :__nested_route__
 

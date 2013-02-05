@@ -58,7 +58,7 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController < ::Module
   #  binding_types  #
   ###################
   
-  attr_hash :binding_types do
+  attr_instance_hash :binding_types do
     
     #======================#
     #  child_pre_set_hook  #
@@ -86,7 +86,7 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController < ::Module
   #  binding_aliases  #
   #####################
   
-  attr_hash :binding_aliases
+  attr_instance_hash :binding_aliases
 
   #########################
   #  define_binding_type  #

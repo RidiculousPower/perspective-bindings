@@ -75,7 +75,7 @@ module ::Perspective::Bindings::BindingTypes
     
     
     type_container_constant_name = container_type.to_s.to_camel_case
-    remove_const( type_container_constant_name ) if const_defined?( type_container_constant_name )
+    remove_const( type_container_constant_name ) if const_defined?( type_container_constant_name, false )
     const_set( type_container_constant_name, type_container )
     @type_containers[ container_type ] = type_container
     

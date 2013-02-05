@@ -32,14 +32,6 @@ class ::Perspective::Bindings::Container::BindingMethods <
   
   end
   
-  ####################
-  #  remove_binding  #
-  ####################
-
-  def remove_binding( binding_name )
-
-  end
-  
   ###########################
   #  define_binding_getter  #
   ###########################

@@ -1,20 +1,5 @@
 
-module ::Perspective::View::ViewBindingTypeContainerInterface
-
-  ########################
-  #  new_class_bindings  #
-  ########################
-  
-  ###
-  # Can be overridden in BindingType modules.
-  #
-  def new_class_bindings( *args, & configuration_proc )
-    
-    return parse_binding_declaration_args( *args ).collect do |this_binding_name, this_container_class|
-      @class_binding_class.new( self, this_binding_name, this_container_class, & configuration_proc )
-    end
-    
-  end
+module ::Perspective::Bindings::Container::BindingTypeContainerInterface
 
   ####################################
   #  parse_binding_declaration_args  #
@@ -111,6 +96,22 @@ module ::Perspective::View::ViewBindingTypeContainerInterface
     end
     
     return binding_descriptions
+    
+  end
+
+  ########################
+  #  new_class_bindings  #
+  ########################
+  
+  ###
+  # Can be overridden in BindingType modules.
+  #
+  def new_class_bindings( binding_type, bound_to_container, *binding_descriptors, & configuration_proc )
+    
+    class_binding_class = binding_type.class_binding_class
+    return parse_binding_declaration_args( *binding_descriptors ).collect do |this_binding_name, this_container_class|
+      class_binding_class.new( bound_to_container, this_binding_name, this_container_class, & configuration_proc )
+    end
     
   end
     

@@ -22,35 +22,13 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
 
   end
 
-  ########################
-  #  __parent_binding__  #
-  ########################
-
-  attr_reader :__parent_binding__
-  
-  ###########
-  #  class  #
-  ###########
-
-  def class
-
-    return ::Perspective::Bindings::Container::MultiContainerProxy
-
-  end
-
   ####################
   #  method_missing  #
   ####################
 
   def method_missing( method, *args )
 
-    results = [ ]
-
-    @__storage_array__.each do |this_container|
-      results.push( this_container.__send__( method, *args ) )
-    end
-
-    return results
+    return @__storage_array__.collect { |this_container| this_container.__send__( method, *args ) }
 
   end
 
@@ -64,8 +42,48 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
 
   end
 
+  ###########
+  #  class  #
+  ###########
+
+  def class
+
+    return ::Perspective::Bindings::Container::MultiContainerProxy
+
+  end
+
+  ########################
+  #  __parent_binding__  #
+  ########################
+
+  attr_reader :__parent_binding__
+  
+  #########################
+  #  __container_class__  #
+  #########################
+
+  # returns class of container it expects to be addressing
+  attr_reader :__container_class__
+
+  #####################################
+  #  __create_additional_container__  #
+  #####################################
+
+  def __create_additional_container__( index )
+    
+    new_container_instance = @__container_class__.non_nested_class.new
+
+    ::CascadingConfiguration.register_parent( new_container_instance, @__parent_binding__ )
+
+    __push__( new_container_instance )
+    
+    new_container_instance.__initialize_for_index__( index )
+
+    return new_container_instance
+    
+  end
+
   ##################
-  #  autobind      #
   #  __autobind__  #
   ##################
 
@@ -91,32 +109,11 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
 
   end
 
+  ##############
+  #  autobind  #
+  ##############
+
   alias_method :autobind, :__autobind__
-
-  #####################################
-  #  __create_additional_container__  #
-  #####################################
-
-  def __create_additional_container__( index )
-    
-    new_container_instance = @__container_class__.non_nested_class.new
-
-    ::CascadingConfiguration.register_parent( new_container_instance, @__parent_binding__ )
-
-    __push__( new_container_instance )
-    
-    new_container_instance.__initialize_for_index__( index )
-
-    return new_container_instance
-    
-  end
-
-  #########################
-  #  __container_class__  #
-  #########################
-
-  # returns class of container it expects to be addressing
-  attr_reader :__container_class__
 
   #######################
   #  __storage_array__  # 

@@ -1,57 +1,4 @@
 
-###
-# Bindings exist to relate containers to one another.
-#
-#   Class bindings 1. permit slots to be defined where particular types of values are
-#   expected to be provided 2. permit configuration blocks to be provided for when
-#   corresponding instances are initialized. 3. permit one class to be nested in another, 
-#   with the container class specifying configuration details for the nested container 
-#   unique to the containing class.
-#
-#   Instance bindings correspond to class bindings, 1. relating values to views 
-#   2. ensuring that the container is prepared to accept values without a view
-#   present where the value would be embedded. 3. ensuring that the structure of
-#   nested instances corresponds to the description of nested classes.
-#
-#   Accordingly, each class binding has a corresponding instance binding. Further,
-#   class and instance bindings have "nested" types, used to distinguish whether
-#   a binding is attached to a container or another binding. We thus have:
-#
-#   * ClassBinding
-#   * InstanceBinding
-#
-#   We want to be able to support multiple types of containers. This means we want a
-#   given container to be able to inherit bindings from another container as well as
-#   extending those bindings and adding its own additional bindings. But we don't want
-#   changes in an inheriting container to affect the bindings in the container it
-#   inherited from. This means that each container type needs its own base binding
-#   types, but also that binding type ought to inherit from the parent container's
-#   binding type. The result is that we expect multiple inheritance, which clearly
-#   is not possible by way of classes. We get around this by collecting a stack of
-#   modules used to extend each binding type, ensuring the module stack cascades
-#   appropriately. 
-#
-#   This is accomplished by defining each binding container context as a BindingTypeContainer.
-#   A BindingTypeContainer holds 4 base container modules:
-#
-#   * ClassBindingBase
-#   * InstanceBindingBase
-#
-#   Additionally, a BindingTypeContainer holds each type of binding defined for a given
-#   container type. To facilitate ease of translation, the naming schema deployed for 
-#   actual binding types is a little different (and may seem odd):
-#
-#   * ClassBinding
-#   * ClassBinding::InstanceBinding
-#
-#   This permits translations such as:
-#
-#   * class_binding.class::InstanceBinding.new
-#   * nested_class_binding.class::InstanceBinding.new
-#
-#   See the definition of #__bindings__ in Perspective::Bindings::Configuration::ObjectAndBindingInstance
-#   for the code that utilizes this naming schema.
-#
 class ::Perspective::Bindings::BindingTypeContainer < ::Module
   
   extend ::Forwardable
@@ -66,7 +13,11 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     
     @type_container_name = type_container_name
     
-    @types = self.class::TypesController.new( parent_container ? parent_container.types : nil, subclass_existing_bindings )
+    parent_type_controller = parent_container ? parent_container.types : nil
+    @types = self.class::TypesController.new( parent_type_controller, subclass_existing_bindings )
+
+    const_set( :ClassBindingBase, @types.class_binding_base )
+    const_set( :InstanceBindingBase, @types.instance_binding_base )
 
     include parent_container if @parent_container = parent_container
     
@@ -115,8 +66,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     binding_type_name = binding_type_name.to_s
     binding_type_constant_name = binding_type_name.to_camel_case
     binding_method_name = binding_type_name.downcase.to_sym
-    
-    remove_const( binding_type_constant_name ) if const_defined?( binding_type_constant_name )
+    remove_const( binding_type_constant_name ) if const_defined?( binding_type_constant_name, false )
     const_set( binding_type_constant_name, new_binding_type )
     
     define_binding_methods( binding_method_name, binding_type_name )
@@ -247,16 +197,16 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   def define_single_binding_type( binding_method_name, binding_type_name = binding_method_name )
     
     method_name = single_binding_method_name( binding_method_name )
-    
+
+    binding_type_instance = @types.binding_types[ binding_type_name.to_sym ]
+    type_container = self
+
     #===============#
     #  attr_[type]  #
     #===============#
     
     define_method( method_name ) do |*args, & block|
       
-      binding_type_instance = binding_types[ binding_type_name.to_sym ]
-      type_container = binding_type_instance.type_container
-
       new_class_bindings = type_container.new_class_bindings( binding_type_instance, self, *args, & block )
 
       return new_class_bindings.each do |this_new_class_binding|

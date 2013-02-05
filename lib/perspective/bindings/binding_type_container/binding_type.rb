@@ -42,8 +42,8 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
     @class_binding_class = class_binding_class.new_subclass( self, @types_controller.class_binding_base )
     @instance_binding_class = instance_binding_class.new_subclass( self, @types_controller.instance_binding_base )
     
-    const_set( :ClassBindingClass,    @class_binding_class )
-    const_set( :InstanceBindingClass, @instance_binding_class )
+    const_set( :ClassBinding,    @class_binding_class )
+    const_set( :InstanceBinding, @instance_binding_class )
         
   end
 

@@ -7,11 +7,10 @@ module ::Perspective::Bindings::Container
   
 	include ::Perspective::Bindings::Container::ObjectInstance
 
-  cluster = cluster( :perspective )
-
-  cluster.before_include_or_extend.cascade.extend( ::Perspective::Bindings::Container::ClassInstance )
-  
-  cluster.before_include.cascade do |class_or_module|
+  cluster( :perspective ).before_include_or_extend.
+  cascade.extend( ::Perspective::Bindings::Container::SingletonInstance ).
+  cascade_to( :class ).extend( ::Perspective::Bindings::Container::ClassInstance ).
+  cascade do |class_or_module|
     
     # Any time we are included in or cascade to a class we need to create our BindingMethods
     # module, which holds the methods for our bindings. This is necessary to make the bindings

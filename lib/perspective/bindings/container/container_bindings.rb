@@ -5,17 +5,14 @@
 #
 #   View bindings add view-related features to bindings.
 #
-::Perspective::Bindings::BindingTypes.define_container_type( :view_bindings, :property_bindings, false )
+::Perspective::Bindings::BindingTypes.define_container_type( :container_bindings, :property_bindings, false )
 
-###
-# For convenience we create a Constant ::Perspective::View::ViewBindings pointing to our 
-#   BindingTypeContainer at ::Perspective::Bindings::BindingTypes::ViewBindings.
-#
-::Perspective::View.const_set( :ViewBindings, ::Perspective::Bindings::BindingTypes::ViewBindings )
+require_relative 'container_bindings/class_binding_base.rb'
+require_relative 'container_bindings/instance_binding_base.rb'
 
-class ::Perspective::View::ViewBindings
+module ::Perspective::Bindings::BindingTypes::ContainerBindings
 
-  extend ::Perspective::View::ViewBindingTypeContainerInterface
+  extend ::Perspective::Bindings::Container::BindingTypeContainerInterface
   
   ##################
   #  attr_binding  #

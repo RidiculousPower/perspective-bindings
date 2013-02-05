@@ -7,8 +7,6 @@ module ::Perspective::Bindings
 
   ContextPrintPrefix = ':'
   
-  ProhibitedNames = {
-    :new => true
-  }
+  ProhibitedNames = { :new => true }
   
 end

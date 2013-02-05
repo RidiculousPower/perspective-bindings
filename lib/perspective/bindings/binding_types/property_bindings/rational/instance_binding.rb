@@ -1,5 +1,5 @@
 
-module ::Perspective::Bindings::BindingTypes::PropertyBindings::RationalProperty::InstanceBinding
+class ::Perspective::Bindings::BindingTypes::PropertyBindings::RationalProperty::InstanceBinding
   
   include ::Perspective::Bindings::BindingDefinitions::Rational
   

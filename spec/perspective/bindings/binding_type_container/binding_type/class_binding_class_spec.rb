@@ -14,7 +14,9 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType::ClassBindin
   end
 
   it_behaves_like :class_binding do
-    let( :class_binding_class ) { ::Perspective::Bindings::BindingTypes::TestContainer::ClassBindingTestBinding::ClassBindingClass }
+    let( :class_binding_class ) do
+      ::Perspective::Bindings::BindingTypes::TestContainer::ClassBindingTestBinding::ClassBinding
+    end
   end
   
 end

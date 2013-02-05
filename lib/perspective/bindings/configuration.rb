@@ -41,22 +41,4 @@ module ::Perspective::Bindings::Configuration
 		
 	end
 
-  ###################
-  #  __configure__  #
-  ###################
-
-  def __configure__( & configuration_proc )
-        
-    __configuration_procs__.push( configuration_proc )
-    
-    return self
-    
-  end
-
-  ###############
-  #  configure  #
-  ###############
-
-  alias_method( :configure, :__configure__ )
-  
 end

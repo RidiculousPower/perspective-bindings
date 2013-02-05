@@ -13,8 +13,12 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBin
     end
   end
 
-  let( :class_binding_class ) { ::Perspective::Bindings::BindingTypes::TestContainer::InstanceBindingTestBinding::ClassBindingClass }
-  let( :instance_binding_class ) { ::Perspective::Bindings::BindingTypes::TestContainer::InstanceBindingTestBinding::InstanceBindingClass }
+  let( :class_binding_class ) do
+    ::Perspective::Bindings::BindingTypes::TestContainer::InstanceBindingTestBinding::ClassBinding
+  end
+  let( :instance_binding_class ) do
+    ::Perspective::Bindings::BindingTypes::TestContainer::InstanceBindingTestBinding::InstanceBinding
+  end
 
   it_behaves_like :instance_binding
 
