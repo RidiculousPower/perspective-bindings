@@ -1,18 +1,6 @@
 
 module ::Perspective::Bindings::Container::ClassAndObjectInstance
   
-  #####################
-  #  __root_string__  #
-  #####################
-
-  def __root_string__
-    
-    # [root:<instance>]    
-
-    return @__root_string__ ||= '<root:' << to_s << '>'
-    
-  end
-
   ######################
   #  __route_string__  #
   ######################

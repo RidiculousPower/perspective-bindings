@@ -1,6 +1,8 @@
 
 require_relative '../../../lib/perspective/bindings.rb'
 
+require_relative '../../support/named_class_and_module.rb'
+
 describe ::Perspective::Bindings::Container do
   
   # Class A
@@ -19,49 +21,73 @@ describe ::Perspective::Bindings::Container do
   #                         * Nested Class C
 
   let( :module_instance ) do
-    ::Module.new do
+    module_instance = ::Module.new do
       include ::Perspective::Bindings::Container
       attr_text :content
     end
+    module_instance.name( :ModuleInstance )
+    module_instance
   end
-  let( :instance_enabled_with_module ) { ::Object.extend( module_instance ) }
-
+  
   let( :sub_module_instance ) do
     _module_instance = module_instance
-    ::Module.new do
+    sub_module_instance = ::Module.new do
       include _module_instance
       attr_binding :binding_one, :binding_two
     end
+    sub_module_instance.name( :SubModuleInstance )
+    sub_module_instance
   end
-  let( :instance_enabled_with_sub_module ) { ::Object.extend( sub_module_instance ) }
 
   let( :class_instance ) do
     _sub_module_instance = sub_module_instance
     _nested_class_A = nested_class_A
-    ::Class.new do
+    class_instance = ::Class.new do
       include _sub_module_instance
       attr_text :a, _nested_class_A
     end
+    class_instance.name( :ClassInstance )
+    class_instance
   end
   let( :nested_class_A ) do
     _nested_class_A_B = nested_class_A_B
-    ::Class.new do
+    nested_class_A = ::Class.new do
       include ::Perspective::Bindings::Container
       attr_text :b, _nested_class_A_B
     end
+    nested_class_A.name( :NestedClass_A )
+    nested_class_A
   end
   let( :nested_class_A_B ) do
     _nested_class_A_B_C = nested_class_A_B_C
-    ::Class.new do
+    nested_class_A_B = ::Class.new do
       include ::Perspective::Bindings::Container
       attr_text :c, _nested_class_A_B_C
     end
+    nested_class_A_B.name( :NestedClass_A_B )
+    nested_class_A_B
   end
-  let( :nested_class_A_B_C ) { ::Class.new { include ::Perspective::Bindings::Container } }
-  let( :instance_of_class ) { class_instance.new }
+  let( :nested_class_A_B_C ) do
+    nested_class_A_B_C = ::Class.new { include ::Perspective::Bindings::Container }
+    nested_class_A_B_C.name( :NestedClass_A_B_C )
+    nested_class_A_B_C
+  end
+  let( :instance_of_class ) do
+    object = class_instance.new
+    object.name( :InstanceOfClass )
+    object
+  end
 
-  let( :subclass_instance ) { ::Class.new( class_instance ) }
-  let( :instance_of_subclass ) { subclass_instance.new }
+  let( :subclass ) do
+    subclass = ::Class.new( class_instance )
+    subclass.name( :SubclassInstance )
+    subclass
+  end
+  let( :instance_of_subclass ) do
+    instance_of_subclass = subclass.new
+    instance_of_subclass.name( :InstanceOfSubclass )
+    instance_of_subclass
+  end
 
   ###########
   #  ::new  #
@@ -85,7 +111,7 @@ describe ::Perspective::Bindings::Container do
     end
     context 'subclass instance' do
       it 'is owned by Perspective::Bindings::Container::ClassInstance' do
-        subclass_instance.method( :new ).owner.should be ::Perspective::Bindings::Container::ClassInstance
+        subclass.method( :new ).owner.should be ::Perspective::Bindings::Container::ClassInstance
       end
     end
   end
@@ -112,7 +138,7 @@ describe ::Perspective::Bindings::Container do
     end
     context 'subclass' do
       it 'is owned by Perspective::Bindings::Container::ClassInstance' do
-        subclass_instance.method( :new_nested_instance ).owner.should be ::Perspective::Bindings::Container::ClassInstance
+        subclass.method( :new_nested_instance ).owner.should be ::Perspective::Bindings::Container::ClassInstance
       end
     end
   end
@@ -145,28 +171,34 @@ describe ::Perspective::Bindings::Container do
   end
 
   context '#__name__' do
-    context 'instance enabled with module' do
+    shared_examples_for :__name__ do
       it 'root container will return root string' do
-        instance_enabled_with_module.__name__.should be module_instance.__root_string__
+        instance.__name__.should be instance.__root_string__
       end
-    end
-    context 'instance enabled with sub module' do
-      it 'root container will return root string' do
-        instance_enabled_with_sub_module.__name__.should be module_instance.__root_string__
+      it 'nested binding A will return its name (:a)' do
+        instance.a.__name__.should == :a
+      end
+      it 'nested container A will return its name (:a)' do
+        instance.a.__container__.__name__.should == :a
+      end
+      it 'nested binding A_B will return its name (:b)' do
+        instance.a.b.__name__.should == :b
+      end
+      it 'nested container A_B will return its name (:b)' do
+        instance.a.b.__container__.__name__.should == :b
+      end
+      it 'nested binding A_B will return its name (:b)' do
+        instance.a.b.c.__name__.should == :c
+      end
+      it 'nested container A_B will return its name (:b)' do
+        instance.a.b.c.__container__.__name__.should == :c
       end
     end
     context 'instance of class' do
-      it 'root container will return root string' do
-        instance_of_class.__name__.should be module_instance.__root_string__
-      end
-      it 'nested instance A will return its name (:a)' do
-        instance_of_class.__binding__( :a ).__container__.__name__#.should == :a
-      end
+      it_behaves_like( :__name__ ) { let( :instance ) { instance_of_class } }
     end
     context 'instance of subclass' do
-      it 'root container will return root string' do
-        instance_of_subclass.__name__.should be module_instance.__root_string__
-      end
+      it_behaves_like( :__name__ ) { let( :instance ) { instance_of_subclass } }
     end
   end
 
@@ -176,39 +208,56 @@ describe ::Perspective::Bindings::Container do
 
   context '::__root__' do
     context 'module' do
-      it '' do
+      it 'will return self' do
+        module_instance.__root__.should be module_instance
       end
     end
     context 'sub module' do
-      it '' do
+      it 'will return self' do
+        sub_module_instance.__root__.should be sub_module_instance
       end
     end
     context 'class' do
-      it '' do
+      it 'will return self' do
+        class_instance.__root__.should be class_instance
       end
     end
     context 'subclass' do
-      it '' do
+      it 'will return self' do
+        subclass.__root__.should be subclass
       end
     end
   end
 
   context '#__root__' do
-    context 'instance enabled with module' do
-      it '' do
+    shared_examples_for :__root__ do
+      it 'root container will return self' do
+        instance.__root__.should be instance
       end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
+      it 'nested binding A will return root container' do
+        instance.a.__root__.should be instance
+      end
+      it 'nested container A will return root container' do
+        instance.a.__container__.__root__.should be instance
+      end
+      it 'nested binding A_B will return root container' do
+        instance.a.b.__root__.should be instance
+      end
+      it 'nested container A_B will return root container' do
+        instance.a.b.__container__.__root__.should be instance
+      end
+      it 'nested binding A_B will return root container' do
+        instance.a.b.c.__root__.should be instance
+      end
+      it 'nested container A_B will return root container' do
+        instance.a.b.c.__container__.__root__.should be instance
       end
     end
     context 'instance of class' do
-      it '' do
-      end
+      it_behaves_like( :__root__ ) { let( :instance ) { instance_of_class } }
     end
     context 'instance of subclass' do
-      it '' do
-      end
+      it_behaves_like( :__root__ ) { let( :instance ) { instance_of_subclass } }
     end
   end
 
@@ -218,11 +267,13 @@ describe ::Perspective::Bindings::Container do
 
   context '::root' do
     it 'is an alias for ::__root__' do
+      module_instance.method( :root ).should == module_instance.method( :__root__ )
     end
   end
 
   context '#root' do
     it 'is an alias for #__root__' do
+      module_instance.instance_method( :root ).should == module_instance.instance_method( :__root__ )
     end
   end
 
@@ -232,39 +283,56 @@ describe ::Perspective::Bindings::Container do
 
   context '::__route__' do
     context 'module' do
-      it '' do
+      it 'will return self' do
+        module_instance.__route__.should be nil
       end
     end
     context 'sub module' do
-      it '' do
+      it 'will return self' do
+        sub_module_instance.__route__.should be nil
       end
     end
     context 'class' do
-      it '' do
+      it 'will return self' do
+        class_instance.__route__.should be nil
       end
     end
     context 'subclass' do
-      it '' do
+      it 'will return self' do
+        subclass.__route__.should be nil
       end
     end
   end
 
   context '#__route__' do
-    context 'instance enabled with module' do
-      it '' do
+    shared_examples_for :__route__ do
+      it 'root container will return nil' do
+        instance.__route__.should == nil
       end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
+      it 'nested binding A will return nil' do
+        instance.a.__route__.should == nil
+      end
+      it 'nested container A will return nil' do
+        instance.a.__container__.__route__.should == nil
+      end
+      it 'nested binding A_B will return :a' do
+        instance.a.b.__route__.should == [ :a ]
+      end
+      it 'nested container A_B will return :a' do
+        instance.a.b.__container__.__route__.should == [ :a ]
+      end
+      it 'nested binding A_B will return :a, :b' do
+        instance.a.b.c.__route__.should == [ :a, :b ]
+      end
+      it 'nested container A_B will return :a, :b' do
+        instance.a.b.c.__container__.__route__.should == [ :a, :b ]
       end
     end
     context 'instance of class' do
-      it '' do
-      end
+      it_behaves_like( :__route__ ) { let( :instance ) { instance_of_class } }
     end
     context 'instance of subclass' do
-      it '' do
-      end
+      it_behaves_like( :__route__ ) { let( :instance ) { instance_of_subclass } }
     end
   end
 
@@ -274,25 +342,13 @@ describe ::Perspective::Bindings::Container do
 
   context '::route' do
     it 'is an alias for ::__route__' do
+      module_instance.method( :route ).should == module_instance.method( :__route__ )
     end
   end
 
   context '#route' do
-    context 'instance enabled with module' do
-      it '' do
-      end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
-      end
-    end
-    context 'instance of class' do
-      it '' do
-      end
-    end
-    context 'instance of subclass' do
-      it '' do
-      end
+    it 'is an alias for #__route__' do
+      module_instance.instance_method( :route ).should == module_instance.instance_method( :__route__ )
     end
   end
 
@@ -302,39 +358,56 @@ describe ::Perspective::Bindings::Container do
 
   context '::__route_with_name__' do
     context 'module' do
-      it '' do
+      it 'will return self' do
+        module_instance.__route_with_name__.should be nil
       end
     end
     context 'sub module' do
-      it '' do
+      it 'will return self' do
+        sub_module_instance.__route_with_name__.should be nil
       end
     end
     context 'class' do
-      it '' do
+      it 'will return self' do
+        class_instance.__route_with_name__.should be nil
       end
     end
     context 'subclass' do
-      it '' do
+      it 'will return self' do
+        subclass.__route_with_name__.should be nil
       end
     end
   end
 
   context '#__route_with_name__' do
-    context 'instance enabled with module' do
-      it '' do
+    shared_examples_for :__route_with_name__ do
+      it 'root container will return nil' do
+        instance.__route_with_name__.should == nil
       end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
+      it 'nested binding A will return nil' do
+        instance.a.__route_with_name__.should == [ :a ]
+      end
+      it 'nested container A will return nil' do
+        instance.a.__container__.__route_with_name__.should == [ :a ]
+      end
+      it 'nested binding A_B will return :a' do
+        instance.a.b.__route_with_name__.should == [ :a, :b ]
+      end
+      it 'nested container A_B will return :a' do
+        instance.a.b.__container__.__route_with_name__.should == [ :a, :b ]
+      end
+      it 'nested binding A_B will return :a, :b' do
+        instance.a.b.c.__route_with_name__.should == [ :a, :b, :c ]
+      end
+      it 'nested container A_B will return :a, :b' do
+        instance.a.b.c.__container__.__route_with_name__.should == [ :a, :b, :c ]
       end
     end
     context 'instance of class' do
-      it '' do
-      end
+      it_behaves_like( :__route_with_name__ ) { let( :instance ) { instance_of_class } }
     end
     context 'instance of subclass' do
-      it '' do
-      end
+      it_behaves_like( :__route_with_name__ ) { let( :instance ) { instance_of_subclass } }
     end
   end
 
@@ -344,25 +417,13 @@ describe ::Perspective::Bindings::Container do
 
   context '::route_with_name' do
     it 'is an alias for ::__route_with_name__' do
+      module_instance.method( :route_with_name ).should == module_instance.method( :__route_with_name__ )
     end
   end
 
   context '#route_with_name' do
-    context 'instance enabled with module' do
-      it '' do
-      end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
-      end
-    end
-    context 'instance of class' do
-      it '' do
-      end
-    end
-    context 'instance of subclass' do
-      it '' do
-      end
+    it 'is an alias for #__route_with_name__' do
+      module_instance.instance_method( :route_with_name ).should == module_instance.instance_method( :__route_with_name__ )
     end
   end
 
@@ -371,33 +432,12 @@ describe ::Perspective::Bindings::Container do
   ######################
 
   context '::__nested_route__' do
-    context 'module' do
-      it '' do
-      end
-    end
-    context 'sub module' do
-      it '' do
-      end
-    end
-    context 'class' do
-      it '' do
-      end
-    end
-    context 'subclass' do
-      it '' do
-      end
+    it 'does not respond to ::__nested_route__' do
+      module_instance.respond_to?( :__nested_route__ ).should be false
     end
   end
 
   context '#__nested_route__' do
-    context 'instance enabled with module' do
-      it '' do
-      end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
-      end
-    end
     context 'instance of class' do
       it '' do
       end
@@ -413,71 +453,86 @@ describe ::Perspective::Bindings::Container do
   ##################
 
   context '::nested_route' do
-    it 'is an alias for ::__nested_route__' do
+    it 'does not respond to ::nested_route' do
+      module_instance.respond_to?( :nested_route ).should be false
     end
   end
 
   context '#nested_route' do
-    context 'instance enabled with module' do
-      it '' do
-      end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
-      end
-    end
-    context 'instance of class' do
-      it '' do
-      end
-    end
-    context 'instance of subclass' do
-      it '' do
-      end
+    it 'is an alias for #__nested_route__' do
+      module_instance.instance_method( :nested_route ).should == module_instance.instance_method( :__nested_route__ )
     end
   end
 
   #####################
   #  __root_string__  #
   #####################
+  
+  context '__root_string__' do
+    
+    let( :string ) { '<root:' << instance.to_s << '>' }
 
-  context '::__root_string__' do
-    context 'module' do
-      it '' do
+    context '::__root_string__' do
+      context 'module' do
+        let( :instance ) { module_instance }
+        it 'is a formatted version of to_s' do
+          module_instance.__root_string__.should == string
+        end
+      end
+      context 'sub module' do
+        let( :instance ) { sub_module_instance }
+        it 'is a formatted version of to_s' do
+          sub_module_instance.__root_string__.should == string
+        end
+      end
+      context 'class' do
+        let( :instance ) { class_instance }
+        it 'is a formatted version of to_s' do
+          class_instance.__root_string__.should == string
+        end
+      end
+      context 'subclass' do
+        let( :instance ) { subclass }
+        it 'is a formatted version of to_s' do
+          subclass.__root_string__.should == string
+        end
       end
     end
-    context 'sub module' do
-      it '' do
+
+    context '#__root_string__' do
+      shared_examples_for :__root_string__ do
+        it 'root container will return self as string' do
+          instance.__root_string__.should == string
+        end
+        it 'nested binding A will instance as string' do
+          instance.a.__root_string__.should == string
+        end
+        it 'nested container A will return instance as string' do
+          instance.a.__container__.__root_string__.should == string
+        end
+        it 'nested binding A_B will return instance as string' do
+          instance.a.b.__root_string__.should == string
+        end
+        it 'nested container A_B will return instance as string' do
+          instance.a.b.__container__.__root_string__.should == string
+        end
+        it 'nested binding A_B will return instance as string' do
+          instance.a.b.c.__root_string__.should == string
+        end
+        it 'nested container A_B will return instance as string' do
+          instance.a.b.c.__container__.__root_string__.should == string
+        end
+      end
+      context 'instance of class' do
+        it_behaves_like( :__root_string__ ) { let( :instance ) { instance_of_class } }
+      end
+      context 'instance of subclass' do
+        it_behaves_like( :__root_string__ ) { let( :instance ) { instance_of_subclass } }
       end
     end
-    context 'class' do
-      it '' do
-      end
-    end
-    context 'subclass' do
-      it '' do
-      end
-    end
+  
   end
-
-  context '#__root_string__' do
-    context 'instance enabled with module' do
-      it '' do
-      end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
-      end
-    end
-    context 'instance of class' do
-      it '' do
-      end
-    end
-    context 'instance of subclass' do
-      it '' do
-      end
-    end
-  end
-
+  
   ######################
   #  __route_string__  #
   ######################
@@ -502,21 +557,34 @@ describe ::Perspective::Bindings::Container do
   end
 
   context '#__route_string__' do
-    context 'instance enabled with module' do
-      it '' do
+    shared_examples_for :__route_string__ do
+      it 'root container will return nil' do
+        instance.__route_string__.should == nil
       end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
+      it 'nested binding A will return nil' do
+        instance.a.__route_string__.should == 'a'
+      end
+      it 'nested container A will return nil' do
+        instance.a.__container__.__route_string__.should == 'a'
+      end
+      it 'nested binding A_B will return :a' do
+        instance.a.b.__route_string__.should == 'a' << ::Perspective::Bindings::RouteDelimiter + 'b'
+      end
+      it 'nested container A_B will return :a' do
+        instance.a.b.__container__.__route_string__.should == 'a' << ::Perspective::Bindings::RouteDelimiter + 'b'
+      end
+      it 'nested binding A_B will return :a, :b' do
+        instance.a.b.c.__route_string__.should == 'a' << ::Perspective::Bindings::RouteDelimiter + 'b' << ::Perspective::Bindings::RouteDelimiter + 'c'
+      end
+      it 'nested container A_B will return :a, :b' do
+        instance.a.b.c.__container__.__route_string__.should == 'a' << ::Perspective::Bindings::RouteDelimiter + 'b' << ::Perspective::Bindings::RouteDelimiter + 'c'
       end
     end
     context 'instance of class' do
-      it '' do
-      end
+      it_behaves_like( :__route_string__ ) { let( :instance ) { instance_of_class } }
     end
     context 'instance of subclass' do
-      it '' do
-      end
+      it_behaves_like( :__route_string__ ) { let( :instance ) { instance_of_subclass } }
     end
   end
 
@@ -526,25 +594,13 @@ describe ::Perspective::Bindings::Container do
 
   context '::route_string' do
     it 'is an alias for ::__route_string__' do
+      module_instance.method( :route_string ).should == module_instance.method( :__route_string__ )
     end
   end
 
   context '#route_string' do
-    context 'instance enabled with module' do
-      it '' do
-      end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
-      end
-    end
-    context 'instance of class' do
-      it '' do
-      end
-    end
-    context 'instance of subclass' do
-      it '' do
-      end
+    it 'is an alias for #__route_string__' do
+      module_instance.instance_method( :route_string ).should == module_instance.instance_method( :__route_string__ )
     end
   end
 
@@ -554,39 +610,56 @@ describe ::Perspective::Bindings::Container do
 
   context '::__route_print_string__' do
     context 'module' do
-      it '' do
+      it 'will be the root string' do
+        module_instance.__route_print_string__.should ==  ::Perspective::Bindings::ContextPrintPrefix + module_instance.__root_string__
       end
     end
     context 'sub module' do
-      it '' do
+      it 'will be the root string' do
+        sub_module_instance.__route_print_string__.should ==  ::Perspective::Bindings::ContextPrintPrefix + sub_module_instance.__root_string__
       end
     end
     context 'class' do
-      it '' do
+      it 'will be the root string' do
+        class_instance.__route_print_string__.should ==  ::Perspective::Bindings::ContextPrintPrefix + class_instance.__root_string__
       end
     end
     context 'subclass' do
-      it '' do
+      it 'will be the root string' do
+        subclass.__route_print_string__.should ==  ::Perspective::Bindings::ContextPrintPrefix + subclass.__root_string__
       end
     end
   end
 
   context '#__route_print_string__' do
-    context 'instance enabled with module' do
-      it '' do
+    shared_examples_for :__route_print_string__ do
+      it 'root container will return nil' do
+        instance.__route_print_string__.should == ::Perspective::Bindings::ContextPrintPrefix + instance.__root_string__
       end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
+      it 'nested binding A will return nil' do
+        instance.a.__route_print_string__.should == ::Perspective::Bindings::ContextPrintPrefix + instance.__root_string__ << ::Perspective::Bindings::RouteDelimiter + 'a'
+      end
+      it 'nested container A will return nil' do
+        instance.a.__container__.__route_print_string__.should == ::Perspective::Bindings::ContextPrintPrefix + instance.__root_string__ << ::Perspective::Bindings::RouteDelimiter + 'a'
+      end
+      it 'nested binding A_B will return :a' do
+        instance.a.b.__route_print_string__.should == ::Perspective::Bindings::ContextPrintPrefix + instance.__root_string__ << ::Perspective::Bindings::RouteDelimiter + 'a' << ::Perspective::Bindings::RouteDelimiter + 'b'
+      end
+      it 'nested container A_B will return :a' do
+        instance.a.b.__container__.__route_print_string__.should == ::Perspective::Bindings::ContextPrintPrefix + instance.__root_string__ << ::Perspective::Bindings::RouteDelimiter + 'a' << ::Perspective::Bindings::RouteDelimiter + 'b'
+      end
+      it 'nested binding A_B will return :a, :b' do
+        instance.a.b.c.__route_print_string__.should == ::Perspective::Bindings::ContextPrintPrefix + instance.__root_string__ << ::Perspective::Bindings::RouteDelimiter + 'a' << ::Perspective::Bindings::RouteDelimiter + 'b' << ::Perspective::Bindings::RouteDelimiter + 'c'
+      end
+      it 'nested container A_B will return :a, :b' do
+        instance.a.b.c.__container__.__route_print_string__.should == ::Perspective::Bindings::ContextPrintPrefix + instance.__root_string__ << ::Perspective::Bindings::RouteDelimiter + 'a' << ::Perspective::Bindings::RouteDelimiter + 'b' << ::Perspective::Bindings::RouteDelimiter + 'c'
       end
     end
     context 'instance of class' do
-      it '' do
-      end
+      it_behaves_like( :__route_print_string__ ) { let( :instance ) { instance_of_class } }
     end
     context 'instance of subclass' do
-      it '' do
-      end
+      it_behaves_like( :__route_print_string__ ) { let( :instance ) { instance_of_subclass } }
     end
   end
 
@@ -596,25 +669,13 @@ describe ::Perspective::Bindings::Container do
 
   context '::route_print_string' do
     it 'is an alias for ::__route_print_string__' do
+      module_instance.method( :route_print_string ).should == module_instance.method( :__route_print_string__ )
     end
   end
 
   context '#route_print_string' do
-    context 'instance enabled with module' do
-      it '' do
-      end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
-      end
-    end
-    context 'instance of class' do
-      it '' do
-      end
-    end
-    context 'instance of subclass' do
-      it '' do
-      end
+    it 'is an alias for #__route_print_string__' do
+      module_instance.instance_method( :route_print_string ).should == module_instance.instance_method( :__route_print_string__ )
     end
   end
 
@@ -642,14 +703,6 @@ describe ::Perspective::Bindings::Container do
   end
 
   context '#__bindings__' do
-    context 'instance enabled with module' do
-      it '' do
-      end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
-      end
-    end
     context 'instance of class' do
       it '' do
       end
@@ -684,14 +737,6 @@ describe ::Perspective::Bindings::Container do
   end
 
   context '#__binding__' do
-    context 'instance enabled with module' do
-      it '' do
-      end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
-      end
-    end
     context 'instance of class' do
       it '' do
       end
@@ -726,14 +771,6 @@ describe ::Perspective::Bindings::Container do
   end
 
   context '#__has_binding__?' do
-    context 'instance enabled with module' do
-      it '' do
-      end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
-      end
-    end
     context 'instance of class' do
       it '' do
       end
@@ -846,18 +883,11 @@ describe ::Perspective::Bindings::Container do
 
   context '::__autobind__' do
     it 'singleton does not respond to ::__autobind__' do
+      module_instance.respond_to?( :__autobind__ ).should be false
     end
   end
 
   context '#__autobind__' do
-    context 'instance enabled with module' do
-      it '' do
-      end
-    end
-    context 'instance enabled with sub module' do
-      it '' do
-      end
-    end
     context 'instance of class' do
       it '' do
       end
@@ -894,11 +924,13 @@ describe ::Perspective::Bindings::Container do
 
   context '::autobind' do
     it 'singleton does not respond to ::autobind' do
+      module_instance.respond_to?( :autobind ).should be false
     end
   end
 
   context '#autobind' do
     it 'is an alias for #__autobind__' do
+      module_instance.instance_method( :autobind ).should == module_instance.instance_method( :__autobind__ )
     end
   end
 
@@ -924,26 +956,6 @@ describe ::Perspective::Bindings::Container do
       end
     end
   end
-
-  context '#__configure__' do
-    it 'instance does not respond to #__configure__' do
-    end
-  end
-
-  ###############
-  #  configure  #
-  ###############
-
-  context '::configure' do
-    it 'is an alias for ::__root__' do
-    end
-  end
-
-  context '#configure' do
-    it 'instance does not respond to #configure' do
-    end
-  end
-
   it 'can define configuration procs to be run before rendering' do
     rspec = self
     class ::Perspective::Bindings::Container::Mock
@@ -953,6 +965,29 @@ describe ::Perspective::Bindings::Container do
       end
       configure( & configuration_proc )
       __configuration_procs__[ 0 ].should == configuration_proc
+    end
+  end
+
+
+  context '#__configure__' do
+    it 'instance does not respond to #__configure__' do
+      instance_of_class.respond_to?( :__configure__ ).should be false
+    end
+  end
+
+  ###############
+  #  configure  #
+  ###############
+
+  context '::configure' do
+    it 'is an alias for ::__configure__' do
+      module_instance.method( :configure ).should == module_instance.method( :__configure__ )
+    end
+  end
+
+  context '#configure' do
+    it 'instance does not respond to #configure' do
+      instance_of_class.respond_to?( :configure ).should be false
     end
   end
 

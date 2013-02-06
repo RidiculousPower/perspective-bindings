@@ -24,7 +24,11 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBindingBas
     if container_class or container_class = __container_class__
       __validate_container_class__( self.__container_class__ = container_class )
       extend( container_class::Controller::ClassBindingMethods )
-      ::CascadingConfiguration.register_parent( self, container_class )
+      unless @__parent_binding__
+        # if we have a parent binding then it has already registered the container class as a parent
+        # and we have already registered it as our parent, so we don't want to replace it
+        ::CascadingConfiguration.register_parent( self, container_class )
+      end
     end
   
   end

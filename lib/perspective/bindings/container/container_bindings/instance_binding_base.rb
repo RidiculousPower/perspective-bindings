@@ -112,6 +112,12 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
     
   end
 
+  ##############################################
+  #  __store_initialized_container_instance__  #
+  ##############################################
+  
+  alias_method :__store_initialized_container_instance__, :__container__=
+  
   ####################
   #  __container__=  #
   ####################
@@ -140,12 +146,6 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
         
   end
 
-  ##############################################
-  #  __store_initialized_container_instance__  #
-  ##############################################
-  
-  alias_method :__store_initialized_container_instance__, :__container__=
-  
   ###############
   #  container  #
   ###############

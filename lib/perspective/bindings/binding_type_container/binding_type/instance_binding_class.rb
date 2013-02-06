@@ -4,7 +4,7 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBindin
   
   NonForwardingMethodsArray = [ :method_missing, :respond_to_missing?, :object_id, :hash, :==,
                                 :equal?, :class, 
-                                :view, :view=, :container, :container=, :to_html_node ]
+                                :view, :view=, :container, :container=, :to_html_node, :nil? ]
   
   NonForwardingMethods = ::Hash[ ::Perspective::Bindings::BindingTypeContainer::BindingType::
                                    InstanceBindingClass::NonForwardingMethodsArray.zip ]

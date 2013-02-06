@@ -25,6 +25,18 @@ module ::Perspective::Bindings::Container::SingletonInstance
 
   alias_method  :root, :__root__
 
+  #####################
+  #  __root_string__  #
+  #####################
+
+  def __root_string__
+    
+    # [root:<instance>]
+
+    return @__root_string__ ||= '<root:' << to_s << '>'
+    
+  end
+
   ###############
   #  __route__  #
   ###############
@@ -50,7 +62,7 @@ module ::Perspective::Bindings::Container::SingletonInstance
 
   def __route_with_name__
     
-    return @__route_with_name__ ||= [ __name__ ]
+    return nil
     
   end
 

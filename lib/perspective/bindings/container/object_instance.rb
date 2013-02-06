@@ -49,7 +49,6 @@ module ::Perspective::Bindings::Container::ObjectInstance
     name = nil
     
     if @__parent_binding__
-      puts 'HERE'
       name = @__parent_binding__.__name__
     else
       name = __root_string__
@@ -82,6 +81,27 @@ module ::Perspective::Bindings::Container::ObjectInstance
   ##########
 
   alias_method  :root, :__root__
+
+  #####################
+  #  __root_string__  #
+  #####################
+
+  def __root_string__
+    
+    # [root:<instance>]
+    
+    root_string = nil
+    
+    if __root__ == self
+      @__root_string__ ||= '<root:' << to_s << '>'
+      root_string = @__root_string__
+    else
+      root_string = __root__.__root_string__
+    end
+
+    return root_string
+    
+  end
 
   ###############
   #  __route__  #

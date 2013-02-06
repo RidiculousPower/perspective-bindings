@@ -6,7 +6,6 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
   include ::CascadingConfiguration::Hash
 
   ##################
-  #  bindings      #
   #  __bindings__  #
   ##################
 
@@ -61,7 +60,13 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
 
           # Container classes are always the base of their route, 
           # which means new class bindings are not nested.
-          child_instance = binding_instance.class.new( instance, nil, nil, binding_instance )
+          case instance
+            when ::Module
+              child_instance = binding_instance.class.new( instance, nil, nil, binding_instance )
+            else
+              # instance extended by a module
+              child_instance = binding_instance.class::InstanceBinding.new( binding_instance, instance )
+          end
 
         # Inheriting from a class or a class binding (nested or not).
         when ::Perspective::Bindings::BindingBase::ClassBinding

@@ -18,7 +18,7 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
     @__bound_container__ = bound_container_instance
     
     @__root__ = @__bound_container__.__root__
-    
+
     # register parent class binding as ancestor for configurations
     ::CascadingConfiguration.register_parent( self, @__parent_binding__ )
 
@@ -26,6 +26,16 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
 
   end
   
+  #####################
+  #  __root_string__  #
+  #####################
+
+  def __root_string__
+    
+    return @__root__.__root_string__
+    
+  end
+
   ######################
   #  __nested_route__  #
   ######################

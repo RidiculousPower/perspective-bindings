@@ -71,9 +71,7 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
 
   def __create_additional_container__( index )
     
-    new_container_instance = @__container_class__.non_nested_class.new
-
-    ::CascadingConfiguration.register_parent( new_container_instance, @__parent_binding__ )
+    new_container_instance = @__container_class__.new_nested_instance( @__parent_binding__ )
 
     __push__( new_container_instance )
     
