@@ -12,20 +12,16 @@ describe ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBindin
     ::Perspective::Bindings::BindingTypes::PropertyBindings.define_binding_type( :instance_binding_test_binding )
   end
 
+  setup_instance_binding_tests
+
   let( :class_binding_class ) do
     ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBindingTestBinding::ClassBinding
   end
   let( :instance_binding_class ) do
     ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBindingTestBinding::InstanceBinding
   end
-
-  it_behaves_like :instance_binding
-
-  setup_class_binding_tests
   
-  let( :class_binding_instance ) { class_binding_to_base }
-  let( :bound_instance ) { base_container.new }
-  let( :instance_binding_instance ) { instance_binding_class.new( class_binding_to_base, bound_instance ) }
+  it_behaves_like :instance_binding
 
   #########################
   #  respond_to_missing?  #
@@ -34,7 +30,7 @@ describe ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBindin
   context '#respond_to_missing?' do
     it 'should not have any keys in non-forwarding-methods' do
       instance_binding_class::NonForwardingMethodsArray.each do |this_key|
-        instance_binding_instance.respond_to_missing?( this_key, true ).should be false
+        topclass_instance_binding.respond_to_missing?( this_key, true ).should be false
       end
     end
   end
@@ -45,7 +41,7 @@ describe ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBindin
 	
   context '#method_missing' do
   	it 'forwards almost all methods to its value' do
-      instance_binding_instance.respond_to_missing?( :some_other_method, true ).should == true
+      topclass_instance_binding.respond_to_missing?( :some_other_method, true ).should == true
     end
   end
 
