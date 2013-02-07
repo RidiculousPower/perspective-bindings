@@ -1,5 +1,5 @@
 
-module ::Perspective::Bindings::Container::ClassAndObjectInstance
+module ::Perspective::Bindings::Container::SingletonAndObjectInstance
   
   ######################
   #  __route_string__  #
@@ -49,7 +49,6 @@ module ::Perspective::Bindings::Container::ClassAndObjectInstance
   ########################
 
   alias_method( :route_print_string, :__route_print_string__ )
-  
   
 end
 

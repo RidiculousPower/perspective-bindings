@@ -21,9 +21,10 @@ describe ::Perspective::Bindings::Container do
   #                         * Nested Class C
 
   let( :module_instance ) do
+    _nested_class_A = nested_class_A
     module_instance = ::Module.new do
       include ::Perspective::Bindings::Container
-      attr_text :content
+      attr_text :a, _nested_class_A
     end
     module_instance.name( :ModuleInstance )
     module_instance
@@ -41,10 +42,8 @@ describe ::Perspective::Bindings::Container do
 
   let( :class_instance ) do
     _sub_module_instance = sub_module_instance
-    _nested_class_A = nested_class_A
     class_instance = ::Class.new do
       include _sub_module_instance
-      attr_text :a, _nested_class_A
     end
     class_instance.name( :ClassInstance )
     class_instance
@@ -432,8 +431,45 @@ describe ::Perspective::Bindings::Container do
   ######################
 
   context '::__nested_route__' do
-    it 'does not respond to ::__nested_route__' do
-      module_instance.respond_to?( :__nested_route__ ).should be false
+    shared_examples_for :"self.__nested_route__" do
+      it 'root container does not respond to ::__nested_route__' do
+        instance.respond_to?( :__nested_route__ ).should be false
+      end
+      it 'nested binding A will return nil' do
+        instance.a.__route_with_name__.should == [ :a ]
+      end
+      it 'nested container A will return nil' do
+        instance.a.__container__.__route_with_name__.should == [ :a ]
+      end
+      it 'nested binding A_B will return :a' do
+        instance.a.b.__route_with_name__.should == [ :a, :b ]
+      end
+      it 'nested container A_B will return :a' do
+        instance.a.b.__container__.__route_with_name__.should == [ :a, :b ]
+      end
+      it 'nested binding A_B will return :a, :b' do
+        instance.a.b.c.__route_with_name__.should == [ :a, :b, :c ]
+      end
+      it 'nested container A_B will return :a, :b' do
+        instance.a.b.c.__container__.__route_with_name__.should == [ :a, :b, :c ]
+      end
+    end
+    context 'module' do
+      it 'does not respond to ::__nested_route__' do
+        module_instance.respond_to?( :__nested_route__ ).should be false
+      end
+    end
+    context 'sub module' do
+      it 'will return self' do
+        sub_module_instance.respond_to?( :__nested_route__ ).should be false
+      end
+    end
+    context 'class' do
+    end
+    context 'subclass' do
+      it 'will return self' do
+        subclass.respond_to?( :__nested_route__ ).should be false
+      end
     end
   end
 
@@ -539,19 +575,23 @@ describe ::Perspective::Bindings::Container do
 
   context '::__route_string__' do
     context 'module' do
-      it '' do
+      it 'root container will return nil' do
+        module_instance.__route_string__.should == nil
       end
     end
     context 'sub module' do
-      it '' do
+      it 'root container will return nil' do
+        sub_module_instance.__route_string__.should == nil
       end
     end
     context 'class' do
-      it '' do
+      it 'root container will return nil' do
+        class_instance.__route_string__.should == nil
       end
     end
     context 'subclass' do
-      it '' do
+      it 'root container will return nil' do
+        subclass.__route_string__.should == nil
       end
     end
   end

@@ -35,39 +35,19 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
     
   end
   
-  ##############################
-  #  __initialize_container__  #
-  ##############################
+  #############################
+  #  __initialize_bindings__  #
+  #############################
   
-  def __initialize_container__
+  def __initialize_bindings__
     
     __container__
     
     __bindings__.each do |this_binding_name, this_binding_instance|
-      this_binding_instance.__initialize_container__
+      this_binding_instance.__initialize_bindings__
     end
     
   end
-  
-  ################
-  #  __value__=  #
-  ################
-
-  def __value__=( object )
-    
-    super
-    
-    __autobind__( @__value__ )
-
-    return object
-    
-  end
-
-  ############
-  #  value=  #
-  ############
-
-  alias_method  :value=, :__value__=
   
   #############################
   #  __configure_container__  #
@@ -211,6 +191,26 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
   
   alias_method  :autobind, :__autobind__
 
+  ################
+  #  __value__=  #
+  ################
+
+  def __value__=( object )
+    
+    super
+    
+    __autobind__( @__value__ )
+
+    return object
+    
+  end
+
+  ############
+  #  value=  #
+  ############
+
+  alias_method  :value=, :__value__=
+  
   ######################################
   #  __create_multi_container_proxy__  #
   ######################################
@@ -222,16 +222,6 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
     self.__store_initialized_container_instance__( multi_proxy )
     
     return multi_proxy
-    
-  end
-
-	########################
-	#  __autobind_value__  #
-	########################
-	
-	def __autobind_value__( current_value = __value__ )
-	  
-    return current_value
     
   end
 

@@ -4,7 +4,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
   include ::Perspective::Bindings::Configuration
   include ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
 
-  include ::Perspective::Bindings::Container::ClassAndObjectInstance
+  include ::Perspective::Bindings::Container::SingletonAndObjectInstance
   
   ##############################
   #  __initialize_for_index__  #
@@ -23,7 +23,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
   def __initialize_bindings__
 
     __bindings__.each do |this_binding_name, this_binding_instance|
-      this_binding_instance.__initialize_container__
+      this_binding_instance.__initialize_bindings__
 	  end
   	  
   end

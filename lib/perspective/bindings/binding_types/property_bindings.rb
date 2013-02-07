@@ -5,8 +5,6 @@
 #
 #   Property bindings are the basic binding type, providing value-oriented binding functionality.
 #
-::Perspective::Bindings::BindingTypes.define_container_type( :property_bindings )
-
 module ::Perspective::Bindings::BindingTypes::PropertyBindings
 
   ###########################

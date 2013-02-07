@@ -19,12 +19,6 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
   #
   #   * Class Binding to Instance Binding (attached to root container)
   #
-  #   * Class Binding to nested Class Binding (nested in a container 
-  #     that is nested in a container)
-  #
-  #   * nested Class Binding to nested Instance Binding (instance nested 
-  #     in a container that is nested in a container)
-  #
   #   * Instance Binding to Instance (class binding specified container class).
   #
   #   * nested Instance Binding to Instance (class binding specified container 
@@ -35,13 +29,6 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
   #     Note: this inverts typical inheritance relations such that the
   #     binding will inherit from the instance rather than the instance
   #     inheriting from the binding. 
-  #
-  #   * Instance to nested Instance Binding (instance assigned to instance 
-  #     binding nested in a nested container)
-  #
-  #     Note: this inverts typical inheritance relations such that the
-  #     binding will inherit from the instance rather than the instance
-  #     inheriting from the binding.
   #
 	attr_hash  :__bindings__ do
 	  
@@ -58,15 +45,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
         # Inheriting from a module included in a root container class/module or as a subclass.
         when ::Perspective::Bindings::Container::SingletonInstance
 
-          # Container classes are always the base of their route, 
-          # which means new class bindings are not nested.
-          case instance
-            when ::Module
-              child_instance = binding_instance.class.new( instance, nil, nil, binding_instance )
-            else
-              # instance extended by a module
-              child_instance = binding_instance.class::InstanceBinding.new( binding_instance, instance )
-          end
+          child_instance = binding_instance.class.new( instance, nil, nil, binding_instance )
 
         # Inheriting from a class or a class binding (nested or not).
         when ::Perspective::Bindings::BindingBase::ClassBinding
@@ -134,50 +113,9 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
   end
 
   #########################
-  #  binding_aliases      #
   #  __binding_aliases__  #
   #########################
 
 	attr_hash  :__binding_aliases__
-
-  ###################################
-  #  local_aliases_to_bindings      #
-  #  __local_aliases_to_bindings__  #
-  ###################################
-
-	attr_hash  :__local_aliases_to_bindings__ do
-
-	  #======================#
-	  #  child_pre_set_hook  #
-	  #======================#
-
-	  def child_pre_set_hook( local_alias_to_binding, binding_instance, parent_hash )
-      
-      binding_route = nil
-      
-      # We are instance C inheriting a shared binding, meaning an alias from instance B to binding in instance A.
-      # The inherited binding instance we want already exists in __bindings__ for instance C.
-      # We need the nested route for A in B, which will allow us to get A in C.
-      
-      binding_route = binding_instance.__nested_route__( instance )
-
-      return ::Perspective::Bindings.aliased_binding_in_context( instance, 
-                                                                 binding_route,
-                                                                 binding_instance.__name__,
-                                                                 local_alias_to_binding,
-                                                                 binding_instance )
-
-    end
-  
-  end
-
-  #############################
-  #  configuration_procs      #
-  #  __configuration_procs__  #
-  #############################
-                              
-  attr_configuration_unique_array  :__configuration_procs__
-
-  Controller.alias_instance_method( :configuration_procs, :__configuration_procs__ )
 
 end

@@ -242,35 +242,6 @@ shared_examples_for :class_binding do
     end
   end
 
-  ######################
-  #  __nested_route__  #
-  ######################
-
-  context '#__nested_route__' do
-    it 'bound to base container' do
-      class_binding_to_base.__nested_route__( class_binding_to_base ).should == nil
-    end
-    it 'bound to first nested container' do
-      class_binding_to_first_nested.__nested_route__( class_binding_to_base ).should == nil
-      class_binding_to_first_nested.__nested_route__( class_binding_to_first_nested ).should == nil
-    end
-    it 'bound to nth nested container' do
-      class_binding_to_nth_nested.__nested_route__( class_binding_to_base ).should == [ binding_to_first_nested_name ]
-      class_binding_to_nth_nested.__nested_route__( class_binding_to_first_nested ).should == nil
-    end
-    it 'bound to subclass of base container' do
-      subclass_class_binding_to_base.__nested_route__( subclass_class_binding_to_base ).should == nil
-    end
-    it 'bound to subclass of first nested container' do
-      subclass_class_binding_to_first_nested.__nested_route__( subclass_class_binding_to_base ).should == nil
-      subclass_class_binding_to_first_nested.__nested_route__( subclass_class_binding_to_first_nested ).should == nil
-    end
-    it 'bound to subclass of nth nested container' do
-      subclass_class_binding_to_nth_nested.__nested_route__( class_binding_to_base ).should == [ binding_to_first_nested_name ]
-      subclass_class_binding_to_nth_nested.__nested_route__( class_binding_to_first_nested ).should == nil
-    end
-  end
-
   ###########################
   #  __permits_multiple__?  #
   #  __permits_multiple__=  #

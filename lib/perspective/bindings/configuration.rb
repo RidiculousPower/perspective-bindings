@@ -18,8 +18,6 @@ module ::Perspective::Bindings::Configuration
     unless binding_instance = __bindings__[ binding_name ]
       if binding_alias = __binding_aliases__[ binding_name ]
         binding_instance = __bindings__[ binding_alias ]
-      else
-        binding_instance = __local_aliases_to_bindings__[ binding_name ]
       end
     end
     
@@ -36,8 +34,7 @@ module ::Perspective::Bindings::Configuration
 	def __has_binding__?( binding_name )
 		
 		return __bindings__.has_key?( binding_name )        || 
-		       __binding_aliases__.has_key?( binding_name ) ||
-		       __local_aliases_to_bindings__.has_key?( binding_name )
+		       __binding_aliases__.has_key?( binding_name )
 		
 	end
 

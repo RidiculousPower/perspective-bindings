@@ -64,40 +64,6 @@ module ::Perspective::Bindings::BindingBase::ClassBinding
     
   end
 
-  ######################
-  #  __nested_route__  #
-  ######################
-
-  def __nested_route__( nested_in_binding )
-    
-    nested_route = nil
-    
-    # our route: <root>-route-to-binding
-    # nested route: <root>-route-to-binding-nested-in-self
-    # result desired: nested-in-self
-
-    # our own route plus our name, which is part of the nested route but not part of our route
-    nested_depth_from_start = 0
-    if route_to_nested_binding = nested_in_binding.__route_with_name__
-      nested_depth_from_start = route_to_nested_binding.count
-    end
-    
-    # route from root to nested binding
-    nested_route_from_root = __route_with_name__
-    nested_route_length = nested_route_from_root.count
-
-    # slice from the end of our own route to the end of nested route
-    # also slice off the name at the end of our route
-    remaining_route_length = nested_route_length - nested_depth_from_start - 1
-    
-    if remaining_route_length > 0
-      nested_route = nested_route_from_root.slice( nested_depth_from_start, remaining_route_length )
-    end
-    
-    return nested_route
-    
-  end
-  
   ###############################
   #  __validate_binding_name__  #
   ###############################

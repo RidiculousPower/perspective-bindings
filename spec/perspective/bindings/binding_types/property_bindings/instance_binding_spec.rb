@@ -5,19 +5,18 @@ require_relative '../../../../support/named_class_and_module.rb'
 
 require_relative '../../binding_base/instance_binding.rb'
 
-describe ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBindingClass do
+describe ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBindingBase do
 
   before :all do
-    ::Perspective::Bindings::BindingTypes.define_container_type( :test_container ) do
-      define_binding_type( :instance_binding_test_binding )
-    end
+    # test with a generic binding we create
+    ::Perspective::Bindings::BindingTypes::PropertyBindings.define_binding_type( :instance_binding_test_binding )
   end
 
   let( :class_binding_class ) do
-    ::Perspective::Bindings::BindingTypes::TestContainer::InstanceBindingTestBinding::ClassBinding
+    ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBindingTestBinding::ClassBinding
   end
   let( :instance_binding_class ) do
-    ::Perspective::Bindings::BindingTypes::TestContainer::InstanceBindingTestBinding::InstanceBinding
+    ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBindingTestBinding::InstanceBinding
   end
 
   it_behaves_like :instance_binding
@@ -49,5 +48,5 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBin
       instance_binding_instance.respond_to_missing?( :some_other_method, true ).should == true
     end
   end
-  
+
 end

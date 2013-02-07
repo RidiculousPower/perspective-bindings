@@ -1,6 +1,20 @@
 
 module ::Perspective::Bindings::Configuration::ClassAndClassBindingInstance
 
+  include ::CascadingConfiguration::Array::Unique
+
+  #############################
+  #  __configuration_procs__  #
+  #############################
+                              
+  attr_configuration_unique_array  :__configuration_procs__
+
+  #########################
+  #  configuration_procs  #
+  #########################
+
+  Controller.alias_instance_method( :configuration_procs, :__configuration_procs__ )
+
   ###################
   #  __configure__  #
   ###################
