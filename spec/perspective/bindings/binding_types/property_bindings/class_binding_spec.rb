@@ -12,9 +12,9 @@ describe ::Perspective::Bindings::BindingTypes::PropertyBindings::ClassBindingBa
     ::Perspective::Bindings::BindingTypes::PropertyBindings.define_binding_type( :class_binding_test_binding )
   end
 
-  setup_class_binding_tests
+  setup_base_class_binding_tests
 
-  it_behaves_like :class_binding do
+  it_behaves_like :base_class_binding do
     let( :class_binding_class ) do
       ::Perspective::Bindings::BindingTypes::PropertyBindings::ClassBindingTestBinding::ClassBinding
     end

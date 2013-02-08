@@ -45,14 +45,14 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
         # Inheriting from a module included in a root container class/module or as a subclass.
         when ::Perspective::Bindings::Container::SingletonInstance
 
-          child_instance = binding_instance.class.new( instance, nil, nil, binding_instance )
+          child_instance = binding_instance.class.new( instance, binding_instance )
 
         # Inheriting from a class or a class binding (nested or not).
         when ::Perspective::Bindings::BindingBase::ClassBinding
           
           # If we're attaching to a class binding we're at least 2 levels deep, 
           # which means new class bindings are nested.
-          child_instance = binding_instance.class::ClassBinding.new( instance, nil, nil, binding_instance )
+          child_instance = binding_instance.class::ClassBinding.new( instance, binding_instance )
           
         # Inheriting from a class or an instance binding (nested or not)
         when ::Perspective::Bindings::Container::ObjectInstance

@@ -1,5 +1,5 @@
 
-def setup_class_binding_tests
+def setup_base_class_binding_tests
   
   let( :mock_container_module ) do
     ::Module.new do
@@ -20,6 +20,6 @@ def setup_class_binding_tests
   let( :subclass_configuration_proc ) { ::Proc.new { puts 'subclass_proc!' } }
   
   let( :topclass_class_binding ) { class_binding_class.new( topclass_bound_container_class, binding_name, & topclass_configuration_proc ) }
-  let( :subclass_class_binding ) { class_binding_class.new( subclass_bound_container_class, nil, topclass_class_binding, & subclass_configuration_proc ) }
+  let( :subclass_class_binding ) { class_binding_class.new( subclass_bound_container_class, topclass_class_binding, & subclass_configuration_proc ) }
   
 end

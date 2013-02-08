@@ -13,35 +13,26 @@ module ::Perspective::Bindings::BindingBase::ClassBinding
   #  initialize  #
   ################
 
-  def initialize( bound_container, binding_name, ancestor_binding = nil, & configuration_proc )
+  ###
+  # 
+  # @overload new( bound_container, binding_name, & configuration_proc )
+  # @overload new( bound_container, ancestor_binding )
+  #
+  def initialize( bound_container, *args, & configuration_proc )
 
-    @__bound_container__ = bound_container
+    @__root__ = ( @__bound_container__ = bound_container ).__root__
 
-    @__root__ = @__bound_container__.__root__
-
-    if ancestor_binding
-      @__parent_binding__ = ancestor_binding
-      ::CascadingConfiguration.register_parent( self, ancestor_binding )
-      __initialize_route__
-    else
-      __initialize_defaults__( binding_name )
+    case binding_name_or_parent = args[ 0 ]
+      when ::Symbol, ::String
+        __validate_binding_name__( binding_name = binding_name_or_parent )
+        self.__name__ = binding_name
+      else
+        ::CascadingConfiguration.register_parent( self, @__parent_binding__ = binding_name_or_parent )
     end
-    
+
+    __initialize_route__
+
     __configure__( & configuration_proc ) if block_given?
-    
-  end
-
-  #############################
-  #  __initialize_defaults__  #
-  #############################
-
-  def __initialize_defaults__( binding_name )
-
-    __validate_binding_name__( binding_name )
-
-    self.__name__ = binding_name
-
-    __initialize_route__    
     
   end
   

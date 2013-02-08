@@ -1,11 +1,11 @@
 
-require_relative '../../../support/class_binding_setup.rb'
+require_relative 'class_binding_setup.rb'
 
 require_relative 'shared.rb'
 
-shared_examples_for :class_binding do
+shared_examples_for :base_class_binding do
 
-  setup_class_binding_tests
+  setup_base_class_binding_tests
   
   it_behaves_like :shared_binding do
     let( :topclass_binding ) { topclass_class_binding }

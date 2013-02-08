@@ -6,12 +6,19 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBindingBas
   ################
   #  initialize  #
   ################
-
-  def initialize( bound_container, binding_name, container_class = nil, ancestor_binding = nil, & configuration_proc )
+  
+  ###
+  # 
+  # @overload new( bound_container, binding_name, container_class = nil, & configuration_proc )
+  # @overload new( bound_container, ancestor_binding )
+  #
+  def initialize( bound_container, *args, & configuration_proc )
     
-    super( bound_container, binding_name, ancestor_binding, & configuration_proc )
-
-    __initialize_for_container_class__( container_class )
+    super( bound_container, *args, & configuration_proc )
+    
+    unless @__parent_binding__
+      __initialize_for_container_class__( container_class = args[ 1 ] )
+    end
     
   end
   
@@ -62,7 +69,10 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBindingBas
   ######################
   #  __nested_route__  #
   ######################
-
+  
+  ###
+  # Assumes that self is nested under parameter.
+  #
   def __nested_route__( nested_in_binding )
     
     nested_route = nil

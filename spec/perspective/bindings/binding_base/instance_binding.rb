@@ -1,5 +1,5 @@
 
-require_relative '../../../support/instance_binding_setup.rb'
+require_relative 'instance_binding_setup.rb'
 
 require_relative 'shared.rb'
 

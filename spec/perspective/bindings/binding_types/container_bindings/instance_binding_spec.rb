@@ -7,72 +7,93 @@ describe ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBindi
   #  __initialize_container_from_class__  #
   #########################################
   
+  context '' do
+  end
+  
   #############################
   #  __initialize_bindings__  #
   #############################
+
+  context '' do
+  end
   
   #############################
   #  __configure_container__  #
   #############################
+
+  context '' do
+  end
   
   ###################
   #  __container__  #
   ###################
+
+  context '' do
+  end
   
   ##############################################
   #  __store_initialized_container_instance__  #
   ##############################################
+
+  context '' do
+  end
   
   ####################
   #  __container__=  #
   ####################
+
+  context '' do
+  end
   
   ###############
   #  container  #
   ###############
+
+  context '' do
+  end
   
   ################
   #  container=  #
   ################
+
+  context '' do
+  end
   
   ##################
   #  __autobind__  #
   ##################
+
+  context '' do
+  end
   
   ################
   #  __value__=  #
   ################
+
+  context '' do
+  end
   
   ############
   #  value=  #
   ############
+
+  context '' do
+  end
   
   ######################
   #  __nested_route__  #
   ######################
   
   context '#__nested_route__' do
-    it 'bound to base container' do
-      instance_binding_to_base.__nested_route__( instance_binding_to_base ).should == nil
+    context 'binding is nested in queried binding' do
+      it 'will return the route from queried container to parameter binding' do
+        topclass_class_binding_A_B.__nested_route__( topclass_class_binding_A ).should == nil
+      end
     end
-    it 'bound to first nested container' do
-      instance_binding_to_first_nested.__nested_route__( instance_binding_to_base ).should == nil
-      instance_binding_to_first_nested.__nested_route__( instance_binding_to_first_nested ).should == nil
-    end
-    it 'bound to nth nested container' do
-      instance_binding_to_nth_nested.__nested_route__( instance_binding_to_base ).should == [ binding_to_first_nested_name ]
-      instance_binding_to_nth_nested.__nested_route__( instance_binding_to_first_nested ).should == nil
-    end
-    it 'bound to subclass of base container' do
-      subclass_instance_binding_to_base.__nested_route__( subclass_instance_binding_to_base ).should == nil
-    end
-    it 'bound to subclass of first nested container' do
-      subclass_instance_binding_to_first_nested.__nested_route__( subclass_instance_binding_to_base ).should == nil
-      subclass_instance_binding_to_first_nested.__nested_route__( subclass_instance_binding_to_first_nested ).should == nil
-    end
-    it 'bound to subclass of nth nested container' do
-      subclass_instance_binding_to_nth_nested.__nested_route__( instance_binding_to_base ).should == [ binding_to_first_nested_name ]
-      subclass_instance_binding_to_nth_nested.__nested_route__( instance_binding_to_first_nested ).should == nil
+    context 'binding is nested in binding under queried binding' do
+      it 'will return the route from queried container to parameter binding' do
+        topclass_class_binding_A_B_C.__nested_route__( topclass_class_binding_A ).should == [ topclass_class_binding_A_B_name ]
+      end
     end
   end
 
