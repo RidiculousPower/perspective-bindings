@@ -15,14 +15,12 @@ describe ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBindingB
     ::Perspective::Bindings::BindingTypes::ContainerBindings.define_binding_type( :class_binding_test_binding )
   end
 
-  setup_base_class_binding_tests
   setup_container_class_binding_tests
 
   let( :class_binding_class ) do
     ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBindingTestBinding::ClassBinding
   end
 
-  it_behaves_like :base_class_binding
   it_behaves_like :container_class_binding
   
 end

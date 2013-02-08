@@ -21,7 +21,7 @@ describe ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBindin
     ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBindingTestBinding::InstanceBinding
   end
   
-  it_behaves_like :instance_binding
+  it_behaves_like :base_instance_binding
 
   #########################
   #  respond_to_missing?  #

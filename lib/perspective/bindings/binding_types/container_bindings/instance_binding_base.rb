@@ -189,6 +189,10 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
     
   end
   
+  ##############
+  #  autobind  #
+  ##############
+  
   alias_method  :autobind, :__autobind__
 
   ################

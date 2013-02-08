@@ -3,7 +3,7 @@ require_relative 'instance_binding_setup.rb'
 
 require_relative 'shared.rb'
 
-shared_examples_for :instance_binding do
+shared_examples_for :base_instance_binding do
 
   setup_instance_binding_tests
   

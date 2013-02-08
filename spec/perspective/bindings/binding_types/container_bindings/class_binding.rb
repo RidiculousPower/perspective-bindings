@@ -1,6 +1,8 @@
 
 shared_examples_for :container_class_binding do
 
+  it_behaves_like :base_class_binding
+
   ##################################
   #  __validate_container_class__  #
   ##################################
