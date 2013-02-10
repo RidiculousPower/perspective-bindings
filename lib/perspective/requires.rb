@@ -24,8 +24,8 @@ files = [
   'binding_base/class_binding',
   'binding_base/instance_binding',
   
-  'binding_type_container/binding_base/class_binding_base',
-  'binding_type_container/binding_base/instance_binding_base',
+  'binding_type_container/binding_base/class_binding',
+  'binding_type_container/binding_base/instance_binding',
   'binding_type_container/binding_base',
   'binding_type_container/binding_type/binding_class',
   'binding_type_container/binding_type/class_binding_class',
@@ -67,17 +67,18 @@ files = [
   'binding_types/property_bindings/true_false/instance_binding',
   'binding_types/property_bindings/uri/instance_binding',
 
+  'container/configuration',
+  'container/object_and_binding_instance',
+
   'binding_types/container',
-  'binding_types/container_bindings/class_binding_base',
-  'binding_types/container_bindings/instance_binding_base',
+  'binding_types/container_bindings/class_binding',
+  'binding_types/container_bindings/instance_binding',
   'binding_types/container_bindings',
   
   'container/multi_container_proxy/multi_container_proxy_interface',
   'container/multi_container_proxy',
   'container/binding_methods',
   'container/binding_methods/instance_binding_methods',
-  'container/configuration',
-  'container/object_and_binding_instance',
   'container/singleton_and_object_instance',
   'container/singleton_instance',
   'container/class_instance',

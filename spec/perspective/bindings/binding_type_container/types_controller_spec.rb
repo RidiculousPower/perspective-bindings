@@ -69,7 +69,7 @@ describe ::Perspective::Bindings::BindingTypeContainer::TypesController do
   #  class_binding_base  #
   ########################
 
-  context '#class_binding_base' do
+  context '#class_binding' do
     it 'has a class binding base module used for all class binding types' do
       parent_types.class_binding_base.ancestors.include?( ::Perspective::Bindings::BindingBase::ClassBinding ).should be true
     end
@@ -98,7 +98,7 @@ describe ::Perspective::Bindings::BindingTypeContainer::TypesController do
   #  instance_binding_base  #
   ###########################
 
-  context '#instance_binding_base' do
+  context '#instance_binding' do
     it 'has an instance binding base module used for all class binding types' do
       parent_types.instance_binding_base.ancestors.include?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should be true
     end

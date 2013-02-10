@@ -89,7 +89,7 @@ describe ::Perspective::Bindings::BindingTypes::ContainerBindings do
       new_bindings = type_container.new_class_bindings( binding_type, bound_container, :some_name, :some_other_name, :another_name )
       new_bindings.each do |this_binding|
         this_binding.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should be true
-        this_binding.is_a?( ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBindingBase ).should be true
+        this_binding.is_a?( ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding ).should be true
         this_binding.is_a?( type_container::Binding ).should be true
         this_binding.__bound_container__.should be bound_container
       end

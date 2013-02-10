@@ -26,6 +26,16 @@ module ::Perspective::Bindings::BindingBase
   
   attr_reader  :__root__
 
+  ##################
+  #  __is_root__?  #
+  ##################
+  
+  def __is_root__?
+    
+    return false
+    
+  end
+
   ###############
   #  __route__  #
   ###############

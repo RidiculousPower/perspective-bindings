@@ -9,10 +9,10 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType do
     mock_binding_type_container = ::Class.new.name( :ParentMockBindingTypeContainer )
     mock_binding_type_container.class_eval do
       def self.class_binding_base
-        return @class_binding_base ||= ::Perspective::Bindings::BindingTypeContainer::BindingBase::ClassBindingBase.new( self ).name( :ClassBindingBase )
+        return @class_binding_base ||= ::Perspective::Bindings::BindingTypeContainer::BindingBase::ClassBinding.new( self ).name( :ClassBinding )
       end
       def self.instance_binding_base
-        return @instance_binding_base ||= ::Perspective::Bindings::BindingTypeContainer::BindingBase::InstanceBindingBase.new( self ).name( :InstanceBindingBase )
+        return @instance_binding_base ||= ::Perspective::Bindings::BindingTypeContainer::BindingBase::InstanceBinding.new( self ).name( :InstanceBinding )
       end
     end
     mock_binding_type_container

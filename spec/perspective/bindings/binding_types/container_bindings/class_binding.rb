@@ -9,7 +9,16 @@ shared_examples_for :container_class_binding do
 
   context '#__validate_container_class__' do
     context 'container does not respond to :__bindings__' do
-      let( :mock_container_class ) { ::Class.new.name( :BrokenContainer ) }
+      let( :mock_container_class ) do
+        ::Class.new do
+          include ::CascadingConfiguration::Setting
+          alias_singleton_method( :new_nested_instance, :new )
+          class_binding_methods = ::Module.new.name( :ClassBindingMethods )
+          self::Controller.const_set( :ClassBindingMethods, class_binding_methods )
+          instance_binding_methods = ::Module.new.name( :ClassBindingMethods )
+          self::Controller.const_set( :InstanceBindingMethods, instance_binding_methods )
+        end
+       end
       it 'will raise Perspective::Bindings::Exception::ContainerClassLacksBindings' do
         ::Proc.new { topclass_class_binding_A.__validate_container_class__( nested_container_class_A ) }.should raise_error( ::Perspective::Bindings::Exception::ContainerClassLacksBindings )
       end
@@ -27,7 +36,16 @@ shared_examples_for :container_class_binding do
 
   context '#__initialize_for_container_class__' do
     context 'container does not respond to :__bindings__' do
-      let( :mock_container_class ) { ::Class.new.name( :BrokenContainer ) }
+      let( :mock_container_class ) do
+        ::Class.new do
+          include ::CascadingConfiguration::Setting
+          alias_singleton_method( :new_nested_instance, :new )
+          class_binding_methods = ::Module.new.name( :ClassBindingMethods )
+          self::Controller.const_set( :ClassBindingMethods, class_binding_methods )
+          instance_binding_methods = ::Module.new.name( :ClassBindingMethods )
+          self::Controller.const_set( :InstanceBindingMethods, instance_binding_methods )
+        end
+       end
       it 'will raise Perspective::Bindings::Exception::ContainerClassLacksBindings' do
         ::Proc.new { topclass_class_binding_A }.should raise_error( ::Perspective::Bindings::Exception::ContainerClassLacksBindings )
       end

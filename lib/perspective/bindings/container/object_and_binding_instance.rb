@@ -1,5 +1,5 @@
 
-class ::Perspective::Bindings::Container::ObjectAndBindingInstance
+module ::Perspective::Bindings::Container::ObjectAndBindingInstance
 
   include ::CascadingConfiguration::Hash
   

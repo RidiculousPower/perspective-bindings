@@ -5,6 +5,7 @@ module ::Perspective::Bindings::Container::SingletonInstance
   include ::Perspective::Bindings::Configuration::ClassAndClassBindingInstance
   include ::Perspective::Bindings::Container::SingletonAndObjectInstance
   include ::Perspective::Bindings::BindingTypes::ContainerBindings
+  include ::Perspective::Bindings::Container::Configuration
 
   ##############
   #  __root__  #
@@ -25,6 +26,16 @@ module ::Perspective::Bindings::Container::SingletonInstance
 
   alias_method  :root, :__root__
 
+  ##################
+  #  __is_root__?  #
+  ##################
+  
+  def __is_root__?
+    
+    return true
+    
+  end
+  
   #####################
   #  __root_string__  #
   #####################
@@ -139,7 +150,7 @@ module ::Perspective::Bindings::Container::SingletonInstance
     end
 	  
     __binding_aliases__[ binding_alias ] = existing_binding_name
-    
+
 		self::Controller::ClassBindingMethods.define_binding_alias( binding_alias, existing_binding_name )
     self::Controller::InstanceBindingMethods.define_binding_alias( binding_alias, existing_binding_name )
     

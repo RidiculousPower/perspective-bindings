@@ -25,6 +25,7 @@ describe ::Perspective::Bindings::Container do
     module_instance = ::Module.new do
       include ::Perspective::Bindings::Container
       attr_text :a, _nested_class_A
+      attr_alias :a_alias, :a
     end
     module_instance.name( :ModuleInstance )
     module_instance
@@ -281,25 +282,31 @@ describe ::Perspective::Bindings::Container do
   ###############
 
   context '::__route__' do
-    context 'module' do
-      it 'will return self' do
-        module_instance.__route__.should be nil
+    shared_examples_for :"self.__route__" do
+      it 'root container will return nil' do
+        instance.__route__.should == nil
       end
+      it 'nested binding A will return nil' do
+        instance.a.__route__.should == nil
+      end
+      it 'nested binding A_B will return :a' do
+        instance.a.b.__route__.should == [ :a ]
+      end
+      it 'nested binding A_B_C will return :a, :b' do
+        instance.a.b.c.__route__.should == [ :a, :b ]
+      end
+    end
+    context 'module' do
+      it_behaves_like( :"self.__route__" ) { let( :instance ) { module_instance } }
     end
     context 'sub module' do
-      it 'will return self' do
-        sub_module_instance.__route__.should be nil
-      end
+      it_behaves_like( :"self.__route__" ) { let( :instance ) { sub_module_instance } }
     end
     context 'class' do
-      it 'will return self' do
-        class_instance.__route__.should be nil
-      end
+      it_behaves_like( :"self.__route__" ) { let( :instance ) { class_instance } }
     end
     context 'subclass' do
-      it 'will return self' do
-        subclass.__route__.should be nil
-      end
+      it_behaves_like( :"self.__route__" ) { let( :instance ) { subclass } }
     end
   end
 
@@ -320,10 +327,10 @@ describe ::Perspective::Bindings::Container do
       it 'nested container A_B will return :a' do
         instance.a.b.__container__.__route__.should == [ :a ]
       end
-      it 'nested binding A_B will return :a, :b' do
+      it 'nested binding A_B_C will return :a, :b' do
         instance.a.b.c.__route__.should == [ :a, :b ]
       end
-      it 'nested container A_B will return :a, :b' do
+      it 'nested container A_B_C will return :a, :b' do
         instance.a.b.c.__container__.__route__.should == [ :a, :b ]
       end
     end
@@ -356,25 +363,31 @@ describe ::Perspective::Bindings::Container do
   #########################
 
   context '::__route_with_name__' do
-    context 'module' do
-      it 'will return self' do
-        module_instance.__route_with_name__.should be nil
+    shared_examples_for :"self.__route_with_name__" do
+      it 'root container will return nil' do
+        instance.__route_with_name__.should == nil
       end
+      it 'nested binding A will return nil' do
+        instance.a.__route_with_name__.should == [ :a ]
+      end
+      it 'nested binding A_B will return :a' do
+        instance.a.b.__route_with_name__.should == [ :a, :b ]
+      end
+      it 'nested binding A_B_C will return :a, :b' do
+        instance.a.b.c.__route_with_name__.should == [ :a, :b, :c ]
+      end
+    end
+    context 'module' do
+      it_behaves_like( :"self.__route_with_name__" ) { let( :instance ) { module_instance } }
     end
     context 'sub module' do
-      it 'will return self' do
-        sub_module_instance.__route_with_name__.should be nil
-      end
+      it_behaves_like( :"self.__route_with_name__" ) { let( :instance ) { sub_module_instance } }
     end
     context 'class' do
-      it 'will return self' do
-        class_instance.__route_with_name__.should be nil
-      end
+      it_behaves_like( :"self.__route_with_name__" ) { let( :instance ) { class_instance } }
     end
     context 'subclass' do
-      it 'will return self' do
-        subclass.__route_with_name__.should be nil
-      end
+      it_behaves_like( :"self.__route_with_name__" ) { let( :instance ) { subclass } }
     end
   end
 
@@ -430,57 +443,40 @@ describe ::Perspective::Bindings::Container do
   #  __nested_route__  #
   ######################
 
-  context '::__nested_route__' do
-    shared_examples_for :"self.__nested_route__" do
-      it 'root container does not respond to ::__nested_route__' do
-        instance.respond_to?( :__nested_route__ ).should be false
-      end
-      it 'nested binding A will return nil' do
-        instance.a.__route_with_name__.should == [ :a ]
-      end
-      it 'nested container A will return nil' do
-        instance.a.__container__.__route_with_name__.should == [ :a ]
-      end
-      it 'nested binding A_B will return :a' do
-        instance.a.b.__route_with_name__.should == [ :a, :b ]
-      end
-      it 'nested container A_B will return :a' do
-        instance.a.b.__container__.__route_with_name__.should == [ :a, :b ]
-      end
-      it 'nested binding A_B will return :a, :b' do
-        instance.a.b.c.__route_with_name__.should == [ :a, :b, :c ]
-      end
-      it 'nested container A_B will return :a, :b' do
-        instance.a.b.c.__container__.__route_with_name__.should == [ :a, :b, :c ]
+  shared_examples_for :__nested_route__ do
+    context 'binding is nested in queried binding' do
+      it 'will return the route from queried container to parameter binding' do
+        instance.a.b.c.__nested_route__( instance ).should == [ :a, :b ]
       end
     end
-    context 'module' do
-      it 'does not respond to ::__nested_route__' do
-        module_instance.respond_to?( :__nested_route__ ).should be false
+    context 'binding is nested in binding under queried binding' do
+      it 'will return the route from queried container to parameter binding' do
+        instance.a.b.c.__nested_route__( instance.a ).should == [ :b ]
       end
+    end
+  end
+
+  context '::__nested_route__' do
+    context 'module' do
+      it_behaves_like( :__nested_route__ ) { let( :instance ) { module_instance } }
     end
     context 'sub module' do
-      it 'will return self' do
-        sub_module_instance.respond_to?( :__nested_route__ ).should be false
-      end
+      it_behaves_like( :__nested_route__ ) { let( :instance ) { sub_module_instance } }
     end
     context 'class' do
+      it_behaves_like( :__nested_route__ ) { let( :instance ) { class_instance } }
     end
     context 'subclass' do
-      it 'will return self' do
-        subclass.respond_to?( :__nested_route__ ).should be false
-      end
+      it_behaves_like( :__nested_route__ ) { let( :instance ) { subclass } }
     end
   end
 
   context '#__nested_route__' do
     context 'instance of class' do
-      it '' do
-      end
+      it_behaves_like( :__nested_route__ ) { let( :instance ) { instance_of_class } }
     end
     context 'instance of subclass' do
-      it '' do
-      end
+      it_behaves_like( :__nested_route__ ) { let( :instance ) { instance_of_subclass } }
     end
   end
 
@@ -719,36 +715,143 @@ describe ::Perspective::Bindings::Container do
     end
   end
 
+  ################
+  #  attr_alias  #
+  ################
+  
+  context '::attr_alias' do
+    context 'module' do
+      it 'will create a method that returns the aliased binding' do
+        module_instance.a_alias.should be module_instance.a
+      end
+      it 'sub-module will inherit' do
+        sub_module_instance.a_alias.should be sub_module_instance.a
+      end
+      it 'class will inherit' do
+        class_instance.a_alias.should be class_instance.a
+      end
+      it 'subclass will inherit' do
+        subclass.a_alias.should be subclass.a
+      end
+    end
+    context 'sub module' do
+      it 'will create a method that returns the aliased binding' do
+        sub_module_instance.a_alias.should be sub_module_instance.a
+      end
+      it 'class will inherit' do
+        class_instance.a_alias.should be class_instance.a
+      end
+      it 'subclass will inherit' do
+        subclass.a_alias.should be subclass.a
+      end
+    end
+    context 'class' do
+      it 'will create a method that returns the aliased binding' do
+        class_instance.a_alias.should be class_instance.a
+      end
+      it 'subclass will inherit' do
+        subclass.a_alias.should be subclass.a
+      end
+    end
+    context 'subclass' do
+      it 'will create a method that returns the aliased binding' do
+        subclass.a_alias.should be subclass.a
+      end
+    end
+  end
+
+  context '#attr_alias' do
+    it 'instance does not respond to #attr_alias' do
+      ::Perspective::Bindings::Container.method_defined?( :attr_alias ).should be false
+    end
+  end
+  
   ##################
   #  __bindings__  #
   ##################
   
   context '::__bindings__' do
     context 'module' do
-      it '' do
+      it 'stores bindings in cascading hash' do
+        module_instance.__bindings__.should == { :a => module_instance.a }
+        module_instance.a.__bindings__.should == { :b => module_instance.a.b }
+        module_instance.a.b.__bindings__.should == { :c => module_instance.a.b.c }
+        module_instance.__bindings__[ :a ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        module_instance.a.__bindings__[ :b ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        module_instance.a.b.__bindings__[ :c ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'sub module' do
-      it '' do
+      it 'stores bindings in cascading hash and inherits from module' do
+        sub_module_instance.__bindings__.should == { :a => sub_module_instance.a,
+                                                     :binding_one => sub_module_instance.binding_one,
+                                                     :binding_two => sub_module_instance.binding_two }
+        sub_module_instance.a.__bindings__.should == { :b => sub_module_instance.a.b }
+        sub_module_instance.a.b.__bindings__.should == { :c => sub_module_instance.a.b.c }
+        sub_module_instance.__bindings__[ :a ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.a.__bindings__[ :b ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.a.b.__bindings__[ :c ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.__bindings__[ :binding_one ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.__bindings__[ :binding_two ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'class' do
-      it '' do
+      it 'stores bindings in cascading hash and inherits from module and sub-module' do
+        class_instance.__bindings__.should == { :a => class_instance.a,
+                                                :binding_one => class_instance.binding_one,
+                                                :binding_two => class_instance.binding_two }
+        class_instance.a.__bindings__.should == { :b => class_instance.a.b }
+        class_instance.a.b.__bindings__.should == { :c => class_instance.a.b.c }
+        class_instance.__bindings__[ :a ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.a.__bindings__[ :b ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.a.b.__bindings__[ :c ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.__bindings__[ :binding_one ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.__bindings__[ :binding_two ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'subclass' do
-      it '' do
+      it 'stores bindings in cascading hash an dinherits from module, sub-module, class' do
+        subclass.__bindings__.should == { :a => subclass.a,
+                                                     :binding_one => subclass.binding_one,
+                                                     :binding_two => subclass.binding_two }
+        subclass.a.__bindings__.should == { :b => subclass.a.b }
+        subclass.a.b.__bindings__.should == { :c => subclass.a.b.c }
+        subclass.__bindings__[ :a ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.a.__bindings__[ :b ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.a.b.__bindings__[ :c ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.__bindings__[ :binding_one ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.__bindings__[ :binding_two ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
   end
 
   context '#__bindings__' do
     context 'instance of class' do
-      it '' do
+      it 'stores bindings in cascading hash and inherits from class' do
+        instance_of_class.__bindings__.should == { :a => instance_of_class.a,
+                                                   :binding_one => instance_of_class.binding_one,
+                                                   :binding_two => instance_of_class.binding_two }
+        instance_of_class.a.__bindings__.should == { :b => instance_of_class.a.b }
+        instance_of_class.a.b.__bindings__.should == { :c => instance_of_class.a.b.c }
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__bindings__[ :a ]
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.a.__bindings__[ :b ]
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.a.b.__bindings__[ :c ]
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__bindings__[ :binding_one ]
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__bindings__[ :binding_two ]
       end
     end
     context 'instance of subclass' do
-      it '' do
+      it 'stores bindings in cascading hash and inherits from subclass' do
+        instance_of_subclass.__bindings__.should == { :a => instance_of_subclass.a,
+                                                      :binding_one => instance_of_subclass.binding_one,
+                                                      :binding_two => instance_of_subclass.binding_two }
+        instance_of_subclass.a.__bindings__.should == { :b => instance_of_subclass.a.b }
+        instance_of_subclass.a.b.__bindings__.should == { :c => instance_of_subclass.a.b.c }
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__bindings__[ :a ]
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.a.__bindings__[ :b ]
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.a.b.__bindings__[ :c ]
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__bindings__[ :binding_one ]
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__bindings__[ :binding_two ]
       end
     end
   end
@@ -759,30 +862,64 @@ describe ::Perspective::Bindings::Container do
 
   context '::__binding__' do
     context 'module' do
-      it '' do
+      it 'returns binding for name' do
+        module_instance.__binding__( :a ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        module_instance.a.__binding__( :b ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        module_instance.a.b.__binding__( :c ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        module_instance.__binding__( :a_alias ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'sub module' do
-      it '' do
+      it 'returns binding for name' do
+        sub_module_instance.__binding__( :a ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.a.__binding__( :b ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.a.b.__binding__( :c ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.__binding__( :binding_one ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.__binding__( :binding_two ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.__binding__( :a_alias ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'class' do
-      it '' do
+      it 'returns binding for name' do
+        class_instance.__binding__( :a ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.a.__binding__( :b ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.a.b.__binding__( :c ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.__binding__( :binding_one ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.__binding__( :binding_two ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.__binding__( :a_alias ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'subclass' do
-      it '' do
+      it 'returns binding for name' do
+        subclass.__binding__( :a ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.a.__binding__( :b ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.a.b.__binding__( :c ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.__binding__( :binding_one ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.__binding__( :binding_two ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.__binding__( :a_alias ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
   end
 
   context '#__binding__' do
     context 'instance of class' do
-      it '' do
+      it 'returns binding for name' do
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__binding__( :a )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.a.__binding__( :b )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.a.b.__binding__( :c )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__binding__( :binding_one )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__binding__( :binding_two )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__binding__( :a_alias )
       end
     end
     context 'instance of subclass' do
-      it '' do
+      it 'returns binding for name' do
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__binding__( :a )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.a.__binding__( :b )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.a.b.__binding__( :c )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__binding__( :binding_one )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__binding__( :binding_two )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__binding__( :a_alias )
       end
     end
   end
@@ -793,128 +930,78 @@ describe ::Perspective::Bindings::Container do
 
   context '::__has_binding__?' do
     context 'module' do
-      it '' do
+      it 'reports if it has binding' do
+        module_instance.__has_binding__?( :a ).should be true
+        module_instance.a.__has_binding__?( :b ).should be true
+        module_instance.a.b.__has_binding__?( :c ).should be true
+        module_instance.__has_binding__?( :a_alias ).should be true
+        module_instance.a.b.__has_binding__?( :d ).should be false
+        module_instance.a.__has_binding__?( :e ).should be false
       end
     end
     context 'sub module' do
-      it '' do
+      it 'reports if it has binding' do
+        sub_module_instance.__has_binding__?( :a ).should be true
+        sub_module_instance.a.__has_binding__?( :b ).should be true
+        sub_module_instance.a.b.__has_binding__?( :c ).should be true
+        sub_module_instance.__has_binding__?( :a_alias ).should be true
+        sub_module_instance.__has_binding__?( :binding_one ).should be true
+        sub_module_instance.__has_binding__?( :binding_two ).should be true
+        sub_module_instance.a.b.__has_binding__?( :d ).should be false
+        sub_module_instance.a.__has_binding__?( :e ).should be false
       end
     end
     context 'class' do
-      it '' do
+      it 'reports if it has binding' do
+        class_instance.__has_binding__?( :a ).should be true
+        class_instance.a.__has_binding__?( :b ).should be true
+        class_instance.a.b.__has_binding__?( :c ).should be true
+        class_instance.__has_binding__?( :a_alias ).should be true
+        class_instance.__has_binding__?( :binding_one ).should be true
+        class_instance.__has_binding__?( :binding_two ).should be true
+        class_instance.a.b.__has_binding__?( :d ).should be false
+        class_instance.a.__has_binding__?( :e ).should be false
       end
     end
     context 'subclass' do
-      it '' do
+      it 'reports if it has binding' do
+        subclass.__has_binding__?( :a ).should be true
+        subclass.a.__has_binding__?( :b ).should be true
+        subclass.a.b.__has_binding__?( :c ).should be true
+        subclass.__has_binding__?( :a_alias ).should be true
+        subclass.__has_binding__?( :binding_one ).should be true
+        subclass.__has_binding__?( :binding_two ).should be true
+        subclass.a.b.__has_binding__?( :d ).should be false
+        subclass.a.__has_binding__?( :e ).should be false
       end
     end
   end
 
   context '#__has_binding__?' do
     context 'instance of class' do
-      it '' do
+      it 'reports if it has binding' do
+        instance_of_class.__has_binding__?( :a ).should be true
+        instance_of_class.a.__has_binding__?( :b ).should be true
+        instance_of_class.a.b.__has_binding__?( :c ).should be true
+        instance_of_class.__has_binding__?( :a_alias ).should be true
+        instance_of_class.__has_binding__?( :binding_one ).should be true
+        instance_of_class.__has_binding__?( :binding_two ).should be true
+        instance_of_class.a.b.__has_binding__?( :d ).should be false
+        instance_of_class.a.__has_binding__?( :e ).should be false
       end
     end
     context 'instance of subclass' do
-      it '' do
+      it 'reports if it has binding' do
+        instance_of_subclass.__has_binding__?( :a ).should be true
+        instance_of_subclass.a.__has_binding__?( :b ).should be true
+        instance_of_subclass.a.b.__has_binding__?( :c ).should be true
+        instance_of_subclass.__has_binding__?( :a_alias ).should be true
+        instance_of_subclass.__has_binding__?( :binding_one ).should be true
+        instance_of_subclass.__has_binding__?( :binding_two ).should be true
+        instance_of_subclass.a.b.__has_binding__?( :d ).should be false
+        instance_of_subclass.a.__has_binding__?( :e ).should be false
       end
     end
-  end
-
-  it 'can return sub-bindings that define containers nested inside this binding container class' do
-
-    Perspective::Bindings::Container::Mock.__bindings__.is_a?( ::Hash ).should == true
-    Perspective::Bindings::Container::Mock.__bindings__[ :text_binding ].is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
-    Perspective::Bindings::Container::Mock.text_binding.should == Perspective::Bindings::Container::Mock.__bindings__[ :text_binding ]
-    Perspective::Bindings::Container::Mock.__has_binding__?( :text_binding ).should == true
-
-    instance = ::Perspective::Bindings::Container::Mock.new    
-    
-    instance.__bindings__.is_a?( ::Hash ).should == true
-    instance.__bindings__[ :text_binding ].__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should == true
-    instance.text_binding.__id__.should == instance.__bindings__[ :text_binding ].__id__
-    instance.__has_binding__?( :text_binding ).should == true
-
-  end
-
-  ################
-  #  attr_alias  #
-  ################
-  
-  context '::attr_alias' do
-    context 'module' do
-      it '' do
-      end
-    end
-    context 'sub module' do
-      it '' do
-      end
-    end
-    context 'class' do
-      it '' do
-      end
-    end
-    context 'subclass' do
-      it '' do
-      end
-    end
-  end
-
-  context '#attr_alias' do
-    it 'instance does not respond to #attr_alias' do
-    end
-  end
-  
-  it 'can define binding aliases' do
-    
-    class ::Perspective::Bindings::Container::Mock
-      
-      attr_binding :yet_another_binding
-
-    end
-
-    Proc.new { ::Perspective::Bindings::Container::Mock.attr_alias :yet_another_binding, :aliased_binding_name }.should raise_error( ::Perspective::Bindings::Exception::NoBindingError )
-
-    class ::Perspective::Bindings::Container::OtherMock
-      
-      attr_binding :some_other_binding
-
-      __has_binding__?( :some_other_binding ).should == true
-      respond_to?( :some_other_binding ).should == true
-
-      some_other_binding.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
-
-    end
-    
-    class ::Perspective::Bindings::Container::Mock
-
-      attr_alias :aliased_binding_name, :yet_another_binding
-      attr_binding :another_binding, ::Perspective::Bindings::Container::OtherMock
-      attr_alias :some_other_binding, another_binding.some_other_binding
-
-      __has_binding__?( :aliased_binding_name ).should == true
-      aliased_binding_name.__required__?.should == false
-
-      __has_binding__?( :another_binding ).should == true
-      another_binding.__required__?.should == false
-      respond_to?( :another_binding ).should == true
-      method_defined?( :another_binding ).should == true
-      
-      another_binding.__has_binding__?( :some_other_binding ).should == true
-      another_binding.respond_to?( :some_other_binding ).should == true
-      another_binding.__bindings__[ :some_other_binding ].is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
-      another_binding.some_other_binding.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
-
-      __has_binding__?( :some_other_binding ).should == true
-      some_other_binding.__required__?.should == false
-      respond_to?( :some_other_binding ).should == true
-      method_defined?( :some_other_binding ).should == true
-
-      some_other_binding.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should == true
-      some_other_binding.should == another_binding.some_other_binding
-      
-    end
-    
   end
 
   ##################
@@ -938,26 +1025,6 @@ describe ::Perspective::Bindings::Container do
     end
   end
 
-  it 'can autobind a data object' do
-
-    instance = ::Perspective::Bindings::Container::Mock::ContentBindingView.new    
-    instance.__autobind__( :one )
-    instance.content.should == :one
-
-    instance = ::Perspective::Bindings::Container::Mock::AutobindMultibindingsView.new
-    data_object = Object.new
-    data_object.define_singleton_method( :binding_one ) do
-      :one
-    end
-    data_object.define_singleton_method( :binding_two ) do
-      :two
-    end
-    instance.__autobind__( data_object )
-    instance.binding_one.should == :one
-    instance.binding_two.should == :two
-    
-  end
-
   ##############
   #  autobind  #
   ##############
@@ -979,32 +1046,26 @@ describe ::Perspective::Bindings::Container do
   ###################
 
   context '::__configure__' do
-    context 'module' do
-      it '' do
+    shared_examples_for :__configure__ do
+      before :each do
+        @configuration_proc = ::Proc.new { configuration_method }
+        instance.__configure__( & @configuration_proc )
       end
+      it 'will add proc to configuration procs to be run at initialization of container instance' do
+        instance.__configuration_procs__[ 0 ].should == @configuration_proc
+      end
+    end
+    context 'module' do
+      it_behaves_like( :__configure__) { let( :instance ) { module_instance } }
     end
     context 'sub module' do
-      it '' do
-      end
+      it_behaves_like( :__configure__) { let( :instance ) { sub_module_instance } }
     end
     context 'class' do
-      it '' do
-      end
+      it_behaves_like( :__configure__) { let( :instance ) { class_instance } }
     end
     context 'subclass' do
-      it '' do
-      end
-    end
-  end
-  it 'can define configuration procs to be run before rendering' do
-    rspec = self
-    class ::Perspective::Bindings::Container::Mock
-      include ::Perspective::Bindings::Container
-      configuration_proc = Proc.new do
-        configuration_method
-      end
-      configure( & configuration_proc )
-      __configuration_procs__[ 0 ].should == configuration_proc
+      it_behaves_like( :__configure__) { let( :instance ) { subclass } }
     end
   end
 

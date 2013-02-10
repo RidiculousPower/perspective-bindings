@@ -3,6 +3,8 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
   include ::Perspective::Bindings::Configuration
   include ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
+  include ::Perspective::Bindings::Container::Configuration
+  include ::Perspective::Bindings::Container::ObjectAndBindingInstance
 
   include ::Perspective::Bindings::Container::SingletonAndObjectInstance
   
@@ -38,6 +40,16 @@ module ::Perspective::Bindings::Container::ObjectInstance
       this_binding_instance.__configure_container__
     end
 
+  end
+
+  ##################
+  #  __is_root__?  #
+  ##################
+  
+  def __is_root__?
+    
+    return @__bound_container__.nil?
+    
   end
   
   ##############

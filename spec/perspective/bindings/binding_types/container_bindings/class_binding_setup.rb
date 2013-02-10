@@ -5,7 +5,7 @@ def setup_container_class_binding_tests
 
   setup_base_class_binding_tests
 
-  let( :mock_container_class ) do
+  let( :mock_container_class_implementation ) do
     _mock_container_module = mock_container_module
     ::Class.new do
       include( _mock_container_module )
@@ -24,6 +24,8 @@ def setup_container_class_binding_tests
       attr_configuration :__name__, :__route__, :__route_with_name__, :__route_string__, :__route_print_string__, :__permits_multiple__?, :__required__?
     end
   end
+  
+  let( :mock_container_class ) { mock_container_class_implementation }
   
   let( :nested_container_class_A ) { ::Class.new( mock_container_class ) }
   let( :nested_container_class_B ) { ::Class.new( mock_container_class ) }

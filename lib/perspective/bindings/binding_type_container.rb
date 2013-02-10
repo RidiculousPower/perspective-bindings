@@ -16,8 +16,8 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     parent_type_controller = parent_container ? parent_container.types : nil
     @types = self.class::TypesController.new( parent_type_controller, subclass_existing_bindings )
 
-    const_set( :ClassBindingBase, @types.class_binding_base )
-    const_set( :InstanceBindingBase, @types.instance_binding_base )
+    const_set( :ClassBinding, @types.class_binding_base )
+    const_set( :InstanceBinding, @types.instance_binding_base )
 
     include parent_container if @parent_container = parent_container
     

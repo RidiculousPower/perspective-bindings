@@ -5,7 +5,7 @@ require_relative '../../../../support/named_class_and_module.rb'
 
 require_relative '../../binding_base/instance_binding.rb'
 
-describe ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBindingBase do
+describe ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBinding do
 
   before :all do
     # test with a generic binding we create

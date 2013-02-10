@@ -14,8 +14,8 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController < ::Module
     
     @subclass_existing_bindings = subclass_existing_bindings
     
-    @class_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::ClassBindingBase.new( self )
-    @instance_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::InstanceBindingBase.new( self )
+    @class_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::ClassBinding.new( self )
+    @instance_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::InstanceBinding.new( self )
     
     if @parent_types_controller = parent_types_controller
       include parent_types_controller

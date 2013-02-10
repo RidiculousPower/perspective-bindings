@@ -1,7 +1,9 @@
 
-module ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBindingBase
+module ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
   
   include ::CascadingConfiguration::Setting
+  include ::Perspective::Bindings::Container::Configuration
+  include ::Perspective::Bindings::Container::ObjectAndBindingInstance
   
   ################
   #  initialize  #
@@ -16,9 +18,7 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBindingBas
     
     super( bound_container, *args, & configuration_proc )
     
-    unless @__parent_binding__
-      __initialize_for_container_class__( container_class = args[ 1 ] )
-    end
+    __initialize_for_container_class__( container_class = args[ 1 ] )
     
   end
   
@@ -29,9 +29,9 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBindingBas
   def __initialize_for_container_class__( container_class )
   
     if container_class or container_class = __container_class__
-      __validate_container_class__( self.__container_class__ = container_class )
       extend( container_class::Controller::ClassBindingMethods )
       unless @__parent_binding__
+        __validate_container_class__( self.__container_class__ = container_class )
         # if we have a parent binding then it has already registered the container class as a parent
         # and we have already registered it as our parent, so we don't want to replace it
         ::CascadingConfiguration.register_parent( self, container_class )
@@ -71,32 +71,28 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBindingBas
   ######################
   
   ###
-  # Assumes that self is nested under parameter.
+  # Get route to binding (self) from parent container where self is nested.
+  #   Assumes that both bindings share a common root.
   #
-  def __nested_route__( nested_in_binding )
+  def __nested_route__( nested_in_container )
     
     nested_route = nil
     
     # our route: <root>-route-to-binding
     # nested route: <root>-route-to-binding-nested-in-self
     # result desired: nested-in-self
-
-    # our own route plus our name, which is part of the nested route but not part of our route
-    nested_depth_from_start = 0
-    if route_to_nested_binding = nested_in_binding.__route_with_name__
-      nested_depth_from_start = route_to_nested_binding.count
-    end
     
-    # route from root to nested binding
-    nested_route_from_root = __route_with_name__
-    nested_route_length = nested_route_from_root.count
-
-    # slice from the end of our own route to the end of nested route
-    # also slice off the name at the end of our route
-    remaining_route_length = nested_route_length - nested_depth_from_start - 1
-    
-    if remaining_route_length > 0
-      nested_route = nested_route_from_root.slice( nested_depth_from_start, remaining_route_length )
+    if nested_in_container.__is_root__?
+      nested_route = __route__
+    else
+      slice_off_start_route = nested_in_container.__route_with_name__
+      slice_size = slice_off_start_route.size
+      route_from_root = __route__
+      route_from_root_size = route_from_root.size
+      remaining_route_size = route_from_root_size - slice_size
+      if remaining_route_size > 0
+        nested_route = __route__.slice( slice_size, remaining_route_size )
+      end
     end
     
     return nested_route

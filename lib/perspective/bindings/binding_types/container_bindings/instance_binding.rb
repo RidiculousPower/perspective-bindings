@@ -1,7 +1,9 @@
 
-module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBindingBase
+module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
   
   include ::CascadingConfiguration::Setting
+  include ::Perspective::Bindings::Container::Configuration
+  include ::Perspective::Bindings::Container::ObjectAndBindingInstance
   
   ################
   #  initialize  #
@@ -56,7 +58,7 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
   def __configure_container__( bound_container = __bound_container__ )
       
     # run configuration proc for each binding instance
-		__configuration_procs__.each do |this_configuration_proc|
+		@__parent_binding__.__configuration_procs__.each do |this_configuration_proc|
       bound_container.__instance_exec__( self, & this_configuration_proc )
 	  end
 	  

@@ -105,7 +105,7 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
           raise ::RuntimeError, ( 'Unexpected binding container type (' << instance.to_s ) << ')!'
           
       end
-      
+
       return child_instance
 
     end

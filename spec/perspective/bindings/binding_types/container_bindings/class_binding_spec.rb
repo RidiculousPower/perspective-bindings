@@ -8,7 +8,7 @@ require_relative '../../binding_base/class_binding.rb'
 require_relative 'class_binding_setup.rb'
 require_relative 'class_binding.rb'
 
-describe ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBindingBase do
+describe ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding do
 
   before :all do
     # test with a generic binding we create
