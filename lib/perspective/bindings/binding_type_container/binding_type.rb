@@ -38,13 +38,13 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
       class_binding_class = ::Perspective::Bindings::BindingTypeContainer::BindingType::ClassBindingClass
       instance_binding_class = ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBindingClass
     end
-
+        
     @class_binding_class = class_binding_class.new_subclass( self, @types_controller.class_binding_base )
     @instance_binding_class = instance_binding_class.new_subclass( self, @types_controller.instance_binding_base )
     
     const_set( :ClassBinding,    @class_binding_class )
     const_set( :InstanceBinding, @instance_binding_class )
-        
+            
   end
 
   ###############

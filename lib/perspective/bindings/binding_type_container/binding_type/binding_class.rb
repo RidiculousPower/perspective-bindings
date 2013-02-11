@@ -7,10 +7,7 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingClass
   
   def self.new_subclass( parent_type_module, *modules )
     
-    return ::Class.new( self ) do
-      @parent_type_module = parent_type_module
-      include( parent_type_module, *modules )
-    end
+    return ::Class.new( self ) { include( @parent_type_module = parent_type_module, *modules ) }
     
   end
   

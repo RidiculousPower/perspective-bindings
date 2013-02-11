@@ -36,6 +36,7 @@ describe ::Perspective::Bindings::Container do
     sub_module_instance = ::Module.new do
       include _module_instance
       attr_binding :binding_one, :binding_two
+      attr_text :content
     end
     sub_module_instance.name( :SubModuleInstance )
     sub_module_instance
@@ -785,7 +786,8 @@ describe ::Perspective::Bindings::Container do
       it 'stores bindings in cascading hash and inherits from module' do
         sub_module_instance.__bindings__.should == { :a => sub_module_instance.a,
                                                      :binding_one => sub_module_instance.binding_one,
-                                                     :binding_two => sub_module_instance.binding_two }
+                                                     :binding_two => sub_module_instance.binding_two,
+                                                     :content => sub_module_instance.content }
         sub_module_instance.a.__bindings__.should == { :b => sub_module_instance.a.b }
         sub_module_instance.a.b.__bindings__.should == { :c => sub_module_instance.a.b.c }
         sub_module_instance.__bindings__[ :a ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
@@ -793,13 +795,15 @@ describe ::Perspective::Bindings::Container do
         sub_module_instance.a.b.__bindings__[ :c ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         sub_module_instance.__bindings__[ :binding_one ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         sub_module_instance.__bindings__[ :binding_two ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'class' do
       it 'stores bindings in cascading hash and inherits from module and sub-module' do
         class_instance.__bindings__.should == { :a => class_instance.a,
                                                 :binding_one => class_instance.binding_one,
-                                                :binding_two => class_instance.binding_two }
+                                                :binding_two => class_instance.binding_two,
+                                                :content => class_instance.content }
         class_instance.a.__bindings__.should == { :b => class_instance.a.b }
         class_instance.a.b.__bindings__.should == { :c => class_instance.a.b.c }
         class_instance.__bindings__[ :a ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
@@ -807,13 +811,15 @@ describe ::Perspective::Bindings::Container do
         class_instance.a.b.__bindings__[ :c ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         class_instance.__bindings__[ :binding_one ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         class_instance.__bindings__[ :binding_two ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'subclass' do
       it 'stores bindings in cascading hash an dinherits from module, sub-module, class' do
         subclass.__bindings__.should == { :a => subclass.a,
                                                      :binding_one => subclass.binding_one,
-                                                     :binding_two => subclass.binding_two }
+                                                     :binding_two => subclass.binding_two,
+                                                     :content => subclass.content }
         subclass.a.__bindings__.should == { :b => subclass.a.b }
         subclass.a.b.__bindings__.should == { :c => subclass.a.b.c }
         subclass.__bindings__[ :a ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
@@ -821,6 +827,7 @@ describe ::Perspective::Bindings::Container do
         subclass.a.b.__bindings__[ :c ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         subclass.__bindings__[ :binding_one ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         subclass.__bindings__[ :binding_two ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
   end
@@ -830,7 +837,8 @@ describe ::Perspective::Bindings::Container do
       it 'stores bindings in cascading hash and inherits from class' do
         instance_of_class.__bindings__.should == { :a => instance_of_class.a,
                                                    :binding_one => instance_of_class.binding_one,
-                                                   :binding_two => instance_of_class.binding_two }
+                                                   :binding_two => instance_of_class.binding_two,
+                                                   :content => instance_of_class.content }
         instance_of_class.a.__bindings__.should == { :b => instance_of_class.a.b }
         instance_of_class.a.b.__bindings__.should == { :c => instance_of_class.a.b.c }
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__bindings__[ :a ]
@@ -838,13 +846,15 @@ describe ::Perspective::Bindings::Container do
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.a.b.__bindings__[ :c ]
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__bindings__[ :binding_one ]
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__bindings__[ :binding_two ]
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__bindings__[ :content ]
       end
     end
     context 'instance of subclass' do
       it 'stores bindings in cascading hash and inherits from subclass' do
         instance_of_subclass.__bindings__.should == { :a => instance_of_subclass.a,
                                                       :binding_one => instance_of_subclass.binding_one,
-                                                      :binding_two => instance_of_subclass.binding_two }
+                                                      :binding_two => instance_of_subclass.binding_two,
+                                                      :content => instance_of_subclass.content }
         instance_of_subclass.a.__bindings__.should == { :b => instance_of_subclass.a.b }
         instance_of_subclass.a.b.__bindings__.should == { :c => instance_of_subclass.a.b.c }
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__bindings__[ :a ]
@@ -852,6 +862,7 @@ describe ::Perspective::Bindings::Container do
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.a.b.__bindings__[ :c ]
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__bindings__[ :binding_one ]
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__bindings__[ :binding_two ]
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__bindings__[ :content ]
       end
     end
   end
@@ -877,6 +888,7 @@ describe ::Perspective::Bindings::Container do
         sub_module_instance.__binding__( :binding_one ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         sub_module_instance.__binding__( :binding_two ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         sub_module_instance.__binding__( :a_alias ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'class' do
@@ -887,6 +899,7 @@ describe ::Perspective::Bindings::Container do
         class_instance.__binding__( :binding_one ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         class_instance.__binding__( :binding_two ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         class_instance.__binding__( :a_alias ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'subclass' do
@@ -897,6 +910,7 @@ describe ::Perspective::Bindings::Container do
         subclass.__binding__( :binding_one ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         subclass.__binding__( :binding_two ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         subclass.__binding__( :a_alias ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
   end
@@ -910,6 +924,7 @@ describe ::Perspective::Bindings::Container do
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__binding__( :binding_one )
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__binding__( :binding_two )
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__binding__( :a_alias )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__binding__( :content )
       end
     end
     context 'instance of subclass' do
@@ -920,6 +935,7 @@ describe ::Perspective::Bindings::Container do
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__binding__( :binding_one )
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__binding__( :binding_two )
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__binding__( :a_alias )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__binding__( :content )
       end
     end
   end
@@ -947,6 +963,7 @@ describe ::Perspective::Bindings::Container do
         sub_module_instance.__has_binding__?( :a_alias ).should be true
         sub_module_instance.__has_binding__?( :binding_one ).should be true
         sub_module_instance.__has_binding__?( :binding_two ).should be true
+        sub_module_instance.__has_binding__?( :content ).should be true
         sub_module_instance.a.b.__has_binding__?( :d ).should be false
         sub_module_instance.a.__has_binding__?( :e ).should be false
       end
@@ -959,6 +976,7 @@ describe ::Perspective::Bindings::Container do
         class_instance.__has_binding__?( :a_alias ).should be true
         class_instance.__has_binding__?( :binding_one ).should be true
         class_instance.__has_binding__?( :binding_two ).should be true
+        class_instance.__has_binding__?( :content ).should be true
         class_instance.a.b.__has_binding__?( :d ).should be false
         class_instance.a.__has_binding__?( :e ).should be false
       end
@@ -971,6 +989,7 @@ describe ::Perspective::Bindings::Container do
         subclass.__has_binding__?( :a_alias ).should be true
         subclass.__has_binding__?( :binding_one ).should be true
         subclass.__has_binding__?( :binding_two ).should be true
+        subclass.__has_binding__?( :content ).should be true
         subclass.a.b.__has_binding__?( :d ).should be false
         subclass.a.__has_binding__?( :e ).should be false
       end
@@ -986,6 +1005,7 @@ describe ::Perspective::Bindings::Container do
         instance_of_class.__has_binding__?( :a_alias ).should be true
         instance_of_class.__has_binding__?( :binding_one ).should be true
         instance_of_class.__has_binding__?( :binding_two ).should be true
+        instance_of_class.__has_binding__?( :content ).should be true
         instance_of_class.a.b.__has_binding__?( :d ).should be false
         instance_of_class.a.__has_binding__?( :e ).should be false
       end
@@ -998,6 +1018,7 @@ describe ::Perspective::Bindings::Container do
         instance_of_subclass.__has_binding__?( :a_alias ).should be true
         instance_of_subclass.__has_binding__?( :binding_one ).should be true
         instance_of_subclass.__has_binding__?( :binding_two ).should be true
+        instance_of_subclass.__has_binding__?( :content ).should be true
         instance_of_subclass.a.b.__has_binding__?( :d ).should be false
         instance_of_subclass.a.__has_binding__?( :e ).should be false
       end

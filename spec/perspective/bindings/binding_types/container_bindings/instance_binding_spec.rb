@@ -12,7 +12,7 @@ describe ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBindi
 
   before :all do
     # test with a generic binding we create
-    ::Perspective::Bindings::BindingTypes::ContainerBindings.define_binding_type( :instance_binding_test_binding )
+    ::Perspective::Bindings::BindingTypes::ContainerBindings.define_binding_type( :instance_binding_test_binding, :text )
   end
 
   let( :class_binding_class ) do
@@ -110,28 +110,52 @@ describe ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBindi
   #  __autobind__  #
   ##################
 
-  context '#__autobind__' do
-    context 'when array' do
-      context 'when permits multiple' do
+  shared_examples_for :__autobind__ do
+    context 'when data object is array' do
+      let( :data_object ) { [ :one, :two, :three ] }
+      context 'when binding permits multiple' do
+        before :each do
+          topclass_instance_binding_A.__permits_multiple__ = true
+        end
         context 'when container is not a MultiContainerProxy' do
+          before :each do
+            topclass_instance_binding_A.__create_multi_container_proxy__
+            topclass_instance_binding_A.__send__( action, data_object )
+          end
           it 'will create a MultiContainerProxy with container as the first container and relay the call to autobind' do
+            topclass_instance_binding_A.__container__.should be_a ::Perspective::Bindings::Container::MultiContainerProxy
+            topclass_instance_binding_A.__container__.called_autobind?.should == [ true, true, true ]
           end
         end
         context 'when container is already a MultiContainerProxy' do
-          it 'will relay the call to autobind' do
+          before :each do
+            topclass_instance_binding_A.__send__( action, data_object )
+          end
+          it 'will relay the call to autobind to multi-container proxy' do
+            topclass_instance_binding_A.__container__.should be_a ::Perspective::Bindings::Container::MultiContainerProxy
+            topclass_instance_binding_A.__container__.called_autobind?.should == [ true, true, true ]
           end
         end
       end
       context 'when permits only one' do
         it 'will raise error' do
+          ::Proc.new { topclass_instance_binding_A.__send__( action, data_object ) }.should raise_error( ::ArgumentError )
         end
       end
     end
-    context 'when non-array object' do
+    context 'when data object is non-array object' do
+      let( :data_object ) { :one }
+      before :each do
+        topclass_instance_binding_A.__send__( action, data_object )
+      end
       it 'will relay the call to autobind' do
+        topclass_instance_binding_A.__container__.called_autobind?.should == true
       end
     end
-    
+  end
+  
+  context '#__autobind__' do
+    it_behaves_like( :__autobind__ ) { let( :action ) { :__autobind__ } }
   end
   
   ##############
@@ -149,7 +173,7 @@ describe ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBindi
   ################
 
   context '#__value__=' do
-#    it_behaves_like :"instance_binding.__autobind__"
+    it_behaves_like( :__autobind__ ) { let( :action ) { :__value__= } }
   end
   
   ###########

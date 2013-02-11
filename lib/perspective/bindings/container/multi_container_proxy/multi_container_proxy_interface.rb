@@ -18,7 +18,7 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
 
     @__storage_array__ = [ current_container ]
 
-    __autobind__( *data_objects )
+    __autobind__( data_objects )
 
   end
 
@@ -84,23 +84,29 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
   ##################
   #  __autobind__  #
   ##################
-
-  def __autobind__( *data_objects )
+  
+  def __autobind__( data_object, method_map_hash = nil )
 
     container_class = nil
 
-    data_objects.each_with_index do |this_object, this_index|
+    case data_object
+      
+      when ::Array
 
-      this_container_instance = nil
+        data_object.each_with_index do |this_object, this_index|
+          this_container_instance = nil
+          if __size__ > this_index
+            this_container_instance = self[ this_index ]
+          else
+            this_container_instance = __create_additional_container__( this_index )
+          end
+          this_container_instance.__autobind__( this_object, method_map_hash )
+        end
 
-      if __count__ > this_index
-        this_container_instance = self[ this_index ]
       else
-        this_container_instance = __create_additional_container__( this_index )
-      end
-
-      this_container_instance.__autobind__( this_object )
-
+      
+        each { |this_container| this_container.__autobind__( this_object, method_map_hash ) }
+      
     end
 
     return self
@@ -119,13 +125,13 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
 
   attr_reader :__storage_array__
 
-  ###############
-  #  __count__  #
-  ###############
+  ##############
+  #  __size__  #
+  ##############
 
-  def __count__
+  def __size__
 
-    return @__storage_array__.count
+    return @__storage_array__.size
 
   end
 
@@ -187,6 +193,22 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
 
     return @__storage_array__[ index ] = object
 
+  end
+  
+  ##########
+  #  each  #
+  ##########
+  
+  def each
+    
+    return to_enum unless block_given?
+    
+    @__storage_array__.each do |this_container|
+      yield( this_container )
+    end
+    
+    return self
+    
   end
     
 end

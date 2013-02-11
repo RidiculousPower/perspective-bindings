@@ -60,7 +60,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   #########################
   
   def define_binding_type( binding_type_name, ancestor_type = nil )
-    
+
     new_binding_type = @types.define_binding_type( binding_type_name, ancestor_type )
 
     binding_type_name = binding_type_name.to_s

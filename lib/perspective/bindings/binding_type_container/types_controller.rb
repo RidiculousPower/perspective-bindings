@@ -109,10 +109,8 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController < ::Module
         # * if we have an ancestor type provided explicitly we use it
         # * otherwise we look up the name being defined in parent container
         else
-          if @parent_types_controller
-            parent_type_instance = ancestor_type ? @parent_types_controller.binding_types[ ancestor_type.to_sym ]
-                                                 : @parent_types_controller.binding_types[ binding_type_name ]
-          end
+          parent_type_instance = ancestor_type ? binding_types[ ancestor_type.to_sym ]
+                                               : binding_types[ binding_type_name ]
       end
     
       # create and store new binding type

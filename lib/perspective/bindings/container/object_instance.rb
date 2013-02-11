@@ -190,10 +190,12 @@ module ::Perspective::Bindings::Container::ObjectInstance
       if data_source_name
         case data_object
           when ::Perspective::Bindings::Container
-            binding_instance = data_object.__binding__( data_source_name )
+            this_binding_instance = data_object.__binding__( data_source_name )
             this_binding_instance.__value__ = binding_instance.__render_value__
           when ::Perspective::Bindings::BindingBase::InstanceBinding
             this_binding_instance.__value__ = data_object.__render_value__
+          when ::Hash
+            this_binding_instance.__value__ = data_object[ data_source_name ]
           else
             this_binding_instance.__value__ = data_object.__send__( data_source_name )
         end

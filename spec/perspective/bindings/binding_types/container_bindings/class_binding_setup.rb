@@ -22,6 +22,14 @@ def setup_container_class_binding_tests
       self::Controller.const_set( :InstanceBindingMethods, instance_binding_methods )
       attr_hash :__bindings__, :__binding_aliases__
       attr_configuration :__name__, :__route__, :__route_with_name__, :__route_string__, :__route_print_string__, :__permits_multiple__?, :__required__?
+      def __autobind__( *args )
+        @called_autobind = true
+      end
+      def called_autobind?
+        return @called_autobind
+      end
+      def __initialize_for_index__( *args )
+      end
     end
   end
   

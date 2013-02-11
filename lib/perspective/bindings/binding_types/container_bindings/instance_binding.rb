@@ -157,7 +157,7 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
   ##################
   
   def __autobind__( data_object, method_map_hash = nil )
-
+    
     # We can't autobind to a container that isn't there yet.
     if container = __container__
 
@@ -166,19 +166,25 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
         when ::Array
                     
           if __permits_multiple__?
+
             if data_object.count - 1 > 0
               binding_value_array = data_object.collect do |this_data_object|
                 __autobind_value__( this_data_object )
               end
               case container
                 when ::Perspective::Bindings::Container::MultiContainerProxy
-                  container.__autobind__( *binding_value_array, method_map_hash )
+                  container.__autobind__( binding_value_array, method_map_hash )
                 else
-                  __create_multi_container_proxy__( data_object )
+                  __create_multi_container_proxy__( *data_object )
               end
             else
               container.__autobind__( __autobind_value__( data_object[ 0 ] ), method_map_hash )
             end
+
+          else
+
+            raise ::ArgumentError, "Received array when multiple not permitted for " << container.to_s << '.' 
+
           end
           
         else
@@ -221,9 +227,9 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
   #  __create_multi_container_proxy__  #
   ######################################
   
-  def __create_multi_container_proxy__( data_object )
+  def __create_multi_container_proxy__( *data_objects )
 
-    multi_proxy = ::Perspective::Bindings::Container::MultiContainerProxy.new( self, *data_object )
+    multi_proxy = ::Perspective::Bindings::Container::MultiContainerProxy.new( self, *data_objects )
 
     self.__store_initialized_container_instance__( multi_proxy )
     

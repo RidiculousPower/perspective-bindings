@@ -86,7 +86,7 @@ shared_examples_for :base_instance_binding do
   ##############################
   
   context '#__binding_value_valid__?' do
-    let( :value ) { 'some value' }
+    let( :value ) { Complex( 42, 37 ) }
     let( :bad_value ) { 42 }
     context 'without permitted value module(s)' do
       it 'topclass binding can report value valid' do
@@ -99,7 +99,7 @@ shared_examples_for :base_instance_binding do
       end
     end
     context 'with permitted value module' do
-      let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Text }
+      let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Complex }
       before :each do
         topclass_instance_binding.__extend__( permitted_value_module )
         subclass_instance_binding.__extend__( permitted_value_module )
@@ -159,7 +159,7 @@ shared_examples_for :base_instance_binding do
   ################
 
   context '#__value__, #__value__=' do
-    let( :value ) { 'some value' }
+    let( :value ) { Complex( 42, 37 ) }
     context 'if __binding_value_valid__? is false' do
       it 'topclass binding will raise error for invalid value' do
         ::Proc.new { topclass_instance_binding.__value__ = value }.should raise_error( ::ArgumentError )
@@ -169,7 +169,7 @@ shared_examples_for :base_instance_binding do
       end
     end
     context 'if __binding_value_valid__? is true' do
-      let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Text }
+      let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Complex }
       before :all do
         topclass_instance_binding.__extend__( permitted_value_module )
         subclass_instance_binding.__extend__( permitted_value_module )
