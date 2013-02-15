@@ -45,8 +45,8 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
     
     __container__
     
-    __bindings__.each do |this_binding_name, this_binding_instance|
-      this_binding_instance.__initialize_bindings__
+    __bindings__.each do |this_binding_name, this_binding|
+      this_binding.__initialize_bindings__
     end
     
   end
@@ -62,11 +62,21 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
       bound_container.__instance_exec__( self, & this_configuration_proc )
 	  end
 	  
-    __bindings__.each do |this_binding_name, this_binding_instance|
-      this_binding_instance.__configure_container__
+    __bindings__.each do |this_binding_name, this_binding|
+      this_binding.__configure_container__
     end
 	  
 	  return self
+    
+  end
+
+  ########################
+  #  __has_container__?  #
+  ########################
+  
+  def __has_container__?
+    
+    return __container__( true ) ? true : false
     
   end
   
@@ -76,18 +86,14 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
 
   attr_instance_configuration  :__container__
 
-  def __container__
+  def __container__( do_not_initialize = false )
     
     container_instance = nil
 
-    unless container_instance = super
-
+    unless do_not_initialize or container_instance = super()
       if container_class = @__parent_binding__.__container_class__
-
         container_instance = __initialize_container_from_class__
-      
       end
-    
     end
     
     return container_instance
@@ -108,24 +114,31 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
     
     super
 
-    instance_binding_methods_class = nil
-    case container_instance
-      when ::Perspective::Bindings::Container::MultiContainerProxy
-        if container_instance.count > 0
-          instance_binding_methods_class = container_instance[0].class
-        end
-      else
-        instance_binding_methods_class = container_instance.class
-    end
+    if container_instance
+      
+      instance_binding_methods_class = nil
+      case container_instance
+        when ::Perspective::Bindings::Container::MultiContainerProxy
+          if container_instance.count > 0
+            instance_binding_methods_class = container_instance[0].class
+          end
+        else
+          instance_binding_methods_class = container_instance.class
+      end
 
-    __extend__( instance_binding_methods_class::Controller::InstanceBindingMethods )
+      __extend__( instance_binding_methods_class::Controller::InstanceBindingMethods )
     
-    # Normal inheritance when container class is defined on class binding is
-    # Class Instance => Class Binding => Instance Binding => Container Instance.
-    # When container instance is instead provided to instance binding then inheritance is
-    # Class Instance => Container Instance => Instance Binding
-    ::CascadingConfiguration.replace_parent( self, @__parent_binding__, container_instance )
-        
+      # Normal inheritance when container class is defined on class binding is
+      # Class Instance => Class Binding => Instance Binding => Container Instance.
+      # When container instance is instead provided to instance binding then inheritance is
+      # Class Instance => Container Instance => Instance Binding
+      #
+      #
+      # FIX - we probably need to make this replace the config values instead of replace parent
+      ::CascadingConfiguration.replace_parent( self, @__parent_binding__, container_instance )
+      
+    end
+    
   end
 
   ###############
@@ -142,76 +155,17 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
 
   alias_method( :container=, :__container__= )
 
-	########################
-	#  __autobind_value__  #
-	########################
-	
-	def __autobind_value__( current_value = __value__ )
-	  
-    return current_value
-    
-  end
-  
-  ##################
-  #  __autobind__  #
-  ##################
-  
-  def __autobind__( data_object, method_map_hash = nil )
-    
-    # We can't autobind to a container that isn't there yet.
-    if container = __container__
-
-      case data_object
-
-        when ::Array
-                    
-          if __permits_multiple__?
-
-            if data_object.count - 1 > 0
-              binding_value_array = data_object.collect do |this_data_object|
-                __autobind_value__( this_data_object )
-              end
-              case container
-                when ::Perspective::Bindings::Container::MultiContainerProxy
-                  container.__autobind__( binding_value_array, method_map_hash )
-                else
-                  __create_multi_container_proxy__( *data_object )
-              end
-            else
-              container.__autobind__( __autobind_value__( data_object[ 0 ] ), method_map_hash )
-            end
-
-          else
-
-            raise ::ArgumentError, "Received array when multiple not permitted for " << container.to_s << '.' 
-
-          end
-          
-        else
-          
-          container.__autobind__( __autobind_value__( data_object ), method_map_hash )
-          
-      end
-    
-    end
-    
-  end
-  
-  ##############
-  #  autobind  #
-  ##############
-  
-  alias_method  :autobind, :__autobind__
-
   ################
   #  __value__=  #
   ################
 
   def __value__=( object )
-    
-    super
-    
+        
     __autobind__( @__value__ )
+
+    # even if we have an array we store it in @__value__
+    # we call super after autobinding to prevent storage if we have an array but multiple not permitted
+    super
 
     return object
     
@@ -222,18 +176,101 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
   ############
 
   alias_method  :value=, :__value__=
-  
-  ######################################
-  #  __create_multi_container_proxy__  #
-  ######################################
-  
-  def __create_multi_container_proxy__( *data_objects )
 
-    multi_proxy = ::Perspective::Bindings::Container::MultiContainerProxy.new( self, *data_objects )
-
-    self.__store_initialized_container_instance__( multi_proxy )
+  ##################
+  #  __autobind__  #
+  ##################
+  
+  def __autobind__( data_object )
     
-    return multi_proxy
+    case data_object
+      when ::Array
+        __autobind_array__( data_object )
+      when ::Hash
+        __autobind_hash__( data_object )
+      else
+        __autobind_object__( data_object )
+    end
+    
+    return self
+    
+  end
+
+  ##############
+  #  autobind  #
+  ##############
+  
+  alias_method  :autobind, :__autobind__
+  
+  #########################
+  #  __autobind_object__  #
+  #########################
+
+  def __autobind_object__( data_object )
+
+    if container = __container__
+      container.__autobind__( data_object )
+    end
+
+    return self
+    
+  end
+
+  ########################
+  #  __autobind_array__  #
+  ########################
+
+  def __autobind_array__( data_array )
+
+    unless __permits_multiple__?
+      raise ::ArgumentError, "Received array when multiple not permitted for " << container.to_s << '.' 
+    end
+    
+    case autobind_item_count = data_array.size
+      when 0
+        # empty array, do nothing
+      when 1
+        # bind as normal object - no reason to treat as list
+        __autobind_object__( data_array[ 0 ] )
+      else
+        # list maps to multiple containers
+        __ensure_multi_container_proxy__.
+        __ensure_container_count__( autobind_item_count ).
+        __autobind__( data_array )
+    end
+    
+    return self
+    
+  end
+
+  #######################
+  #  __autobind_hash__  #
+  #######################
+  
+  def __autobind_hash__( data_hash )
+    
+    if container = __container__
+      __container__.__autobind_hash__( data_hash )
+    end
+
+    return self
+    
+  end
+
+  ######################################
+  #  __ensure_multi_container_proxy__  #
+  ######################################
+  
+  def __ensure_multi_container_proxy__
+    
+    multi_container_proxy = __container__
+    
+    unless ::Perspective::Bindings::Container::MultiContainerProxy === multi_container_proxy
+      multi_container_proxy = ::Perspective::Bindings::Container::MultiContainerProxy.new( self )
+      self.__store_initialized_container_instance__( multi_container_proxy )
+    end
+    
+    return multi_container_proxy
     
   end
 

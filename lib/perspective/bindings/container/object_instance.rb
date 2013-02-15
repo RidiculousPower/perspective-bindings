@@ -24,8 +24,8 @@ module ::Perspective::Bindings::Container::ObjectInstance
   
   def __initialize_bindings__
 
-    __bindings__.each do |this_binding_name, this_binding_instance|
-      this_binding_instance.__initialize_bindings__
+    __bindings__.each do |this_binding_name, this_binding|
+      this_binding.__initialize_bindings__
 	  end
   	  
   end
@@ -36,8 +36,8 @@ module ::Perspective::Bindings::Container::ObjectInstance
   
   def __configure_containers__
 
-    __bindings__.each do |this_binding_name, this_binding_instance|
-      this_binding_instance.__configure_container__
+    __bindings__.each do |this_binding_name, this_binding|
+      this_binding.__configure_container__
     end
 
   end
@@ -162,76 +162,132 @@ module ::Perspective::Bindings::Container::ObjectInstance
   ##################
   #  __autobind__  #
   ##################
-
-  def __autobind__( data_object, method_map_hash = nil )
+  
+  def __autobind__( data_object )
     
     @__view_rendering_empty__ = false
-    
+
     found_a_binding = false
     
-    if method_map_hash
-      found_a_binding = true
-    end
-    
-    # iterate bindings, binding each to method in data_object
-    # method_map_hash permits name of method in data_object to be overridden from binding_name
-    __bindings__.each do |this_binding_name, this_binding_instance|
-
-      if method_map_hash and method_map_hash.has_key?( this_binding_name )
-        # if we are given false/nil instead of a method name, don't look for this binding
-        next unless method_name = method_map_hash[ this_binding_name ]
-        found_a_binding = true
-        data_source_name = method_name
-      elsif data_object.respond_to?( this_binding_name )
-        found_a_binding = true
-        data_source_name = this_binding_name
-      end
-      
-      if data_source_name
-        case data_object
-          when ::Perspective::Bindings::Container
-            this_binding_instance = data_object.__binding__( data_source_name )
-            this_binding_instance.__value__ = binding_instance.__render_value__
-          when ::Perspective::Bindings::BindingBase::InstanceBinding
-            this_binding_instance.__value__ = data_object.__render_value__
-          when ::Hash
-            this_binding_instance.__value__ = data_object[ data_source_name ]
-          else
-            this_binding_instance.__value__ = data_object.__send__( data_source_name )
-        end
-      end
-      
-    end
-    
-    unless found_a_binding
-      if respond_to?( :content )
-        content.__value__ = data_object
+    case data_object
+      when ::Perspective::Bindings::Container
+        found_a_binding = __autobind_container__( data_object )
+      when ::Perspective::Bindings::BindingBase::InstanceBinding
+        found_a_binding = __autobind_binding__( data_object )
+      when ::Hash
+        found_a_binding = __autobind_hash__( data_object )
       else
-        if method_map_hash
-          raise ::Perspective::Bindings::Exception::AutobindFailed, 
-                  'Data object did not respond to the name of any declared bindings in ' << 
-                  self.inspect << ' or provided method map and ' << self.inspect << ' does not ' <<
-                  'respond to :' << :content.to_s << '.'
-        else
-          raise ::Perspective::Bindings::Exception::AutobindFailed, 
-                  ':autobind was called on ' << self.to_s << ' but data object did not respond ' <<
-                  'to the name of any declared bindings in ' << self.to_s << 
-                  ', no method map was provided, and ' << self.to_s << 
-                  ' does not respond to :' << :content.to_s << '.'
-        end
+        found_a_binding = __autobind_object__( data_object )
+    end
+
+    unless found_a_binding
+      if respond_to?( :content= )
+        self.content = data_object
+      else
+        raise ::Perspective::Bindings::Exception::AutobindFailed, 
+                ':autobind was called on ' << self.to_s << ' but data object did not respond ' <<
+                'to the name of any declared bindings in ' << self.to_s << 
+                ', no method map was provided, and ' << self.to_s << 
+                ' does not respond to :' << :content.to_s << '.'
       end
     end
     
     return self
     
   end
-  
+
   ##############
   #  autobind  #
   ##############
   
   alias_method  :autobind, :__autobind__
 
+  ############################
+  #  __autobind_container__  #
+  ############################
+
+  def __autobind_container__( data_container )
+    
+    found_a_binding = false
+    
+    __bindings__.each do |this_binding_name, this_binding|
+      if data_container.__has_binding__?( this_binding_name )
+        this_data_binding = data_container.__binding__( this_binding_name )
+        this_binding.__autobind_binding__( this_data_binding )
+        found_a_binding = true
+      end
+    end
+    
+    return found_a_binding
+    
+  end
+
+  ##########################
+  #  __autobind_binding__  #
+  ##########################
+
+  def __autobind_binding__( data_binding )
+    
+    found_a_binding = false
+    
+    if __has_binding__?( data_binding )
+      this_data_binding_name = data_binding.__name__
+      __binding__( this_data_binding_name ).__autobind_binding__( data_binding )
+      found_a_binding = true
+    end
+
+    return found_a_binding
+    
+  end
+  
+  #########################
+  #  __autobind_object__  #
+  #########################
+
+  def __autobind_object__( data_object )
+    
+    found_a_binding = false
+
+    __bindings__.each do |this_binding_name, this_binding|
+      if data_object.respond_to?( this_binding_name )
+        this_value = data_object.__send__( this_binding_name )
+        this_binding.__autobind__( this_value )
+        found_a_binding = true
+      end    
+    end
+
+    return found_a_binding
+    
+  end
+
+  ########################
+  #  __autobind_array__  #
+  ########################
+
+  def __autobind_array__( data_array )
+    
+    raise ::ArgumentError, 'Autobinding an Array instance to a container has ambiguous meaning.'
+    
+  end
+
+  #######################
+  #  __autobind_hash__  #
+  #######################
+  
+  def __autobind_hash__( data_hash )
+
+    found_a_binding = false
+    
+    __bindings__.each do |this_binding_name, this_binding|
+      this_data_value = data_hash[ this_binding_name ]
+      this_binding.__autobind__( this_data_value )
+      found_a_binding = true
+    end
+    
+    return found_a_binding
+    
+  end
+  
   ######################
   #  __nested_route__  #
   ######################

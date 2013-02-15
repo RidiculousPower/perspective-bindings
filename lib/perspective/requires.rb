@@ -52,6 +52,8 @@ files = [
   
   'binding_types/property',
   'binding_types/property_bindings',
+  'binding_types/property_bindings/class_binding',
+  'binding_types/property_bindings/instance_binding',
   'binding_types/property_bindings/binding/instance_binding',
   'binding_types/property_bindings/class/instance_binding',
   'binding_types/property_bindings/complex/instance_binding',
@@ -71,9 +73,9 @@ files = [
   'container/object_and_binding_instance',
 
   'binding_types/container',
+  'binding_types/container_bindings',
   'binding_types/container_bindings/class_binding',
   'binding_types/container_bindings/instance_binding',
-  'binding_types/container_bindings',
   
   'container/multi_container_proxy/multi_container_proxy_interface',
   'container/multi_container_proxy',

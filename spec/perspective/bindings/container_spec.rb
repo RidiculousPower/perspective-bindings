@@ -69,7 +69,10 @@ describe ::Perspective::Bindings::Container do
     nested_class_A_B
   end
   let( :nested_class_A_B_C ) do
-    nested_class_A_B_C = ::Class.new { include ::Perspective::Bindings::Container }
+    nested_class_A_B_C = ::Class.new do
+      include ::Perspective::Bindings::Container
+      attr_text :content
+    end
     nested_class_A_B_C.name( :NestedClass_A_B_C )
     nested_class_A_B_C
   end
@@ -780,6 +783,7 @@ describe ::Perspective::Bindings::Container do
         module_instance.__bindings__[ :a ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         module_instance.a.__bindings__[ :b ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         module_instance.a.b.__bindings__[ :c ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        module_instance.a.b.c.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'sub module' do
@@ -796,6 +800,7 @@ describe ::Perspective::Bindings::Container do
         sub_module_instance.__bindings__[ :binding_one ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         sub_module_instance.__bindings__[ :binding_two ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         sub_module_instance.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.a.b.c.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'class' do
@@ -812,6 +817,7 @@ describe ::Perspective::Bindings::Container do
         class_instance.__bindings__[ :binding_one ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         class_instance.__bindings__[ :binding_two ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         class_instance.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.a.b.c.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'subclass' do
@@ -828,6 +834,7 @@ describe ::Perspective::Bindings::Container do
         subclass.__bindings__[ :binding_one ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         subclass.__bindings__[ :binding_two ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         subclass.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.a.b.c.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
   end
@@ -847,6 +854,7 @@ describe ::Perspective::Bindings::Container do
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__bindings__[ :binding_one ]
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__bindings__[ :binding_two ]
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__bindings__[ :content ]
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.a.b.c.__bindings__[ :content ]
       end
     end
     context 'instance of subclass' do
@@ -863,6 +871,7 @@ describe ::Perspective::Bindings::Container do
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__bindings__[ :binding_one ]
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__bindings__[ :binding_two ]
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__bindings__[ :content ]
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.a.b.c.__bindings__[ :content ]
       end
     end
   end
@@ -878,6 +887,7 @@ describe ::Perspective::Bindings::Container do
         module_instance.a.__binding__( :b ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         module_instance.a.b.__binding__( :c ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         module_instance.__binding__( :a_alias ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        module_instance.a.b.c.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'sub module' do
@@ -889,6 +899,7 @@ describe ::Perspective::Bindings::Container do
         sub_module_instance.__binding__( :binding_two ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         sub_module_instance.__binding__( :a_alias ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         sub_module_instance.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        sub_module_instance.a.b.c.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'class' do
@@ -900,6 +911,7 @@ describe ::Perspective::Bindings::Container do
         class_instance.__binding__( :binding_two ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         class_instance.__binding__( :a_alias ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         class_instance.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        class_instance.a.b.c.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
     context 'subclass' do
@@ -911,6 +923,7 @@ describe ::Perspective::Bindings::Container do
         subclass.__binding__( :binding_two ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         subclass.__binding__( :a_alias ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
         subclass.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+        subclass.a.b.c.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
       end
     end
   end
@@ -925,6 +938,7 @@ describe ::Perspective::Bindings::Container do
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__binding__( :binding_two )
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__binding__( :a_alias )
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.__binding__( :content )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_class.a.b.c.__binding__( :content )
       end
     end
     context 'instance of subclass' do
@@ -936,6 +950,7 @@ describe ::Perspective::Bindings::Container do
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__binding__( :binding_two )
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__binding__( :a_alias )
         ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.__binding__( :content )
+        ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding.should === instance_of_subclass.a.b.c.__binding__( :content )
       end
     end
   end
@@ -1025,6 +1040,70 @@ describe ::Perspective::Bindings::Container do
     end
   end
 
+  #########################
+  #  __autobind_object__  #
+  #########################
+
+  context '::__autobind_object__' do
+    it 'singleton does not respond to ::__autobind_object__' do
+      module_instance.respond_to?( :__autobind_object__ ).should be false
+    end
+  end
+
+  context '#__autobind_object__' do
+    shared_examples_for :__autobind_object__ do
+      let( :data_object ) do
+        object = ::Object.new
+        object.define_singleton_method( :content ) { :content_value }
+        object
+      end
+      it 'will query object for binding value for each binding whose name object responds to' do
+        instance_of_class.a.b.c.__container__.__autobind_object__( data_object )
+        instance_of_class.a.b.c.__container__.content.should == :content_value
+      end
+    end
+    context 'container#__autobind_object__' do
+      it_behaves_like :__autobind_object__
+    end
+    context 'instance_binding#__autobind_object__' do
+      it_behaves_like :__autobind_object__
+    end
+  end
+  
+  ########################
+  #  __autobind_array__  #
+  ########################
+
+  context '::__autobind_array__' do
+    it 'singleton does not respond to ::__autobind_array__' do
+      module_instance.respond_to?( :__autobind_array__ ).should be false
+    end
+  end
+
+  context '#__autobind_array__' do
+    shared_examples_for :__autobind_array__ do
+      it 'will treat an array as a list of values to be mapped to multiple containers' do
+      end
+    end
+  end
+
+  #######################
+  #  __autobind_hash__  #
+  #######################
+
+  context '::__autobind_hash__' do
+    it 'singleton does not respond to ::__autobind_hash__' do
+      module_instance.respond_to?( :__autobind_hash__ ).should be false
+    end
+  end
+  
+  context '#__autobind_hash__' do
+    shared_examples_for :__autobind_hash__ do
+      it 'will treat a hash as a mapped set of binding names to corresponding values' do
+      end
+    end
+  end
+
   ##################
   #  __autobind__  #
   ##################
@@ -1036,12 +1115,74 @@ describe ::Perspective::Bindings::Container do
   end
 
   context '#__autobind__' do
-    context 'instance of class' do
-      it '' do
+    context 'without method map' do
+      context 'multiple binding matches' do
+        # :binding_one => a.binding_one
+        # :binding_two => a.binding_two
+        # :a => { :content => content
+        #         :b => { :c => { :content => content } } }
+        # or 
+        # :a => { :content => content
+        #         :b => { :c => content } }
+        context 'hash' do
+          let( :data_object ) { { :binding_one => :binding_one_value,
+                                  :binding_two => :binding_two_value,
+                                  :content => :content_value,
+                                  :a => { :b => { :c => :c_content_value } } } }
+          before :each do
+            instance_of_class.__autobind__( data_object )
+          end
+          it 'will attempt to map each binding to corresponding hash key' do
+            instance_of_class.binding_one.should == binding_one_value
+          end
+        end
+        context 'object' do
+          let( :data_object ) do
+            object = ::Object.new
+            object.define_singleton_method( :binding_one ) { :binding_one_value }
+            object.define_singleton_method( :binding_two ) { :binding_two_value }
+            object.define_singleton_method( :content ) { :content_value }
+            object.define_singleton_method( :a ) { b }
+            object.define_singleton_method( :b ) { c }
+            object.define_singleton_method( :c ) { content }
+            object.define_singleton_method( :content ) { :a_content_value }
+            object
+          end
+          it 'will attempt to map each binding to corresponding method call' do
+          end
+        end
+      end
+      context ':content binding' do
+        # a.content
+        # a.b.c.content
+        it 'will map to a content binding if other bindings do not match' do
+        end
       end
     end
-    context 'instance of subclass' do
-      it '' do
+    context 'with method map' do
+      let( :method_map ) { { :binding_one => :binding_one_method, 
+                             :binding_two => :binding_two_method,
+                             :content => :content_method,
+                             :a => { :b => { :c => :c_content_method } } } }
+      context 'hash' do
+        it 'will attempt to map each binding to corresponding hash key' do
+        end
+      end
+      context 'object' do
+        let( :data_object ) do
+          object = ::Object.new
+          object.define_singleton_method( :binding_one_method ) { :binding_one_value }
+          object.define_singleton_method( :binding_two_method ) { :binding_two_value }
+          object.define_singleton_method( :content_method ) { :a_content_value }
+          object.define_singleton_method( :c_content_method ) { :c_content_value }
+          object
+        end
+        let( :method_map ) { { :binding_one => :binding_one_method, 
+                               :binding_two => :binding_two_method,
+                               :content => :content_method,
+                               :a => { :b => { :c => :c_content_method } } } }
+        it 'will attempt to map each binding to corresponding method call' do
+        end
       end
     end
   end

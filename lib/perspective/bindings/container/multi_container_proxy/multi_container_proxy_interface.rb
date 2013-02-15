@@ -32,6 +32,14 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
 
   end
 
+  ################################
+  #  __ensure_container_count__  #
+  ################################
+  
+  def __ensure_container_count__( container_count )
+    
+  end
+
   #########################
   #  respond_to_missing?  #
   #########################
@@ -85,7 +93,7 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
   #  __autobind__  #
   ##################
   
-  def __autobind__( data_object, method_map_hash = nil )
+  def __autobind__( data_object )
 
     container_class = nil
 
@@ -100,12 +108,12 @@ module ::Perspective::Bindings::Container::MultiContainerProxy::MultiContainerPr
           else
             this_container_instance = __create_additional_container__( this_index )
           end
-          this_container_instance.__autobind__( this_object, method_map_hash )
+          this_container_instance.__autobind__( this_object )
         end
 
       else
       
-        each { |this_container| this_container.__autobind__( this_object, method_map_hash ) }
+        each { |this_container| this_container.__autobind__( this_object ) }
       
     end
 
