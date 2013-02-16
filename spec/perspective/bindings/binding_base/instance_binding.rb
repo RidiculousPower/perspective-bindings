@@ -101,8 +101,8 @@ shared_examples_for :base_instance_binding do
     context 'with permitted value module' do
       let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Complex }
       before :each do
-        topclass_instance_binding.__extend__( permitted_value_module )
-        subclass_instance_binding.__extend__( permitted_value_module )
+        topclass_instance_binding.extend( permitted_value_module )
+        subclass_instance_binding.extend( permitted_value_module )
       end
       it 'topclass binding can report value valid' do
         topclass_instance_binding.__binding_value_valid__?( value ).should be true
@@ -171,8 +171,8 @@ shared_examples_for :base_instance_binding do
     context 'if __binding_value_valid__? is true' do
       let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Complex }
       before :all do
-        topclass_instance_binding.__extend__( permitted_value_module )
-        subclass_instance_binding.__extend__( permitted_value_module )
+        topclass_instance_binding.extend( permitted_value_module )
+        subclass_instance_binding.extend( permitted_value_module )
       end
       it 'topclass binding will accept valid values' do
         topclass_instance_binding.__value__.should be nil
@@ -215,8 +215,8 @@ shared_examples_for :base_instance_binding do
     let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Text }
     let( :value ) { 'some value' }
     before :all do
-      topclass_instance_binding.__extend__( permitted_value_module ).__value__ = value
-      subclass_instance_binding.__extend__( permitted_value_module ).__value__ = value
+      topclass_instance_binding.extend( permitted_value_module ).__value__ = value
+      subclass_instance_binding.extend( permitted_value_module ).__value__ = value
     end
     it 'topclass binding will accept valid values' do
       topclass_instance_binding.__value__.should == value

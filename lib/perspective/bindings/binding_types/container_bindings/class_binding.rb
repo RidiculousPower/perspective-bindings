@@ -1,6 +1,6 @@
 
 module ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
-  
+
   include ::CascadingConfiguration::Setting
   include ::Perspective::Bindings::Container::Configuration
   include ::Perspective::Bindings::Container::ObjectAndBindingInstance
@@ -17,7 +17,7 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
   def initialize( bound_container, *args, & configuration_proc )
     
     super( bound_container, *args, & configuration_proc )
-    
+
     __initialize_for_container_class__( container_class = args[ 1 ] )
     
   end

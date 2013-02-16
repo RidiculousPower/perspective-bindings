@@ -12,7 +12,6 @@ describe ::Perspective::Bindings::BindingBase::InstanceBinding do
     let( :instance_binding_class ) do
       ::Class.new do
         include( ::Perspective::Bindings::BindingBase::InstanceBinding )
-        alias_method( :__extend__, :extend )
       end
     end
 

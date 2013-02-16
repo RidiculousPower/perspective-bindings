@@ -11,18 +11,6 @@ module ::Perspective::Bindings::IncludeExtend
 
       include( ::Perspective::Bindings::IncludeExtend::InitializeInstances )
 
-      #################
-      #  __include__  #
-      #################
-
-      alias_method :__include__, :include
-
-      ################
-      #  __extend__  #
-      ################
-
-      alias_method :__extend__, :extend
-
     end
     
     super
@@ -38,18 +26,6 @@ module ::Perspective::Bindings::IncludeExtend
     module_or_class_instance.module_eval do
 
       @child_binding_types = ::Array::Unique.new( self )
-
-      #################
-      #  __include__  #
-      #################
-
-      alias_module_method :__include__, :include
-
-      ################
-      #  __extend__  #
-      ################
-
-      alias_module_method :__extend__, :extend
 
     end
 

@@ -26,7 +26,7 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
     container_instance = nil
     
     if container_class
-      __extend__( container_class::Controller::InstanceBindingMethods )
+      extend( container_class::Controller::InstanceBindingMethods )
       container_instance = container_class.new_nested_instance( self )
       # :__store_initialized_container_instance__ is used instead of :__container__= 
       # so that we can store without any overloaded effects.
@@ -126,7 +126,7 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
           instance_binding_methods_class = container_instance.class
       end
 
-      __extend__( instance_binding_methods_class::Controller::InstanceBindingMethods )
+      extend( instance_binding_methods_class::Controller::InstanceBindingMethods )
     
       # Normal inheritance when container class is defined on class binding is
       # Class Instance => Class Binding => Instance Binding => Container Instance.

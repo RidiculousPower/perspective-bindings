@@ -23,26 +23,4 @@ describe ::Perspective::Bindings::BindingTypes::PropertyBindings::InstanceBindin
   
   it_behaves_like :base_instance_binding
 
-  #########################
-  #  respond_to_missing?  #
-  #########################
-  
-  context '#respond_to_missing?' do
-    it 'should not have any keys in non-forwarding-methods' do
-      instance_binding_class::NonForwardingMethodsArray.each do |this_key|
-        topclass_instance_binding.respond_to_missing?( this_key, true ).should be false
-      end
-    end
-  end
-  
-  ####################
-  #  method_missing  #
-  ####################
-	
-  context '#method_missing' do
-  	it 'forwards almost all methods to its value' do
-      topclass_instance_binding.respond_to_missing?( :some_other_method, true ).should == true
-    end
-  end
-
 end
