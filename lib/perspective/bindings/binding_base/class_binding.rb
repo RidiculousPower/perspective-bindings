@@ -23,17 +23,19 @@ module ::Perspective::Bindings::BindingBase::ClassBinding
     @__root__ = ( @__bound_container__ = bound_container ).__root__
 
     case binding_name_or_parent = args[ 0 ]
+      # binding_name
       when ::Symbol, ::String
         __validate_binding_name__( binding_name = binding_name_or_parent )
         self.__name__ = binding_name
+      # ancestor binding
       else
         ::CascadingConfiguration.register_parent( self, @__parent_binding__ = binding_name_or_parent )
     end
 
     __initialize_route__
 
-    __configure__( & configuration_proc ) if block_given?
-    
+    __configure__( true, & configuration_proc ) if block_given?
+
   end
   
   ##########################

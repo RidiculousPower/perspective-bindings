@@ -1,4 +1,6 @@
 
+require_relative '../../binding_base/class_binding.rb'
+
 shared_examples_for :container_class_binding do
 
   it_behaves_like :base_class_binding

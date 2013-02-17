@@ -5,8 +5,6 @@ require_relative 'shared.rb'
 
 shared_examples_for :base_class_binding do
 
-  setup_base_class_binding_tests
-  
   it_behaves_like :shared_binding do
     let( :topclass_binding ) { topclass_class_binding }
     let( :subclass_binding ) { subclass_class_binding }
@@ -33,8 +31,8 @@ shared_examples_for :base_class_binding do
   
   context '#__validate_binding_name__' do
     let( :binding_name ) { :new }
-    let( :topclass__validate_binding_name__ ) { ::Proc.new { topclass_class_binding } }
-    let( :subclass__validate_binding_name__ ) { ::Proc.new { subclass_class_binding } }
+    let( :topclass__validate_binding_name__ ) { ::Proc.new { topclass_class_binding.__validate_binding_name__( binding_name ) } }
+    let( :subclass__validate_binding_name__ ) { ::Proc.new { subclass_class_binding.__validate_binding_name__( binding_name ) } }
     it 'topclass prohibits :new' do
       topclass__validate_binding_name__.should raise_error( ::ArgumentError )
     end
@@ -48,10 +46,10 @@ shared_examples_for :base_class_binding do
   #############################
 
   context '#__configuration_procs__' do
-    it 'topclass binding print string is root plus route string' do
+    it 'topclass binding has proc' do
       topclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc ]
     end
-    it 'subclass binding print string is root plus route string' do
+    it 'subclass binding has topclass proc plus additional proc' do
       subclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc, subclass_configuration_proc ]
     end
   end
@@ -62,12 +60,12 @@ shared_examples_for :base_class_binding do
 
   context '#__configure__' do
     let( :another_block ) { ::Proc.new { puts 'another block' } }
-    it 'topclass binding print string is root plus route string' do
+    it 'topclass binding can configure via proc' do
       topclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc ]
       topclass_class_binding.__configure__( & another_block )
       topclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc, another_block ]
     end
-    it 'subclass binding print string is root plus route string' do
+    it 'subclass can configure its own procs in addition' do
       subclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc, subclass_configuration_proc ]
       subclass_class_binding.__configure__( & another_block )
       topclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc ]

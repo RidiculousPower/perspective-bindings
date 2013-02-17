@@ -15,7 +15,7 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
   # @overload new( bound_container, ancestor_binding )
   #
   def initialize( bound_container, *args, & configuration_proc )
-    
+
     super( bound_container, *args, & configuration_proc )
 
     __initialize_for_container_class__( container_class = args[ 1 ] )

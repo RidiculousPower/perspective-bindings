@@ -5,8 +5,6 @@ require_relative 'shared.rb'
 
 shared_examples_for :base_instance_binding do
 
-  setup_instance_binding_tests
-  
   it_behaves_like :shared_binding do
     let( :topclass_binding ) { topclass_instance_binding }
     let( :subclass_binding ) { subclass_instance_binding }
