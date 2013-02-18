@@ -34,7 +34,7 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
       # so that we can store without any overloaded effects.
       __store_initialized_container_instance__( container_instance )
       # if we have a value, autobind it to new container
-      container_instance.__autobind__( @__value__ )
+      __autobind__( @__value__ )
     end
     
     return container_instance
@@ -127,7 +127,7 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
       ::CascadingConfiguration.replace_parent( self, @__parent_binding__, container_instance )
       
       # if we have a value, autobind it to new container
-      container_instance.__autobind__( @__value__ )
+      __autobind__( @__value__ )
       
     end
     
@@ -189,7 +189,7 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
   #  __value__=  #
   ################
 
-  def __value__=( object )
+  def __value__=( data_object )
 
     # even if we have an array we store it in @__value__
     # we call super after autobinding to prevent storage if we have an array but multiple not permitted
@@ -208,7 +208,7 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
       end
     end
     
-    return object
+    return data_object
     
   end
 
