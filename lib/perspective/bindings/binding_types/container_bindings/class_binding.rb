@@ -60,11 +60,29 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
 
   attr_configuration  :__container_class__
 
+  ##########################
+  #  __container_class__=  #
+  ##########################
+
+  def __container_class__=( container_class )
+    
+    __validate_container_class__( container_class )
+    
+    return super
+    
+  end
+
   #####################
   #  container_class  #
   #####################
 
   Controller.alias_module_and_instance_methods( :container_class, :__container_class__ )
+
+  ######################
+  #  container_class=  #
+  ######################
+
+  Controller.alias_module_and_instance_methods( :container_class=, :__container_class__= )
   
   ######################
   #  __nested_route__  #

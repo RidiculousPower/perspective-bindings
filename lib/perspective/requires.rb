@@ -77,10 +77,7 @@ files = [
   'binding_types/container_bindings/class_binding',
   'binding_types/container_bindings/instance_binding',
   
-  'container/multi_container_proxy/multi_container_proxy_interface',
-  'container/multi_container_proxy',
   'container/binding_methods',
-  'container/binding_methods/instance_binding_methods',
   'container/singleton_and_object_instance',
   'container/singleton_instance',
   'container/class_instance',

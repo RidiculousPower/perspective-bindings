@@ -121,6 +121,12 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings
     end
     
   end
+
+  ###############
+  #  attr_list  #
+  ###############
+
+  define_binding_type( :list )
   
   ##################
   #  attr_binding  #

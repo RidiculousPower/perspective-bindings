@@ -34,7 +34,7 @@ module ::Perspective::Bindings::BindingBase::ClassBinding
 
     __initialize_route__
 
-    __configure__( true, & configuration_proc ) if block_given?
+    __configure__( & configuration_proc ) if block_given?
 
   end
   

@@ -11,6 +11,10 @@ shared_examples_for :base_class_binding do
     let( :topclass_bound_container ) { topclass_bound_container_class }
     let( :subclass_bound_container ) { subclass_bound_container_class }
   end
+
+  let( :topclass_class_binding_parent_binding ) { nil }
+  let( :topclass_class_binding_configuration_procs ) { [ topclass_configuration_proc ] }
+  let( :subclass_class_binding_configuration_procs ) { [ topclass_configuration_proc, subclass_configuration_proc ] }
   
   ########################
   #  __parent_binding__  #
@@ -18,7 +22,7 @@ shared_examples_for :base_class_binding do
   
   context '#__parent_binding__' do
     it 'topclass binding has no parent binding' do
-      topclass_class_binding.__parent_binding__.should == nil
+      topclass_class_binding.__parent_binding__.should == topclass_class_binding_parent_binding
     end
     it 'subclass binding has topclass binding as parent' do
       subclass_class_binding.__parent_binding__.should == topclass_class_binding
@@ -47,10 +51,10 @@ shared_examples_for :base_class_binding do
 
   context '#__configuration_procs__' do
     it 'topclass binding has proc' do
-      topclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc ]
+      topclass_class_binding.__configuration_procs__.should == topclass_class_binding_configuration_procs
     end
     it 'subclass binding has topclass proc plus additional proc' do
-      subclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc, subclass_configuration_proc ]
+      subclass_class_binding.__configuration_procs__.should == subclass_class_binding_configuration_procs
     end
   end
 
@@ -61,15 +65,17 @@ shared_examples_for :base_class_binding do
   context '#__configure__' do
     let( :another_block ) { ::Proc.new { puts 'another block' } }
     it 'topclass binding can configure via proc' do
-      topclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc ]
+      topclass_class_binding.__configuration_procs__.should == topclass_class_binding_configuration_procs
       topclass_class_binding.__configure__( & another_block )
-      topclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc, another_block ]
+      topclass_class_binding_configuration_procs.push( another_block )
+      topclass_class_binding.__configuration_procs__.should == topclass_class_binding_configuration_procs
     end
     it 'subclass can configure its own procs in addition' do
-      subclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc, subclass_configuration_proc ]
+      subclass_class_binding.__configuration_procs__.should == subclass_class_binding_configuration_procs
       subclass_class_binding.__configure__( & another_block )
-      topclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc ]
-      subclass_class_binding.__configuration_procs__.should == [ topclass_configuration_proc, subclass_configuration_proc, another_block ]
+      subclass_class_binding_configuration_procs.push( another_block )
+      topclass_class_binding.__configuration_procs__.should == topclass_class_binding_configuration_procs
+      subclass_class_binding.__configuration_procs__.should == subclass_class_binding_configuration_procs
     end
   end
 

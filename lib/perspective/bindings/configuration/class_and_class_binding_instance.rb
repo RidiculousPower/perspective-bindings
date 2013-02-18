@@ -19,7 +19,7 @@ module ::Perspective::Bindings::Configuration::ClassAndClassBindingInstance
   #  __configure__  #
   ###################
   
-  def __configure__( called_from_initialize = false, & configuration_block )
+  def __configure__( & configuration_block )
 
     __configuration_procs__.push( configuration_block )
     

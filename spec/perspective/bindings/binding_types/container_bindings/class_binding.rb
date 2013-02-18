@@ -3,8 +3,6 @@ require_relative '../../binding_base/class_binding.rb'
 
 shared_examples_for :container_class_binding do
 
-  it_behaves_like :base_class_binding
-
   ##################################
   #  __validate_container_class__  #
   ##################################
@@ -22,7 +20,7 @@ shared_examples_for :container_class_binding do
         end
        end
       it 'will raise Perspective::Bindings::Exception::ContainerClassLacksBindings' do
-        ::Proc.new { topclass_class_binding_A.__validate_container_class__( nested_container_class_A ) }.should raise_error( ::Perspective::Bindings::Exception::ContainerClassLacksBindings )
+        ::Proc.new { topclass_class_binding_A.__validate_container_class__( mock_container_class ) }.should raise_error( ::Perspective::Bindings::Exception::ContainerClassLacksBindings )
       end
     end
     context 'container validates' do
@@ -49,12 +47,12 @@ shared_examples_for :container_class_binding do
         end
        end
       it 'will raise Perspective::Bindings::Exception::ContainerClassLacksBindings' do
-        ::Proc.new { topclass_class_binding_A }.should raise_error( ::Perspective::Bindings::Exception::ContainerClassLacksBindings )
+        ::Proc.new { topclass_class_binding_A.__container_class__ = mock_container_class }.should raise_error( ::Perspective::Bindings::Exception::ContainerClassLacksBindings )
       end
     end
     context 'container validates' do
       it 'will be extended by container class binding methods' do
-        topclass_class_binding_A.is_a?( mock_container_class::Controller::ClassBindingMethods ).should be true
+        topclass_class_binding_A.is_a?( nested_container_class_A::Controller::ClassBindingMethods ).should be true
       end
       it 'top binding will have container class as parent' do
         ::CascadingConfiguration.configuration( topclass_class_binding_A, :__bindings__ ).is_parent?( nested_container_class_A ).should be true
@@ -96,7 +94,7 @@ shared_examples_for :container_class_binding do
 
   context '#container_class' do
     it 'is an alias for #__container_class__' do
-      class_binding_class.instance_method( :container_class ).should == class_binding_class.instance_method( :__container_class__ )
+      topclass_class_binding_A.class.instance_method( :container_class ).should == topclass_class_binding_A.class.instance_method( :__container_class__ )
     end
   end
 

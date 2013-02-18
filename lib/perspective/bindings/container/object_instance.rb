@@ -228,12 +228,8 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
   def __autobind_binding__( data_binding )
     
-    found_a_binding = false
-    
-    if __has_binding__?( data_binding )
-      this_data_binding_name = data_binding.__name__
-      __binding__( this_data_binding_name ).__autobind_binding__( data_binding )
-      found_a_binding = true
+    if found_a_binding = __has_binding__?( data_binding_name = data_binding.__name__ )
+      __binding__( data_binding_name ).__autobind_binding__( data_binding )
     end
 
     return found_a_binding
@@ -250,23 +246,12 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
     __bindings__.each do |this_binding_name, this_binding|
       if data_object.respond_to?( this_binding_name )
-        this_value = data_object.__send__( this_binding_name )
-        this_binding.__autobind__( this_value )
+        this_binding.__value__ = data_object.__send__( this_binding_name )
         found_a_binding = true
       end    
     end
 
     return found_a_binding
-    
-  end
-
-  ########################
-  #  __autobind_array__  #
-  ########################
-
-  def __autobind_array__( data_array )
-    
-    raise ::ArgumentError, 'Autobinding an Array instance to a container has ambiguous meaning.'
     
   end
 
@@ -279,9 +264,10 @@ module ::Perspective::Bindings::Container::ObjectInstance
     found_a_binding = false
     
     __bindings__.each do |this_binding_name, this_binding|
-      this_data_value = data_hash[ this_binding_name ]
-      this_binding.__autobind__( this_data_value )
-      found_a_binding = true
+      if data_hash.has_key?( this_binding_name )
+        this_binding.__value__ = data_hash[ this_binding_name ]
+        found_a_binding = true
+      end
     end
     
     return found_a_binding
