@@ -2,7 +2,7 @@
 module ::Perspective::Bindings::Configuration::ClassAndClassBindingInstance
 
   include ::CascadingConfiguration::Array::Unique
-
+  
   #############################
   #  __configuration_procs__  #
   #############################

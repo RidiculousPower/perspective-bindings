@@ -8,6 +8,16 @@ module ::Perspective::Bindings::Container::SingletonInstance
   include ::Perspective::Bindings::Container::Configuration
 
   ##############
+  #  __name__  #
+  ##############
+  
+  def __name__
+    
+    return name
+    
+  end
+
+  ##############
   #  __root__  #
   ##############
   
