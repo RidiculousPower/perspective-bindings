@@ -180,16 +180,12 @@ module ::Perspective::Bindings::Container::ObjectInstance
         found_a_binding = __autobind_object__( data_object )
     end
 
-    unless found_a_binding
-      if respond_to?( :content= )
-        self.content = data_object
-      else
-        raise ::Perspective::Bindings::Exception::AutobindFailed, 
-                ':autobind was called on ' << self.to_s << ' but data object did not respond ' <<
-                'to the name of any declared bindings in ' << self.to_s << 
-                ', no method map was provided, and ' << self.to_s << 
-                ' does not respond to :' << :content.to_s << '.'
-      end
+    unless found_a_binding or __autobind_content__( data_object )
+      raise ::Perspective::Bindings::Exception::AutobindFailed, 
+              ':autobind was called on ' << self.to_s << ' but data object did not respond ' <<
+              'to the name of any declared bindings in ' << self.to_s << 
+              ', no method map was provided, and ' << self.to_s << 
+              ' does not respond to :' << :content.to_s << '.'
     end
     
     return self
@@ -201,6 +197,16 @@ module ::Perspective::Bindings::Container::ObjectInstance
   ##############
   
   alias_method  :autobind, :__autobind__
+
+  ########################
+  #  __autobind_array__  #
+  ########################
+
+  def __autobind_array__( data_binding )
+    
+    raise ::ArgumentError, 'Container does not know how to resolve Array value for autobind.'
+    
+  end
 
   ############################
   #  __autobind_container__  #
@@ -225,12 +231,14 @@ module ::Perspective::Bindings::Container::ObjectInstance
   ##########################
   #  __autobind_binding__  #
   ##########################
-
+  
   def __autobind_binding__( data_binding )
     
     if found_a_binding = __has_binding__?( data_binding_name = data_binding.__name__ )
-      __binding__( data_binding_name ).__autobind_binding__( data_binding )
+      __binding__( data_binding_name ).__autobind_binding__( data_binding.__value__ )
     end
+    
+    found_a_binding = true if __autobind_container__( data_binding )
 
     return found_a_binding
     
@@ -246,11 +254,13 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
     __bindings__.each do |this_binding_name, this_binding|
       if data_object.respond_to?( this_binding_name )
-        this_binding.__value__ = data_object.__send__( this_binding_name )
+        this_binding.__autobind__( data_object.__send__( this_binding_name ) )
         found_a_binding = true
       end    
     end
-
+    
+    found_a_binding = __autobind_content__( data_object ) unless found_a_binding
+    
     return found_a_binding
     
   end
@@ -265,12 +275,29 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
     __bindings__.each do |this_binding_name, this_binding|
       if data_hash.has_key?( this_binding_name )
-        this_binding.__value__ = data_hash[ this_binding_name ]
+        this_binding.__autobind__( data_hash[ this_binding_name ] )
         found_a_binding = true
       end
     end
     
     return found_a_binding
+    
+  end
+  
+  ##########################
+  #  __autobind_content__  #
+  ##########################
+  
+  def __autobind_content__( data_object )
+    
+    found_content_binding = false
+    
+    if __has_binding__?( :content )
+      __binding__( :content ).__autobind__( data_object )
+      found_content_binding = true
+    end
+    
+    return found_content_binding
     
   end
   
@@ -298,4 +325,14 @@ module ::Perspective::Bindings::Container::ObjectInstance
   
   alias_method  :nested_route, :__nested_route__
 
+  ########
+  #  []  #
+  ########
+  
+  def []( binding_name )
+
+    return __binding__( binding_name )
+    
+  end
+  
 end

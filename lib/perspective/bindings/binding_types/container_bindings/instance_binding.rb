@@ -151,9 +151,9 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
 
   def __create_additional_container__( container_class = @__parent_binding__.__container_class__ )
     
-    @__containers__ ||= [ ]
+    @__containers__ ||= [ __container__ ]
     
-    new_container_instance = container_class.new_nested_instance( self )
+    new_container_instance = container_class.new_nested_instance( __container__ )
     index = @__containers__.size
     @__containers__.push( new_container_instance )
     new_container_instance.__initialize_for_index__( index )
@@ -171,58 +171,52 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
     unless container_class
       raise ::ArgumentError, 'Could not create any containers because no container class was defined or provided.'
     end
+
+    if container_count > 1
+      
+      unless __permits_multiple__?
+        raise ::ArgumentError, "Multiple not permitted for " << container.to_s << '.' 
+      end
     
-    case container_count
-      when 1
-        __container__
-      else
-        until @__containers__ and @__containers__.size == container_count
-          __create_additional_container__( container_class )
-        end
+      case container_count
+        when 1
+          __container__
+        else
+          while ! @__containers__ or @__containers__.size < container_count
+            __create_additional_container__( container_class )
+          end
+      end
+      
     end
     
     return self
     
   end
 
-  ################
-  #  __value__=  #
-  ################
+  ##################
+  #  __autobind__  #
+  ##################
 
-  def __value__=( data_object )
-
-    # even if we have an array we store it in @__value__
-    # we call super after autobinding to prevent storage if we have an array but multiple not permitted
-    super
+  def __autobind__( data_object )
         
-    if container = __container__
-      case data_object
-        when nil
-          # nothing to do
-        when ::Array
-          __autobind_array__( data_object )
-        when ::Hash
-          __autobind_hash__( data_object )
-        else
-          __autobind_object__( data_object )
-      end
+    case data_object
+      when nil
+        @__value__ = nil
+      when ::Array
+        __autobind_array__( data_object )
+      when ::Hash
+        __autobind_hash__( data_object )
+      when ::Perspective::Bindings::BindingBase::InstanceBinding
+        __autobind_binding__( data_object )
+      when ::Perspective::Bindings::Container::ObjectInstance
+        __autobind_container__( data_object )
+      else
+        __autobind_object__( data_object )
     end
     
     return data_object
     
   end
-
-  ############
-  #  value=  #
-  ############
-
-  alias_method  :value=, :__value__=
-
-  ##################
-  #  __autobind__  #
-  ##################
-  
-  alias_method :__autobind__, :__value__=
 
   ##############
   #  autobind  #
@@ -235,12 +229,8 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
   ########################
 
   def __autobind_array__( data_array )
-
-    unless __permits_multiple__?
-      raise ::ArgumentError, "Received array when multiple not permitted for " << container.to_s << '.' 
-    end
     
-    @__value__ = data_array
+    self.__value__ = data_array
     
     case autobind_item_count = data_array.size
       when 0
@@ -251,7 +241,9 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
       else
         # array maps each index to each of multiple containers
         __ensure_container_count__( autobind_item_count )
-        @__containers__.each { |this_container| this_container.__autobind_object__ }
+        @__containers__.each_with_index do |this_container, this_index|
+          this_container.__autobind_object__( data_array[ this_index ] )
+        end
     end
     
     return self
@@ -264,9 +256,10 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
 
   def __autobind_container__( data_container )
 
-    @__value__ = data_container
-    container.__autobind_container__( data_object ) if container = __container__
-
+    if container = __container__
+      container.__autobind_container__( data_container )
+    end
+    
     return self
 
   end
@@ -277,8 +270,17 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
 
   def __autobind_binding__( data_binding )
     
-    @__value__ = data_binding
-    container.__autobind_binding__( data_object ) if container = __container__
+    # if we identify as binding name, copy value
+    if data_binding.__name__ == __name__
+      self.__value__ = data_binding.__value__
+    end
+    
+    # if we have sub-bindings that match, copy them
+    if container = __container__
+      __autobind_container__( data_binding )
+    elsif data_binding.__has_binding__?( :content )
+      __autobind_binding__( data_binding.content )
+    end
     
     return self
     
@@ -290,8 +292,11 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
 
   def __autobind_object__( data_object )
 
-    @__value__ = data_object
-    container.__autobind_object__( data_object ) if container = __container__
+    if container = __container__
+      container.__autobind_object__( data_object )
+    else
+      self.__value__ = data_object
+    end
 
     return self
     
@@ -303,8 +308,9 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
   
   def __autobind_hash__( data_hash )
 
-    @__value__ = data_hash
-    container.__autobind_hash__( data_hash ) if container = __container__
+    if container = __container__
+      container.__autobind_hash__( data_hash )
+    end
 
     return self
     
@@ -314,19 +320,32 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
   #  []  #
   ########
   
-  def []( index )
+  def []( index_or_binding_name )
     
     container = nil
     
-    if __permits_multiple__?
-      container = @__containers__ ? @__containers__[ index ] : __container__      
-    else
-      case index
-        when 0, -1
-          container = __container__
-      end
+    case index_or_binding_name
+
+      when ::Symbol, ::String
+
+        container = __binding__( binding_name = index_or_binding_name )
+
+      else
+        
+        index = index_or_binding_name
+        
+        __ensure_container_count__( index + 1 )
+
+        case index
+          when 0
+            container = __container__
+          else
+            @__containers__ ||= [ __container__ ]
+            container = @__containers__[ index ]
+        end
+
     end
-    
+        
     return container
     
   end
@@ -337,26 +356,31 @@ module ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
   
   def []=( index, container_instance )
 
-    if __permits_multiple__?
-      if @__containers__
-        @__containers__[ index ] = container_instance
-      else
-        case index
-          when 0, -1
-            self.__containers__ = container_instance
+    __ensure_container_count__( index + 1 )
+
+    case index
+      when 0
+        self.__container__ = container_instance
+      when -1
+        if __permits_multiple__?
+          if @__containers__
+            @__containers__[ index ] = container_instance
           else
-            @__containers__ = [ __container__ ]
-        end
-      end
-      @__containers__ ? @__containers__[ index ] = container_instance 
-                      : self.__container__ = container_instance
-    else
-      case index
-        when 0, -1
-          self.__container__ = container_instance
+            self.__container__ = container_instance
+          end
         else
-          raise ::ArgumentError, ':' << __route_print_string__.to_s << ' does not permit multiple containers.'
-      end
+          self.__container__ = container_instance
+        end
+      else
+        if index < 0
+          if ! @__containers__
+            raise IndexError, 'index ' << index.to_s << ' too small for array; minimum: -1'
+          elsif -@__containers__.size < index
+            raise IndexError, 'index ' << index.to_s << ' too small for array; minimum: ' << 
+                              (-@__containers__.size).to_s
+          end
+        end
+        @__containers__[ index ] = container_instance
     end
 
     return container_instance

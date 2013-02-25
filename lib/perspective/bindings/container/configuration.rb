@@ -10,7 +10,7 @@ module ::Perspective::Bindings::Container::Configuration
     binding_instance = nil
 
     unless binding_instance = super
-      binding_instance = __local_aliases_to_bindings__[ binding_name ]
+      binding_instance = __local_aliases_to_bindings__[ binding_name.to_sym ]
     end
     
     return binding_instance

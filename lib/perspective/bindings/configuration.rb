@@ -15,7 +15,7 @@ module ::Perspective::Bindings::Configuration
     
     binding_instance = nil
 
-    unless binding_instance = __bindings__[ binding_name ]
+    unless binding_instance = __bindings__[ binding_name = binding_name.to_sym ]
       if binding_alias = __binding_aliases__[ binding_name ]
         binding_instance = __bindings__[ binding_alias ]
       end

@@ -74,6 +74,14 @@ module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
               # We want the same instance bindings we attached to the instance binding that
               # this container is attached to.
               child_instance = binding_instance
+              
+            when ::Perspective::Bindings::Container::ObjectInstance
+              
+              # We were created by an instance binding as a multiple container.
+              #
+              # We inherit from the first container in the list; we need new bindings.
+              child_instance = binding_instance.class::InstanceBinding.new( binding_instance.__parent_binding__, 
+                                                                            instance )
 
           end
             
