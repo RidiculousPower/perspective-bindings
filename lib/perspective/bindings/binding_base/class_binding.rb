@@ -2,7 +2,7 @@
 module ::Perspective::Bindings::BindingBase::ClassBinding
 
   include ::Perspective::Bindings::BindingBase
-  include ::Perspective::Bindings::Configuration::ClassAndClassBindingInstance
+  include ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance
   
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Array::Unique

@@ -2,7 +2,7 @@
 module ::Perspective::Bindings::BindingBase
 
   include ::Perspective::Bindings::Configuration
-  include ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
+  include ::Perspective::Bindings::ObjectAndBindingInstance
 
   include ::CascadingConfiguration::Setting
   

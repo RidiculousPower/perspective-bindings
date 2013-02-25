@@ -60,7 +60,7 @@ require_relative 'container_and_bindings_shared_examples.rb'
 
 shared_examples_for :container_and_bindings do
 
-  describe ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding do
+  describe ::Perspective::BindingTypes::ContainerBindings::ClassBinding do
     it_behaves_like :base_class_binding do
       let( :top_singleton_instance ) { module_instance }
       let( :sub_singleton_instance ) { sub_module_instance }
@@ -85,7 +85,7 @@ shared_examples_for :container_and_bindings do
     end
   end
 
-  describe ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding do
+  describe ::Perspective::BindingTypes::ContainerBindings::InstanceBinding do
 
     let( :top_singleton_instance ) { class_instance }
     let( :sub_singleton_instance ) { subclass }
@@ -139,13 +139,13 @@ shared_examples_for :container_and_bindings do
         end
       end
       context 'class instance' do
-        it 'is owned by Perspective::Bindings::Container::ClassInstance' do
-          class_instance.method( :new ).owner.should be ::Perspective::Bindings::Container::ClassInstance
+        it 'is owned by Perspective::Bindings::Container::SingletonInstance' do
+          class_instance.method( :new ).owner.should be ::Perspective::Bindings::Container::SingletonInstance
         end
       end
       context 'subclass instance' do
-        it 'is owned by Perspective::Bindings::Container::ClassInstance' do
-          subclass.method( :new ).owner.should be ::Perspective::Bindings::Container::ClassInstance
+        it 'is owned by Perspective::Bindings::Container::SingletonInstance' do
+          subclass.method( :new ).owner.should be ::Perspective::Bindings::Container::SingletonInstance
         end
       end
     end
@@ -166,13 +166,13 @@ shared_examples_for :container_and_bindings do
         end
       end
       context 'class' do
-        it 'is owned by Perspective::Bindings::Container::ClassInstance' do
-          class_instance.method( :new_nested_instance ).owner.should be ::Perspective::Bindings::Container::ClassInstance
+        it 'is owned by Perspective::Bindings::Container::SingletonInstance' do
+          class_instance.method( :new_nested_instance ).owner.should be ::Perspective::Bindings::Container::SingletonInstance
         end
       end
       context 'subclass' do
-        it 'is owned by Perspective::Bindings::Container::ClassInstance' do
-          subclass.method( :new_nested_instance ).owner.should be ::Perspective::Bindings::Container::ClassInstance
+        it 'is owned by Perspective::Bindings::Container::SingletonInstance' do
+          subclass.method( :new_nested_instance ).owner.should be ::Perspective::Bindings::Container::SingletonInstance
         end
       end
     end
@@ -655,7 +655,7 @@ shared_examples_for :container_and_bindings do
         let( :root ) { module_instance }
         it 'root container bindings' do
           root.__bindings__.should == { :a => root.a }
-          root.__bindings__[ :a ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+          root.__bindings__[ :a ].should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
         end
         it_behaves_like( :"self.__bindings__( base_module )" )
       end

@@ -2,9 +2,9 @@
 module ::Perspective::Bindings::Container::SingletonInstance
 
   include ::Perspective::Bindings::Configuration
-  include ::Perspective::Bindings::Configuration::ClassAndClassBindingInstance
+  include ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance
   include ::Perspective::Bindings::Container::SingletonAndObjectInstance
-  include ::Perspective::Bindings::BindingTypes::ContainerBindings
+  include ::Perspective::BindingTypes::ContainerBindings
   include ::Perspective::Bindings::Container::Configuration
 
   ##############

@@ -1,5 +1,5 @@
 
-module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
+module ::Perspective::Bindings::ObjectAndBindingInstance
 
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Array::Unique

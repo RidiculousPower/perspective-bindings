@@ -1,5 +1,5 @@
 
-module ::Perspective::Bindings::Configuration::ClassAndClassBindingInstance
+module ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance
 
   include ::CascadingConfiguration::Array::Unique
   

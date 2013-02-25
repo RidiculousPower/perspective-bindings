@@ -15,7 +15,7 @@ module ::Perspective::Bindings
   module Container
     module Nested
     end
-		module ClassInstance
+		module SingletonInstance
       module Methods
       end
 		end

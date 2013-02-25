@@ -2,7 +2,7 @@
 module ::Perspective::Bindings::Container::ObjectInstance
 
   include ::Perspective::Bindings::Configuration
-  include ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
+  include ::Perspective::Bindings::ObjectAndBindingInstance
   include ::Perspective::Bindings::Container::Configuration
   include ::Perspective::Bindings::Container::ObjectAndBindingInstance
 

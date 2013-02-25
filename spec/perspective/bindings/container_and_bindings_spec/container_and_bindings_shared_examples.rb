@@ -456,15 +456,15 @@ end
 shared_examples_for :"self.__bindings__( base_module )" do
   it 'nested binding A bindings' do
     root.a.__bindings__.should == { :b => root.a.b }
-    root.a.__bindings__[ :b ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+    root.a.__bindings__[ :b ].should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   end
   it 'nested binding A_B bindings' do
     root.a.b.__bindings__.should == { :c => root.a.b.c }
-    root.a.b.__bindings__[ :c ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+    root.a.b.__bindings__[ :c ].should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   end
   it 'nested binding A_B_C bindings' do
     root.a.b.c.__bindings__.should == { :content => root.a.b.c.content }
-    root.a.b.c.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+    root.a.b.c.__bindings__[ :content ].should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   end
   it 'nested binding A_B_C_content bindings' do
     root.a.b.c.content.__bindings__.should == { }
@@ -478,10 +478,10 @@ shared_examples_for :"self.__bindings__( sub_module_and_below )" do
                                   :content => root.content,
                                   :binding_one => root.binding_one,
                                   :binding_two => root.binding_two }
-    root.__bindings__[ :a ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
-    root.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
-    root.__bindings__[ :binding_one ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
-    root.__bindings__[ :binding_two ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+    root.__bindings__[ :a ].should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
+    root.__bindings__[ :content ].should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
+    root.__bindings__[ :binding_one ].should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
+    root.__bindings__[ :binding_two ].should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   end
   it 'nested binding content bindings' do
     root.content.__bindings__.should == { }
@@ -500,10 +500,10 @@ shared_examples_for :__bindings__ do
                                            :content => root_instance.content,
                                            :binding_one => root_instance.binding_one,
                                            :binding_two => root_instance.binding_two }
-    root_instance.__bindings__[ :a ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
-    root_instance.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
-    root_instance.__bindings__[ :binding_one ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
-    root_instance.__bindings__[ :binding_two ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.__bindings__[ :a ].should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.__bindings__[ :content ].should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.__bindings__[ :binding_one ].should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.__bindings__[ :binding_two ].should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   end
   it 'nested binding content bindings' do
     root_instance.content.__bindings__.should == { }
@@ -516,15 +516,15 @@ shared_examples_for :__bindings__ do
   end
   it 'nested binding A bindings' do
     root_instance.a.__bindings__.should == { :b => root_instance.a.b }
-    root_instance.a.__bindings__[ :b ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.a.__bindings__[ :b ].should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   end
   it 'nested binding A_B bindings' do
     root_instance.a.b.__bindings__.should == { :c => root_instance.a.b.c }
-    root_instance.a.b.__bindings__[ :c ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.a.b.__bindings__[ :c ].should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   end
   it 'nested binding A_B_C bindings' do
     root_instance.a.b.c.__bindings__.should == { :content => root_instance.a.b.c.content }
-    root_instance.a.b.c.__bindings__[ :content ].should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.a.b.c.__bindings__[ :content ].should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   end
   it 'nested binding A_B_C_content bindings' do
     root_instance.a.b.c.content.__bindings__.should == { }
@@ -533,57 +533,57 @@ end
 
 shared_examples_for :"self.__binding__( base_module )" do
   it 'nested binding A' do
-    root.__binding__( :a ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+    root.__binding__( :a ).should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   end
   it 'nested binding A alias' do
-    root.__binding__( :a_alias ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+    root.__binding__( :a_alias ).should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   end
   it 'nested binding A_B' do
-    root.a.__binding__( :b ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+    root.a.__binding__( :b ).should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   end
   it 'nested binding A_B_C' do
-    root.a.b.__binding__( :c ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+    root.a.b.__binding__( :c ).should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   end
   it 'nested binding A_B_C_content' do
-    root.a.b.c.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+    root.a.b.c.__binding__( :content ).should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   end
 end
 
 shared_examples_for :"self.__binding__( sub_module_and_below )" do
   it_behaves_like( :"self.__binding__( base_module )" )
   it 'nested binding content will return nil' do
-    root.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+    root.__binding__( :content ).should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   end
   it 'nested binding binding_one will return nil' do
-    root.__binding__( :binding_one ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+    root.__binding__( :binding_one ).should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   end
   it 'nested binding binding_two will return nil' do
-    root.__binding__( :binding_two ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::ClassBinding
+    root.__binding__( :binding_two ).should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   end
 end
 
 shared_examples_for :__binding__ do
   it 'nested binding A' do
-    root_instance.__binding__( :a ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.__binding__( :a ).should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   end
   it 'nested binding A_B' do
-    root_instance.a.__binding__( :b ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.a.__binding__( :b ).should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   end
   it 'nested binding A_B_C' do
-    root_instance.a.b.__binding__( :c ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.a.b.__binding__( :c ).should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   end
   it 'nested binding A_B_C_content' do
-    root_instance.a.b.c.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.a.b.c.__binding__( :content ).should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   end
 
   it 'nested binding content will return nil' do
-    root_instance.__binding__( :content ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.__binding__( :content ).should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   end
   it 'nested binding binding_one will return nil' do
-    root_instance.__binding__( :binding_one ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.__binding__( :binding_one ).should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   end
   it 'nested binding binding_two will return nil' do
-    root_instance.__binding__( :binding_two ).should be_a ::Perspective::Bindings::BindingTypes::ContainerBindings::InstanceBinding
+    root_instance.__binding__( :binding_two ).should be_a ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   end
 end
 

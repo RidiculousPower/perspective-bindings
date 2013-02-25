@@ -5,50 +5,48 @@ require 'accessor_utilities'
 require 'reraise'
 require 'singleton_attr'
 
-basepath = 'bindings'
-
 files = [
   
-  'include_extend',
-  'include_extend/initialize_instances',
+  'bindings/include_extend',
+  'bindings/include_extend/initialize_instances',
   
-  'container/context',
+  'bindings/container/context',
 
-  'constants',
+  'bindings/constants',
 
-  'configuration/class_and_class_binding_instance',
-  'configuration/object_and_binding_instance',
-  'configuration',
+  'bindings/configuration/class_and_class_binding_instance',
+  'bindings/configuration/object_and_binding_instance',
+  'bindings/configuration',
 
-  'binding_base',
-  'binding_base/class_binding',
-  'binding_base/instance_binding',
+  'bindings/binding_base',
+  'bindings/binding_base/class_binding',
+  'bindings/binding_base/instance_binding',
   
-  'binding_type_container/binding_base/class_binding',
-  'binding_type_container/binding_base/instance_binding',
-  'binding_type_container/binding_base',
-  'binding_type_container/binding_type/binding_class',
-  'binding_type_container/binding_type/class_binding_class',
-  'binding_type_container/binding_type/instance_binding_class',
-  'binding_type_container/binding_type',
-  'binding_type_container/types_controller',
-  'binding_type_container',
+  'bindings/binding_type_container/binding_base/class_binding',
+  'bindings/binding_type_container/binding_base/instance_binding',
+  'bindings/binding_type_container/binding_base',
+  'bindings/binding_type_container/binding_type/binding_class',
+  'bindings/binding_type_container/binding_type/class_binding_class',
+  'bindings/binding_type_container/binding_type/instance_binding_class',
+  'bindings/binding_type_container/binding_type',
+  'bindings/binding_type_container/types_controller',
+  'bindings/binding_type_container',
 
   'binding_types',
 
-  'binding_definitions/class',
-  'binding_definitions/complex',
-  'binding_definitions/file',
-  'binding_definitions/float',
-  'binding_definitions/integer',
-  'binding_definitions/module',
-  'binding_definitions/rational',
-  'binding_definitions/regexp',
-  'binding_definitions/text',
-  'binding_definitions/true_false',
-  'binding_definitions/uri',
-  'binding_definitions/number',
-  'binding_definitions/binding',
+  'bindings/binding_definitions/class',
+  'bindings/binding_definitions/complex',
+  'bindings/binding_definitions/file',
+  'bindings/binding_definitions/float',
+  'bindings/binding_definitions/integer',
+  'bindings/binding_definitions/module',
+  'bindings/binding_definitions/rational',
+  'bindings/binding_definitions/regexp',
+  'bindings/binding_definitions/text',
+  'bindings/binding_definitions/true_false',
+  'bindings/binding_definitions/uri',
+  'bindings/binding_definitions/number',
+  'bindings/binding_definitions/binding',
   
   'binding_types/property',
   'binding_types/property_bindings',
@@ -69,35 +67,35 @@ files = [
   'binding_types/property_bindings/true_false/instance_binding',
   'binding_types/property_bindings/uri/instance_binding',
 
-  'container/configuration',
-  'container/object_and_binding_instance',
+  'bindings/container/configuration',
+  'bindings/container/object_and_binding_instance',
 
   'binding_types/container',
   'binding_types/container_bindings',
   'binding_types/container_bindings/class_binding',
   'binding_types/container_bindings/instance_binding',
   
-  'container/binding_methods',
-  'container/singleton_and_object_instance',
-  'container/singleton_instance',
-  'container/class_instance',
-  'container/object_instance',
-  'container',
+  'bindings/container/binding_methods',
+  'bindings/container/singleton_and_object_instance',
+  'bindings/container/singleton_instance',
+  'bindings/container/class_instance',
+  'bindings/container/object_instance',
+  'bindings/container',
   
-  'exception/binding_already_defined',
-  'exception/binding_name_expected',
-  'exception/no_binding_context',
-  'exception/binding_instance_invalid_type',
-  'exception/binding_required',
-  'exception/binding_order_empty',
-  'exception/no_binding_error',
-  'exception/container_class_lacks_bindings',
-  'exception/autobind_failed',
+  'bindings/exception/binding_already_defined',
+  'bindings/exception/binding_name_expected',
+  'bindings/exception/no_binding_context',
+  'bindings/exception/binding_instance_invalid_type',
+  'bindings/exception/binding_required',
+  'bindings/exception/binding_order_empty',
+  'bindings/exception/no_binding_error',
+  'bindings/exception/container_class_lacks_bindings',
+  'bindings/exception/autobind_failed',
 
-  'reference_binding'
+  'bindings/reference_binding'
   
 ]
 
 files.each do |this_file|
-  require_relative( File.join( basepath, this_file ) + '.rb' )
+  require_relative( this_file << '.rb' )
 end
