@@ -1,6 +1,4 @@
 
-begin ; require 'development' ; rescue ::LoadError ; end
-
 require 'perspective/configuration'
 
 # namespaces that have to be declared ahead of time for proper load order

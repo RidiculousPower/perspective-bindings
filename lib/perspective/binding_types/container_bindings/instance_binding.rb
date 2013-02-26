@@ -316,6 +316,22 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
   
+  #########################
+  #  __container_count__  #
+  #########################
+  
+  def __container_count__
+    
+    container_count = 1
+    
+    if __permits_multiple__? and @__containers__
+      container_count = @__containers__.size
+    end
+    
+    return container_count
+    
+  end
+  
   ########
   #  []  #
   ########
