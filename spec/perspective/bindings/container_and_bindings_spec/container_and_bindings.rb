@@ -60,66 +60,66 @@ require_relative 'container_and_bindings_shared_examples.rb'
 
 shared_examples_for :container_and_bindings do
 
-  #describe ::Perspective::BindingTypes::ContainerBindings::ClassBinding do
-  #  it_behaves_like :base_class_binding do
-  #    let( :top_singleton_instance ) { module_instance }
-  #    let( :sub_singleton_instance ) { sub_module_instance }
-  #  end
-  #  it_behaves_like :base_class_binding do
-  #    let( :top_singleton_instance ) { class_instance }
-  #    let( :sub_singleton_instance ) { subclass }
-  #    let( :topclass_class_binding_parent_binding ) { sub_module_instance.a }
-  #    let( :topclass_class_binding_configuration_procs ) { [ topclass_binding_A_action, subclass_binding_A_action ] }
-  #    let( :subclass_class_binding_configuration_procs ) { [ topclass_binding_A_action, subclass_binding_A_action ] }
-  #  end
-  #  it_behaves_like :container_class_binding do
-  #    let( :top_singleton_instance ) { module_instance }
-  #    let( :sub_singleton_instance ) { sub_module_instance }
-  #  end
-  #  it_behaves_like :container_class_binding do
-  #    let( :top_singleton_instance ) { class_instance }
-  #    let( :sub_singleton_instance ) { subclass }
-  #    let( :topclass_class_binding_parent_binding ) { sub_module_instance.a }
-  #    let( :topclass_class_binding_configuration_procs ) { [ topclass_binding_A_action, subclass_binding_A_action ] }
-  #    let( :subclass_class_binding_configuration_procs ) { [ topclass_binding_A_action, subclass_binding_A_action ] }
-  #  end
-  #end
-  #
-  #describe ::Perspective::BindingTypes::ContainerBindings::InstanceBinding do
-  #
-  #  let( :top_singleton_instance ) { class_instance }
-  #  let( :sub_singleton_instance ) { subclass }
-  #
-  #  let( :binding_name ) { topclass_instance_binding_A.__name__ }
-  #
-  #  let( :topclass_bound_container_class ) { class_instance }
-  #  let( :subclass_bound_container_class ) { subclass }
-  #
-  #  let( :topclass_bound_container_instance ) { instance_of_class }
-  #  let( :topclass_nested_container_instance_A ) { instance_of_class.a.__container__ }
-  #  let( :topclass_nested_container_instance_B ) { instance_of_class.a.b.__container__ }
-  #
-  #  let( :subclass_bound_container_instance ) { instance_of_subclass }
-  #  let( :subclass_nested_container_instance_A ) { instance_of_subclass.a.__container__ }
-  #  let( :subclass_nested_container_instance_B ) { instance_of_subclass.a.b.__container__ }
-  #
-  #  let( :topclass_class_binding ) { topclass_class_binding_A }
-  #
-  #  let( :topclass_instance_binding ) { topclass_instance_binding_A }
-  #  let( :subclass_instance_binding ) { subclass_instance_binding_A }
-  #
-  #  let( :topclass_instance_binding_A ) { instance_of_class.a }
-  #  let( :topclass_instance_binding_A_B ) { instance_of_class.a.b }
-  #  let( :topclass_instance_binding_A_B_C ) { instance_of_class.a.b.c }
-  #
-  #  let( :subclass_instance_binding_A ) { instance_of_subclass.a }
-  #  let( :subclass_instance_binding_A_B ) { instance_of_subclass.a.b }
-  #  let( :subclass_instance_binding_A_B_C ) { instance_of_subclass.a.b.c }
-  #
-  #  it_behaves_like :base_instance_binding
-  #  it_behaves_like :container_instance_binding
-  #
-  #end
+  describe ::Perspective::BindingTypes::ContainerBindings::ClassBinding do
+    it_behaves_like :base_class_binding do
+      let( :top_singleton_instance ) { module_instance }
+      let( :sub_singleton_instance ) { sub_module_instance }
+    end
+    it_behaves_like :base_class_binding do
+      let( :top_singleton_instance ) { class_instance }
+      let( :sub_singleton_instance ) { subclass }
+      let( :topclass_class_binding_parent_binding ) { sub_module_instance.a }
+      let( :topclass_class_binding_configuration_procs ) { [ topclass_binding_A_action, subclass_binding_A_action ] }
+      let( :subclass_class_binding_configuration_procs ) { [ topclass_binding_A_action, subclass_binding_A_action ] }
+    end
+    it_behaves_like :container_class_binding do
+      let( :top_singleton_instance ) { module_instance }
+      let( :sub_singleton_instance ) { sub_module_instance }
+    end
+    it_behaves_like :container_class_binding do
+      let( :top_singleton_instance ) { class_instance }
+      let( :sub_singleton_instance ) { subclass }
+      let( :topclass_class_binding_parent_binding ) { sub_module_instance.a }
+      let( :topclass_class_binding_configuration_procs ) { [ topclass_binding_A_action, subclass_binding_A_action ] }
+      let( :subclass_class_binding_configuration_procs ) { [ topclass_binding_A_action, subclass_binding_A_action ] }
+    end
+  end
+  
+  describe ::Perspective::BindingTypes::ContainerBindings::InstanceBinding do
+  
+    let( :top_singleton_instance ) { class_instance }
+    let( :sub_singleton_instance ) { subclass }
+  
+    let( :binding_name ) { topclass_instance_binding_A.__name__ }
+  
+    let( :topclass_bound_container_class ) { class_instance }
+    let( :subclass_bound_container_class ) { subclass }
+  
+    let( :topclass_bound_container_instance ) { instance_of_class }
+    let( :topclass_nested_container_instance_A ) { instance_of_class.a.__container__ }
+    let( :topclass_nested_container_instance_B ) { instance_of_class.a.b.__container__ }
+  
+    let( :subclass_bound_container_instance ) { instance_of_subclass }
+    let( :subclass_nested_container_instance_A ) { instance_of_subclass.a.__container__ }
+    let( :subclass_nested_container_instance_B ) { instance_of_subclass.a.b.__container__ }
+  
+    let( :topclass_class_binding ) { topclass_class_binding_A }
+  
+    let( :topclass_instance_binding ) { topclass_instance_binding_A }
+    let( :subclass_instance_binding ) { subclass_instance_binding_A }
+  
+    let( :topclass_instance_binding_A ) { instance_of_class.a }
+    let( :topclass_instance_binding_A_B ) { instance_of_class.a.b }
+    let( :topclass_instance_binding_A_B_C ) { instance_of_class.a.b.c }
+  
+    let( :subclass_instance_binding_A ) { instance_of_subclass.a }
+    let( :subclass_instance_binding_A_B ) { instance_of_subclass.a.b }
+    let( :subclass_instance_binding_A_B_C ) { instance_of_subclass.a.b.c }
+  
+    it_behaves_like :base_instance_binding
+    it_behaves_like :container_instance_binding
+  
+  end
 
   describe ::Perspective::Bindings::Container do
 

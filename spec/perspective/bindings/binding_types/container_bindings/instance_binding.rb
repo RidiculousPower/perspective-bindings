@@ -126,6 +126,44 @@ shared_examples_for :container_instance_binding do
     end
   end
   
+  #########################
+  #  __container_count__  #
+  #########################
+
+  context '#__container_count__' do
+    context 'when __permits_multiple__? is false' do
+      context 'when 0' do
+        it 'will report 0' do
+          instance_of_class.a.b.c.content.__container_count__.should be 0
+        end
+      end
+      context 'when 1' do
+        it 'will report 1' do
+          instance_of_class.a.b.c.__container_count__.should be 1
+        end
+      end
+    end
+    context 'when __permits_multiple__? is true' do
+      context 'when 0' do
+        it 'will report 0' do
+          instance_of_multiple_container_class.multiple_binding.content.__permits_multiple__ = true
+          instance_of_multiple_container_class.multiple_binding.content.__container_count__.should be 0
+        end
+      end
+      context 'when 1' do
+        it 'will report 1' do
+          instance_of_multiple_container_class.multiple_binding.__container_count__.should be 1
+        end
+      end
+      context 'when > 1' do
+        it 'will report #' do
+          instance_of_multiple_container_class.multiple_binding.__ensure_container_count__( 2 )
+          instance_of_multiple_container_class.multiple_binding.__container_count__.should be 2
+        end
+      end
+    end
+  end
+
   ########
   #  []  #
   ########

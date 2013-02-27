@@ -75,7 +75,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   
   def __has_container__?
     
-    return __container__( true ) ? true : false
+    return __container__( false ) ? true : false
     
   end
   
@@ -85,11 +85,11 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
 
   attr_instance_configuration  :__container__
 
-  def __container__( do_not_initialize = false )
+  def __container__( initialize_container = true )
     
     container_instance = nil
 
-    unless do_not_initialize or container_instance = super()
+    unless ! initialize_container or container_instance = super()
       if container_class = @__parent_binding__.__container_class__
         container_instance = __initialize_container_from_class__
       end
@@ -322,10 +322,13 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   
   def __container_count__
     
-    container_count = 1
+    container_count = nil
     
     if __permits_multiple__? and @__containers__
       container_count = @__containers__.size
+    else
+      container_count = __container__( false ) ? 1 
+                                               : @__parent_binding__.__container_class__ ? 1 : 0
     end
     
     return container_count
