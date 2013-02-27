@@ -69,7 +69,7 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController < ::Module
       child_instance = nil
 
       if configuration_instance.subclass_existing_bindings
-        child_instance = parent_binding_type_instance.class.new( configuration_instance.parent_types_controller, 
+        child_instance = parent_binding_type_instance.class.new( configuration_instance, 
                                                                  binding_type_name, 
                                                                  parent_binding_type_instance )
       else
