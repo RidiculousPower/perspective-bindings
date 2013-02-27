@@ -1,7 +1,10 @@
 
 require_relative '../../../support/named_class_and_module.rb'
+require_relative '../../../helpers/binding_definitions.rb'
 
 def setup_binding_definition_tests
+
+  subject { binding_definition_instance }
 
   let( :binding_definition_class ) do
     binding_definition_class = ::Class.new
