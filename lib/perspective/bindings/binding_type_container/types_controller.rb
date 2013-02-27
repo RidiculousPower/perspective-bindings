@@ -2,63 +2,75 @@
 ###
 # Type controller for groups of binding types.
 #
-class ::Perspective::Bindings::BindingTypeContainer::TypesController < ::Module
+class ::Perspective::Bindings::BindingTypeContainer::TypesController
 
   include ::CascadingConfiguration::Hash
 
-  ################
-  #  initialize  #
-  ################
+  ##############
+  #  self.new  #
+  ##############
   
-  def initialize( parent_types_controller = nil, subclass_existing_bindings = true, & module_block )
+  def self.new( type_container, parent_types_controller = nil, subclass_existing_bindings = true, & module_block )
     
-    @subclass_existing_bindings = subclass_existing_bindings
+    return ::Class.new( parent_types_controller || self ) do
+      
+      @type_container = type_container
+      @subclass_existing_bindings = subclass_existing_bindings
     
-    @class_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::ClassBinding.new( self )
-    @instance_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::InstanceBinding.new( self )
+      @class_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::ClassBinding.new( self )
+      @instance_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::InstanceBinding.new( self )
     
-    if @parent_types_controller = parent_types_controller
-      include parent_types_controller
-      @class_binding_base.module_eval    { include parent_types_controller.class_binding_base }
-      @instance_binding_base.module_eval { include parent_types_controller.instance_binding_base }
-    else
-      @class_binding_base.module_eval    { include ::Perspective::Bindings::BindingBase::ClassBinding }
-      @instance_binding_base.module_eval { include ::Perspective::Bindings::BindingBase::InstanceBinding }
+      if @parent_types_controller = parent_types_controller
+        @class_binding_base.module_eval    { include parent_types_controller.class_binding_base }
+        @instance_binding_base.module_eval { include parent_types_controller.instance_binding_base }
+      else
+        @class_binding_base.module_eval    { include ::Perspective::Bindings::BindingBase::ClassBinding }
+        @instance_binding_base.module_eval { include ::Perspective::Bindings::BindingBase::InstanceBinding }
+      end
+      
+      module_eval( & module_block ) if block_given?
+      
+      self
+      
     end
-    
-    super( & module_block )
     
   end
 
+  #########################
+  #  self.type_container  #
+  #########################
+  
+  singleton_attr_reader :type_container
+
+  ##################################
+  #  self.parent_types_controller  #
+  ##################################
+  
+  singleton_attr_reader :parent_types_controller
+  
+  #####################################
+  #  self.subclass_existing_bindings  #
+  #####################################
+  
+  singleton_attr_reader :subclass_existing_bindings
+
   #############################
-  #  parent_types_controller  #
+  #  self.class_binding_base  #
   #############################
-  
-  attr_reader :parent_types_controller
-  
+
+  singleton_attr_reader :class_binding_base
+
   ################################
-  #  subclass_existing_bindings  #
+  #  self.instance_binding_base  #
   ################################
-  
-  attr_reader :subclass_existing_bindings
+
+  singleton_attr_reader :instance_binding_base
 
   ########################
-  #  class_binding_base  #
+  #  self.binding_types  #
   ########################
-
-  attr_reader :class_binding_base
-
-  ###########################
-  #  instance_binding_base  #
-  ###########################
-
-  attr_reader :instance_binding_base
-
-  ###################
-  #  binding_types  #
-  ###################
   
-  attr_instance_hash :binding_types do
+  attr_singleton_hash :binding_types do
     
     #======================#
     #  child_pre_set_hook  #
@@ -67,13 +79,21 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController < ::Module
     def child_pre_set_hook( binding_type_name, parent_binding_type_instance, parent_hash )
       
       child_instance = nil
-
-      if configuration_instance.subclass_existing_bindings
-        child_instance = parent_binding_type_instance.class.new( configuration_instance, 
+      
+      instance = configuration_instance
+      
+      if instance.subclass_existing_bindings and 
+         parent_binding_type_instance.types_controller == parent_hash.configuration_instance
+        
+        child_instance = parent_binding_type_instance.class.new( instance, 
                                                                  binding_type_name, 
                                                                  parent_binding_type_instance )
+        instance.const_set( binding_type_name.to_s.to_camel_case, child_instance )
+        
       else
+      
         child_instance = parent_binding_type_instance
+      
       end
       
       return child_instance
@@ -83,16 +103,16 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController < ::Module
   end
 
   #####################
-  #  binding_aliases  #
+  #  self.binding_aliases  #
   #####################
   
-  attr_instance_hash :binding_aliases
+  attr_singleton_hash :binding_aliases
 
-  #########################
-  #  define_binding_type  #
-  #########################
+  ##############################
+  #  self.define_binding_type  #
+  ##############################
   
-  def define_binding_type( binding_type_name, ancestor_type = nil )
+  def self.define_binding_type( binding_type_name, ancestor_type = nil )
     
     unless new_binding_type = binding_types[ binding_type_name ]
 
@@ -125,15 +145,32 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController < ::Module
     
   end
 
-  ########################
-  #  alias_binding_type  #
-  ########################
+  #############################
+  #  self.alias_binding_type  #
+  #############################
   
-  def alias_binding_type( alias_name, binding_type_name )
+  def self.alias_binding_type( alias_name, binding_type_name )
     
     binding_aliases[ alias_name.to_sym ] = binding_type_name.to_sym
 
     return self
+    
+  end
+
+  #############################
+  #  self.new_class_bindings  #
+  #############################
+  
+  ###
+  # Create a new class binding for each binding name, each having the same configuration block. 
+  #
+  # 
+  #
+  def self.new_class_bindings( binding_type, bound_to_container, *binding_names, & configuration_proc )
+
+    return binding_names.collect do |this_binding_name|
+      binding_type.class_binding_class.new( bound_to_container, this_binding_name, & configuration_proc )
+    end
     
   end
 

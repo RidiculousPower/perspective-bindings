@@ -1,5 +1,5 @@
 
-module ::Perspective::Bindings::Container::SingletonInstance
+module ::Perspective::Bindings::Container::ClassInstance
   
   #########
   #  new  #

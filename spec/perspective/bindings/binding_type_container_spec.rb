@@ -142,6 +142,7 @@ describe ::Perspective::Bindings::BindingTypeContainer do
     context '#define_single_binding_type' do
       let( :define_single_binding_type ) do
         _binding_name = binding_name
+        parent_type_container.define_binding_type( binding_name )
         parent_type_container.instance_eval { define_single_binding_type( _binding_name ) }
       end
       it_behaves_like :define_single_binding_type
@@ -277,7 +278,7 @@ describe ::Perspective::Bindings::BindingTypeContainer do
           return @__root_string__ ||= '<root:' << to_s << '>'
         end
       end
-      new_bindings = parent_type_container.new_class_bindings( binding_type, bound_container, :some_name, :some_other_name, :another_name )
+      new_bindings = parent_type_container.types.new_class_bindings( binding_type, bound_container, :some_name, :some_other_name, :another_name )
       new_bindings.each do |this_binding|
         this_binding.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should be true
         this_binding.is_a?( parent_type_container::SomeType ).should be true

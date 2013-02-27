@@ -14,13 +14,22 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     @type_container_name = type_container_name
     
     parent_type_controller = parent_container ? parent_container.types : nil
-    @types = self.class::TypesController.new( parent_type_controller, subclass_existing_bindings )
-
+    parent_types_controller_class = parent_container ? parent_container.types : self.class::TypesController
+    @types = parent_types_controller_class.new( self, parent_type_controller, subclass_existing_bindings )
+    
+    const_set( :TypesController, @types )
+    
     const_set( :ClassBinding, @types.class_binding_base )
     const_set( :InstanceBinding, @types.instance_binding_base )
-
-    include parent_container if @parent_container = parent_container
     
+    include parent_container if @parent_container = parent_container
+
+    if parent_type_controller and subclass_existing_bindings
+      parent_type_controller.binding_types.each do |this_binding_name, this_binding_instance|
+        define_binding_methods( this_binding_name, this_binding_instance.type_name )
+      end
+    end
+
     super( & module_block )
 
   end
@@ -96,27 +105,6 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     
   end
   
-  ########################
-  #  new_class_bindings  #
-  ########################
-  
-  ###
-  # Create a new class binding for each binding name, each having the same configuration block. 
-  #
-  # 
-  #
-  def new_class_bindings( binding_type, bound_to_container, *binding_names, & configuration_proc )
-    
-    return binding_names.collect do |this_binding_name|
-      binding_type.class_binding_class.new( bound_to_container, this_binding_name, & configuration_proc )
-    end
-    
-  end
-
-  ##################################################################################################
-      private ######################################################################################
-  ##################################################################################################
-
   ############################
   #  define_binding_methods  #
   ############################
@@ -129,6 +117,10 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     define_required_multiple_binding_type( binding_method_name, binding_type_name )
     
   end
+
+  ##################################################################################################
+      private ######################################################################################
+  ##################################################################################################
 
   ################################
   #  single_binding_method_name  #
@@ -198,16 +190,16 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     
     method_name = single_binding_method_name( binding_method_name )
 
-    binding_type_instance = @types.binding_types[ binding_type_name.to_sym ]
-    type_container = self
+    types_controller = @types
+    binding_type_instance = types_controller.binding_types[ binding_type_name.to_sym ]
 
     #===============#
     #  attr_[type]  #
     #===============#
     
     define_method( method_name ) do |*args, & block|
-      
-      new_class_bindings = type_container.new_class_bindings( binding_type_instance, self, *args, & block )
+
+      new_class_bindings = types_controller.new_class_bindings( binding_type_instance, self, *args, & block )
 
       return new_class_bindings.each do |this_new_class_binding|
         this_new_binding_name = this_new_class_binding.__name__

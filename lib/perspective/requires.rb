@@ -72,6 +72,7 @@ files = [
 
   'binding_types/container',
   'binding_types/container_bindings',
+  'binding_types/container_bindings/types_controller',
   'binding_types/container_bindings/class_binding',
   'binding_types/container_bindings/instance_binding',
   
