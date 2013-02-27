@@ -7,9 +7,6 @@ require_relative './namespaces'
 # source file requires
 require_relative './requires.rb'
 
-# post-require setup
-require_relative './setup.rb'
-
 ###
 # Bindings exist to relate containers to one another.
 #
@@ -38,5 +35,20 @@ require_relative './setup.rb'
 module ::Perspective::Bindings
 
   include ::Perspective::Bindings::Container
+  
+  ########################
+  #  self.spec_location  #
+  ########################
+  
+  ###
+  # Returns location of Perspective::Bindings specs and spec support files.
+  #
+  # @return [String] Path to location of spec files.
+  #
+  def self.spec_location
     
+    return ::File.expand_path( ::File.dirname( __FILE__ ) << '/../../spec' )    
+
+  end
+  
 end

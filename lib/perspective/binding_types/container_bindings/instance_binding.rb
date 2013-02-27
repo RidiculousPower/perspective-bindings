@@ -60,7 +60,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
       
     # run configuration proc for each binding instance
 		@__parent_binding__.__configuration_procs__.each do |this_configuration_proc|
-      bound_container.__instance_exec__( self, & this_configuration_proc )
+      bound_container.instance_exec( self, & this_configuration_proc )
 	  end
 	  
     __bindings__.each { |this_binding_name, this_binding| this_binding.__configure_container__ }

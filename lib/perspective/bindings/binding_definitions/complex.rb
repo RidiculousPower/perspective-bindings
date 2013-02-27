@@ -1,9 +1,9 @@
 
 module ::Perspective::Bindings::BindingDefinitions::Complex
 
-  ##########################
+  ##############################
   #  __binding_value_valid__?  #
-  ##########################
+  ##############################
 
   def __binding_value_valid__?( binding_value )
     
