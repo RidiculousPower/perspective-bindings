@@ -203,8 +203,8 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
       new_class_bindings = types_controller.new_class_bindings( binding_type_instance, self, *args, & block )
 
       return new_class_bindings.each do |this_new_class_binding|
-        this_new_binding_name = this_new_class_binding.«name
-        «bindings[ this_new_binding_name ] = this_new_class_binding
+        this_new_binding_name = this_new_class_binding.«name»
+        «bindings»[ this_new_binding_name ] = this_new_class_binding
         self::Controller::ClassBindingMethods.define_binding( this_new_binding_name )
         self::Controller::InstanceBindingMethods.define_binding( this_new_binding_name )
       end
@@ -232,7 +232,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
 
       new_class_bindings.each do |this_new_class_binding|
         this_new_class_binding.permits_multiple = true
-        «bindings[ this_new_class_binding.«name ] = this_new_class_binding
+        «bindings»[ this_new_class_binding.«name» ] = this_new_class_binding
       end
       
       return new_class_bindings

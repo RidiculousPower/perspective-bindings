@@ -15,35 +15,35 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
 
   def initialize( parent_class_binding, bound_container_instance )
         
-    @«parent_binding = parent_class_binding
-    @«bound_container = bound_container_instance
+    @«parent_binding» = parent_class_binding
+    @«bound_container» = bound_container_instance
     
-    @«root = @«bound_container.«root
+    @«root» = @«bound_container».«root»
 
     # register parent class binding as ancestor for configurations
-    ::CascadingConfiguration.register_parent( self, @«parent_binding )
+    ::CascadingConfiguration.register_parent( self, @«parent_binding» )
 
-    self.«route_print_string = ::Perspective::Bindings.context_print_string( @«root, «route_string )
+    self.«route_print_string» = ::Perspective::Bindings.context_print_string( @«root», «route_string» )
 
   end
   
   #####################
-  #  «root_string  #
+  #  «root_string»  #
   #####################
 
-  def «root_string
+  def «root_string»
     
-    return @«root.«root_string
+    return @«root».«root_string»
     
   end
 
   ######################
-  #  «nested_route  #
+  #  «nested_route»  #
   ######################
 
-  def «nested_route( nested_in_binding )
+  def «nested_route»( nested_in_binding )
     
-    return @«parent_binding.«nested_route( nested_in_binding )
+    return @«parent_binding».«nested_route»( nested_in_binding )
     
   end
 
@@ -69,38 +69,38 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
 
   ###############
   #  value      #
-  #  «value  #
+  #  «value»  #
   ###############
   
-  attr_reader  :«value
+  attr_reader  :«value»
 
-  alias_method  :value, :«value
+  alias_method  :value, :«value»
 
   ################
   #  value=      #
-  #  «value=  #
+  #  «value»=  #
   ################
 
-  def «value=( object )
+  def «value»=( object )
     
     case object
       
       when ::Perspective::Bindings::BindingBase::InstanceBinding
 
         if ::Perspective::Bindings::ReferenceBinding === self
-          @«value = object
+          @«value» = object
         else
-          @«value = object.«value
+          @«value» = object.«value»
         end
       
       else
 
         unless binding_value_valid?( object )
           raise ::Perspective::Bindings::Exception::BindingInstanceInvalidType, 
-                  'Invalid value ' <<  object.inspect + ' assigned to binding :' << «name.to_s + '.'
+                  'Invalid value ' <<  object.inspect + ' assigned to binding :' << «name».to_s + '.'
         end
 
-        @«value = object
+        @«value» = object
         
     end    
 
@@ -108,6 +108,6 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
     
   end
 
-  alias_method  :value=, :«value=
+  alias_method  :value=, :«value»=
 
 end

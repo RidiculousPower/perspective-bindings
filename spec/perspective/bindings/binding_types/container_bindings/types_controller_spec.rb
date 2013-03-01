@@ -9,11 +9,11 @@ describe ::Perspective::BindingTypes::ContainerBindings::TypesController do
   let( :binding_type ) { ::Perspective::BindingTypes::ContainerBindings::Binding }
   let( :bound_container ) do
     ::Module.new do
-      def self.«root
+      def self.«root»
         return self
       end
-      def self.«root_string
-        return @«root_string ||= '<root:' << to_s << '>'
+      def self.«root_string»
+        return @«root_string» ||= '<root:' << to_s << '>'
       end
     end
   end
@@ -93,7 +93,7 @@ describe ::Perspective::BindingTypes::ContainerBindings::TypesController do
         this_binding.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should be true
         this_binding.is_a?( ::Perspective::BindingTypes::ContainerBindings::ClassBinding ).should be true
         this_binding.is_a?( type_container::Binding ).should be true
-        this_binding.«bound_container.should be bound_container
+        this_binding.«bound_container».should be bound_container
       end
     end
   end

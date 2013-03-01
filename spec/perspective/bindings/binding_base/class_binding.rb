@@ -18,65 +18,65 @@ shared_examples_for :base_class_binding do
   let( :subclass_class_binding_configuration_procs ) { [ topclass_configuration_proc, subclass_configuration_proc ] }
   
   ########################
-  #  «parent_binding  #
+  #  «parent_binding»  #
   ########################
   
-  context '#«parent_binding' do
+  context '#«parent_binding»' do
     it 'topclass binding has no parent binding' do
-      topclass_class_binding.«parent_binding.should == topclass_class_binding_parent_binding
+      topclass_class_binding.«parent_binding».should == topclass_class_binding_parent_binding
     end
     it 'subclass binding has topclass binding as parent' do
-      subclass_class_binding.«parent_binding.should == topclass_class_binding
+      subclass_class_binding.«parent_binding».should == topclass_class_binding
     end
   end
   
   ###############################
-  #  «validate_binding_name  #
+  #  «validate_binding_name»  #
   ###############################
   
-  context '#«validate_binding_name' do
+  context '#«validate_binding_name»' do
     let( :binding_name ) { :new }
-    let( :topclass«validate_binding_name ) { ::Proc.new { topclass_class_binding.«validate_binding_name( binding_name ) } }
-    let( :subclass«validate_binding_name ) { ::Proc.new { subclass_class_binding.«validate_binding_name( binding_name ) } }
+    let( :topclass«validate_binding_name» ) { ::Proc.new { topclass_class_binding.«validate_binding_name»( binding_name ) } }
+    let( :subclass«validate_binding_name» ) { ::Proc.new { subclass_class_binding.«validate_binding_name»( binding_name ) } }
     it 'topclass prohibits :new' do
-      topclass«validate_binding_name.should raise_error( ::ArgumentError )
+      topclass«validate_binding_name».should raise_error( ::ArgumentError )
     end
     it 'subclass prohibits :new' do
-      subclass«validate_binding_name.should raise_error( ::ArgumentError )
+      subclass«validate_binding_name».should raise_error( ::ArgumentError )
     end
   end
   
   #############################
-  #  «configuration_procs  #
+  #  «configuration_procs»  #
   #############################
 
-  context '#«configuration_procs' do
+  context '#«configuration_procs»' do
     it 'topclass binding has proc' do
-      topclass_class_binding.«configuration_procs.should == topclass_class_binding_configuration_procs
+      topclass_class_binding.«configuration_procs».should == topclass_class_binding_configuration_procs
     end
     it 'subclass binding has topclass proc plus additional proc' do
-      subclass_class_binding.«configuration_procs.should == subclass_class_binding_configuration_procs
+      subclass_class_binding.«configuration_procs».should == subclass_class_binding_configuration_procs
     end
   end
 
   ###################
-  #  «configure  #
+  #  «configure»  #
   ###################
 
-  context '#«configure' do
+  context '#«configure»' do
     let( :another_block ) { ::Proc.new { puts 'another block' } }
     it 'topclass binding can configure via proc' do
-      topclass_class_binding.«configuration_procs.should == topclass_class_binding_configuration_procs
-      topclass_class_binding.«configure( & another_block )
+      topclass_class_binding.«configuration_procs».should == topclass_class_binding_configuration_procs
+      topclass_class_binding.«configure»( & another_block )
       topclass_class_binding_configuration_procs.push( another_block )
-      topclass_class_binding.«configuration_procs.should == topclass_class_binding_configuration_procs
+      topclass_class_binding.«configuration_procs».should == topclass_class_binding_configuration_procs
     end
     it 'subclass can configure its own procs in addition' do
-      subclass_class_binding.«configuration_procs.should == subclass_class_binding_configuration_procs
-      subclass_class_binding.«configure( & another_block )
+      subclass_class_binding.«configuration_procs».should == subclass_class_binding_configuration_procs
+      subclass_class_binding.«configure»( & another_block )
       subclass_class_binding_configuration_procs.push( another_block )
-      topclass_class_binding.«configuration_procs.should == topclass_class_binding_configuration_procs
-      subclass_class_binding.«configuration_procs.should == subclass_class_binding_configuration_procs
+      topclass_class_binding.«configuration_procs».should == topclass_class_binding_configuration_procs
+      subclass_class_binding.«configuration_procs».should == subclass_class_binding_configuration_procs
     end
   end
 
@@ -85,8 +85,8 @@ shared_examples_for :base_class_binding do
   ###############
   
   context '#configure' do
-    it 'is an alias for #«configure' do
-      ::Perspective::Bindings::BindingBase::ClassBinding.instance_method( :configure ).should == ::Perspective::Bindings::BindingBase::ClassBinding.instance_method( :«configure )
+    it 'is an alias for #«configure»' do
+      ::Perspective::Bindings::BindingBase::ClassBinding.instance_method( :configure ).should == ::Perspective::Bindings::BindingBase::ClassBinding.instance_method( :«configure» )
     end
   end
 

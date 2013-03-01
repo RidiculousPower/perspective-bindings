@@ -272,18 +272,18 @@ describe ::Perspective::Bindings::BindingTypeContainer do
     it 'creates new class bindings for a container, a list of names, and an optional block' do
       binding_type = parent_type_container.define_binding_type( :some_type )
       bound_container = ::Module.new do
-        def self.«root
+        def self.«root»
           return self
         end
-        def self.«root_string
-          return @«root_string ||= '<root:' << to_s << '>'
+        def self.«root_string»
+          return @«root_string» ||= '<root:' << to_s << '>'
         end
       end
       new_bindings = parent_type_container.types.new_class_bindings( binding_type, bound_container, :some_name, :some_other_name, :another_name )
       new_bindings.each do |this_binding|
         this_binding.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should be true
         this_binding.is_a?( parent_type_container::SomeType ).should be true
-        this_binding.«bound_container.should be bound_container
+        this_binding.«bound_container».should be bound_container
       end
     end
   end

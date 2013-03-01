@@ -22,7 +22,7 @@ module ::Perspective::Bindings::Container::ClassInstance
 
     return allocate.instance_eval do
 
-      «initialize_bindings
+      «initialize_bindings»
       initialize( *args, & block )
       initialize_instance
 
@@ -44,12 +44,12 @@ module ::Perspective::Bindings::Container::ClassInstance
     
     return allocate.instance_eval do
 
-      @«parent_binding = parent_binding_instance
-      @«bound_container = parent_binding_instance
+      @«parent_binding» = parent_binding_instance
+      @«bound_container» = parent_binding_instance
       
       ::CascadingConfiguration.register_parent( self, parent_binding_instance )
 
-      «initialize_bindings
+      «initialize_bindings»
       initialize( *args, & block )
       initialize_instance
       

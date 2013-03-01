@@ -6,8 +6,8 @@ def setup_base_class_binding_tests
   
   let( :mock_container_module ) do
     ::Module.new do
-      def «root ; return self ; end
-      def «root_string ; return to_s ; end
+      def «root» ; return self ; end
+      def «root_string» ; return to_s ; end
     end
   end
 

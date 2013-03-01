@@ -12,7 +12,7 @@ module ::Perspective::Bindings::Container::Context
 
     binding_route.each_with_index do |this_binding_name, index|
       
-      if requested_context = current_context.«binding( this_binding_name )
+      if requested_context = current_context.«binding»( this_binding_name )
         
         current_context = requested_context
         
@@ -43,7 +43,7 @@ module ::Perspective::Bindings::Container::Context
     
     binding_context = context( starting_context, binding_route )
     
-    unless binding_instance = binding_context.«binding( binding_name )
+    unless binding_instance = binding_context.«binding»( binding_name )
       
       raise ::Perspective::Bindings::Exception::NoBindingError.new( binding_context, 
                                                                 binding_name, 
@@ -67,7 +67,7 @@ module ::Perspective::Bindings::Container::Context
 
     binding_context = context( starting_context, binding_route )
 
-    unless binding_instance = binding_context.«binding( binding_name )
+    unless binding_instance = binding_context.«binding»( binding_name )
 
   		raise ::Perspective::Bindings::Exception::NoBindingError.new( binding_context, 
   		                                                              local_alias,
@@ -113,9 +113,9 @@ module ::Perspective::Bindings::Container::Context
         when ::Perspective::Bindings::Configuration
 
           if return_context_string.empty?
-            return_context_string << this_context.«name
+            return_context_string << this_context.«name»
           else
-            return_context_string << this_context.«route_string
+            return_context_string << this_context.«route_string»
           end
 
       end
@@ -132,7 +132,7 @@ module ::Perspective::Bindings::Container::Context
   
   def context_print_string( current_context, *contexts )
 
-    print_string = ::Perspective::Bindings::ContextPrintPrefix.dup << current_context.«root.«root_string
+    print_string = ::Perspective::Bindings::ContextPrintPrefix.dup << current_context.«root».«root_string»
 
     case contexts.count
       

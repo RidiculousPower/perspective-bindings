@@ -21,9 +21,9 @@ def setup_container_class_binding_tests
       self::Controller.const_set( :ClassBindingMethods, class_binding_methods )
       instance_binding_methods = ::Module.new.name( :ClassBindingMethods )
       self::Controller.const_set( :InstanceBindingMethods, instance_binding_methods )
-      attr_hash :«bindings, :«binding_aliases
-      attr_configuration :«name, :«route, :«route_with_name, :«route_string, :«route_print_string, :permits_multiple?, :required?
-      def «autobind( *args )
+      attr_hash :«bindings», :«binding_aliases»
+      attr_configuration :«name», :«route», :«route_with_name», :«route_string», :«route_print_string», :permits_multiple?, :required?
+      def «autobind»( *args )
         @called_autobind = true
       end
       def called_autobind?

@@ -15,7 +15,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
   
   def initialize_instance
 
-    «configure_containers
+    «configure_containers»
     
     return self
     
@@ -32,25 +32,25 @@ module ::Perspective::Bindings::Container::ObjectInstance
   end
 
   #############################
-  #  «initialize_bindings  #
+  #  «initialize_bindings»  #
   #############################
   
-  def «initialize_bindings
+  def «initialize_bindings»
 
-    «bindings.each do |this_binding_name, this_binding|
-      this_binding.«initialize_bindings
+    «bindings».each do |this_binding_name, this_binding|
+      this_binding.«initialize_bindings»
 	  end
   	  
   end
   
   ##############################
-  #  «configure_containers  #
+  #  «configure_containers»  #
   ##############################
   
-  def «configure_containers
+  def «configure_containers»
 
-    «bindings.each do |this_binding_name, this_binding|
-      this_binding.«configure_container
+    «bindings».each do |this_binding_name, this_binding|
+      this_binding.«configure_container»
     end
 
   end
@@ -61,22 +61,22 @@ module ::Perspective::Bindings::Container::ObjectInstance
   
   def is_root?
     
-    return @«bound_container.nil?
+    return @«bound_container».nil?
     
   end
   
   ##############
-  #  «name  #
+  #  «name»  #
   ##############
   
-  def «name
+  def «name»
     
     name = nil
     
-    if @«parent_binding
-      name = @«parent_binding.«name
+    if @«parent_binding»
+      name = @«parent_binding».«name»
     else
-      name = «root_string
+      name = «root_string»
     end
     
     return name
@@ -84,15 +84,15 @@ module ::Perspective::Bindings::Container::ObjectInstance
   end
   
   ##############
-  #  «root  #
+  #  «root»  #
   ##############
   
-  def «root
+  def «root»
     
     root_instance = nil
     
-    if @«bound_container
-      root_instance = @«bound_container.«root
+    if @«bound_container»
+      root_instance = @«bound_container».«root»
     else
       root_instance = self
     end
@@ -105,23 +105,23 @@ module ::Perspective::Bindings::Container::ObjectInstance
   #  root  #
   ##########
 
-  alias_method  :root, :«root
+  alias_method  :root, :«root»
 
   #####################
-  #  «root_string  #
+  #  «root_string»  #
   #####################
 
-  def «root_string
+  def «root_string»
     
     # [root:<instance>]
     
     root_string = nil
     
-    if «root == self
-      @«root_string ||= '<root:' << to_s << '>'
-      root_string = @«root_string
+    if «root» == self
+      @«root_string» ||= '<root:' << to_s << '>'
+      root_string = @«root_string»
     else
-      root_string = «root.«root_string
+      root_string = «root».«root_string»
     end
 
     return root_string
@@ -129,15 +129,15 @@ module ::Perspective::Bindings::Container::ObjectInstance
   end
 
   ###############
-  #  «route  #
+  #  «route»  #
   ###############
 
-  def «route
+  def «route»
     
     route = nil
     
-    if @«parent_binding
-      route = @«parent_binding.«route
+    if @«parent_binding»
+      route = @«parent_binding».«route»
     end
     
     return route
@@ -148,18 +148,18 @@ module ::Perspective::Bindings::Container::ObjectInstance
   #  route  #
   ###########
   
-  alias_method  :route, :«route
+  alias_method  :route, :«route»
 
   #####################
   #  route_with_name  #
   #####################
 
-  def «route_with_name
+  def «route_with_name»
     
     route_with_name = nil
     
-    if @«parent_binding
-      route_with_name = @«parent_binding.«route_with_name
+    if @«parent_binding»
+      route_with_name = @«parent_binding».«route_with_name»
     end
     
     return route_with_name
@@ -167,33 +167,33 @@ module ::Perspective::Bindings::Container::ObjectInstance
   end
 
   #########################
-  #  «route_with_name  #
+  #  «route_with_name»  #
   #########################
   
-  alias_method  :route_with_name, :«route_with_name
+  alias_method  :route_with_name, :«route_with_name»
 
   ##################
-  #  «autobind  #
+  #  «autobind»  #
   ##################
   
-  def «autobind( data_object )
+  def «autobind»( data_object )
     
-    @«view_rendering_empty = false
+    @«view_rendering_empty» = false
 
     found_a_binding = false
     
     case data_object
       when ::Perspective::Bindings::Container
-        found_a_binding = «autobind_container( data_object )
+        found_a_binding = «autobind_container»( data_object )
       when ::Perspective::Bindings::BindingBase::InstanceBinding
-        found_a_binding = «autobind_binding( data_object )
+        found_a_binding = «autobind_binding»( data_object )
       when ::Hash
-        found_a_binding = «autobind_hash( data_object )
+        found_a_binding = «autobind_hash»( data_object )
       else
-        found_a_binding = «autobind_object( data_object )
+        found_a_binding = «autobind_object»( data_object )
     end
 
-    unless found_a_binding or «autobind_content( data_object )
+    unless found_a_binding or «autobind_content»( data_object )
       raise ::Perspective::Bindings::Exception::AutobindFailed, 
               ':autobind was called on ' << self.to_s << ' but data object did not respond ' <<
               'to the name of any declared bindings in ' << self.to_s << 
@@ -209,30 +209,30 @@ module ::Perspective::Bindings::Container::ObjectInstance
   #  autobind  #
   ##############
   
-  alias_method  :autobind, :«autobind
+  alias_method  :autobind, :«autobind»
 
   ########################
-  #  «autobind_array  #
+  #  «autobind_array»  #
   ########################
 
-  def «autobind_array( data_binding )
+  def «autobind_array»( data_binding )
     
     raise ::ArgumentError, 'Container does not know how to resolve Array value for autobind.'
     
   end
 
   ############################
-  #  «autobind_container  #
+  #  «autobind_container»  #
   ############################
 
-  def «autobind_container( data_container )
+  def «autobind_container»( data_container )
     
     found_a_binding = false
     
-    «bindings.each do |this_binding_name, this_binding|
+    «bindings».each do |this_binding_name, this_binding|
       if data_container.has_binding?( this_binding_name )
-        this_data_binding = data_container.«binding( this_binding_name )
-        this_binding.«autobind_binding( this_data_binding )
+        this_data_binding = data_container.«binding»( this_binding_name )
+        this_binding.«autobind_binding»( this_data_binding )
         found_a_binding = true
       end
     end
@@ -242,53 +242,53 @@ module ::Perspective::Bindings::Container::ObjectInstance
   end
 
   ##########################
-  #  «autobind_binding  #
+  #  «autobind_binding»  #
   ##########################
   
-  def «autobind_binding( data_binding )
+  def «autobind_binding»( data_binding )
     
-    if found_a_binding = has_binding?( data_binding_name = data_binding.«name )
-      «binding( data_binding_name ).«autobind_binding( data_binding.«value )
+    if found_a_binding = has_binding?( data_binding_name = data_binding.«name» )
+      «binding»( data_binding_name ).«autobind_binding»( data_binding.«value» )
     end
     
-    found_a_binding = true if «autobind_container( data_binding )
+    found_a_binding = true if «autobind_container»( data_binding )
 
     return found_a_binding
     
   end
   
   #########################
-  #  «autobind_object  #
+  #  «autobind_object»  #
   #########################
 
-  def «autobind_object( data_object )
+  def «autobind_object»( data_object )
     
     found_a_binding = false
 
-    «bindings.each do |this_binding_name, this_binding|
+    «bindings».each do |this_binding_name, this_binding|
       if data_object.respond_to?( this_binding_name )
-        this_binding.«autobind( data_object.__send__( this_binding_name ) )
+        this_binding.«autobind»( data_object.__send__( this_binding_name ) )
         found_a_binding = true
       end    
     end
     
-    found_a_binding = «autobind_content( data_object ) unless found_a_binding
+    found_a_binding = «autobind_content»( data_object ) unless found_a_binding
     
     return found_a_binding
     
   end
 
   #######################
-  #  «autobind_hash  #
+  #  «autobind_hash»  #
   #######################
   
-  def «autobind_hash( data_hash )
+  def «autobind_hash»( data_hash )
 
     found_a_binding = false
     
-    «bindings.each do |this_binding_name, this_binding|
+    «bindings».each do |this_binding_name, this_binding|
       if data_hash.has_key?( this_binding_name )
-        this_binding.«autobind( data_hash[ this_binding_name ] )
+        this_binding.«autobind»( data_hash[ this_binding_name ] )
         found_a_binding = true
       end
     end
@@ -298,15 +298,15 @@ module ::Perspective::Bindings::Container::ObjectInstance
   end
   
   ##########################
-  #  «autobind_content  #
+  #  «autobind_content»  #
   ##########################
   
-  def «autobind_content( data_object )
+  def «autobind_content»( data_object )
     
     found_content_binding = false
     
     if has_binding?( :content )
-      «binding( :content ).«autobind( data_object )
+      «binding»( :content ).«autobind»( data_object )
       found_content_binding = true
     end
     
@@ -315,17 +315,17 @@ module ::Perspective::Bindings::Container::ObjectInstance
   end
   
   ######################
-  #  «nested_route  #
+  #  «nested_route»  #
   ######################
 
-  def «nested_route( nested_binding )
+  def «nested_route»( nested_binding )
 
     nested_route = nil
     
-    if @«parent_binding
-      nested_route = @«parent_binding.«nested_route( nested_binding )
+    if @«parent_binding»
+      nested_route = @«parent_binding».«nested_route»( nested_binding )
     else
-      nested_route = nested_binding.«route
+      nested_route = nested_binding.«route»
     end
 
     return nested_route
@@ -336,7 +336,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
   #  nested_route  #
   ##################
   
-  alias_method  :nested_route, :«nested_route
+  alias_method  :nested_route, :«nested_route»
 
   ########
   #  []  #
@@ -344,7 +344,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
   
   def []( binding_name )
 
-    return «binding( binding_name )
+    return «binding»( binding_name )
     
   end
   

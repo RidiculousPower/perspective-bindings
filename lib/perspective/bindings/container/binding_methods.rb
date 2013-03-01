@@ -46,7 +46,7 @@ class ::Perspective::Bindings::Container::BindingMethods <
     
     define_method( binding_name ) do
 
-      return «bindings[ binding_name ]
+      return «bindings»[ binding_name ]
       
     end
     
@@ -64,7 +64,7 @@ class ::Perspective::Bindings::Container::BindingMethods <
     
     define_method( binding_alias ) do
       
-      return «bindings[ binding_name ]
+      return «bindings»[ binding_name ]
       
     end
     
@@ -82,7 +82,7 @@ class ::Perspective::Bindings::Container::BindingMethods <
 
     define_method( binding_alias ) do
 
-      return «local_aliases_to_bindings[ binding_alias ]
+      return «local_aliases_to_bindings»[ binding_alias ]
       
     end
     

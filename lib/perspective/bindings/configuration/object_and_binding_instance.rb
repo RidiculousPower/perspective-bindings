@@ -7,7 +7,7 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
   include ::CascadingConfiguration::Hash
 
   ##################
-  #  «bindings  #
+  #  «bindings»  #
   ##################
 
   ###
@@ -31,7 +31,7 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
   #     binding will inherit from the instance rather than the instance
   #     inheriting from the binding. 
   #
-	attr_hash  :«bindings do
+	attr_hash  :«bindings» do
 	  
 	  #======================#
 	  #  child_pre_set_hook  #
@@ -70,12 +70,12 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
             
             when ::Perspective::Bindings::BindingBase::InstanceBinding
               
-              if parent_instance.permits_multiple? and parent_instance.«container( false ) != instance
+              if parent_instance.permits_multiple? and parent_instance.«container»( false ) != instance
                 # We were created by an instance binding as a multiple container (> index 0).
                 #
                 # We need new instance bindings or we end up with the same binding instances as the
                 # first container for this instance binding.
-                child_instance = binding_instance.class::InstanceBinding.new( binding_instance.«parent_binding, 
+                child_instance = binding_instance.class::InstanceBinding.new( binding_instance.«parent_binding», 
                                                                               instance )
               else
                 # We were created by an instance binding.
@@ -123,9 +123,9 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
   end
 
   #########################
-  #  «binding_aliases  #
+  #  «binding_aliases»  #
   #########################
 
-	attr_hash  :«binding_aliases
+	attr_hash  :«binding_aliases»
 
 end

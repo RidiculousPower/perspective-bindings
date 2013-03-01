@@ -129,7 +129,7 @@ def setup_container_and_bindings_tests
   let( :topclass_configuration_proc ) { topclass_binding_A_action }
   let( :subclass_configuration_proc ) { subclass_binding_A_action }
 
-  let( :binding_name ) { topclass_class_binding_A.«name }
+  let( :binding_name ) { topclass_class_binding_A.«name» }
   
   let( :topclass_bound_container ) { topclass_bound_container_class }
   let( :subclass_bound_container ) { subclass_bound_container }
