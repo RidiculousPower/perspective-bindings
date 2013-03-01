@@ -2,10 +2,10 @@
 module ::Perspective::Bindings::BindingDefinitions::Regexp
 
   ##############################
-  #  __binding_value_valid__?  #
+  #  binding_value_valid?  #
   ##############################
 
-  def __binding_value_valid__?( binding_value )
+  def binding_value_valid?( binding_value )
     
     binding_value_valid = false
     

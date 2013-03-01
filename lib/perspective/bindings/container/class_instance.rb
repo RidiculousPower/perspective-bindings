@@ -23,7 +23,7 @@ module ::Perspective::Bindings::Container::ClassInstance
 
       __initialize_bindings__
       initialize( *args, & block )
-      __configure_containers__
+      initialize_instance
 
       return self
 
@@ -50,7 +50,7 @@ module ::Perspective::Bindings::Container::ClassInstance
 
       __initialize_bindings__
       initialize( *args, & block )
-      __configure_containers__
+      initialize_instance
       
       return self
 

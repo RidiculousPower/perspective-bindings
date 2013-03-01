@@ -68,20 +68,21 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
               child_instance = binding_instance.class::InstanceBinding.new( binding_instance, instance )
             
             when ::Perspective::Bindings::BindingBase::InstanceBinding
-
-              # We were created by an instance binding.
-              #
-              # We want the same instance bindings we attached to the instance binding that
-              # this container is attached to.
-              child_instance = binding_instance
               
-            when ::Perspective::Bindings::Container::ObjectInstance
-              
-              # We were created by an instance binding as a multiple container.
-              #
-              # We inherit from the first container in the list; we need new bindings.
-              child_instance = binding_instance.class::InstanceBinding.new( binding_instance.__parent_binding__, 
-                                                                            instance )
+              if parent_instance.permits_multiple? and parent_instance.__container__( false ) != instance
+                # We were created by an instance binding as a multiple container (> index 0).
+                #
+                # We need new instance bindings or we end up with the same binding instances as the
+                # first container for this instance binding.
+                child_instance = binding_instance.class::InstanceBinding.new( binding_instance.__parent_binding__, 
+                                                                              instance )
+              else
+                # We were created by an instance binding.
+                #
+                # We want the same instance bindings we attached to the instance binding that
+                # this container is attached to.
+                child_instance = binding_instance
+              end
 
           end
             

@@ -736,10 +736,10 @@ shared_examples_for :container_and_bindings do
     end
   
     ######################
-    #  __has_binding__?  #
+    #  has_binding?  #
     ######################
 
-    context '::__has_binding__?' do
+    context '::has_binding?' do
 
       context 'module' do
         let( :root ) { module_instance }
@@ -760,13 +760,13 @@ shared_examples_for :container_and_bindings do
 
     end
 
-    context '#__has_binding__?' do
+    context '#has_binding?' do
 
       context 'instance of class' do
-        it_behaves_like( :__has_binding__? ) { let( :root_instance ) { instance_of_class } }
+        it_behaves_like( :has_binding? ) { let( :root_instance ) { instance_of_class } }
       end
       context 'instance of subclass' do
-        it_behaves_like( :__has_binding__? ) { let( :root_instance ) { instance_of_subclass } }
+        it_behaves_like( :has_binding? ) { let( :root_instance ) { instance_of_subclass } }
       end
 
     end

@@ -90,68 +90,68 @@ shared_examples_for :base_class_binding do
   end
 
   ###########################
-  #  __permits_multiple__?  #
-  #  __permits_multiple__=  #
+  #  permits_multiple?  #
+  #  permits_multiple=  #
   ###########################
 
-  context '#__permits_multiple__?, #__permits_multiple__=' do
+  context '#permits_multiple?, #permits_multiple=' do
     it 'topclass binding can permit multiple' do
-      topclass_class_binding.__permits_multiple__?.should be false
-      topclass_class_binding.__permits_multiple__ = true
-      topclass_class_binding.__permits_multiple__?.should be true
+      topclass_class_binding.permits_multiple?.should be false
+      topclass_class_binding.permits_multiple = true
+      topclass_class_binding.permits_multiple?.should be true
     end
     it 'subclass binding can permit multiple independent of topclass binding' do
-      subclass_class_binding.__permits_multiple__?.should be false
-      subclass_class_binding.__permits_multiple__ = true
-      subclass_class_binding.__permits_multiple__?.should be true
-      subclass_class_binding.__permits_multiple__ = false
-      subclass_class_binding.__permits_multiple__?.should be false
-      subclass_class_binding.__permits_multiple__ = true
-      subclass_class_binding.__permits_multiple__?.should be true
+      subclass_class_binding.permits_multiple?.should be false
+      subclass_class_binding.permits_multiple = true
+      subclass_class_binding.permits_multiple?.should be true
+      subclass_class_binding.permits_multiple = false
+      subclass_class_binding.permits_multiple?.should be false
+      subclass_class_binding.permits_multiple = true
+      subclass_class_binding.permits_multiple?.should be true
     end
   end
 
   ###################
-  #  __required__?  #
-  #  __required__=  #
+  #  required?  #
+  #  required=  #
   ###################
 
-  context '#__required__?, #__required__=' do
+  context '#required?, #required=' do
     it 'topclass binding can require binding' do
-      topclass_class_binding.__required__?.should be false
-      topclass_class_binding.__required__ = true
-      topclass_class_binding.__required__?.should be true
+      topclass_class_binding.required?.should be false
+      topclass_class_binding.required = true
+      topclass_class_binding.required?.should be true
     end
     it 'subclass binding can require binding independent of topclass binding' do
-      subclass_class_binding.__required__?.should be false
-      topclass_class_binding.__required__ = true
-      subclass_class_binding.__required__?.should be true
-      subclass_class_binding.__required__ = false
-      subclass_class_binding.__required__?.should be false
-      subclass_class_binding.__required__ = true
-      subclass_class_binding.__required__?.should be true
+      subclass_class_binding.required?.should be false
+      topclass_class_binding.required = true
+      subclass_class_binding.required?.should be true
+      subclass_class_binding.required = false
+      subclass_class_binding.required?.should be false
+      subclass_class_binding.required = true
+      subclass_class_binding.required?.should be true
     end
   end
 
   ###################
-  #  __optional__?  #
-  #  __optional__=  #
+  #  optional?  #
+  #  optional=  #
   ###################
 
-  context '#__optional__?, #__optional__=' do
+  context '#optional?, #optional=' do
     it 'topclass binding can require binding and query via optional? (inverted)' do
-      topclass_class_binding.__optional__?.should be true
-      topclass_class_binding.__optional__ = false
-      topclass_class_binding.__optional__?.should be false
+      topclass_class_binding.optional?.should be true
+      topclass_class_binding.optional = false
+      topclass_class_binding.optional?.should be false
     end
     it 'subclass binding can require binding independent of topclass binding and query via optional? (inverted)' do
-      subclass_class_binding.__optional__?.should be true
-      topclass_class_binding.__optional__ = false
-      subclass_class_binding.__optional__?.should be false
-      subclass_class_binding.__optional__ = true
-      subclass_class_binding.__optional__?.should be true
-      subclass_class_binding.__optional__ = false
-      subclass_class_binding.__optional__?.should be false
+      subclass_class_binding.optional?.should be true
+      topclass_class_binding.optional = false
+      subclass_class_binding.optional?.should be false
+      subclass_class_binding.optional = true
+      subclass_class_binding.optional?.should be true
+      subclass_class_binding.optional = false
+      subclass_class_binding.optional?.should be false
     end
   end
     

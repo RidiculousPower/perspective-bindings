@@ -8,11 +8,23 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
   include ::Perspective::Bindings::Container::SingletonAndObjectInstance
   
+  #########################
+  #  initialize_instance  #
+  #########################
+  
+  def initialize_instance
+
+    __configure_containers__
+    
+    return self
+    
+  end
+
   ##############################
-  #  __initialize_for_index__  #
+  #  initialize_for_index  #
   ##############################
   
-  def __initialize_for_index__( index )
+  def initialize_for_index( index )
     
     # nothing to do - implemented to permit overriding
     
@@ -43,10 +55,10 @@ module ::Perspective::Bindings::Container::ObjectInstance
   end
 
   ##################
-  #  __is_root__?  #
+  #  is_root?  #
   ##################
   
-  def __is_root__?
+  def is_root?
     
     return @__bound_container__.nil?
     
@@ -217,7 +229,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
     found_a_binding = false
     
     __bindings__.each do |this_binding_name, this_binding|
-      if data_container.__has_binding__?( this_binding_name )
+      if data_container.has_binding?( this_binding_name )
         this_data_binding = data_container.__binding__( this_binding_name )
         this_binding.__autobind_binding__( this_data_binding )
         found_a_binding = true
@@ -234,7 +246,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
   
   def __autobind_binding__( data_binding )
     
-    if found_a_binding = __has_binding__?( data_binding_name = data_binding.__name__ )
+    if found_a_binding = has_binding?( data_binding_name = data_binding.__name__ )
       __binding__( data_binding_name ).__autobind_binding__( data_binding.__value__ )
     end
     
@@ -292,7 +304,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
     found_content_binding = false
     
-    if __has_binding__?( :content )
+    if has_binding?( :content )
       __binding__( :content ).__autobind__( data_object )
       found_content_binding = true
     end

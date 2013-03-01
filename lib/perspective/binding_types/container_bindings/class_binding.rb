@@ -100,7 +100,7 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
     # nested route: <root>-route-to-binding-nested-in-self
     # result desired: nested-in-self
     
-    if nested_in_container.__is_root__?
+    if nested_in_container.is_root?
       nested_route = __route__
     else
       slice_off_start_route = nested_in_container.__route_with_name__

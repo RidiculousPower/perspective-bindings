@@ -46,17 +46,17 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
     
   end
 
-  ##############################
-  #  __binding_value_valid__?  #
-  ##############################
+  ##########################
+  #  binding_value_valid?  #
+  ##########################
 
-  def __binding_value_valid__?( binding_value )
+  def binding_value_valid?( binding_value )
 
     binding_value_valid = false
     
-    if binding_value.is_a?( ::Array ) and __permits_multiple__?
+    if binding_value.is_a?( ::Array ) and permits_multiple?
       # ensure each member value is valid
-      binding_value.each { |this_member| break unless binding_value_valid = __binding_value_valid__?( this_member ) }
+      binding_value.each { |this_member| break unless binding_value_valid = binding_value_valid?( this_member ) }
     else
       # if we got here (the top) then the only valid value is nil
       binding_value_valid = binding_value.nil?
@@ -65,12 +65,6 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
     return binding_value_valid
     
   end
-
-	#################
-	#  __equals__?  #
-	#################
-
-  alias_method :__equals__?, :==
 
   ###############
   #  value      #
@@ -92,7 +86,7 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
       
       when ::Perspective::Bindings::BindingBase::InstanceBinding
 
-        if __is_a__?( ::Perspective::Bindings::ReferenceBinding )
+        if ::Perspective::Bindings::ReferenceBinding === self
           @__value__ = object
         else
           @__value__ = object.__value__
@@ -100,7 +94,7 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
       
       else
 
-        unless __binding_value_valid__?( object )
+        unless binding_value_valid?( object )
           raise ::Perspective::Bindings::Exception::BindingInstanceInvalidType, 
                   'Invalid value ' <<  object.inspect + ' assigned to binding :' << __name__.to_s + '.'
         end
@@ -114,30 +108,5 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
   end
 
   alias_method  :value=, :__value__=
-
-	########
-	#  ==  #
-	########
-    
-  def ==( object )
-    
-    is_equal = nil
-
-    value = __value__
-    
-    if __is_a__?( ::Perspective::Bindings::ReferenceBinding ) and
-       value.__is_a__?( ::Perspective::Bindings::BindingBase::InstanceBinding )
-
-      is_equal = value.__equals__?( object )
-
-    else
-
-      is_equal = ( value == object )
-
-    end
-    
-    return is_equal
-    
-  end
 
 end

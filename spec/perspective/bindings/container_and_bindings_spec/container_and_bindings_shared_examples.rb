@@ -587,67 +587,67 @@ shared_examples_for :__binding__ do
   end
 end
 
-shared_examples_for :"self.__has_binding__?( base_module )" do
+shared_examples_for :"self.has_binding?( base_module )" do
   it 'nested binding A' do
-    root.__has_binding__?( :a ).should be true
+    root.has_binding?( :a ).should be true
   end
   it 'nested binding A alias' do
-    root.__has_binding__?( :a_alias ).should be true
+    root.has_binding?( :a_alias ).should be true
   end
   it 'nested binding A_B' do
-    root.a.__has_binding__?( :b ).should be true
+    root.a.has_binding?( :b ).should be true
   end
   it 'nested binding A_B_C' do
-    root.a.b.__has_binding__?( :c ).should be true
+    root.a.b.has_binding?( :c ).should be true
   end
   it 'nested binding A_B_C_content' do
-    root.a.b.c.__has_binding__?( :content ).should be true
+    root.a.b.c.has_binding?( :content ).should be true
   end
   it 'binding that does not exist' do
-    root.__has_binding__?( :non_existent_binding ).should be false
+    root.has_binding?( :non_existent_binding ).should be false
   end
 end
 
-shared_examples_for :"self.__has_binding__?( sub_module_and_below )" do
-  it_behaves_like( :"self.__has_binding__?( base_module )" )
+shared_examples_for :"self.has_binding?( sub_module_and_below )" do
+  it_behaves_like( :"self.has_binding?( base_module )" )
   it 'nested binding content' do
-    root.__has_binding__?( :content ).should be true
+    root.has_binding?( :content ).should be true
   end
   it 'nested binding binding_one' do
-    root.__has_binding__?( :binding_one ).should be true
+    root.has_binding?( :binding_one ).should be true
   end
   it 'nested binding binding_two' do
-    root.__has_binding__?( :binding_two ).should be true
+    root.has_binding?( :binding_two ).should be true
   end
 end
 
-shared_examples_for :__has_binding__? do
+shared_examples_for :has_binding? do
   it 'nested binding A' do
-    root_instance.__has_binding__?( :a ).should be true
+    root_instance.has_binding?( :a ).should be true
   end
   it 'nested binding content' do
-    root_instance.__has_binding__?( :content ).should be true
+    root_instance.has_binding?( :content ).should be true
   end
   it 'nested binding binding_one' do
-    root_instance.__has_binding__?( :binding_one ).should be true
+    root_instance.has_binding?( :binding_one ).should be true
   end
   it 'nested binding binding_two' do
-    root_instance.__has_binding__?( :binding_two ).should be true
+    root_instance.has_binding?( :binding_two ).should be true
   end
   it 'nested binding A alias' do
-    root_instance.__has_binding__?( :a_alias ).should be true
+    root_instance.has_binding?( :a_alias ).should be true
   end
   it 'nested binding A_B' do
-    root_instance.a.__has_binding__?( :b ).should be true
+    root_instance.a.has_binding?( :b ).should be true
   end
   it 'nested binding A_B_C' do
-    root_instance.a.b.__has_binding__?( :c ).should be true
+    root_instance.a.b.has_binding?( :c ).should be true
   end
   it 'nested binding A_B_C_content' do
-    root_instance.a.b.c.__has_binding__?( :content ).should be true
+    root_instance.a.b.c.has_binding?( :content ).should be true
   end
   it 'binding that does not exist' do
-    root_instance.__has_binding__?( :non_existent_binding ).should be false
+    root_instance.has_binding?( :non_existent_binding ).should be false
   end
 end
 

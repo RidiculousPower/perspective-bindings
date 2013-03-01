@@ -30,6 +30,8 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     if container_class
       extend( container_class::Controller::InstanceBindingMethods )
       container_instance = container_class.new_nested_instance( self )
+      # if we could have multiple then we initialize for the first index
+      container_instance.initialize_for_index( 0 ) if permits_multiple?
       # :__store_initialized_container_instance__ is used instead of :__container__= 
       # so that we can store without any overloaded effects.
       __store_initialized_container_instance__( container_instance )
@@ -69,11 +71,11 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
 
-  ########################
-  #  __has_container__?  #
-  ########################
+  ####################
+  #  has_container?  #
+  ####################
   
-  def __has_container__?
+  def has_container?
     
     return __container__( false ) ? true : false
     
@@ -153,10 +155,10 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
     @__containers__ ||= [ __container__ ]
     
-    new_container_instance = container_class.new_nested_instance( __container__ )
+    new_container_instance = container_class.new_nested_instance( self )
     index = @__containers__.size
     @__containers__.push( new_container_instance )
-    new_container_instance.__initialize_for_index__( index )
+    new_container_instance.initialize_for_index( index )
 
     return new_container_instance
     
@@ -174,7 +176,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
 
     if container_count > 1
       
-      unless __permits_multiple__?
+      unless permits_multiple?
         raise ::ArgumentError, "Multiple not permitted for " << container.to_s << '.' 
       end
     
@@ -278,7 +280,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     # if we have sub-bindings that match, copy them
     if container = __container__
       __autobind_container__( data_binding )
-    elsif data_binding.__has_binding__?( :content )
+    elsif data_binding.has_binding?( :content )
       __autobind_binding__( data_binding.content )
     end
     
@@ -324,7 +326,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
     container_count = nil
     
-    if __permits_multiple__? and @__containers__
+    if permits_multiple? and @__containers__
       container_count = @__containers__.size
     else
       container_count = __container__( false ) ? 1 
@@ -381,7 +383,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
       when 0
         self.__container__ = container_instance
       when -1
-        if __permits_multiple__?
+        if permits_multiple?
           if @__containers__
             @__containers__[ index ] = container_instance
           else

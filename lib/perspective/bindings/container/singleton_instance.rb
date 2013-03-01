@@ -37,10 +37,10 @@ module ::Perspective::Bindings::Container::SingletonInstance
   alias_method  :root, :__root__
 
   ##################
-  #  __is_root__?  #
+  #  is_root?  #
   ##################
   
-  def __is_root__?
+  def is_root?
     
     return true
     
@@ -151,7 +151,7 @@ module ::Perspective::Bindings::Container::SingletonInstance
 	
   def __create_name_alias__( binding_alias, existing_binding_name )
     
-    unless __has_binding__?( existing_binding_name )
+    unless has_binding?( existing_binding_name )
   		begin
   		  raise ::Perspective::Bindings::Exception::NoBindingError.new( self, existing_binding_name )
   		rescue ::Exception => exception

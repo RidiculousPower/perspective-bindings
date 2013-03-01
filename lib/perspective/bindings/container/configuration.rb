@@ -18,12 +18,12 @@ module ::Perspective::Bindings::Container::Configuration
   end
 
   ######################
-  #  __has_binding__?  #
+  #  has_binding?  #
   ######################
 
-  # __has_binding__? :name, ...
+  # has_binding? :name, ...
   # 
-	def __has_binding__?( binding_name )
+	def has_binding?( binding_name )
 		
 		return super || __local_aliases_to_bindings__.has_key?( binding_name )
 		

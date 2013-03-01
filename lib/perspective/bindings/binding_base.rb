@@ -26,11 +26,11 @@ module ::Perspective::Bindings::BindingBase
   
   attr_reader  :__root__
 
-  ##################
-  #  __is_root__?  #
-  ##################
+  ##############
+  #  is_root?  #
+  ##############
   
-  def __is_root__?
+  def is_root?
     
     return false
     
@@ -60,41 +60,41 @@ module ::Perspective::Bindings::BindingBase
 
   attr_instance_configuration  :__route_print_string__
 
-  ###########################
-  #  __permits_multiple__?  #
-  #  __permits_multiple__=  #
-  ###########################
+  #######################
+  #  permits_multiple?  #
+  #  permits_multiple=  #
+  #######################
   
-  attr_configuration  :__permits_multiple__?
+  attr_configuration  :permits_multiple?
   
-  self.__permits_multiple__ = false
+  self.permits_multiple = false
   
-  ###################
-  #  __required__?  #
-  #  __required__=  #
-  ###################
+  ###############
+  #  required?  #
+  #  required=  #
+  ###############
 
-  attr_configuration  :__required__?
+  attr_configuration  :required?
 
-  self.__required__ = false
+  self.required = false
 
-  ###################
-  #  __optional__?  #
-  ###################
+  ###############
+  #  optional?  #
+  ###############
   
-  def __optional__?
+  def optional?
   
-    return ! __required__?
+    return ! required?
   
   end
 
-  ###################
-  #  __optional__=  #
-  ###################
+  ###############
+  #  optional=  #
+  ###############
   
-  def __optional__=( true_or_false )
+  def optional=( true_or_false )
   
-    return self.__required__=( ! true_or_false )
+    return self.required=( ! true_or_false )
   
   end
   

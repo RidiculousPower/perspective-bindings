@@ -230,7 +230,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
       new_class_bindings = __send__( single_binding_method_name, *args, & block )
 
       new_class_bindings.each do |this_new_class_binding|
-        this_new_class_binding.__permits_multiple__ = true
+        this_new_class_binding.permits_multiple = true
         __bindings__[ this_new_class_binding.__name__ ] = this_new_class_binding
       end
       
@@ -256,7 +256,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     define_method( method_name ) do |*args, & block|
     
       new_class_bindings = __send__( single_binding_method_name, *args, & block )
-      new_class_bindings.each { |this_new_class_binding| this_new_class_binding.__required__ = true }
+      new_class_bindings.each { |this_new_class_binding| this_new_class_binding.required = true }
     
       return new_class_bindings
     
@@ -280,7 +280,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     define_method( method_name ) do |*args, & block|
     
       new_class_bindings = __send__( multiple_binding_method_name, *args, & block )
-      new_class_bindings.each { |this_new_class_binding| this_new_class_binding.__required__ = true }
+      new_class_bindings.each { |this_new_class_binding| this_new_class_binding.required = true }
     
       return new_class_bindings
     
