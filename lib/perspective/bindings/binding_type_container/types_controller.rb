@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 ###
 # Type controller for groups of binding types.

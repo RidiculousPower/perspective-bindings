@@ -90,18 +90,18 @@ shared_examples_for :container_and_bindings do
     let( :top_singleton_instance ) { class_instance }
     let( :sub_singleton_instance ) { subclass }
   
-    let( :binding_name ) { topclass_instance_binding_A.__name__ }
+    let( :binding_name ) { topclass_instance_binding_A.«name }
   
     let( :topclass_bound_container_class ) { class_instance }
     let( :subclass_bound_container_class ) { subclass }
   
     let( :topclass_bound_container_instance ) { instance_of_class }
-    let( :topclass_nested_container_instance_A ) { instance_of_class.a.__container__ }
-    let( :topclass_nested_container_instance_B ) { instance_of_class.a.b.__container__ }
+    let( :topclass_nested_container_instance_A ) { instance_of_class.a.«container }
+    let( :topclass_nested_container_instance_B ) { instance_of_class.a.b.«container }
   
     let( :subclass_bound_container_instance ) { instance_of_subclass }
-    let( :subclass_nested_container_instance_A ) { instance_of_subclass.a.__container__ }
-    let( :subclass_nested_container_instance_B ) { instance_of_subclass.a.b.__container__ }
+    let( :subclass_nested_container_instance_A ) { instance_of_subclass.a.«container }
+    let( :subclass_nested_container_instance_B ) { instance_of_subclass.a.b.«container }
   
     let( :topclass_class_binding ) { topclass_class_binding_A }
   
@@ -178,64 +178,64 @@ shared_examples_for :container_and_bindings do
     end
 
     ##############
-    #  __name__  #
+    #  «name  #
     ##############
 
-    context '::__name__' do
+    context '::«name' do
     
       context 'module' do
         let( :root ) { module_instance }
-        it_behaves_like( :"self.__name__( base_module )" )
+        it_behaves_like( :"self.«name( base_module )" )
       end
       context 'sub module' do
         let( :root ) { sub_module_instance }
-        it_behaves_like( :"self.__name__( sub_module_and_below )" )
+        it_behaves_like( :"self.«name( sub_module_and_below )" )
       end
       context 'class' do
         let( :root ) { class_instance }
-        it_behaves_like( :"self.__name__( sub_module_and_below )" )
+        it_behaves_like( :"self.«name( sub_module_and_below )" )
       end
       context 'subclass' do
         let( :root ) { subclass }
-        it_behaves_like( :"self.__name__( sub_module_and_below )" )
+        it_behaves_like( :"self.«name( sub_module_and_below )" )
       end
 
     end
 
-    context '#__name__' do
+    context '#«name' do
 
       context 'instance of class' do
-        it_behaves_like( :__name__ ) { let( :root_instance ) { instance_of_class } }
+        it_behaves_like( :«name ) { let( :root_instance ) { instance_of_class } }
       end
       context 'instance of subclass' do
-        it_behaves_like( :__name__ ) { let( :root_instance ) { instance_of_subclass } }
+        it_behaves_like( :«name ) { let( :root_instance ) { instance_of_subclass } }
       end
 
     end
 
     ###################
-    #  __configure__  #
+    #  «configure  #
     ###################
 
-    context '::__configure__' do
+    context '::«configure' do
     
       context 'module' do
-        it_behaves_like( :"self.__configure__( base_module )") { let( :root ) { module_instance } }
+        it_behaves_like( :"self.«configure( base_module )") { let( :root ) { module_instance } }
       end
       context 'sub module' do
-        it_behaves_like( :"self.__configure__( sub_module_and_below )") { let( :root ) { sub_module_instance } }
+        it_behaves_like( :"self.«configure( sub_module_and_below )") { let( :root ) { sub_module_instance } }
       end
       context 'class' do
-        it_behaves_like( :"self.__configure__( sub_module_and_below )") { let( :root ) { class_instance } }
+        it_behaves_like( :"self.«configure( sub_module_and_below )") { let( :root ) { class_instance } }
       end
       context 'subclass' do
-        it_behaves_like( :"self.__configure__( sub_module_and_below )") { let( :root ) { subclass } }
+        it_behaves_like( :"self.«configure( sub_module_and_below )") { let( :root ) { subclass } }
       end
     end
 
-    context '#__configure__' do
-      it 'instance does not respond to #__configure__' do
-        instance_of_class.respond_to?( :__configure__ ).should be false
+    context '#«configure' do
+      it 'instance does not respond to #«configure' do
+        instance_of_class.respond_to?( :«configure ).should be false
       end
     end
 
@@ -244,8 +244,8 @@ shared_examples_for :container_and_bindings do
     ###############
 
     context '::configure' do
-      it 'is an alias for ::__configure__' do
-        module_instance.method( :configure ).should == module_instance.method( :__configure__ )
+      it 'is an alias for ::«configure' do
+        module_instance.method( :configure ).should == module_instance.method( :«configure )
       end
     end
 
@@ -256,37 +256,37 @@ shared_examples_for :container_and_bindings do
     end
 
     ##############
-    #  __root__  #
+    #  «root  #
     ##############
 
-    context '::__root__' do
+    context '::«root' do
           
       context 'module' do
         let( :root ) { module_instance }
-        it_behaves_like( :"self.__name__( base_module )" )
+        it_behaves_like( :"self.«name( base_module )" )
       end
       context 'sub module' do
         let( :root ) { sub_module_instance }
-        it_behaves_like( :"self.__name__( sub_module_and_below )" )
+        it_behaves_like( :"self.«name( sub_module_and_below )" )
       end
       context 'class' do
         let( :root ) { class_instance }
-        it_behaves_like( :"self.__name__( sub_module_and_below )" )
+        it_behaves_like( :"self.«name( sub_module_and_below )" )
       end
       context 'subclass' do
         let( :root ) { subclass }
-        it_behaves_like( :"self.__name__( sub_module_and_below )" )
+        it_behaves_like( :"self.«name( sub_module_and_below )" )
       end
 
     end
 
-    context '#__root__' do
+    context '#«root' do
     
       context 'instance of class' do
-        it_behaves_like( :__root__ ) { let( :root_instance ) { instance_of_class } }
+        it_behaves_like( :«root ) { let( :root_instance ) { instance_of_class } }
       end
       context 'instance of subclass' do
-        it_behaves_like( :__root__ ) { let( :root_instance ) { instance_of_subclass } }
+        it_behaves_like( :«root ) { let( :root_instance ) { instance_of_subclass } }
       end
 
     end
@@ -296,48 +296,48 @@ shared_examples_for :container_and_bindings do
     ##########
 
     context '::root' do
-      it 'is an alias for ::__root__' do
-        module_instance.method( :root ).should == module_instance.method( :__root__ )
+      it 'is an alias for ::«root' do
+        module_instance.method( :root ).should == module_instance.method( :«root )
       end
     end
 
     context '#root' do
-      it 'is an alias for #__root__' do
-        module_instance.instance_method( :root ).should == module_instance.instance_method( :__root__ )
+      it 'is an alias for #«root' do
+        module_instance.instance_method( :root ).should == module_instance.instance_method( :«root )
       end
     end
 
     ###############
-    #  __route__  #
+    #  «route  #
     ###############
 
-    context '::__route__' do
+    context '::«route' do
 
       context 'module' do
         let( :root ) { module_instance }
-        it_behaves_like( :"self.__name__( base_module )" )
+        it_behaves_like( :"self.«name( base_module )" )
       end
       context 'sub module' do
         let( :root ) { sub_module_instance }
-        it_behaves_like( :"self.__name__( sub_module_and_below )" )
+        it_behaves_like( :"self.«name( sub_module_and_below )" )
       end
       context 'class' do
         let( :root ) { class_instance }
-        it_behaves_like( :"self.__name__( sub_module_and_below )" )
+        it_behaves_like( :"self.«name( sub_module_and_below )" )
       end
       context 'subclass' do
         let( :root ) { subclass }
-        it_behaves_like( :"self.__name__( sub_module_and_below )" )
+        it_behaves_like( :"self.«name( sub_module_and_below )" )
       end
     
     end
 
-    context '#__route__' do
+    context '#«route' do
       context 'instance of class' do
-        it_behaves_like( :__route__ ) { let( :root_instance ) { instance_of_class } }
+        it_behaves_like( :«route ) { let( :root_instance ) { instance_of_class } }
       end
       context 'instance of subclass' do
-        it_behaves_like( :__route__ ) { let( :root_instance ) { instance_of_subclass } }
+        it_behaves_like( :«route ) { let( :root_instance ) { instance_of_subclass } }
       end
     end
 
@@ -346,47 +346,47 @@ shared_examples_for :container_and_bindings do
     ###########
 
     context '::route' do
-      it 'is an alias for ::__route__' do
-        module_instance.method( :route ).should == module_instance.method( :__route__ )
+      it 'is an alias for ::«route' do
+        module_instance.method( :route ).should == module_instance.method( :«route )
       end
     end
 
     context '#route' do
-      it 'is an alias for #__route__' do
-        module_instance.instance_method( :route ).should == module_instance.instance_method( :__route__ )
+      it 'is an alias for #«route' do
+        module_instance.instance_method( :route ).should == module_instance.instance_method( :«route )
       end
     end
 
     #########################
-    #  __route_with_name__  #
+    #  «route_with_name  #
     #########################
 
-    context '::__route_with_name__' do
+    context '::«route_with_name' do
 
       context 'module' do
         let( :root ) { module_instance }
-        it_behaves_like( :"self.__name__( base_module )" )
+        it_behaves_like( :"self.«name( base_module )" )
       end
       context 'sub module' do
         let( :root ) { sub_module_instance }
-        it_behaves_like( :"self.__name__( sub_module_and_below )" )
+        it_behaves_like( :"self.«name( sub_module_and_below )" )
       end
       context 'class' do
         let( :root ) { class_instance }
-        it_behaves_like( :"self.__name__( sub_module_and_below )" )
+        it_behaves_like( :"self.«name( sub_module_and_below )" )
       end
       context 'subclass' do
         let( :root ) { subclass }
-        it_behaves_like( :"self.__name__( sub_module_and_below )" )
+        it_behaves_like( :"self.«name( sub_module_and_below )" )
       end
     end
 
-    context '#__route_with_name__' do
+    context '#«route_with_name' do
       context 'instance of class' do
-        it_behaves_like( :__route_with_name__ ) { let( :root_instance ) { instance_of_class } }
+        it_behaves_like( :«route_with_name ) { let( :root_instance ) { instance_of_class } }
       end
       context 'instance of subclass' do
-        it_behaves_like( :__route_with_name__ ) { let( :root_instance ) { instance_of_subclass } }
+        it_behaves_like( :«route_with_name ) { let( :root_instance ) { instance_of_subclass } }
       end
     end
 
@@ -395,42 +395,42 @@ shared_examples_for :container_and_bindings do
     #####################
 
     context '::route_with_name' do
-      it 'is an alias for ::__route_with_name__' do
-        module_instance.method( :route_with_name ).should == module_instance.method( :__route_with_name__ )
+      it 'is an alias for ::«route_with_name' do
+        module_instance.method( :route_with_name ).should == module_instance.method( :«route_with_name )
       end
     end
 
     context '#route_with_name' do
-      it 'is an alias for #__route_with_name__' do
-        module_instance.instance_method( :route_with_name ).should == module_instance.instance_method( :__route_with_name__ )
+      it 'is an alias for #«route_with_name' do
+        module_instance.instance_method( :route_with_name ).should == module_instance.instance_method( :«route_with_name )
       end
     end
 
     ######################
-    #  __nested_route__  #
+    #  «nested_route  #
     ######################
 
-    context '::__nested_route__' do
+    context '::«nested_route' do
       context 'module' do
-        it_behaves_like( :__nested_route__ ) { let( :instance ) { module_instance } }
+        it_behaves_like( :«nested_route ) { let( :instance ) { module_instance } }
       end
       context 'sub module' do
-        it_behaves_like( :__nested_route__ ) { let( :instance ) { sub_module_instance } }
+        it_behaves_like( :«nested_route ) { let( :instance ) { sub_module_instance } }
       end
       context 'class' do
-        it_behaves_like( :__nested_route__ ) { let( :instance ) { class_instance } }
+        it_behaves_like( :«nested_route ) { let( :instance ) { class_instance } }
       end
       context 'subclass' do
-        it_behaves_like( :__nested_route__ ) { let( :instance ) { subclass } }
+        it_behaves_like( :«nested_route ) { let( :instance ) { subclass } }
       end
     end
 
-    context '#__nested_route__' do
+    context '#«nested_route' do
       context 'instance of class' do
-        it_behaves_like( :__nested_route__ ) { let( :instance ) { instance_of_class } }
+        it_behaves_like( :«nested_route ) { let( :instance ) { instance_of_class } }
       end
       context 'instance of subclass' do
-        it_behaves_like( :__nested_route__ ) { let( :instance ) { instance_of_subclass } }
+        it_behaves_like( :«nested_route ) { let( :instance ) { instance_of_subclass } }
       end
     end
 
@@ -445,87 +445,87 @@ shared_examples_for :container_and_bindings do
     end
 
     context '#nested_route' do
-      it 'is an alias for #__nested_route__' do
-        module_instance.instance_method( :nested_route ).should == module_instance.instance_method( :__nested_route__ )
+      it 'is an alias for #«nested_route' do
+        module_instance.instance_method( :nested_route ).should == module_instance.instance_method( :«nested_route )
       end
     end
 
     #####################
-    #  __root_string__  #
+    #  «root_string  #
     #####################
 
-    context '__root_string__' do
+    context '«root_string' do
   
       let( :string ) { '<root:' << instance.to_s << '>' }
 
-      context '::__root_string__' do
+      context '::«root_string' do
         context 'module' do
           let( :instance ) { module_instance }
           it 'is a formatted version of to_s' do
-            module_instance.__root_string__.should == string
+            module_instance.«root_string.should == string
           end
         end
         context 'sub module' do
           let( :instance ) { sub_module_instance }
           it 'is a formatted version of to_s' do
-            sub_module_instance.__root_string__.should == string
+            sub_module_instance.«root_string.should == string
           end
         end
         context 'class' do
           let( :instance ) { class_instance }
           it 'is a formatted version of to_s' do
-            class_instance.__root_string__.should == string
+            class_instance.«root_string.should == string
           end
         end
         context 'subclass' do
           let( :instance ) { subclass }
           it 'is a formatted version of to_s' do
-            subclass.__root_string__.should == string
+            subclass.«root_string.should == string
           end
         end
       end
 
-      context '#__root_string__' do
+      context '#«root_string' do
         context 'instance of class' do
-          it_behaves_like( :__root_string__ ) { let( :instance ) { instance_of_class } }
+          it_behaves_like( :«root_string ) { let( :instance ) { instance_of_class } }
         end
         context 'instance of subclass' do
-          it_behaves_like( :__root_string__ ) { let( :instance ) { instance_of_subclass } }
+          it_behaves_like( :«root_string ) { let( :instance ) { instance_of_subclass } }
         end
       end
 
     end
 
     ######################
-    #  __route_string__  #
+    #  «route_string  #
     ######################
 
-    context '::__route_string__' do
+    context '::«route_string' do
 
       context 'module' do
         let( :root ) { module_instance }
-        it_behaves_like( :"self.__route_string__( base_module )" )
+        it_behaves_like( :"self.«route_string( base_module )" )
       end
       context 'sub module' do
         let( :root ) { sub_module_instance }
-        it_behaves_like( :"self.__route_string__( sub_module_and_below )" )
+        it_behaves_like( :"self.«route_string( sub_module_and_below )" )
       end
       context 'class' do
         let( :root ) { class_instance }
-        it_behaves_like( :"self.__route_string__( sub_module_and_below )" )
+        it_behaves_like( :"self.«route_string( sub_module_and_below )" )
       end
       context 'subclass' do
         let( :root ) { subclass }
-        it_behaves_like( :"self.__route_string__( sub_module_and_below )" )
+        it_behaves_like( :"self.«route_string( sub_module_and_below )" )
       end
     end
 
-    context '#__route_string__' do
+    context '#«route_string' do
       context 'instance of class' do
-        it_behaves_like( :__route_string__ ) { let( :root_instance ) { instance_of_class } }
+        it_behaves_like( :«route_string ) { let( :root_instance ) { instance_of_class } }
       end
       context 'instance of subclass' do
-        it_behaves_like( :__route_string__ ) { let( :root_instance ) { instance_of_subclass } }
+        it_behaves_like( :«route_string ) { let( :root_instance ) { instance_of_subclass } }
       end
     end
 
@@ -534,48 +534,48 @@ shared_examples_for :container_and_bindings do
     ##################
 
     context '::route_string' do
-      it 'is an alias for ::__route_string__' do
-        module_instance.method( :route_string ).should == module_instance.method( :__route_string__ )
+      it 'is an alias for ::«route_string' do
+        module_instance.method( :route_string ).should == module_instance.method( :«route_string )
       end
     end
 
     context '#route_string' do
-      it 'is an alias for #__route_string__' do
-        module_instance.instance_method( :route_string ).should == module_instance.instance_method( :__route_string__ )
+      it 'is an alias for #«route_string' do
+        module_instance.instance_method( :route_string ).should == module_instance.instance_method( :«route_string )
       end
     end
 
     ############################
-    #  __route_print_string__  #
+    #  «route_print_string  #
     ############################
 
-    context '::__route_print_string__' do
+    context '::«route_print_string' do
 
       context 'module' do
         let( :root ) { module_instance }
-        it_behaves_like( :"self.__route_print_string__( base_module )" )
+        it_behaves_like( :"self.«route_print_string( base_module )" )
       end
       context 'sub module' do
         let( :root ) { sub_module_instance }
-        it_behaves_like( :"self.__route_print_string__( sub_module_and_below )" )
+        it_behaves_like( :"self.«route_print_string( sub_module_and_below )" )
       end
       context 'class' do
         let( :root ) { class_instance }
-        it_behaves_like( :"self.__route_print_string__( sub_module_and_below )" )
+        it_behaves_like( :"self.«route_print_string( sub_module_and_below )" )
       end
       context 'subclass' do
         let( :root ) { subclass }
-        it_behaves_like( :"self.__route_print_string__( sub_module_and_below )" )
+        it_behaves_like( :"self.«route_print_string( sub_module_and_below )" )
       end
 
     end
 
-    context '#__route_print_string__' do
+    context '#«route_print_string' do
       context 'instance of class' do
-        it_behaves_like( :__route_print_string__ ) { let( :root_instance ) { instance_of_class } }
+        it_behaves_like( :«route_print_string ) { let( :root_instance ) { instance_of_class } }
       end
       context 'instance of subclass' do
-        it_behaves_like( :__route_print_string__ ) { let( :root_instance ) { instance_of_subclass } }
+        it_behaves_like( :«route_print_string ) { let( :root_instance ) { instance_of_subclass } }
       end
     end
 
@@ -584,14 +584,14 @@ shared_examples_for :container_and_bindings do
     ########################
 
     context '::route_print_string' do
-      it 'is an alias for ::__route_print_string__' do
-        module_instance.method( :route_print_string ).should == module_instance.method( :__route_print_string__ )
+      it 'is an alias for ::«route_print_string' do
+        module_instance.method( :route_print_string ).should == module_instance.method( :«route_print_string )
       end
     end
 
     context '#route_print_string' do
-      it 'is an alias for #__route_print_string__' do
-        module_instance.instance_method( :route_print_string ).should == module_instance.instance_method( :__route_print_string__ )
+      it 'is an alias for #«route_print_string' do
+        module_instance.instance_method( :route_print_string ).should == module_instance.instance_method( :«route_print_string )
       end
     end
 
@@ -647,74 +647,74 @@ shared_examples_for :container_and_bindings do
     end
 
     ##################
-    #  __bindings__  #
+    #  «bindings  #
     ##################
 
-    context '::__bindings__' do
+    context '::«bindings' do
       context 'module' do
         let( :root ) { module_instance }
         it 'root container bindings' do
-          root.__bindings__.should == { :a => root.a }
-          root.__bindings__[ :a ].should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
+          root.«bindings.should == { :a => root.a }
+          root.«bindings[ :a ].should be_a ::Perspective::BindingTypes::ContainerBindings::ClassBinding
         end
-        it_behaves_like( :"self.__bindings__( base_module )" )
+        it_behaves_like( :"self.«bindings( base_module )" )
       end
       context 'sub module' do
         let( :root ) { sub_module_instance }
-        it_behaves_like( :"self.__bindings__( sub_module_and_below )" )
+        it_behaves_like( :"self.«bindings( sub_module_and_below )" )
       end
       context 'class' do
         let( :root ) { class_instance }
-        it_behaves_like( :"self.__bindings__( sub_module_and_below )" )
+        it_behaves_like( :"self.«bindings( sub_module_and_below )" )
       end
       context 'subclass' do
         let( :root ) { subclass }
-        it_behaves_like( :"self.__bindings__( sub_module_and_below )" )
+        it_behaves_like( :"self.«bindings( sub_module_and_below )" )
       end
 
     end
 
-    context '#__bindings__' do
+    context '#«bindings' do
       context 'instance of class' do
-        it_behaves_like( :__bindings__ ) { let( :root_instance ) { instance_of_class } }
+        it_behaves_like( :«bindings ) { let( :root_instance ) { instance_of_class } }
       end
       context 'instance of subclass' do
-        it_behaves_like( :__bindings__ ) { let( :root_instance ) { instance_of_subclass } }
+        it_behaves_like( :«bindings ) { let( :root_instance ) { instance_of_subclass } }
       end
     end
 
     #################
-    #  __binding__  #
+    #  «binding  #
     #################
 
-    context '::__binding__' do
+    context '::«binding' do
 
       context 'module' do
         let( :root ) { module_instance }
-        it_behaves_like( :"self.__binding__( base_module )" )
+        it_behaves_like( :"self.«binding( base_module )" )
       end
       context 'sub module' do
         let( :root ) { sub_module_instance }
-        it_behaves_like( :"self.__binding__( sub_module_and_below )" )
+        it_behaves_like( :"self.«binding( sub_module_and_below )" )
       end
       context 'class' do
         let( :root ) { class_instance }
-        it_behaves_like( :"self.__binding__( sub_module_and_below )" )
+        it_behaves_like( :"self.«binding( sub_module_and_below )" )
       end
       context 'subclass' do
         let( :root ) { subclass }
-        it_behaves_like( :"self.__binding__( sub_module_and_below )" )
+        it_behaves_like( :"self.«binding( sub_module_and_below )" )
       end
 
     end
 
-    context '#__binding__' do
+    context '#«binding' do
     
       context 'instance of class' do
-        it_behaves_like( :__binding__ ) { let( :root_instance ) { instance_of_class } }
+        it_behaves_like( :«binding ) { let( :root_instance ) { instance_of_class } }
       end
       context 'instance of subclass' do
-        it_behaves_like( :__binding__ ) { let( :root_instance ) { instance_of_subclass } }
+        it_behaves_like( :«binding ) { let( :root_instance ) { instance_of_subclass } }
       end
     end
 
@@ -743,19 +743,19 @@ shared_examples_for :container_and_bindings do
 
       context 'module' do
         let( :root ) { module_instance }
-        it_behaves_like( :"self.__binding__( base_module )" )
+        it_behaves_like( :"self.«binding( base_module )" )
       end
       context 'sub module' do
         let( :root ) { sub_module_instance }
-        it_behaves_like( :"self.__binding__( sub_module_and_below )" )
+        it_behaves_like( :"self.«binding( sub_module_and_below )" )
       end
       context 'class' do
         let( :root ) { class_instance }
-        it_behaves_like( :"self.__binding__( sub_module_and_below )" )
+        it_behaves_like( :"self.«binding( sub_module_and_below )" )
       end
       context 'subclass' do
         let( :root ) { subclass }
-        it_behaves_like( :"self.__binding__( sub_module_and_below )" )
+        it_behaves_like( :"self.«binding( sub_module_and_below )" )
       end
 
     end
@@ -772,19 +772,19 @@ shared_examples_for :container_and_bindings do
     end
 
     ##########################
-    #  __autobind_binding__  #
+    #  «autobind_binding  #
     ##########################
 
-    context '::__autobind_binding__' do
-      it 'singleton does not respond to ::__autobind_binding__' do
-        module_instance.respond_to?( :__autobind_binding__ ).should be false
+    context '::«autobind_binding' do
+      it 'singleton does not respond to ::«autobind_binding' do
+        module_instance.respond_to?( :«autobind_binding ).should be false
       end
     end
 
-    context '#__autobind_binding__' do
+    context '#«autobind_binding' do
       context 'container' do
         before :each do
-          instance_of_class.__autobind_binding__( data_binding )
+          instance_of_class.«autobind_binding( data_binding )
         end
         it 'will look for a binding by the same name and set its value to the value of provided binding' do
           instance_of_class.content.value.should be data_binding.content.value
@@ -792,7 +792,7 @@ shared_examples_for :container_and_bindings do
       end
       context 'binding' do
         before :each do
-          instance_of_class.content.__autobind_binding__( data_binding.content )
+          instance_of_class.content.«autobind_binding( data_binding.content )
         end
         it 'will set its value to the value of provided binding' do
           instance_of_class.content.value.should be data_binding.content.value
@@ -801,19 +801,19 @@ shared_examples_for :container_and_bindings do
     end
 
     ############################
-    #  __autobind_container__  #
+    #  «autobind_container  #
     ############################
 
-    context '::__autobind_container__' do
-      it 'singleton does not respond to ::__autobind_container__' do
-        module_instance.respond_to?( :__autobind_container__ ).should be false
+    context '::«autobind_container' do
+      it 'singleton does not respond to ::«autobind_container' do
+        module_instance.respond_to?( :«autobind_container ).should be false
       end
     end
 
-    context '#__autobind_container__' do
+    context '#«autobind_container' do
       context 'container' do
         before :each do
-          instance_of_class.__autobind_container__( data_container )
+          instance_of_class.«autobind_container( data_container )
         end
         it 'will bind values from foreign container bindings to corresponding bindings' do
           instance_of_class.content.value.should == data_container.content.value
@@ -824,7 +824,7 @@ shared_examples_for :container_and_bindings do
       end
       context 'binding' do
         before :each do
-          instance_of_class.a.__autobind_container__( data_container.a.__container__ )
+          instance_of_class.a.«autobind_container( data_container.a.«container )
         end
         it 'will bind values from foreign container bindings to corresponding bindings' do
           instance_of_class.a.b.c.content.value.should == data_container.a.b.c.content.value
@@ -833,19 +833,19 @@ shared_examples_for :container_and_bindings do
     end
 
     #######################
-    #  __autobind_hash__  #
+    #  «autobind_hash  #
     #######################
 
-    context '::__autobind_hash__' do
-      it 'singleton does not respond to ::__autobind_hash__' do
-        module_instance.respond_to?( :__autobind_hash__ ).should be false
+    context '::«autobind_hash' do
+      it 'singleton does not respond to ::«autobind_hash' do
+        module_instance.respond_to?( :«autobind_hash ).should be false
       end
     end
 
-    context '#__autobind_hash__' do
+    context '#«autobind_hash' do
       context 'container' do
         before :each do
-          instance_of_class.__autobind_hash__( data_hash )
+          instance_of_class.«autobind_hash( data_hash )
         end
         it 'will bind values from hash to corresponding bindings' do
           instance_of_class.content.value.should == data_hash[ :content ]
@@ -856,7 +856,7 @@ shared_examples_for :container_and_bindings do
       end
       context 'binding' do
         before :each do
-          instance_of_class.a.__autobind_hash__( data_hash[ :a ] )
+          instance_of_class.a.«autobind_hash( data_hash[ :a ] )
         end
         it 'will bind values from hash to corresponding bindings' do
           instance_of_class.a.b.c.content.value.should == data_hash[ :a ][ :b ][ :c ]
@@ -865,19 +865,19 @@ shared_examples_for :container_and_bindings do
     end
 
     #########################
-    #  __autobind_object__  #
+    #  «autobind_object  #
     #########################
 
-    context '::__autobind_object__' do
-      it 'singleton does not respond to ::__autobind_object__' do
-        module_instance.respond_to?( :__autobind_object__ ).should be false
+    context '::«autobind_object' do
+      it 'singleton does not respond to ::«autobind_object' do
+        module_instance.respond_to?( :«autobind_object ).should be false
       end
     end
 
-    context '#__autobind_object__' do
+    context '#«autobind_object' do
       context 'container' do
         before :each do
-          instance_of_class.__autobind_object__( data_object )
+          instance_of_class.«autobind_object( data_object )
         end
         it 'will bind values from object to corresponding bindings' do
           instance_of_class.content.value.should == data_object.content
@@ -888,7 +888,7 @@ shared_examples_for :container_and_bindings do
       end
       context 'binding' do
         before :each do
-          instance_of_class.a.__autobind_object__( data_object.a )
+          instance_of_class.a.«autobind_object( data_object.a )
         end
         it 'will bind values from object to corresponding bindings' do
           instance_of_class.a.b.c.content.value.should == data_object.a.b.c
@@ -897,24 +897,24 @@ shared_examples_for :container_and_bindings do
     end
 
     ########################
-    #  __autobind_array__  #
+    #  «autobind_array  #
     ########################
 
-    context '::__autobind_array__' do
-      it 'singleton does not respond to ::__autobind_array__' do
-        module_instance.respond_to?( :__autobind_array__ ).should be false
+    context '::«autobind_array' do
+      it 'singleton does not respond to ::«autobind_array' do
+        module_instance.respond_to?( :«autobind_array ).should be false
       end
     end
 
-    context '#__autobind_array__' do
-      context 'container#__autobind_array__' do
+    context '#«autobind_array' do
+      context 'container#«autobind_array' do
         it 'raises exception since Array has no clear resolution' do
-          ::Proc.new { instance_of_class.__autobind_array__( multiple_data_objects ) }.should raise_error( ::ArgumentError )
+          ::Proc.new { instance_of_class.«autobind_array( multiple_data_objects ) }.should raise_error( ::ArgumentError )
         end
       end
-      context 'instance_binding#__autobind_array__' do
+      context 'instance_binding#«autobind_array' do
         before :each do
-          instance_of_multiple_container_class.multiple_binding.__autobind_array__( multiple_data_objects )
+          instance_of_multiple_container_class.multiple_binding.«autobind_array( multiple_data_objects )
         end
         it 'will treat an array as a list of values to be mapped to multiple containers' do
           instance_of_multiple_container_class.multiple_binding[ 0 ].content.value.should be :c_content_value
@@ -925,19 +925,19 @@ shared_examples_for :container_and_bindings do
     end
 
     ##################
-    #  __autobind__  #
+    #  «autobind  #
     ##################
 
-    context '::__autobind__' do
-      it 'singleton does not respond to ::__autobind__' do
-        module_instance.respond_to?( :__autobind__ ).should be false
+    context '::«autobind' do
+      it 'singleton does not respond to ::«autobind' do
+        module_instance.respond_to?( :«autobind ).should be false
       end
     end
 
-    context '#__autobind__' do
+    context '#«autobind' do
       context 'container' do
         context 'acceptable objects' do
-          before( :each ) { instance.__autobind__( object ) }
+          before( :each ) { instance.«autobind( object ) }
           let( :instance ) { instance_of_class }
           context 'binding' do
             let( :object ) { data_binding }
@@ -977,12 +977,12 @@ shared_examples_for :container_and_bindings do
           let( :instance ) { instance_of_multiple_container_class }
           let( :object ) { multiple_data_objects }
           it 'raises exception since Array has no clear resolution' do
-            ::Proc.new { instance.__autobind__( object ) }.should raise_error( ::ArgumentError )
+            ::Proc.new { instance.«autobind( object ) }.should raise_error( ::ArgumentError )
           end
         end
       end
       context 'binding' do
-        before( :each ) { instance.__autobind__( object ) }
+        before( :each ) { instance.«autobind( object ) }
         let( :instance ) { instance_of_class.a }
         context 'binding' do
           let( :object ) { data_binding }
@@ -1032,8 +1032,8 @@ shared_examples_for :container_and_bindings do
     end
 
     context '#autobind' do
-      it 'is an alias for #__autobind__' do
-        module_instance.instance_method( :autobind ).should == module_instance.instance_method( :__autobind__ )
+      it 'is an alias for #«autobind' do
+        module_instance.instance_method( :autobind ).should == module_instance.instance_method( :«autobind )
       end
     end
 

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 require_relative 'bindings/container_and_bindings_spec/container_and_bindings_test_setup.rb'
 require_relative 'bindings/container_and_bindings_spec/container_and_bindings.rb'

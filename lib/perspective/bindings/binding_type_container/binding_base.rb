@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 ###
 # BindingBase is a common base class that creates modules to act as base modules for binding types.

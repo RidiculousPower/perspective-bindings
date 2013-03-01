@@ -6,42 +6,42 @@ shared_examples_for :container_instance_binding do
   it_behaves_like :base_instance_binding
   
   #########################################
-  #  __initialize_container_from_class__  #
+  #  «initialize_container_from_class  #
   #########################################
   
-  context '#__initialize_container_from_class__' do
+  context '#«initialize_container_from_class' do
     it 'will be extended with container instance binding methods' do
-      topclass_class_binding_A.__container_class__::Controller::InstanceBindingMethods.should === topclass_instance_binding_A
+      topclass_class_binding_A.«container_class::Controller::InstanceBindingMethods.should === topclass_instance_binding_A
     end
     it 'will create and store instance of container' do
-      topclass_class_binding_A.__container_class__.should === topclass_instance_binding_A.__container__
+      topclass_class_binding_A.«container_class.should === topclass_instance_binding_A.«container
     end
   end
   
   ###################
-  #  __container__  #
+  #  «container  #
   ###################
 
-  context '#__container__' do
+  context '#«container' do
     it 'will return the initialized container instance' do
-      topclass_instance_binding_A.__container__.should be_a topclass_class_binding_A.__container_class__
-      topclass_instance_binding_A_B.__container__.should be_a topclass_class_binding_A_B.__container_class__
-      topclass_instance_binding_A_B_C.__container__.should be_a topclass_class_binding_A_B_C.__container_class__
-      subclass_instance_binding_A.__container__.should be_a subclass_class_binding_A.__container_class__
-      subclass_instance_binding_A_B.__container__.should be_a subclass_class_binding_A_B.__container_class__
-      subclass_instance_binding_A_B_C.__container__.should be_a subclass_class_binding_A_B_C.__container_class__
+      topclass_instance_binding_A.«container.should be_a topclass_class_binding_A.«container_class
+      topclass_instance_binding_A_B.«container.should be_a topclass_class_binding_A_B.«container_class
+      topclass_instance_binding_A_B_C.«container.should be_a topclass_class_binding_A_B_C.«container_class
+      subclass_instance_binding_A.«container.should be_a subclass_class_binding_A.«container_class
+      subclass_instance_binding_A_B.«container.should be_a subclass_class_binding_A_B.«container_class
+      subclass_instance_binding_A_B_C.«container.should be_a subclass_class_binding_A_B_C.«container_class
     end
   end
   
   ####################
-  #  __container__=  #
+  #  «container=  #
   ####################
 
-  context '#__container__=' do
+  context '#«container=' do
     it 'will store container, initializing self with container as parent (reverse the norm)' do
-      subclass_instance_binding_A_B_C.__container__ = topclass_nested_container_instance_A
-      subclass_instance_binding_A_B_C.__container__.should be topclass_nested_container_instance_A
-      CascadingConfiguration.configuration( subclass_instance_binding_A_B_C, :__bindings__ ).is_parent?( topclass_nested_container_instance_A ).should be true
+      subclass_instance_binding_A_B_C.«container = topclass_nested_container_instance_A
+      subclass_instance_binding_A_B_C.«container.should be topclass_nested_container_instance_A
+      CascadingConfiguration.configuration( subclass_instance_binding_A_B_C, :«bindings ).is_parent?( topclass_nested_container_instance_A ).should be true
     end
   end
   
@@ -50,8 +50,8 @@ shared_examples_for :container_instance_binding do
   ###############
 
   context '#container' do
-    it 'is an alias for #__container__' do
-      topclass_instance_binding_A.class.instance_method( :container ).should == topclass_instance_binding_A.class.instance_method( :__container__ )
+    it 'is an alias for #«container' do
+      topclass_instance_binding_A.class.instance_method( :container ).should == topclass_instance_binding_A.class.instance_method( :«container )
     end
   end
   
@@ -60,86 +60,86 @@ shared_examples_for :container_instance_binding do
   ################
 
   context '#container=' do
-    it 'is an alias for #__container__=' do
-      topclass_instance_binding_A.class.instance_method( :container= ).should == topclass_instance_binding_A.class.instance_method( :__container__= )
+    it 'is an alias for #«container=' do
+      topclass_instance_binding_A.class.instance_method( :container= ).should == topclass_instance_binding_A.class.instance_method( :«container= )
     end
   end
   
   #####################################
-  #  __create_additional_container__  #
+  #  «create_additional_container  #
   #####################################
 
-  context '#__create_additional_container__' do
+  context '#«create_additional_container' do
     before :each do
-      instance_of_multiple_container_class.multiple_binding.__create_additional_container__
+      instance_of_multiple_container_class.multiple_binding.«create_additional_container
     end
     context 'only one container exists' do
       it 'will create another container, ensuring containers array exists internally' do
-        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@__containers__ ).size.should be 2
-        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@__containers__)[ 0 ].should be_a nested_class_A_B_C
-        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@__containers__)[ 1 ].should be_a nested_class_A_B_C
+        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@«containers ).size.should be 2
+        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@«containers)[ 0 ].should be_a nested_class_A_B_C
+        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@«containers)[ 1 ].should be_a nested_class_A_B_C
       end
     end
     context 'more than one container already exists' do
       before :each do
-        instance_of_multiple_container_class.multiple_binding.__create_additional_container__
+        instance_of_multiple_container_class.multiple_binding.«create_additional_container
       end
       it 'will create another container' do
-        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@__containers__ ).size.should be 3
-        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@__containers__)[ 0 ].should be_a nested_class_A_B_C
-        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@__containers__)[ 1 ].should be_a nested_class_A_B_C
-        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@__containers__)[ 2 ].should be_a nested_class_A_B_C
+        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@«containers ).size.should be 3
+        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@«containers)[ 0 ].should be_a nested_class_A_B_C
+        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@«containers)[ 1 ].should be_a nested_class_A_B_C
+        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@«containers)[ 2 ].should be_a nested_class_A_B_C
       end
     end
   end
 
   ################################
-  #  __ensure_container_count__  #
+  #  «ensure_container_count  #
   ################################
 
-  context '#__ensure_container_count__' do
+  context '#«ensure_container_count' do
     context 'does not permit multiple' do
       it 'will do nothing if count == 1' do
-        instance_of_class.a.__ensure_container_count__( 1 )
-        instance_of_class.a.instance_variable_get( :@__containers__ ).should be nil
+        instance_of_class.a.«ensure_container_count( 1 )
+        instance_of_class.a.instance_variable_get( :@«containers ).should be nil
       end
       it 'will raise ArgumentError if count > 1' do
-        ::Proc.new { instance_of_class.a.__ensure_container_count__( 2 ) }.should raise_error( ::ArgumentError )
+        ::Proc.new { instance_of_class.a.«ensure_container_count( 2 ) }.should raise_error( ::ArgumentError )
       end
     end
     context 'no container class' do
       it 'will raise ArgumentError' do
-        ::Proc.new { instance_of_class.a.b.c.content.__ensure_container_count__( 1 ) }.should raise_error( ::ArgumentError )
+        ::Proc.new { instance_of_class.a.b.c.content.«ensure_container_count( 1 ) }.should raise_error( ::ArgumentError )
       end
     end
     context 'ensure 1 and one container currently exists' do
       it 'will do nothing' do
-        instance_of_multiple_container_class.multiple_binding.__ensure_container_count__( 1 )
-        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@__containers__ ).should be nil
+        instance_of_multiple_container_class.multiple_binding.«ensure_container_count( 1 )
+        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@«containers ).should be nil
       end
     end
     context 'ensure more than 1 and one container currently exists' do
       it 'will create necessary containers' do
-        instance_of_multiple_container_class.multiple_binding.__ensure_container_count__( 10 )
-        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@__containers__ ).size.should be 10
+        instance_of_multiple_container_class.multiple_binding.«ensure_container_count( 10 )
+        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@«containers ).size.should be 10
       end
     end
   end
   
   #########################
-  #  __container_count__  #
+  #  «container_count  #
   #########################
 
-  context '#__container_count__' do
+  context '#«container_count' do
     context 'when permits_multiple? is false' do
       context 'when 0' do
         it 'will report 0' do
-          instance_of_class.a.b.c.content.__container_count__.should be 0
+          instance_of_class.a.b.c.content.«container_count.should be 0
         end
       end
       context 'when 1' do
         it 'will report 1' do
-          instance_of_class.a.b.c.__container_count__.should be 1
+          instance_of_class.a.b.c.«container_count.should be 1
         end
       end
     end
@@ -147,18 +147,18 @@ shared_examples_for :container_instance_binding do
       context 'when 0' do
         it 'will report 0' do
           instance_of_multiple_container_class.multiple_binding.content.permits_multiple = true
-          instance_of_multiple_container_class.multiple_binding.content.__container_count__.should be 0
+          instance_of_multiple_container_class.multiple_binding.content.«container_count.should be 0
         end
       end
       context 'when 1' do
         it 'will report 1' do
-          instance_of_multiple_container_class.multiple_binding.__container_count__.should be 1
+          instance_of_multiple_container_class.multiple_binding.«container_count.should be 1
         end
       end
       context 'when > 1' do
         it 'will report #' do
-          instance_of_multiple_container_class.multiple_binding.__ensure_container_count__( 2 )
-          instance_of_multiple_container_class.multiple_binding.__container_count__.should be 2
+          instance_of_multiple_container_class.multiple_binding.«ensure_container_count( 2 )
+          instance_of_multiple_container_class.multiple_binding.«container_count.should be 2
         end
       end
     end
@@ -181,31 +181,31 @@ shared_examples_for :container_instance_binding do
     end
     context 'when index == 0' do
       context 'when multiple are not permitted' do
-        it 'will return __container__' do
-          instance_of_class.a[ 0 ].should be instance_of_class.a.__container__
+        it 'will return «container' do
+          instance_of_class.a[ 0 ].should be instance_of_class.a.«container
         end
       end
       context 'when multiple are permitted' do
-        it 'will return __container__' do
-          instance_of_multiple_container_class.multiple_binding[ 0 ].should be instance_of_multiple_container_class.multiple_binding.__container__
+        it 'will return «container' do
+          instance_of_multiple_container_class.multiple_binding[ 0 ].should be instance_of_multiple_container_class.multiple_binding.«container
         end
       end
     end
     context 'when index is negative' do
       context 'when multiple are not permitted' do
-        it 'will return __container__' do
-          instance_of_class.a[ -1 ].should be instance_of_class.a.__container__
+        it 'will return «container' do
+          instance_of_class.a[ -1 ].should be instance_of_class.a.«container
         end
       end
       context 'when multiple are permitted' do
         context 'when only 1 exists' do
-          it 'will return __container__' do
-            instance_of_multiple_container_class.multiple_binding[ -1 ].should be instance_of_multiple_container_class.multiple_binding.__container__
+          it 'will return «container' do
+            instance_of_multiple_container_class.multiple_binding[ -1 ].should be instance_of_multiple_container_class.multiple_binding.«container
           end
         end
         context 'when more than 1 exists' do
           before :each do
-            instance_of_multiple_container_class.multiple_binding.__ensure_container_count__( 10 )
+            instance_of_multiple_container_class.multiple_binding.«ensure_container_count( 10 )
           end
           it 'will return container corresponding to index' do
             instance_of_multiple_container_class.multiple_binding[ -1 ].should be instance_of_multiple_container_class.multiple_binding[ 9 ]
@@ -233,15 +233,15 @@ shared_examples_for :container_instance_binding do
 
   context '#[]=' do
     context 'when multiple are not permitted' do
-      it 'will be equivalent to __container__= for index 0' do
+      it 'will be equivalent to «container= for index 0' do
         new_container_instance = nested_class_A_B_C.new
         instance_of_class.a[ 0 ] = new_container_instance
-        instance_of_class.a.__container__.should be new_container_instance
+        instance_of_class.a.«container.should be new_container_instance
       end
-      it 'will be equivalent to __container__= for index -1' do
+      it 'will be equivalent to «container= for index -1' do
         new_container_instance = nested_class_A_B_C.new
         instance_of_class.a[ -1 ] = new_container_instance
-        instance_of_class.a.__container__.should be new_container_instance
+        instance_of_class.a.«container.should be new_container_instance
       end
       it 'will raise ArgumentError for index > 0' do
         new_container_instance = nested_class_A_B_C.new
@@ -253,10 +253,10 @@ shared_examples_for :container_instance_binding do
       end
     end
     context 'when multiple are permitted' do
-      it 'will be equivalent to __container__= for index 0' do
+      it 'will be equivalent to «container= for index 0' do
         new_container_instance = nested_class_A_B_C.new
         instance_of_multiple_container_class.multiple_binding[ 0 ] = new_container_instance
-        instance_of_multiple_container_class.multiple_binding.__container__.should be new_container_instance
+        instance_of_multiple_container_class.multiple_binding.«container.should be new_container_instance
       end
       it 'will set the corresponding container for index == 1' do
         new_container_instance = nested_class_A_B_C.new
@@ -266,7 +266,7 @@ shared_examples_for :container_instance_binding do
       it 'will set the corresponding container for index > 1' do
         new_container_instance = nested_class_A_B_C.new
         instance_of_multiple_container_class.multiple_binding[ 2 ] = new_container_instance
-        instance_of_multiple_container_class.multiple_binding[ 1 ].should be_a instance_of_multiple_container_class.multiple_binding.__parent_binding__.__container_class__
+        instance_of_multiple_container_class.multiple_binding[ 1 ].should be_a instance_of_multiple_container_class.multiple_binding.«parent_binding.«container_class
         instance_of_multiple_container_class.multiple_binding[ 2 ].should be new_container_instance
       end
       it 'will set the corresponding container for index < 0' do
@@ -288,13 +288,13 @@ shared_examples_for :container_instance_binding do
   context '#each' do
     context 'when multiple are not permitted' do
       it 'will iterate' do
-        instance_of_class.a.collect { |container| container }.should == [ instance_of_class.a.__container__ ]
+        instance_of_class.a.collect { |container| container }.should == [ instance_of_class.a.«container ]
       end
     end
     context 'when multiple are permitted' do
       it 'will iterate' do
-        instance_of_multiple_container_class.multiple_binding.__ensure_container_count__( 4 )
-        instance_of_multiple_container_class.multiple_binding.collect { |container| container }.should == instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@__containers__ )
+        instance_of_multiple_container_class.multiple_binding.«ensure_container_count( 4 )
+        instance_of_multiple_container_class.multiple_binding.collect { |container| container }.should == instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@«containers )
       end
     end
   end
@@ -304,8 +304,8 @@ shared_examples_for :container_instance_binding do
   ###########
 
   context '#value' do
-    it 'is an alias for #__value__' do
-      topclass_instance_binding_A.class.instance_method( :value ).should == topclass_instance_binding_A.class.instance_method( :__value__ )
+    it 'is an alias for #«value' do
+      topclass_instance_binding_A.class.instance_method( :value ).should == topclass_instance_binding_A.class.instance_method( :«value )
     end
   end
   
@@ -314,24 +314,24 @@ shared_examples_for :container_instance_binding do
   ############
 
   context '#value=' do
-    it 'is an alias for #__value__=' do
-      topclass_instance_binding_A.class.instance_method( :value= ).should == topclass_instance_binding_A.class.instance_method( :__value__= )
+    it 'is an alias for #«value=' do
+      topclass_instance_binding_A.class.instance_method( :value= ).should == topclass_instance_binding_A.class.instance_method( :«value= )
     end
   end
   
   ######################
-  #  __nested_route__  #
+  #  «nested_route  #
   ######################
   
-  context '#__nested_route__' do
+  context '#«nested_route' do
     context 'binding is nested in queried binding' do
       it 'will return the route from queried container to parameter binding' do
-        topclass_instance_binding_A_B.__nested_route__( topclass_instance_binding_A ).should == nil
+        topclass_instance_binding_A_B.«nested_route( topclass_instance_binding_A ).should == nil
       end
     end
     context 'binding is nested in binding under queried binding' do
       it 'will return the route from queried container to parameter binding' do
-        topclass_instance_binding_A_B_C.__nested_route__( topclass_instance_binding_A ).should == [ topclass_class_binding_A_B_name ]
+        topclass_instance_binding_A_B_C.«nested_route( topclass_instance_binding_A ).should == [ topclass_class_binding_A_B_name ]
       end
     end
   end

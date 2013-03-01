@@ -2,22 +2,22 @@
 module ::Perspective::Bindings::Configuration
 
   ########################
-  #  __parent_binding__  #
+  #  «parent_binding  #
   ########################
 
-  attr_reader  :__parent_binding__
+  attr_reader  :«parent_binding
 
 	#################
-  #  __binding__  #
+  #  «binding  #
   #################
     
-  def __binding__( binding_name )
+  def «binding( binding_name )
     
     binding_instance = nil
 
-    unless binding_instance = __bindings__[ binding_name = binding_name.to_sym ]
-      if binding_alias = __binding_aliases__[ binding_name ]
-        binding_instance = __bindings__[ binding_alias ]
+    unless binding_instance = «bindings[ binding_name = binding_name.to_sym ]
+      if binding_alias = «binding_aliases[ binding_name ]
+        binding_instance = «bindings[ binding_alias ]
       end
     end
     
@@ -33,8 +33,8 @@ module ::Perspective::Bindings::Configuration
   # 
 	def has_binding?( binding_name )
 		
-		return __bindings__.has_key?( binding_name )        || 
-		       __binding_aliases__.has_key?( binding_name )
+		return «bindings.has_key?( binding_name )        || 
+		       «binding_aliases.has_key?( binding_name )
 		
 	end
 

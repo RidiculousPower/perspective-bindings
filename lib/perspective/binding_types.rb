@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 ###
 # Container to hold BindingTypeContainers.

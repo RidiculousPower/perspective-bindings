@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 ###
 # Causes binding to store reference to another binding when given for value assignment

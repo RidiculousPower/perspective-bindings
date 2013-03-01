@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 ###
 # Create our PropertyBindings BindingTypeContainer, which will automatically be stored at

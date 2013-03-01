@@ -4,10 +4,10 @@ module ::Perspective::Bindings::Container::ObjectAndBindingInstance
   include ::CascadingConfiguration::Hash
   
   ###################################
-  #  __local_aliases_to_bindings__  #
+  #  «local_aliases_to_bindings  #
   ###################################
 
-	attr_hash  :__local_aliases_to_bindings__ do
+	attr_hash  :«local_aliases_to_bindings do
 
 	  #======================#
 	  #  child_pre_set_hook  #
@@ -18,14 +18,14 @@ module ::Perspective::Bindings::Container::ObjectAndBindingInstance
       binding_route = nil
       
       # We are instance C inheriting a shared binding, meaning an alias from instance B to binding in instance A.
-      # The inherited binding instance we want already exists in __bindings__ for instance C.
+      # The inherited binding instance we want already exists in «bindings for instance C.
       # We need the nested route for A in B, which will allow us to get A in C.
       
-      binding_route = binding_instance.__nested_route__( instance )
+      binding_route = binding_instance.«nested_route( instance )
 
       return ::Perspective::Bindings.aliased_binding_in_context( instance, 
                                                                  binding_route,
-                                                                 binding_instance.__name__,
+                                                                 binding_instance.«name,
                                                                  local_alias_to_binding,
                                                                  binding_instance )
 

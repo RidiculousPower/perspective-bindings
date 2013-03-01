@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 ###
 # Create our ViewBindings BindingTypeContainer, which will automatically be stored at

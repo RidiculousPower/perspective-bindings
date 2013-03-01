@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 ###
 # A BindingType groups the actual classes used to create a binding of the given type.

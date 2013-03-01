@@ -2,93 +2,93 @@
 shared_examples_for :shared_binding do
 
   #########################
-  #  __bound_container__  #
+  #  «bound_container  #
   #########################
   
-  context '#__bound_container__' do
+  context '#«bound_container' do
     it 'topclass binding has its bound container' do
-      topclass_binding.__bound_container__.should == topclass_bound_container
+      topclass_binding.«bound_container.should == topclass_bound_container
     end
     it 'subclass binding has its bound container' do
-      subclass_binding.__bound_container__.should == subclass_bound_container
+      subclass_binding.«bound_container.should == subclass_bound_container
     end
   end
   
   ##############
-  #  __root__  #
+  #  «root  #
   ##############
   
-  context '#__root__' do
+  context '#«root' do
     it 'topclass binding has bound container as root' do
-      topclass_binding.__root__.should == topclass_bound_container
+      topclass_binding.«root.should == topclass_bound_container
     end
     it 'subclass binding has bound container as root' do
-      subclass_binding.__root__.should == subclass_bound_container
+      subclass_binding.«root.should == subclass_bound_container
     end
   end
 
   ##############
-  #  __name__  #
+  #  «name  #
   ##############
   
-  context '#__name__' do
+  context '#«name' do
     it 'topclass binding has a name' do
-      topclass_binding.__name__.should == binding_name
+      topclass_binding.«name.should == binding_name
     end
     it 'subclass binding has the same name' do
-      subclass_binding.__name__.should == topclass_binding.__name__
+      subclass_binding.«name.should == topclass_binding.«name
     end
   end
   
   ###############
-  #  __route__  #
+  #  «route  #
   ###############
 
-  context '#__route__' do
+  context '#«route' do
     it 'topclass binding has no route since it is in the root container' do
-      topclass_binding.__route__.should == nil
+      topclass_binding.«route.should == nil
     end
     it 'subclass binding has no route since it is in the root container' do
-      subclass_binding.__route__.should == nil
+      subclass_binding.«route.should == nil
     end
   end
 
   #########################
-  #  __route_with_name__  #
+  #  «route_with_name  #
   #########################
 
-  context '#__route_with_name__' do
+  context '#«route_with_name' do
     it 'topclass binding route with name is binding name' do
-      topclass_binding.__route_with_name__.should == [ binding_name ]
+      topclass_binding.«route_with_name.should == [ binding_name ]
     end
     it 'subclass binding route with name is binding name' do
-      subclass_binding.__route_with_name__.should == [ binding_name ]
+      subclass_binding.«route_with_name.should == [ binding_name ]
     end
   end
 
   ######################
-  #  __route_string__  #
+  #  «route_string  #
   ######################
 
-  context '#__route_string__' do
+  context '#«route_string' do
     it 'topclass binding route string is its name' do
-      topclass_binding.__route_string__.should == ::Perspective::Bindings.context_string( topclass_binding.__route_with_name__ )
+      topclass_binding.«route_string.should == ::Perspective::Bindings.context_string( topclass_binding.«route_with_name )
     end
     it 'subclass binding route string is its name' do
-      subclass_binding.__route_string__.should == ::Perspective::Bindings.context_string( subclass_binding.__route_with_name__ )
+      subclass_binding.«route_string.should == ::Perspective::Bindings.context_string( subclass_binding.«route_with_name )
     end
   end
 
   ############################
-  #  __route_print_string__  #
+  #  «route_print_string  #
   ############################
 
-  context '#__route_print_string__' do
+  context '#«route_print_string' do
     it 'topclass binding print string is root plus route string' do
-      topclass_binding.__route_print_string__.should == ::Perspective::Bindings.context_print_string( topclass_bound_container, topclass_binding.__route_string__ )
+      topclass_binding.«route_print_string.should == ::Perspective::Bindings.context_print_string( topclass_bound_container, topclass_binding.«route_string )
     end
     it 'subclass binding print string is root plus route string' do
-      subclass_binding.__route_print_string__.should == ::Perspective::Bindings.context_print_string( subclass_bound_container, subclass_binding.__route_string__ )
+      subclass_binding.«route_print_string.should == ::Perspective::Bindings.context_print_string( subclass_bound_container, subclass_binding.«route_string )
     end
   end
 

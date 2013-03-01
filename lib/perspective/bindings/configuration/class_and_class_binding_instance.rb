@@ -4,24 +4,24 @@ module ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance
   include ::CascadingConfiguration::Array::Unique
   
   #############################
-  #  __configuration_procs__  #
+  #  «configuration_procs  #
   #############################
                               
-  attr_configuration_unique_array  :__configuration_procs__
+  attr_configuration_unique_array  :«configuration_procs
 
   #########################
   #  configuration_procs  #
   #########################
 
-  Controller.alias_instance_method( :configuration_procs, :__configuration_procs__ )
+  Controller.alias_instance_method( :configuration_procs, :«configuration_procs )
 
   ###################
-  #  __configure__  #
+  #  «configure  #
   ###################
   
-  def __configure__( & configuration_block )
+  def «configure( & configuration_block )
 
-    __configuration_procs__.push( configuration_block )
+    «configuration_procs.push( configuration_block )
     
     return self
     
@@ -31,6 +31,6 @@ module ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance
   #  configure  #
   ###############
 
-  alias_method :configure, :__configure__
+  alias_method :configure, :«configure
   
 end

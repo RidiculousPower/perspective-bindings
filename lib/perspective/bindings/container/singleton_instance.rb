@@ -8,20 +8,20 @@ module ::Perspective::Bindings::Container::SingletonInstance
   include ::Perspective::Bindings::Container::Configuration
 
   ##############
-  #  __name__  #
+  #  «name  #
   ##############
   
-  def __name__
+  def «name
     
     return name
     
   end
 
   ##############
-  #  __root__  #
+  #  «root  #
   ##############
   
-  def __root__
+  def «root
     
     # class instance is always the root
     # otherwise we have a class binding
@@ -34,7 +34,7 @@ module ::Perspective::Bindings::Container::SingletonInstance
   #  root  #
   ##########
 
-  alias_method  :root, :__root__
+  alias_method  :root, :«root
 
   ##################
   #  is_root?  #
@@ -47,22 +47,22 @@ module ::Perspective::Bindings::Container::SingletonInstance
   end
   
   #####################
-  #  __root_string__  #
+  #  «root_string  #
   #####################
 
-  def __root_string__
+  def «root_string
     
     # [root:<instance>]
 
-    return @__root_string__ ||= '<root:' << to_s << '>'
+    return @«root_string ||= '<root:' << to_s << '>'
     
   end
 
   ###############
-  #  __route__  #
+  #  «route  #
   ###############
 
-  def __route__
+  def «route
     
     # class instance is always the root
     # otherwise we have a class binding
@@ -75,13 +75,13 @@ module ::Perspective::Bindings::Container::SingletonInstance
   #  route  #
   ###########
 
-  alias_method( :route, :__route__ )
+  alias_method( :route, :«route )
 
   #########################
-  #  __route_with_name__  #
+  #  «route_with_name  #
   #########################
 
-  def __route_with_name__
+  def «route_with_name
     
     return nil
     
@@ -91,7 +91,7 @@ module ::Perspective::Bindings::Container::SingletonInstance
   #  route_with_name  #
   #####################
 
-  alias_method( :route_with_name, :__route_with_name__ )
+  alias_method( :route_with_name, :«route_with_name )
 
 	################
   #  attr_alias  #
@@ -109,10 +109,10 @@ module ::Perspective::Bindings::Container::SingletonInstance
 			case this_descriptor = alias_args.shift
   		  when ::Hash
   				this_descriptor.each do |this_alias_name, this_existing_descriptor|
-            __create_binding_alias__( this_alias_name, this_existing_descriptor )
+            «create_binding_alias( this_alias_name, this_existing_descriptor )
   				end
   	    else
-          __create_binding_alias__( this_descriptor, alias_args.shift )
+          «create_binding_alias( this_descriptor, alias_args.shift )
 		  end
 		  			
 		end
@@ -126,30 +126,30 @@ module ::Perspective::Bindings::Container::SingletonInstance
   ##################################################################################################
 
 	##############################
-  #  __create_binding_alias__  #
+  #  «create_binding_alias  #
   ##############################
 	
-	def __create_binding_alias__( binding_alias, existing_reference )
+	def «create_binding_alias( binding_alias, existing_reference )
 
     case existing_reference
       
       when ::Symbol, ::String
               
-        __create_name_alias__( binding_alias, existing_reference )
+        «create_name_alias( binding_alias, existing_reference )
                 
       else
 
-        __create_local_alias_to_binding__( binding_alias, existing_reference )
+        «create_local_alias_to_binding( binding_alias, existing_reference )
         
     end
     
   end
   
   ###########################
-  #  __create_name_alias__  #
+  #  «create_name_alias  #
   ###########################
 	
-  def __create_name_alias__( binding_alias, existing_binding_name )
+  def «create_name_alias( binding_alias, existing_binding_name )
     
     unless has_binding?( existing_binding_name )
   		begin
@@ -159,7 +159,7 @@ module ::Perspective::Bindings::Container::SingletonInstance
   		end
     end
 	  
-    __binding_aliases__[ binding_alias ] = existing_binding_name
+    «binding_aliases[ binding_alias ] = existing_binding_name
 
 		self::Controller::ClassBindingMethods.define_binding_alias( binding_alias, existing_binding_name )
     self::Controller::InstanceBindingMethods.define_binding_alias( binding_alias, existing_binding_name )
@@ -167,12 +167,12 @@ module ::Perspective::Bindings::Container::SingletonInstance
   end
 
 	#######################################
-  #  __create_local_alias_to_binding__  #
+  #  «create_local_alias_to_binding  #
   #######################################
   
-  def __create_local_alias_to_binding__( binding_alias, binding_instance )
+  def «create_local_alias_to_binding( binding_alias, binding_instance )
 
-    __local_aliases_to_bindings__[ binding_alias ] = binding_instance
+    «local_aliases_to_bindings[ binding_alias ] = binding_instance
 
 		self::Controller::ClassBindingMethods.define_local_alias_to_binding( binding_alias, binding_instance )
     self::Controller::InstanceBindingMethods.define_local_alias_to_binding( binding_alias, binding_instance )

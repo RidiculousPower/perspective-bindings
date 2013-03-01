@@ -9,22 +9,22 @@ module ::Perspective::Bindings::BindingBase
   extend ::Perspective::Bindings::IncludeExtend
   
   #########################
-  #  __bound_container__  #
+  #  «bound_container  #
   #########################
 
-  attr_reader  :__bound_container__
+  attr_reader  :«bound_container
 
   ##############
-  #  __name__  #
+  #  «name  #
   ##############
   
-  attr_instance_configuration  :__name__
+  attr_instance_configuration  :«name
 
   ##############
-  #  __root__  #
+  #  «root  #
   ##############
   
-  attr_reader  :__root__
+  attr_reader  :«root
 
   ##############
   #  is_root?  #
@@ -37,28 +37,28 @@ module ::Perspective::Bindings::BindingBase
   end
 
   ###############
-  #  __route__  #
+  #  «route  #
   ###############
 
-  attr_instance_configuration  :__route__
+  attr_instance_configuration  :«route
 
   #########################
-  #  __route_with_name__  #
+  #  «route_with_name  #
   #########################
 
-  attr_instance_configuration  :__route_with_name__
+  attr_instance_configuration  :«route_with_name
 
   ######################
-  #  __route_string__  #
+  #  «route_string  #
   ######################
 
-  attr_instance_configuration  :__route_string__
+  attr_instance_configuration  :«route_string
 
   ############################
-  #  __route_print_string__  #
+  #  «route_print_string  #
   ############################
 
-  attr_instance_configuration  :__route_print_string__
+  attr_instance_configuration  :«route_print_string
 
   #######################
   #  permits_multiple?  #

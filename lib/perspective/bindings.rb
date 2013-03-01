@@ -47,7 +47,7 @@ module ::Perspective::Bindings
   #
   def self.spec_location
     
-    return ::File.expand_path( ::File.dirname( __FILE__ ) << '/../../spec' )    
+    return ::File.expand_path( ::File.dirname( «FILE ) << '/../../spec' )    
 
   end
   

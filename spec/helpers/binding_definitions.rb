@@ -31,7 +31,7 @@ RSpec::Matchers.define :match_types do |*match_types|
     
     # :file
     if match_types.delete( :file )
-      file = File.new( __FILE__ )
+      file = File.new( «FILE )
       unless fail_string or matched = binding_definition_instance.binding_value_valid?( file )
         fail_string = 'Match types included :file but ' << file.to_s << ' reported not valid.'
       end

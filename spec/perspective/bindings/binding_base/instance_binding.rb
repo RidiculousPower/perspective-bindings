@@ -13,15 +13,15 @@ shared_examples_for :base_instance_binding do
   end
 
   ########################
-  #  __parent_binding__  #
+  #  «parent_binding  #
   ########################
   
-  context '#__parent_binding__' do
+  context '#«parent_binding' do
     it 'topclass binding has topclass class binding as parent' do
-      topclass_instance_binding.__parent_binding__.should == topclass_class_binding
+      topclass_instance_binding.«parent_binding.should == topclass_class_binding
     end
     it 'subclass binding has subclass class binding as parent' do
-      subclass_instance_binding.__parent_binding__.should == subclass_class_binding
+      subclass_instance_binding.«parent_binding.should == subclass_class_binding
     end
   end
   
@@ -139,18 +139,18 @@ shared_examples_for :base_instance_binding do
   end
 
   ################
-  #  __value__   #
-  #  __value__=  #
+  #  «value   #
+  #  «value=  #
   ################
 
-  context '#__value__, #__value__=' do
+  context '#«value, #«value=' do
     let( :value ) { Complex( 42, 37 ) }
     context 'if binding_value_valid? is false' do
       it 'topclass binding will raise error for invalid value' do
-        ::Proc.new { topclass_instance_binding.__value__ = value }.should raise_error( ::ArgumentError )
+        ::Proc.new { topclass_instance_binding.«value = value }.should raise_error( ::ArgumentError )
       end
       it 'subclass binding will raise error for invalid value' do
-        ::Proc.new { subclass_instance_binding.__value__ = value }.should raise_error( ::ArgumentError )
+        ::Proc.new { subclass_instance_binding.«value = value }.should raise_error( ::ArgumentError )
       end
     end
     context 'if binding_value_valid? is true' do
@@ -160,14 +160,14 @@ shared_examples_for :base_instance_binding do
         subclass_instance_binding.extend( permitted_value_module )
       end
       it 'topclass binding will accept valid values' do
-        topclass_instance_binding.__value__.should be nil
-        topclass_instance_binding.__value__ = value
-        topclass_instance_binding.__value__.should be value
+        topclass_instance_binding.«value.should be nil
+        topclass_instance_binding.«value = value
+        topclass_instance_binding.«value.should be value
       end
       it 'subclass binding will accept valid values' do
-        subclass_instance_binding.__value__.should be nil
-        subclass_instance_binding.__value__ = value
-        subclass_instance_binding.__value__.should be value
+        subclass_instance_binding.«value.should be nil
+        subclass_instance_binding.«value = value
+        subclass_instance_binding.«value.should be value
       end
     end
   end
@@ -177,8 +177,8 @@ shared_examples_for :base_instance_binding do
   ###########
   
   context '#value' do
-    it 'is an alias for #__value__' do
-      ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :value ).should == ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :__value__ )
+    it 'is an alias for #«value' do
+      ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :value ).should == ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :«value )
     end
   end
 
@@ -187,8 +187,8 @@ shared_examples_for :base_instance_binding do
   ############
   
   context 'value=' do
-    it 'is an alias for #__value__=' do
-      ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :value= ).should == ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :__value__= )
+    it 'is an alias for #«value=' do
+      ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :value= ).should == ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :«value= )
     end
   end
 
@@ -200,14 +200,14 @@ shared_examples_for :base_instance_binding do
     let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Text }
     let( :value ) { 'some value' }
     before :all do
-      topclass_instance_binding.extend( permitted_value_module ).__value__ = value
-      subclass_instance_binding.extend( permitted_value_module ).__value__ = value
+      topclass_instance_binding.extend( permitted_value_module ).«value = value
+      subclass_instance_binding.extend( permitted_value_module ).«value = value
     end
     it 'topclass binding will accept valid values' do
-      topclass_instance_binding.__value__.should == value
+      topclass_instance_binding.«value.should == value
     end
     it 'subclass binding will accept valid values' do
-      subclass_instance_binding.__value__.should == value
+      subclass_instance_binding.«value.should == value
     end
   end
 

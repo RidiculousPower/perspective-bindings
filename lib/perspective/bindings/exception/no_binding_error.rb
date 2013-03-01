@@ -14,7 +14,7 @@ class ::Perspective::Bindings::Exception::NoBindingError < ::ArgumentError
     if binding_context and binding_name
       
       exception_string = 'No binding :' << binding_name.to_s << ' found in ' << 
-                         binding_context.__route_print_string__
+                         binding_context.«route_print_string
       exception_string << ' (' << binding_context.to_s << ').'
     
     end
@@ -23,28 +23,28 @@ class ::Perspective::Bindings::Exception::NoBindingError < ::ArgumentError
             
       exception_string << "\n\n" << 
                        'Route for local binding alias :' << local_alias.to_s 
-      exception_string << ' in context ' << starting_context.__route_print_string__
+      exception_string << ' in context ' << starting_context.«route_print_string
       exception_string << ' (' << starting_context.to_s << ') ' << 'could not be resolved.'
 
     end
 
     if local_alias_binding_instance
       
-      bound_instance = local_alias_binding_instance.__bound_container__
+      bound_instance = local_alias_binding_instance.«bound_container
 
       exception_string << "\n\n" <<
-                       'Aliased binding ' << local_alias_binding_instance.__route_print_string__
+                       'Aliased binding ' << local_alias_binding_instance.«route_print_string
       
-      if parent_binding = local_alias_binding_instance.__parent_binding__
+      if parent_binding = local_alias_binding_instance.«parent_binding
 
         exception_string << ' (defined in ' 
-        exception_string << parent_binding.__bound_container__.to_s
+        exception_string << parent_binding.«bound_container.to_s
         exception_string << ') '
         
       else
 
         exception_string << ' (defined in ' 
-        exception_string << local_alias_binding_instance.__bound_container__.to_s
+        exception_string << local_alias_binding_instance.«bound_container.to_s
         exception_string << ') '
         
       end
