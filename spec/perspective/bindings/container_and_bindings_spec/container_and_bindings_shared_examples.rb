@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 shared_examples_for :"self.«name( base_module )" do
   it 'root container returns its singleton name' do

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 require 'perspective/configuration'
 
@@ -47,7 +48,7 @@ module ::Perspective::Bindings
   #
   def self.spec_location
     
-    return ::File.expand_path( ::File.dirname( «FILE ) << '/../../spec' )    
+    return ::File.expand_path( ::File.dirname( __FILE__ ) << '/../../spec' )    
 
   end
   

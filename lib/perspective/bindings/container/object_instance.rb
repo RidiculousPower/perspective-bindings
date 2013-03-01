@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 module ::Perspective::Bindings::Container::ObjectInstance
 
@@ -266,7 +267,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
     «bindings.each do |this_binding_name, this_binding|
       if data_object.respond_to?( this_binding_name )
-        this_binding.«autobind( data_object.«send( this_binding_name ) )
+        this_binding.«autobind( data_object.__send__( this_binding_name ) )
         found_a_binding = true
       end    
     end
