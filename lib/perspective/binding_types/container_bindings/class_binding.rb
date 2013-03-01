@@ -23,9 +23,9 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
     
   end
   
-  #####################################
+  ######################################
   #  «initialize_for_container_class»  #
-  #####################################
+  ######################################
   
   def «initialize_for_container_class»( container_class )
   
@@ -41,9 +41,9 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   
   end
 
-  ###############################
+  ################################
   #  «validate_container_class»  #
-  ###############################
+  ################################
 
   def «validate_container_class»( container_class )
     	  
@@ -55,15 +55,15 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
     
   end
 
-  ######################
+  #######################
   #  «container_class»  # 
-  ######################
+  #######################
 
   attr_configuration  :«container_class»
 
-  #######################
+  ########################
   #  «container_class»=  #
-  #######################
+  ########################
 
   def «container_class»=( container_class )
     
@@ -85,9 +85,9 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
 
   Controller.alias_module_and_instance_methods( :container_class=, :«container_class»= )
   
-  ###################
+  ####################
   #  «nested_route»  # 
-  ###################
+  ####################
   
   ###
   # Get route to binding (self) from parent container where self is nested.

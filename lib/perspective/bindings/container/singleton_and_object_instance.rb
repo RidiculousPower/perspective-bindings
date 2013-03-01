@@ -2,9 +2,9 @@
 
 module ::Perspective::Bindings::Container::SingletonAndObjectInstance
   
-  ######################
+  ####################
   #  «route_string»  #
-  ######################
+  ####################
 
   def «route_string»
     
@@ -24,9 +24,9 @@ module ::Perspective::Bindings::Container::SingletonAndObjectInstance
 
   alias_method( :route_string, :«route_string» )
 
-  ############################
+  ##########################
   #  «route_print_string»  #
-  ############################
+  ##########################
 
   def «route_print_string»
 

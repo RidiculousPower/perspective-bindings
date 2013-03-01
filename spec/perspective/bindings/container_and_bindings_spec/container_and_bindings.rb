@@ -178,9 +178,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    ##############
+    ############
     #  «name»  #
-    ##############
+    ############
 
     context '::«name»' do
     
@@ -214,9 +214,9 @@ shared_examples_for :container_and_bindings do
 
     end
 
-    ###################
+    #################
     #  «configure»  #
-    ###################
+    #################
 
     context '::«configure»' do
     
@@ -256,9 +256,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    ##############
+    ############
     #  «root»  #
-    ##############
+    ############
 
     context '::«root»' do
           
@@ -308,9 +308,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    ###############
+    #############
     #  «route»  #
-    ###############
+    #############
 
     context '::«route»' do
 
@@ -358,9 +358,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    #########################
+    #######################
     #  «route_with_name»  #
-    #########################
+    #######################
 
     context '::«route_with_name»' do
 
@@ -407,9 +407,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    ######################
+    ####################
     #  «nested_route»  #
-    ######################
+    ####################
 
     context '::«nested_route»' do
       context 'module' do
@@ -451,9 +451,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    #####################
+    ###################
     #  «root_string»  #
-    #####################
+    ###################
 
     context '«root_string»' do
   
@@ -497,9 +497,9 @@ shared_examples_for :container_and_bindings do
 
     end
 
-    ######################
+    ####################
     #  «route_string»  #
-    ######################
+    ####################
 
     context '::«route_string»' do
 
@@ -546,9 +546,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    ############################
+    ##########################
     #  «route_print_string»  #
-    ############################
+    ##########################
 
     context '::«route_print_string»' do
 
@@ -647,9 +647,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    ##################
+    ################
     #  «bindings»  #
-    ##################
+    ################
 
     context '::«bindings»' do
       context 'module' do
@@ -684,9 +684,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    #################
+    ###############
     #  «binding»  #
-    #################
+    ###############
 
     context '::«binding»' do
 
@@ -736,9 +736,9 @@ shared_examples_for :container_and_bindings do
       end
     end
   
-    ######################
+    ##################
     #  has_binding?  #
-    ######################
+    ##################
 
     context '::has_binding?' do
 
@@ -772,9 +772,9 @@ shared_examples_for :container_and_bindings do
 
     end
 
-    ##########################
+    ########################
     #  «autobind_binding»  #
-    ##########################
+    ########################
 
     context '::«autobind_binding»' do
       it 'singleton does not respond to ::«autobind_binding»' do
@@ -801,9 +801,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    ############################
+    ##########################
     #  «autobind_container»  #
-    ############################
+    ##########################
 
     context '::«autobind_container»' do
       it 'singleton does not respond to ::«autobind_container»' do
@@ -833,9 +833,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    #######################
+    #####################
     #  «autobind_hash»  #
-    #######################
+    #####################
 
     context '::«autobind_hash»' do
       it 'singleton does not respond to ::«autobind_hash»' do
@@ -865,9 +865,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    #########################
+    #######################
     #  «autobind_object»  #
-    #########################
+    #######################
 
     context '::«autobind_object»' do
       it 'singleton does not respond to ::«autobind_object»' do
@@ -897,9 +897,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    ########################
+    ######################
     #  «autobind_array»  #
-    ########################
+    ######################
 
     context '::«autobind_array»' do
       it 'singleton does not respond to ::«autobind_array»' do
@@ -925,9 +925,9 @@ shared_examples_for :container_and_bindings do
       end
     end
 
-    ##################
+    ################
     #  «autobind»  #
-    ##################
+    ################
 
     context '::«autobind»' do
       it 'singleton does not respond to ::«autobind»' do

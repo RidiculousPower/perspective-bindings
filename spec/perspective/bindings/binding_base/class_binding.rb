@@ -17,9 +17,9 @@ shared_examples_for :base_class_binding do
   let( :topclass_class_binding_configuration_procs ) { [ topclass_configuration_proc ] }
   let( :subclass_class_binding_configuration_procs ) { [ topclass_configuration_proc, subclass_configuration_proc ] }
   
-  ########################
+  ######################
   #  «parent_binding»  #
-  ########################
+  ######################
   
   context '#«parent_binding»' do
     it 'topclass binding has no parent binding' do
@@ -30,9 +30,9 @@ shared_examples_for :base_class_binding do
     end
   end
   
-  ###############################
+  #############################
   #  «validate_binding_name»  #
-  ###############################
+  #############################
   
   context '#«validate_binding_name»' do
     let( :binding_name ) { :new }
@@ -46,9 +46,9 @@ shared_examples_for :base_class_binding do
     end
   end
   
-  #############################
+  ###########################
   #  «configuration_procs»  #
-  #############################
+  ###########################
 
   context '#«configuration_procs»' do
     it 'topclass binding has proc' do
@@ -59,9 +59,9 @@ shared_examples_for :base_class_binding do
     end
   end
 
-  ###################
+  #################
   #  «configure»  #
-  ###################
+  #################
 
   context '#«configure»' do
     let( :another_block ) { ::Proc.new { puts 'another block' } }
@@ -90,10 +90,10 @@ shared_examples_for :base_class_binding do
     end
   end
 
-  ###########################
+  #######################
   #  permits_multiple?  #
   #  permits_multiple=  #
-  ###########################
+  #######################
 
   context '#permits_multiple?, #permits_multiple=' do
     it 'topclass binding can permit multiple' do
@@ -112,10 +112,10 @@ shared_examples_for :base_class_binding do
     end
   end
 
-  ###################
+  ###############
   #  required?  #
   #  required=  #
-  ###################
+  ###############
 
   context '#required?, #required=' do
     it 'topclass binding can require binding' do
@@ -134,10 +134,10 @@ shared_examples_for :base_class_binding do
     end
   end
 
-  ###################
+  ###############
   #  optional?  #
   #  optional=  #
-  ###################
+  ###############
 
   context '#optional?, #optional=' do
     it 'topclass binding can require binding and query via optional? (inverted)' do

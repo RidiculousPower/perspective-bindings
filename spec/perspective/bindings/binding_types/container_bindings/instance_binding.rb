@@ -6,9 +6,9 @@ shared_examples_for :container_instance_binding do
 
   it_behaves_like :base_instance_binding
   
-  #########################################
+  #######################################
   #  «initialize_container_from_class»  #
-  #########################################
+  #######################################
   
   context '#«initialize_container_from_class»' do
     it 'will be extended with container instance binding methods' do
@@ -19,9 +19,9 @@ shared_examples_for :container_instance_binding do
     end
   end
   
-  ###################
+  #################
   #  «container»  #
-  ###################
+  #################
 
   context '#«container»' do
     it 'will return the initialized container instance' do
@@ -34,9 +34,9 @@ shared_examples_for :container_instance_binding do
     end
   end
   
-  ####################
+  ##################
   #  «container»=  #
-  ####################
+  ##################
 
   context '#«container»=' do
     it 'will store container, initializing self with container as parent (reverse the norm)' do
@@ -66,9 +66,9 @@ shared_examples_for :container_instance_binding do
     end
   end
   
-  #####################################
+  ###################################
   #  «create_additional_container»  #
-  #####################################
+  ###################################
 
   context '#«create_additional_container»' do
     before :each do
@@ -94,9 +94,9 @@ shared_examples_for :container_instance_binding do
     end
   end
 
-  ################################
+  ##############################
   #  «ensure_container_count»  #
-  ################################
+  ##############################
 
   context '#«ensure_container_count»' do
     context 'does not permit multiple' do
@@ -127,9 +127,9 @@ shared_examples_for :container_instance_binding do
     end
   end
   
-  #########################
+  #######################
   #  «container_count»  #
-  #########################
+  #######################
 
   context '#«container_count»' do
     context 'when permits_multiple? is false' do
@@ -320,9 +320,9 @@ shared_examples_for :container_instance_binding do
     end
   end
   
-  ######################
+  ####################
   #  «nested_route»  #
-  ######################
+  ####################
   
   context '#«nested_route»' do
     context 'binding is nested in queried binding' do

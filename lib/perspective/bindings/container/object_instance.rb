@@ -21,9 +21,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
 
-  ##############################
+  ##########################
   #  initialize_for_index  #
-  ##############################
+  ##########################
   
   def initialize_for_index( index )
     
@@ -31,9 +31,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
 
-  #############################
+  ###########################
   #  «initialize_bindings»  #
-  #############################
+  ###########################
   
   def «initialize_bindings»
 
@@ -43,9 +43,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
   	  
   end
   
-  ##############################
+  ############################
   #  «configure_containers»  #
-  ##############################
+  ############################
   
   def «configure_containers»
 
@@ -55,9 +55,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
   end
 
-  ##################
+  ##############
   #  is_root?  #
-  ##################
+  ##############
   
   def is_root?
     
@@ -65,9 +65,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
   
-  ##############
+  ############
   #  «name»  #
-  ##############
+  ############
   
   def «name»
     
@@ -83,9 +83,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
   
-  ##############
+  ############
   #  «root»  #
-  ##############
+  ############
   
   def «root»
     
@@ -107,9 +107,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
   alias_method  :root, :«root»
 
-  #####################
+  ###################
   #  «root_string»  #
-  #####################
+  ###################
 
   def «root_string»
     
@@ -128,9 +128,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
 
-  ###############
+  #############
   #  «route»  #
-  ###############
+  #############
 
   def «route»
     
@@ -166,15 +166,15 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
 
-  #########################
+  #######################
   #  «route_with_name»  #
-  #########################
+  #######################
   
   alias_method  :route_with_name, :«route_with_name»
 
-  ##################
+  ################
   #  «autobind»  #
-  ##################
+  ################
   
   def «autobind»( data_object )
     
@@ -211,9 +211,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
   
   alias_method  :autobind, :«autobind»
 
-  ########################
+  ######################
   #  «autobind_array»  #
-  ########################
+  ######################
 
   def «autobind_array»( data_binding )
     
@@ -221,9 +221,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
 
-  ############################
+  ##########################
   #  «autobind_container»  #
-  ############################
+  ##########################
 
   def «autobind_container»( data_container )
     
@@ -241,9 +241,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
 
-  ##########################
+  ########################
   #  «autobind_binding»  #
-  ##########################
+  ########################
   
   def «autobind_binding»( data_binding )
     
@@ -257,9 +257,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
   
-  #########################
+  #######################
   #  «autobind_object»  #
-  #########################
+  #######################
 
   def «autobind_object»( data_object )
     
@@ -278,9 +278,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
 
-  #######################
+  #####################
   #  «autobind_hash»  #
-  #######################
+  #####################
   
   def «autobind_hash»( data_hash )
 
@@ -297,9 +297,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
   
-  ##########################
+  ########################
   #  «autobind_content»  #
-  ##########################
+  ########################
   
   def «autobind_content»( data_object )
     
@@ -314,9 +314,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
   
-  ######################
+  ####################
   #  «nested_route»  #
-  ######################
+  ####################
 
   def «nested_route»( nested_binding )
 

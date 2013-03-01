@@ -20,9 +20,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
 
   end
   
-  #########################################
+  #######################################
   #  «initialize_container_from_class»  #
-  #########################################
+  #######################################
   
   def «initialize_container_from_class»( container_class = @«parent_binding».«container_class» )
     
@@ -44,9 +44,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
   
-  #############################
+  ###########################
   #  «initialize_bindings»  #
-  #############################
+  ###########################
   
   def «initialize_bindings»
     
@@ -55,9 +55,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
   
-  #############################
+  ###########################
   #  «configure_container»  #
-  #############################
+  ###########################
   
   def «configure_container»( bound_container = «bound_container» )
       
@@ -82,9 +82,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
   
-  ###################
+  #################
   #  «container»  #
-  ###################
+  #################
 
   attr_instance_configuration  :«container»
 
@@ -102,15 +102,15 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
 
-  ##############################################
+  ############################################
   #  «store_initialized_container_instance»  #
-  ##############################################
+  ############################################
   
   alias_method :«store_initialized_container_instance», :«container»=
   
-  ####################
+  ##################
   #  «container»=  #
-  ####################
+  ##################
 
   def «container»=( container_instance )
     
@@ -148,9 +148,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
 
   alias_method( :container=, :«container»= )
 
-  #####################################
+  ###################################
   #  «create_additional_container»  #
-  #####################################
+  ###################################
 
   def «create_additional_container»( container_class = @«parent_binding».«container_class» )
     
@@ -165,9 +165,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
   
-  ################################
+  ##############################
   #  «ensure_container_count»  #
-  ################################
+  ##############################
   
   def «ensure_container_count»( container_count, container_class = @«parent_binding».«container_class» )
 
@@ -196,9 +196,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
 
-  ##################
+  ################
   #  «autobind»  #
-  ##################
+  ################
 
   def «autobind»( data_object )
         
@@ -227,9 +227,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   
   alias_method  :autobind, :«autobind»
   
-  ########################
+  ######################
   #  «autobind_array»  #
-  ########################
+  ######################
 
   def «autobind_array»( data_array )
     
@@ -253,9 +253,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
 
-  ############################
+  ##########################
   #  «autobind_container»  #
-  ############################
+  ##########################
 
   def «autobind_container»( data_container )
 
@@ -267,9 +267,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
 
   end
   
-  ##########################
+  ########################
   #  «autobind_binding»  #
-  ##########################
+  ########################
 
   def «autobind_binding»( data_binding )
     
@@ -289,9 +289,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
   
-  #########################
+  #######################
   #  «autobind_object»  #
-  #########################
+  #######################
 
   def «autobind_object»( data_object )
 
@@ -305,9 +305,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
 
-  #######################
+  #####################
   #  «autobind_hash»  #
-  #######################
+  #####################
   
   def «autobind_hash»( data_hash )
 
@@ -319,9 +319,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
   
-  #########################
+  #######################
   #  «container_count»  #
-  #########################
+  #######################
   
   def «container_count»
     

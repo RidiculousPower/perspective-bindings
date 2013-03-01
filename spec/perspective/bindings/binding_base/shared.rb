@@ -2,9 +2,9 @@
 
 shared_examples_for :shared_binding do
 
-  #########################
+  #######################
   #  «bound_container»  #
-  #########################
+  #######################
   
   context '#«bound_container»' do
     it 'topclass binding has its bound container' do
@@ -15,9 +15,9 @@ shared_examples_for :shared_binding do
     end
   end
   
-  ##############
+  ############
   #  «root»  #
-  ##############
+  ############
   
   context '#«root»' do
     it 'topclass binding has bound container as root' do
@@ -28,9 +28,9 @@ shared_examples_for :shared_binding do
     end
   end
 
-  ##############
+  ############
   #  «name»  #
-  ##############
+  ############
   
   context '#«name»' do
     it 'topclass binding has a name' do
@@ -41,9 +41,9 @@ shared_examples_for :shared_binding do
     end
   end
   
-  ###############
+  #############
   #  «route»  #
-  ###############
+  #############
 
   context '#«route»' do
     it 'topclass binding has no route since it is in the root container' do
@@ -54,9 +54,9 @@ shared_examples_for :shared_binding do
     end
   end
 
-  #########################
+  #######################
   #  «route_with_name»  #
-  #########################
+  #######################
 
   context '#«route_with_name»' do
     it 'topclass binding route with name is binding name' do
@@ -67,9 +67,9 @@ shared_examples_for :shared_binding do
     end
   end
 
-  ######################
+  ####################
   #  «route_string»  #
-  ######################
+  ####################
 
   context '#«route_string»' do
     it 'topclass binding route string is its name' do
@@ -80,9 +80,9 @@ shared_examples_for :shared_binding do
     end
   end
 
-  ############################
+  ##########################
   #  «route_print_string»  #
-  ############################
+  ##########################
 
   context '#«route_print_string»' do
     it 'topclass binding print string is root plus route string' do

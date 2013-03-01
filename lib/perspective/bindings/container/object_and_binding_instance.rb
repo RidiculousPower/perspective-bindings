@@ -4,9 +4,9 @@ module ::Perspective::Bindings::Container::ObjectAndBindingInstance
 
   include ::CascadingConfiguration::Hash
   
-  ###################################
+  #################################
   #  «local_aliases_to_bindings»  #
-  ###################################
+  #################################
 
 	attr_hash  :«local_aliases_to_bindings» do
 

@@ -27,9 +27,9 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
 
   end
   
-  #####################
+  ###################
   #  «root_string»  #
-  #####################
+  ###################
 
   def «root_string»
     
@@ -37,9 +37,9 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
     
   end
 
-  ######################
+  ####################
   #  «nested_route»  #
-  ######################
+  ####################
 
   def «nested_route»( nested_in_binding )
     
@@ -67,19 +67,21 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
     
   end
 
-  ###############
-  #  value      #
+  #############
   #  «value»  #
-  ###############
+  #############
   
   attr_reader  :«value»
 
+  ###########
+  #  value  #
+  ###########
+
   alias_method  :value, :«value»
 
-  ################
-  #  value=      #
+  ##############
   #  «value»=  #
-  ################
+  ##############
 
   def «value»=( object )
     
@@ -107,6 +109,10 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
     return object
     
   end
+
+  ############
+  #  value=  #
+  ############
 
   alias_method  :value=, :«value»=
 

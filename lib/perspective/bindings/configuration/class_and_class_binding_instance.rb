@@ -4,9 +4,9 @@ module ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance
 
   include ::CascadingConfiguration::Array::Unique
   
-  #############################
+  ###########################
   #  «configuration_procs»  #
-  #############################
+  ###########################
                               
   attr_configuration_unique_array  :«configuration_procs»
 
@@ -16,9 +16,9 @@ module ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance
 
   Controller.alias_instance_method( :configuration_procs, :«configuration_procs» )
 
-  ###################
+  #################
   #  «configure»  #
-  ###################
+  #################
   
   def «configure»( & configuration_block )
 

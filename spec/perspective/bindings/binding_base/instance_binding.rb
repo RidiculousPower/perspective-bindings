@@ -13,9 +13,9 @@ shared_examples_for :base_instance_binding do
     let( :subclass_bound_container ) { subclass_bound_container_instance }
   end
 
-  ########################
+  ######################
   #  «parent_binding»  #
-  ########################
+  ######################
   
   context '#«parent_binding»' do
     it 'topclass binding has topclass class binding as parent' do
@@ -26,10 +26,10 @@ shared_examples_for :base_instance_binding do
     end
   end
   
-  ###########################
+  #######################
   #  permits_multiple?  #
   #  permits_multiple=  #
-  ###########################
+  #######################
 
   context '#permits_multiple?, #permits_multiple=' do
     it 'topclass binding can permit multiple' do
@@ -44,10 +44,10 @@ shared_examples_for :base_instance_binding do
     end
   end
 
-  ###################
+  ###############
   #  required?  #
   #  required=  #
-  ###################
+  ###############
 
   context '#required?, #required=' do
     it 'topclass binding can require binding' do
@@ -62,10 +62,10 @@ shared_examples_for :base_instance_binding do
     end
   end
 
-  ###################
+  ###############
   #  optional?  #
   #  optional=  #
-  ###################
+  ###############
 
   context '#optional?, #optional=' do
     it 'topclass binding can require binding and query via optional? (inverted)' do
@@ -80,9 +80,9 @@ shared_examples_for :base_instance_binding do
     end
   end
   
-  ##############################
+  ##########################
   #  binding_value_valid?  #
-  ##############################
+  ##########################
   
   context '#binding_value_valid?' do
     let( :value ) { Complex( 42, 37 ) }
@@ -139,10 +139,10 @@ shared_examples_for :base_instance_binding do
     end
   end
 
-  ################
+  ##############
   #  «value»   #
   #  «value»=  #
-  ################
+  ##############
 
   context '#«value», #«value»=' do
     let( :value ) { Complex( 42, 37 ) }

@@ -6,9 +6,9 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
   include ::CascadingConfiguration::Array::Unique
   include ::CascadingConfiguration::Hash
 
-  ##################
+  ################
   #  «bindings»  #
-  ##################
+  ################
 
   ###
   # Binding initialization takes place in the process of cascading from
@@ -122,9 +122,9 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
     
   end
 
-  #########################
+  #######################
   #  «binding_aliases»  #
-  #########################
+  #######################
 
 	attr_hash  :«binding_aliases»
 

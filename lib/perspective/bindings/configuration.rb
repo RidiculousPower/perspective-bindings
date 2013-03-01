@@ -2,15 +2,15 @@
 
 module ::Perspective::Bindings::Configuration
 
-  ########################
+  ######################
   #  «parent_binding»  #
-  ########################
+  ######################
 
   attr_reader  :«parent_binding»
 
-	#################
+	###############
   #  «binding»  #
-  #################
+  ###############
     
   def «binding»( binding_name )
     
@@ -26,9 +26,9 @@ module ::Perspective::Bindings::Configuration
     
   end
 
-  ######################
+  ##################
   #  has_binding?  #
-  ######################
+  ##################
 
   # has_binding? :name, ...
   # 

@@ -8,9 +8,9 @@ module ::Perspective::Bindings::Container::SingletonInstance
   include ::Perspective::BindingTypes::ContainerBindings
   include ::Perspective::Bindings::Container::Configuration
 
-  ##############
+  ############
   #  «name»  #
-  ##############
+  ############
   
   def «name»
     
@@ -18,9 +18,9 @@ module ::Perspective::Bindings::Container::SingletonInstance
     
   end
 
-  ##############
+  ############
   #  «root»  #
-  ##############
+  ############
   
   def «root»
     
@@ -37,9 +37,9 @@ module ::Perspective::Bindings::Container::SingletonInstance
 
   alias_method  :root, :«root»
 
-  ##################
+  ##############
   #  is_root?  #
-  ##################
+  ##############
   
   def is_root?
     
@@ -47,9 +47,9 @@ module ::Perspective::Bindings::Container::SingletonInstance
     
   end
   
-  #####################
+  ###################
   #  «root_string»  #
-  #####################
+  ###################
 
   def «root_string»
     
@@ -59,9 +59,9 @@ module ::Perspective::Bindings::Container::SingletonInstance
     
   end
 
-  ###############
+  #############
   #  «route»  #
-  ###############
+  #############
 
   def «route»
     
@@ -78,9 +78,9 @@ module ::Perspective::Bindings::Container::SingletonInstance
 
   alias_method( :route, :«route» )
 
-  #########################
+  #######################
   #  «route_with_name»  #
-  #########################
+  #######################
 
   def «route_with_name»
     
@@ -126,9 +126,9 @@ module ::Perspective::Bindings::Container::SingletonInstance
       private ######################################################################################
   ##################################################################################################
 
-	##############################
+	############################
   #  «create_binding_alias»  #
-  ##############################
+  ############################
 	
 	def «create_binding_alias»( binding_alias, existing_reference )
 
@@ -146,9 +146,9 @@ module ::Perspective::Bindings::Container::SingletonInstance
     
   end
   
-  ###########################
+  #########################
   #  «create_name_alias»  #
-  ###########################
+  #########################
 	
   def «create_name_alias»( binding_alias, existing_binding_name )
     
@@ -167,9 +167,9 @@ module ::Perspective::Bindings::Container::SingletonInstance
     
   end
 
-	#######################################
+	#####################################
   #  «create_local_alias_to_binding»  #
-  #######################################
+  #####################################
   
   def «create_local_alias_to_binding»( binding_alias, binding_instance )
 

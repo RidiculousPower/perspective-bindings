@@ -4,9 +4,9 @@ require_relative '../../binding_base/class_binding.rb'
 
 shared_examples_for :container_class_binding do
 
-  ##################################
+  ################################
   #  «validate_container_class»  #
-  ##################################
+  ################################
 
   context '#«validate_container_class»' do
     context 'container does not respond to :«bindings»' do
@@ -31,9 +31,9 @@ shared_examples_for :container_class_binding do
     end
   end
 
-  ########################################
+  ######################################
   #  «initialize_for_container_class»  #
-  ########################################
+  ######################################
 
   context '#«initialize_for_container_class»' do
     context 'container does not respond to :«bindings»' do
@@ -64,9 +64,9 @@ shared_examples_for :container_class_binding do
     end
   end
 
-  #########################
+  #######################
   #  «container_class»  #
-  #########################
+  #######################
 
   context '#«container_class»' do
     it 'topclass bound to root - binding A' do
@@ -99,9 +99,9 @@ shared_examples_for :container_class_binding do
     end
   end
 
-  ##############
+  ############
   #  «root»  #
-  ##############
+  ############
   
   context '#«root»' do
     it 'topclass bound to root - binding A' do
@@ -124,9 +124,9 @@ shared_examples_for :container_class_binding do
     end
   end
   
-  ###############
+  #############
   #  «route»  #
-  ###############
+  #############
 
   context '#«route»' do
     it 'topclass bound to root - binding A' do
@@ -149,9 +149,9 @@ shared_examples_for :container_class_binding do
     end
   end
 
-  #########################
+  #######################
   #  «route_with_name»  #
-  #########################
+  #######################
 
   context '#«route_with_name»' do
     it 'topclass bound to root - binding A' do
@@ -174,9 +174,9 @@ shared_examples_for :container_class_binding do
     end
   end
 
-  ######################
+  ####################
   #  «nested_route»  #
-  ######################
+  ####################
 
   context '#«nested_route»' do
     context 'binding is nested in queried binding' do

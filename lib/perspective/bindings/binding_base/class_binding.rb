@@ -39,9 +39,9 @@ module ::Perspective::Bindings::BindingBase::ClassBinding
 
   end
   
-  ##########################
+  ########################
   #  «initialize_route»  #
-  ##########################
+  ########################
   
   def «initialize_route»
     
@@ -58,9 +58,9 @@ module ::Perspective::Bindings::BindingBase::ClassBinding
     
   end
 
-  ###############################
+  #############################
   #  «validate_binding_name»  #
-  ###############################
+  #############################
 
   def «validate_binding_name»( binding_name )
   

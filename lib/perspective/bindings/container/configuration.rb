@@ -2,9 +2,9 @@
 
 module ::Perspective::Bindings::Container::Configuration
   
-  #################
+  ###############
   #  «binding»  #
-  #################
+  ###############
     
   def «binding»( binding_name )
     
@@ -18,9 +18,9 @@ module ::Perspective::Bindings::Container::Configuration
     
   end
 
-  ######################
+  ##################
   #  has_binding?  #
-  ######################
+  ##################
 
   # has_binding? :name, ...
   # 
