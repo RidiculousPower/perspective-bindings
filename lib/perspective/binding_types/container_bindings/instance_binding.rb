@@ -282,7 +282,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     if container = «container»
       «autobind_container»( data_binding )
     elsif data_binding.has_binding?( :content )
-      «autobind_binding»( data_binding.content )
+      «autobind_binding»( data_binding.•content )
     end
     
     return self
@@ -426,5 +426,5 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     return self
     
   end
-  
+
 end

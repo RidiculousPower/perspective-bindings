@@ -8,9 +8,9 @@ class ::Perspective::Bindings::Container::BindingMethods <
   ####################
   
   def define_binding( binding_name )
-  
+        
     define_binding_getter( binding_name )
-  
+    
   end
 
   ##########################
@@ -32,6 +32,23 @@ class ::Perspective::Bindings::Container::BindingMethods <
     define_local_alias_to_binding_getter( binding_alias, binding_instance )
   
   end
+
+  ################################
+  #  binding_getter_method_name  #
+  ################################
+  
+  def binding_getter_method_name( binding_name )
+    
+    case binding_name
+      when ::String
+        binding_name = binding_name.dup
+      when ::Symbol
+        binding_name = binding_name.to_s
+    end
+    
+    return '•' << binding_name
+
+  end
   
   ###########################
   #  define_binding_getter  #
@@ -40,11 +57,11 @@ class ::Perspective::Bindings::Container::BindingMethods <
   # Defines :binding_name, which returns the binding instance (whether class or instance binding).
   def define_binding_getter( binding_name )
     
-    #================#
-    #  binding_name  #
-    #================#
+    #=================#
+    #  •binding_name  #
+    #=================#
     
-    define_method( binding_name ) do
+    define_method( binding_getter_method_name( binding_name ) ) do
 
       return «bindings»[ binding_name ]
       
@@ -58,15 +75,14 @@ class ::Perspective::Bindings::Container::BindingMethods <
   
   def define_binding_alias_getter( binding_alias, binding_name )
     
-    #======================#
-    #  binding_alias_name  #
-    #======================#
+    #=======================#
+    #  •binding_alias_name  #
+    #=======================#
     
-    define_method( binding_alias ) do
-      
-      return «bindings»[ binding_name ]
-      
-    end
+    existing_method_name = binding_getter_method_name( binding_name )
+    alias_method_name = binding_getter_method_name( binding_alias )
+    
+    alias_method( alias_method_name, existing_method_name )
     
   end
 
@@ -76,11 +92,11 @@ class ::Perspective::Bindings::Container::BindingMethods <
   
   def define_local_alias_to_binding_getter( binding_alias, binding_instance )
     
-    #===============================#
-    #  local_alias_to_binding_name  #
-    #===============================#
+    #================================#
+    #  •local_alias_to_binding_name  #
+    #================================#
 
-    define_method( binding_alias ) do
+    define_method( binding_getter_method_name( binding_alias ) ) do
 
       return «local_aliases_to_bindings»[ binding_alias ]
       

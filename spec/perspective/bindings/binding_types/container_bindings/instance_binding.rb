@@ -110,19 +110,19 @@ shared_examples_for :container_instance_binding do
     end
     context 'no container class' do
       it 'will raise ArgumentError' do
-        ::Proc.new { instance_of_class.a.b.c.content.«ensure_container_count»( 1 ) }.should raise_error( ::ArgumentError )
+        ::Proc.new { instance_of_class.a.b.c.•content.«ensure_container_count»( 1 ) }.should raise_error( ::ArgumentError )
       end
     end
     context 'ensure 1 and one container currently exists' do
       it 'will do nothing' do
-        instance_of_multiple_container_class.multiple_binding.«ensure_container_count»( 1 )
-        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@«containers» ).should be nil
+        instance_of_multiple_container_class.•multiple_binding.«ensure_container_count»( 1 )
+        instance_of_multiple_container_class.•multiple_binding.instance_variable_get( :@«containers» ).should be nil
       end
     end
     context 'ensure more than 1 and one container currently exists' do
       it 'will create necessary containers' do
-        instance_of_multiple_container_class.multiple_binding.«ensure_container_count»( 10 )
-        instance_of_multiple_container_class.multiple_binding.instance_variable_get( :@«containers» ).size.should be 10
+        instance_of_multiple_container_class.•multiple_binding.«ensure_container_count»( 10 )
+        instance_of_multiple_container_class.•multiple_binding.instance_variable_get( :@«containers» ).size.should be 10
       end
     end
   end
@@ -135,7 +135,7 @@ shared_examples_for :container_instance_binding do
     context 'when permits_multiple? is false' do
       context 'when 0' do
         it 'will report 0' do
-          instance_of_class.a.b.c.content.«container_count».should be 0
+          instance_of_class.a.b.c.•content.«container_count».should be 0
         end
       end
       context 'when 1' do
@@ -147,8 +147,8 @@ shared_examples_for :container_instance_binding do
     context 'when permits_multiple? is true' do
       context 'when 0' do
         it 'will report 0' do
-          instance_of_multiple_container_class.multiple_binding.content.permits_multiple = true
-          instance_of_multiple_container_class.multiple_binding.content.«container_count».should be 0
+          instance_of_multiple_container_class.multiple_binding.•content.permits_multiple = true
+          instance_of_multiple_container_class.multiple_binding.•content.«container_count».should be 0
         end
       end
       context 'when 1' do

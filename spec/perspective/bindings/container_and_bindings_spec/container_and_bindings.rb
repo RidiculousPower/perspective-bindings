@@ -726,12 +726,12 @@ shared_examples_for :container_and_bindings do
     context '#[]' do
       context 'when symbol' do
         it 'will return binding for binding name' do
-          instance_of_class[ :binding_one ].should be instance_of_class.binding_one
+          instance_of_class[ :binding_one ].should be instance_of_class.•binding_one
         end
       end
       context 'when string' do
         it 'will return binding for binding name' do
-          instance_of_class[ 'binding_one' ].should be instance_of_class.binding_one
+          instance_of_class[ 'binding_one' ].should be instance_of_class.•binding_one
         end
       end
     end
@@ -788,15 +788,15 @@ shared_examples_for :container_and_bindings do
           instance_of_class.«autobind_binding»( data_binding )
         end
         it 'will look for a binding by the same name and set its value to the value of provided binding' do
-          instance_of_class.content.value.should be data_binding.content.value
+          instance_of_class.content.should be data_binding.content
         end
       end
       context 'binding' do
         before :each do
-          instance_of_class.content.«autobind_binding»( data_binding.content )
+          instance_of_class.•content.«autobind_binding»( data_binding.•content )
         end
         it 'will set its value to the value of provided binding' do
-          instance_of_class.content.value.should be data_binding.content.value
+          instance_of_class.content.should be data_binding.content
         end
       end
     end
@@ -817,10 +817,10 @@ shared_examples_for :container_and_bindings do
           instance_of_class.«autobind_container»( data_container )
         end
         it 'will bind values from foreign container bindings to corresponding bindings' do
-          instance_of_class.content.value.should == data_container.content.value
-          instance_of_class.binding_one.value.should == data_container.binding_one.value
-          instance_of_class.binding_two.value.should == data_container.binding_two.value
-          instance_of_class.a.b.c.content.value.should == data_container.a.b.c.content.value
+          instance_of_class.content.should == data_container.content
+          instance_of_class.binding_one.should == data_container.binding_one
+          instance_of_class.binding_two.should == data_container.binding_two
+          instance_of_class.a.b.c.content.should == data_container.a.b.c.content
         end
       end
       context 'binding' do
@@ -828,7 +828,7 @@ shared_examples_for :container_and_bindings do
           instance_of_class.a.«autobind_container»( data_container.a.«container» )
         end
         it 'will bind values from foreign container bindings to corresponding bindings' do
-          instance_of_class.a.b.c.content.value.should == data_container.a.b.c.content.value
+          instance_of_class.a.b.c.content.should == data_container.a.b.c.content
         end
       end
     end
@@ -849,10 +849,10 @@ shared_examples_for :container_and_bindings do
           instance_of_class.«autobind_hash»( data_hash )
         end
         it 'will bind values from hash to corresponding bindings' do
-          instance_of_class.content.value.should == data_hash[ :content ]
-          instance_of_class.binding_one.value.should == data_hash[ :binding_one ]
-          instance_of_class.binding_two.value.should == data_hash[ :binding_two ]
-          instance_of_class.a.b.c.content.value.should == data_hash[ :a ][ :b ][ :c ]
+          instance_of_class.content.should == data_hash[ :content ]
+          instance_of_class.binding_one.should == data_hash[ :binding_one ]
+          instance_of_class.binding_two.should == data_hash[ :binding_two ]
+          instance_of_class.a.b.c.content.should == data_hash[ :a ][ :b ][ :c ]
         end
       end
       context 'binding' do
@@ -860,7 +860,7 @@ shared_examples_for :container_and_bindings do
           instance_of_class.a.«autobind_hash»( data_hash[ :a ] )
         end
         it 'will bind values from hash to corresponding bindings' do
-          instance_of_class.a.b.c.content.value.should == data_hash[ :a ][ :b ][ :c ]
+          instance_of_class.a.b.c.content.should == data_hash[ :a ][ :b ][ :c ]
         end
       end
     end
@@ -881,10 +881,10 @@ shared_examples_for :container_and_bindings do
           instance_of_class.«autobind_object»( data_object )
         end
         it 'will bind values from object to corresponding bindings' do
-          instance_of_class.content.value.should == data_object.content
-          instance_of_class.binding_one.value.should == data_object.binding_one
-          instance_of_class.binding_two.value.should == data_object.binding_two
-          instance_of_class.a.b.c.content.value.should == data_object.a.b.c
+          instance_of_class.content.should == data_object.content
+          instance_of_class.binding_one.should == data_object.binding_one
+          instance_of_class.binding_two.should == data_object.binding_two
+          instance_of_class.a.b.c.content.should == data_object.a.b.c
         end
       end
       context 'binding' do
@@ -892,7 +892,7 @@ shared_examples_for :container_and_bindings do
           instance_of_class.a.«autobind_object»( data_object.a )
         end
         it 'will bind values from object to corresponding bindings' do
-          instance_of_class.a.b.c.content.value.should == data_object.a.b.c
+          instance_of_class.a.b.c.content.should == data_object.a.b.c
         end
       end
     end
@@ -918,9 +918,9 @@ shared_examples_for :container_and_bindings do
           instance_of_multiple_container_class.multiple_binding.«autobind_array»( multiple_data_objects )
         end
         it 'will treat an array as a list of values to be mapped to multiple containers' do
-          instance_of_multiple_container_class.multiple_binding[ 0 ].content.value.should be :c_content_value
-          instance_of_multiple_container_class.multiple_binding[ 1 ].content.value.should be :c_content_value2
-          instance_of_multiple_container_class.multiple_binding[ 2 ].content.value.should be :c_content_value3
+          instance_of_multiple_container_class.multiple_binding[ 0 ].content.should be :c_content_value
+          instance_of_multiple_container_class.multiple_binding[ 1 ].content.should be :c_content_value2
+          instance_of_multiple_container_class.multiple_binding[ 2 ].content.should be :c_content_value3
         end
       end
     end
@@ -943,34 +943,34 @@ shared_examples_for :container_and_bindings do
           context 'binding' do
             let( :object ) { data_binding }
             it 'will look for a binding by the same name and set its value to the value of provided binding' do
-              instance.content.value.should be object.content.value
+              instance.content.should be object.content
             end
           end
           context 'container' do
             let( :object ) { data_container }
             it 'will bind values from foreign container bindings to corresponding bindings' do
-              instance.content.value.should == object.content.value
-              instance.binding_one.value.should == object.binding_one.value
-              instance.binding_two.value.should == object.binding_two.value
-              instance.a.b.c.content.value.should == object.a.b.c.content.value
+              instance.content.should == object.content
+              instance.binding_one.should == object.binding_one
+              instance.binding_two.should == object.binding_two
+              instance.a.b.c.content.should == object.a.b.c.content
             end
           end
           context 'hash' do
             let( :object ) { data_hash }
             it 'will bind values from hash to corresponding bindings' do
-              instance.content.value.should == object[ :content ]
-              instance.binding_one.value.should == object[ :binding_one ]
-              instance.binding_two.value.should == object[ :binding_two ]
-              instance.a.b.c.content.value.should == object[ :a ][ :b ][ :c ]
+              instance.content.should == object[ :content ]
+              instance.binding_one.should == object[ :binding_one ]
+              instance.binding_two.should == object[ :binding_two ]
+              instance.a.b.c.content.should == object[ :a ][ :b ][ :c ]
             end
           end
           context 'object' do
             let( :object ) { data_object }
             it 'will bind values from object to corresponding bindings' do
-              instance.content.value.should == object.content
-              instance.binding_one.value.should == object.binding_one
-              instance.binding_two.value.should == object.binding_two
-              instance.a.b.c.content.value.should == object.a.b.c
+              instance.content.should == object.content
+              instance.binding_one.should == object.binding_one
+              instance.binding_two.should == object.binding_two
+              instance.a.b.c.content.should == object.a.b.c
             end
           end
         end
@@ -987,36 +987,36 @@ shared_examples_for :container_and_bindings do
         let( :instance ) { instance_of_class.a }
         context 'binding' do
           let( :object ) { data_binding }
-          let( :instance ) { instance_of_class.content }
+          let( :instance ) { instance_of_class.•content }
           it 'will set its value to the value of provided binding' do
-            instance.value.should be object.content.value
+            instance.«value».should be object.content
           end
         end
         context 'container' do
           let( :object ) { data_container.a }
           it 'will bind values from foreign container bindings to corresponding bindings' do
-            instance.b.c.content.value.should == object.b.c.content.value
+            instance.b.c.content.should == object.b.c.content
           end
         end
         context 'hash' do
           let( :object ) { data_hash[ :a ] }
           it 'will bind values from hash to corresponding bindings' do
-            instance.b.c.content.value.should == object[ :b ][ :c ]
+            instance.b.c.content.should == object[ :b ][ :c ]
           end
         end
         context 'object' do
           let( :object ) { data_object.a }
           it 'will bind values from object to corresponding bindings' do
-            instance.b.c.content.value.should == object.b.c
+            instance.b.c.content.should == object.b.c
           end
         end
         context 'array' do
           let( :instance ) { instance_of_multiple_container_class.multiple_binding }
           let( :object ) { multiple_data_objects }
           it 'will treat an array as a list of values to be mapped to multiple containers' do
-            instance[ 0 ].content.value.should be object[ 0 ]
-            instance[ 1 ].content.value.should be object[ 1 ]
-            instance[ 2 ].content.value.should be object[ 2 ]
+            instance[ 0 ].content.should be object[ 0 ]
+            instance[ 1 ].content.should be object[ 1 ]
+            instance[ 2 ].content.should be object[ 2 ]
           end
         end
       end

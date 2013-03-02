@@ -160,10 +160,10 @@ def setup_container_and_bindings_tests
   
   let( :data_container ) do
     data_container = class_instance.new
-    data_container.content.value = :content_value
-    data_container.binding_one.value = :binding_one_value
-    data_container.binding_two.value = :binding_two_value
-    data_container.a.b.c.content.value = :c_content_value
+    data_container.content = :content_value
+    data_container.binding_one = :binding_one_value
+    data_container.binding_two = :binding_two_value
+    data_container.a.b.c.content = :c_content_value
     data_container
   end
   

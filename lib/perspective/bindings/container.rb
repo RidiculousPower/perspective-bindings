@@ -20,8 +20,8 @@ module ::Perspective::Bindings::Container
     unless controller = ::CascadingConfiguration.instance_controller( instance )
       controller = ::CascadingConfiguration.create_instance_controller( instance )
     end    
-    controller.create_singleton_support( :class_binding_methods, self::BindingMethods )
-    controller.create_instance_support( :instance_binding_methods, self::BindingMethods )    
+    controller.create_singleton_support( :class_binding_methods, self::BindingMethods::ClassBindingMethods )
+    controller.create_instance_support( :instance_binding_methods, self::BindingMethods::InstanceBindingMethods )
   end
   
 end

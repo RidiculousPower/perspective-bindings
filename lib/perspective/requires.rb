@@ -78,6 +78,8 @@ files = [
   'binding_types/container_bindings/instance_binding',
   
   'bindings/container/binding_methods',
+  'bindings/container/binding_methods/class_binding_methods',
+  'bindings/container/binding_methods/instance_binding_methods',
   'bindings/container/singleton_and_object_instance',
   'bindings/container/singleton_instance',
   'bindings/container/class_instance',
