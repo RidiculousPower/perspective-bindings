@@ -25,8 +25,8 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
         @class_binding_base.module_eval    { include parent_types_controller.class_binding_base }
         @instance_binding_base.module_eval { include parent_types_controller.instance_binding_base }
       else
-        @class_binding_base.module_eval    { include ::Perspective::Bindings::BindingBase::ClassBinding }
-        @instance_binding_base.module_eval { include ::Perspective::Bindings::BindingBase::InstanceBinding }
+        @class_binding_base.module_eval    { include ::Perspective::Bindings::ClassBinding }
+        @instance_binding_base.module_eval { include ::Perspective::Bindings::InstanceBinding }
       end
       
       module_eval( & module_block ) if block_given?

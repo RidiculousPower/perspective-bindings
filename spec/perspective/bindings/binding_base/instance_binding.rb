@@ -179,7 +179,7 @@ shared_examples_for :base_instance_binding do
   
   context '#value' do
     it 'is an alias for #«value»' do
-      ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :value ).should == ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :«value» )
+      ::Perspective::Bindings::InstanceBinding.instance_method( :value ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :«value» )
     end
   end
 
@@ -189,7 +189,7 @@ shared_examples_for :base_instance_binding do
   
   context 'value=' do
     it 'is an alias for #«value»=' do
-      ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :value= ).should == ::Perspective::Bindings::BindingBase::InstanceBinding.instance_method( :«value»= )
+      ::Perspective::Bindings::InstanceBinding.instance_method( :value= ).should == ::Perspective::Bindings::InstanceBinding.instance_method( :«value»= )
     end
   end
 

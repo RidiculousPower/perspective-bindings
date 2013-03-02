@@ -20,8 +20,8 @@ files = [
   'bindings/configuration',
 
   'bindings/binding_base',
-  'bindings/binding_base/class_binding',
-  'bindings/binding_base/instance_binding',
+  'bindings/class_binding',
+  'bindings/instance_binding',
   
   'bindings/binding_type_container/binding_base/class_binding',
   'bindings/binding_type_container/binding_base/instance_binding',

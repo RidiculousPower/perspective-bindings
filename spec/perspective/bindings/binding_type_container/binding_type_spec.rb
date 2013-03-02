@@ -85,7 +85,7 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType do
       parent_binding_type.class_binding_class.ancestors.include?( parent_mock_binding_type_container.class_binding_base ).should be true
     end
     it 'each class binding class includes the common class binding base' do
-      parent_binding_type.class_binding_class.ancestors.include?( ::Perspective::Bindings::BindingBase::ClassBinding ).should be true
+      parent_binding_type.class_binding_class.ancestors.include?( ::Perspective::Bindings::ClassBinding ).should be true
     end
     it 'child also has a class binding class' do
       child_binding_type.class_binding_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType::ClassBindingClass ).should be true
@@ -113,7 +113,7 @@ describe ::Perspective::Bindings::BindingTypeContainer::BindingType do
       parent_binding_type.instance_binding_class.ancestors.include?( parent_mock_binding_type_container.instance_binding_base ).should be true
     end
     it 'each instance binding class includes the common instance binding base' do
-      parent_binding_type.instance_binding_class.ancestors.include?( ::Perspective::Bindings::BindingBase::InstanceBinding ).should be true
+      parent_binding_type.instance_binding_class.ancestors.include?( ::Perspective::Bindings::InstanceBinding ).should be true
     end
     it 'child also has an instance binding class' do
       child_binding_type.instance_binding_class.ancestors.include?( ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBindingClass ).should be true

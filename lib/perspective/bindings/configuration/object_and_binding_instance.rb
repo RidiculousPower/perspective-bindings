@@ -49,7 +49,7 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
           child_instance = binding_instance.class.new( instance, binding_instance )
 
         # Inheriting from a class or a class binding (nested or not).
-        when ::Perspective::Bindings::BindingBase::ClassBinding
+        when ::Perspective::Bindings::ClassBinding
           
           # If we're attaching to a class binding we're at least 2 levels deep, 
           # which means new class bindings are nested.
@@ -68,7 +68,7 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
               # We need instance bindings corresponding to the declared class bindings
               child_instance = binding_instance.class::InstanceBinding.new( binding_instance, instance )
             
-            when ::Perspective::Bindings::BindingBase::InstanceBinding
+            when ::Perspective::Bindings::InstanceBinding
               
               if parent_instance.permits_multiple? and parent_instance.«container»( false ) != instance
                 # We were created by an instance binding as a multiple container (> index 0).
@@ -88,13 +88,13 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
           end
             
         # Inheriting from class binding (nested or not) or instance (assigned to instance binding)
-        when ::Perspective::Bindings::BindingBase::InstanceBinding
+        when ::Perspective::Bindings::InstanceBinding
           
           # What matters in this case is that we need instance bindings.
 
           case parent_instance = parent_hash.configuration_instance
             
-            when ::Perspective::Bindings::BindingBase::ClassBinding
+            when ::Perspective::Bindings::ClassBinding
 
               # it's looping b/c we are an instance binding iheriting from a class binding
               # and when we create a new instance binding, it is also inheriting from a class binding

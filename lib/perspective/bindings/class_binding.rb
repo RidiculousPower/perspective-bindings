@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::BindingBase::ClassBinding
+module ::Perspective::Bindings::ClassBinding
 
   include ::Perspective::Bindings::BindingBase
   include ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance

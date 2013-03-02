@@ -209,7 +209,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
         «autobind_array»( data_object )
       when ::Hash
         «autobind_hash»( data_object )
-      when ::Perspective::Bindings::BindingBase::InstanceBinding
+      when ::Perspective::Bindings::InstanceBinding
         «autobind_binding»( data_object )
       when ::Perspective::Bindings::Container::ObjectInstance
         «autobind_container»( data_object )

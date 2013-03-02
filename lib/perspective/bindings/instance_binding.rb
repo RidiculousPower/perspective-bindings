@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::BindingBase::InstanceBinding
+module ::Perspective::Bindings::InstanceBinding
   
   include ::Perspective::Bindings::BindingBase
   
@@ -87,7 +87,7 @@ module ::Perspective::Bindings::BindingBase::InstanceBinding
     
     case object
       
-      when ::Perspective::Bindings::BindingBase::InstanceBinding
+      when ::Perspective::Bindings::InstanceBinding
 
         if ::Perspective::Bindings::ReferenceBinding === self
           @«value» = object

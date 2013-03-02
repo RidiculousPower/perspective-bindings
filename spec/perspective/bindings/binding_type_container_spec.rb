@@ -281,7 +281,7 @@ describe ::Perspective::Bindings::BindingTypeContainer do
       end
       new_bindings = parent_type_container.types.new_class_bindings( binding_type, bound_container, :some_name, :some_other_name, :another_name )
       new_bindings.each do |this_binding|
-        this_binding.is_a?( ::Perspective::Bindings::BindingBase::ClassBinding ).should be true
+        this_binding.is_a?( ::Perspective::Bindings::ClassBinding ).should be true
         this_binding.is_a?( parent_type_container::SomeType ).should be true
         this_binding.«bound_container».should be bound_container
       end

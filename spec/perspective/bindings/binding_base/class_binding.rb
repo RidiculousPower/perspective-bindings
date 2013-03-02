@@ -86,7 +86,7 @@ shared_examples_for :base_class_binding do
   
   context '#configure' do
     it 'is an alias for #«configure»' do
-      ::Perspective::Bindings::BindingBase::ClassBinding.instance_method( :configure ).should == ::Perspective::Bindings::BindingBase::ClassBinding.instance_method( :«configure» )
+      ::Perspective::Bindings::ClassBinding.instance_method( :configure ).should == ::Perspective::Bindings::ClassBinding.instance_method( :«configure» )
     end
   end
 

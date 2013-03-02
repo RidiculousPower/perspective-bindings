@@ -14,7 +14,7 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingBase::InstanceBindin
 
     super
 
-    include ::Perspective::Bindings::BindingBase::InstanceBinding
+    include ::Perspective::Bindings::InstanceBinding
 
   end
   

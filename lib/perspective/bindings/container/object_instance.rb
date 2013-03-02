@@ -185,7 +185,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
     case data_object
       when ::Perspective::Bindings::Container
         found_a_binding = «autobind_container»( data_object )
-      when ::Perspective::Bindings::BindingBase::InstanceBinding
+      when ::Perspective::Bindings::InstanceBinding
         found_a_binding = «autobind_binding»( data_object )
       when ::Hash
         found_a_binding = «autobind_hash»( data_object )
