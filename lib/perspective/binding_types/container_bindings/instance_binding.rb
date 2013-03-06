@@ -51,7 +51,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   def «initialize_bindings»
     
     «container»
-    «bindings».each { |this_binding_name, this_binding| this_binding.«initialize_bindings» }
+    «bindings».each do |this_binding_name, this_binding|
+      this_binding.«initialize_bindings» if this_binding.respond_to?( :«initialize_bindings» )
+    end
     
   end
   
@@ -66,7 +68,9 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
       bound_container.instance_exec( self, & this_configuration_proc )
 	  end
 	  
-    «bindings».each { |this_binding_name, this_binding| this_binding.«configure_container» }
+    «bindings».each do |this_binding_name, this_binding| 
+      this_binding.«configure_container» if this_binding.respond_to?( :«configure_container» )
+    end
 	  
 	  return self
     
@@ -78,7 +82,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   
   def has_container?
     
-    return «container»( false ) ? true : false
+    return «container»( nil, false ) ? true : false
     
   end
   
@@ -88,14 +92,30 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
 
   attr_instance_configuration  :«container»
 
-  def «container»( initialize_container = true )
+  def «container»( index = nil, initialize_container = true )
     
     container_instance = nil
+    
+    if index
+      
+      «ensure_container_count»( index + 1 )
 
-    unless ! initialize_container or container_instance = super()
-      if container_class = @«parent_binding».«container_class»
-        container_instance = «initialize_container_from_class»
+      case index
+        when 0
+          container_instance = «container»
+        else
+          @«containers» ||= [ «container» ]
+          container_instance = @«containers»[ index ]
       end
+
+    else
+
+      unless ! initialize_container or container_instance = super()
+        if container_class = @«parent_binding».«container_class»
+          container_instance = «initialize_container_from_class»
+        end
+      end
+
     end
     
     return container_instance
@@ -111,7 +131,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   ##################
   #  «container»=  #
   ##################
-
+  
   def «container»=( container_instance )
     
     super
@@ -133,6 +153,66 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
       «autobind»( @«value» )
       
     end
+    
+  end
+  
+  #####################
+  #  «set_container»  #
+  #####################
+  
+  ###
+  # @overload «container»=( container_instance )
+  # @overload «container»=( index, container_instance )
+  #
+  def «set_container»( *args )
+    
+    index = nil
+    container_instance = nil
+    
+    case index_or_container = args[ 0 ]
+      when ::Integer
+        index = index_or_container
+        container_instance = args[ 1 ]
+      else
+        container_instance = index_or_container
+    end
+    
+    if index
+      
+      «ensure_container_count»( index + 1 )
+
+      case index
+        when 0
+          self.«container» = container_instance
+        when -1
+          if permits_multiple?
+            if @«containers»
+              @«containers»[ index ] = container_instance
+            else
+              self.«container» = container_instance
+            end
+          else
+            self.«container» = container_instance
+          end
+        else
+          if index < 0
+            if ! @«containers»
+              raise IndexError, 'index ' << index.to_s << ' too small for array; minimum: -1'
+            elsif -@«containers».size < index
+              raise IndexError, 'index ' << index.to_s << ' too small for array; minimum: ' << 
+                                (-@«containers».size).to_s
+            end
+          end
+          @«containers»[ index ] = container_instance
+      end
+
+    else
+      
+      self.«container» = container_instance
+      
+    end
+    
+    return container_instance
     
   end
 
@@ -281,8 +361,8 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     # if we have sub-bindings that match, copy them
     if container = «container»
       «autobind_container»( data_binding )
-    elsif data_binding.has_binding?( :content )
-      «autobind_binding»( data_binding.•content )
+    elsif autobind_binding = data_binding.«autobind_value_to_binding»
+      «autobind_binding»( autobind_binding )
     end
     
     return self
@@ -330,8 +410,8 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     if permits_multiple? and @«containers»
       container_count = @«containers».size
     else
-      container_count = «container»( false ) ? 1 
-                                               : @«parent_binding».«container_class» ? 1 : 0
+      container_count = «container»( nil, false ) ? 1 
+                                                  : @«parent_binding».«container_class» ? 1 : 0
     end
     
     return container_count
@@ -344,31 +424,29 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   
   def []( index_or_binding_name )
     
-    container = nil
+    return_value = nil
     
     case index_or_binding_name
 
       when ::Symbol, ::String
 
-        container = «binding»( binding_name = index_or_binding_name )
+        return_value = «binding»( binding_name = index_or_binding_name )
 
       else
         
         index = index_or_binding_name
         
-        «ensure_container_count»( index + 1 )
+        container = «container»( index )
 
-        case index
-          when 0
-            container = «container»
-          else
-            @«containers» ||= [ «container» ]
-            container = @«containers»[ index ]
+        if autobind_binding = container.«autobind_value_to_binding» and container.«bindings».size == 1
+          return_value = autobind_binding.«value»
+        else
+          return_value = container
         end
 
     end
         
-    return container
+    return return_value
     
   end
 
@@ -376,22 +454,24 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   #  []=  #
   #########
   
-  def []=( index, container_instance )
+  def []=( index, object )
 
     «ensure_container_count»( index + 1 )
-
+    
+    container_instance = nil
+    
     case index
       when 0
-        self.«container» = container_instance
+        container_instance = «container»
       when -1
         if permits_multiple?
           if @«containers»
-            @«containers»[ index ] = container_instance
+            container_instance = @«containers»[ index ]
           else
-            self.«container» = container_instance
+            container_instance = «container»
           end
         else
-          self.«container» = container_instance
+          container_instance = self.«container»
         end
       else
         if index < 0
@@ -402,9 +482,11 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
                               (-@«containers».size).to_s
           end
         end
-        @«containers»[ index ] = container_instance
+        container_instance = @«containers»[ index ]
     end
-
+    
+    container_instance.«autobind_value»( object )
+    
     return container_instance
     
   end

@@ -34,4 +34,16 @@ module ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance
 
   alias_method :configure, :«configure»
   
+  ###################
+  #  attr_autobind  #
+  ###################
+  
+  def attr_autobind( binding_name_or_instance )
+
+    self.«autobind_value_to_binding» = binding_name_or_instance
+
+    return self
+    
+  end  
+  
 end

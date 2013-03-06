@@ -42,12 +42,14 @@ module ::Perspective::Bindings::Container::ClassInstance
   #
   def new_nested_instance( parent_binding_instance, *args, & block )
     
+    class_instance = self
+    
     return allocate.instance_eval do
 
       @«parent_binding» = parent_binding_instance
       @«bound_container» = parent_binding_instance
       
-      ::CascadingConfiguration.register_parent( self, parent_binding_instance )
+      ::CascadingConfiguration.replace_parent( self, class_instance, parent_binding_instance )
 
       «initialize_bindings»
       initialize( *args, & block )

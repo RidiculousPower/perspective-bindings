@@ -90,6 +90,7 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
                                                                  binding_type_name, 
                                                                  parent_binding_type_instance )
         instance.const_set( binding_type_name.to_s.to_camel_case, child_instance )
+        instance.type_container.define_binding_methods( binding_type_name )
         
       else
       
@@ -103,9 +104,9 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
     
   end
 
-  #####################
+  ##########################
   #  self.binding_aliases  #
-  #####################
+  ##########################
   
   attr_singleton_hash :binding_aliases
 

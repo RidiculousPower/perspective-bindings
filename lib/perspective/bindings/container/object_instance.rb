@@ -3,7 +3,7 @@
 module ::Perspective::Bindings::Container::ObjectInstance
 
   include ::Perspective::Bindings::Configuration
-  include ::Perspective::Bindings::ObjectAndBindingInstance
+  include ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
   include ::Perspective::Bindings::Container::Configuration
   include ::Perspective::Bindings::Container::ObjectAndBindingInstance
 
@@ -38,7 +38,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
   def «initialize_bindings»
 
     «bindings».each do |this_binding_name, this_binding|
-      this_binding.«initialize_bindings»
+      this_binding.«initialize_bindings» if this_binding.respond_to?( :«initialize_bindings» )
 	  end
   	  
   end
@@ -50,7 +50,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
   def «configure_containers»
 
     «bindings».each do |this_binding_name, this_binding|
-      this_binding.«configure_container»
+      this_binding.«configure_container» if this_binding.respond_to?( :«configure_container» )
     end
 
   end
@@ -193,12 +193,16 @@ module ::Perspective::Bindings::Container::ObjectInstance
         found_a_binding = «autobind_object»( data_object )
     end
 
-    unless found_a_binding or «autobind_content»( data_object )
-      raise ::Perspective::Bindings::Exception::AutobindFailed, 
-              ':autobind was called on ' << self.to_s << ' but data object did not respond ' <<
-              'to the name of any declared bindings in ' << self.to_s << 
-              ', no method map was provided, and ' << self.to_s << 
-              ' does not respond to :' << :content.to_s << '.'
+    unless found_a_binding
+      if autobinds_value?
+        «autobinds_value»( data_object )
+      else
+        raise ::Perspective::Bindings::Exception::AutobindFailed, 
+                ':autobind was called on ' << self.to_s << ' but data object did not respond ' <<
+                'to the name of any declared bindings in ' << self.to_s << 
+                ', no method map was provided, and ' << self.to_s << 
+                ' responds false to :autobind_value?.'
+      end
     end
     
     return self
@@ -297,20 +301,24 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
   
-  ########################
-  #  «autobind_content»  #
-  ########################
+  ######################
+  #  «autobind_value»  #
+  ######################
   
-  def «autobind_content»( data_object )
-    
-    found_content_binding = false
-    
-    if has_binding?( :content )
-      «binding»( :content ).«autobind»( data_object )
-      found_content_binding = true
+  def «autobind_value»( value )
+
+    if autobind_binding = «autobind_value_to_binding»
+      if sub_autobinding = autobind_binding.«autobind_value_to_binding»
+        autobind_binding.«autobind_value»( value )
+      else
+        autobind_binding.«value» = value
+      end
+    else
+      raise ::ArgumentError, 'Cannot autobind value - no binding set for :«autobind_value_to_binding» ' << 
+                             '(generally set through :attr_autobind).'
     end
     
-    return found_content_binding
+    return self
     
   end
   

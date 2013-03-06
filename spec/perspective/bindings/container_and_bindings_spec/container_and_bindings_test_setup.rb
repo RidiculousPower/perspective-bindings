@@ -39,6 +39,7 @@ def setup_container_and_bindings_tests
     nested_class_A_B_C.class_eval do
       include _bindings_module
       attr_text :content
+      attr_autobind :content
     end
     nested_class_A_B_C
   end
@@ -67,6 +68,7 @@ def setup_container_and_bindings_tests
       include _module_instance
       attr_binding :binding_one, :binding_two
       attr_text :content
+      attr_autobind :content
       a.configure( & _subclass_binding_A_action )
       a.b.configure( & _subclass_binding_A_B_action )
       a.b.c.configure( & _subclass_binding_A_B_C_action )

@@ -8,6 +8,10 @@ require 'singleton_attr'
 
 files = [
   
+  '../../lib_ext/module',
+  '../../lib_ext/class',
+  '../../lib_ext/object',
+  
   'bindings/include_extend',
   'bindings/include_extend/initialize_instances',
   
@@ -15,8 +19,8 @@ files = [
 
   'bindings/constants',
 
-  'bindings/configuration/class_and_class_binding_instance',
   'bindings/configuration/object_and_binding_instance',
+  'bindings/configuration/singleton_and_class_binding_instance',
   'bindings/configuration',
 
   'bindings/binding_base',

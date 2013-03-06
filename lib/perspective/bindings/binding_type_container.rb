@@ -25,11 +25,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     
     include parent_container if @parent_container = parent_container
 
-    if parent_type_controller and subclass_existing_bindings
-      parent_type_controller.binding_types.each do |this_binding_name, this_binding_instance|
-        define_binding_methods( this_binding_name, this_binding_instance.type_name )
-      end
-    end
+    @types.binding_types.load_parent_state
 
     super( & module_block )
 
@@ -192,14 +188,16 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     method_name = single_binding_method_name( binding_method_name )
 
     types_controller = @types
-    binding_type_instance = types_controller.binding_types[ binding_type_name.to_sym ]
 
+    binding_type_name = binding_type_name.to_sym
+    
     #===============#
     #  attr_[type]  #
     #===============#
     
     define_method( method_name ) do |*args, & block|
 
+      binding_type_instance = types_controller.binding_types[ binding_type_name ]
       new_class_bindings = types_controller.new_class_bindings( binding_type_instance, self, *args, & block )
 
       return new_class_bindings.each do |this_new_class_binding|

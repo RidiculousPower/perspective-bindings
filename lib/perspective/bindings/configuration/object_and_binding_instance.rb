@@ -1,10 +1,11 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::ObjectAndBindingInstance
+module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
 
-  include ::CascadingConfiguration::Setting
-  include ::CascadingConfiguration::Array::Unique
-  include ::CascadingConfiguration::Hash
+  include ::CascadingConfiguration::Value,
+          ::CascadingConfiguration::Setting,
+          ::CascadingConfiguration::Hash,
+          ::CascadingConfiguration::Array::Unique
 
   ################
   #  «bindings»  #
@@ -70,7 +71,7 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
             
             when ::Perspective::Bindings::InstanceBinding
               
-              if parent_instance.permits_multiple? and parent_instance.«container»( false ) != instance
+              if parent_instance.permits_multiple? and parent_instance.«container»( nil, false ) != instance
                 # We were created by an instance binding as a multiple container (> index 0).
                 #
                 # We need new instance bindings or we end up with the same binding instances as the
@@ -96,10 +97,6 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
             
             when ::Perspective::Bindings::ClassBinding
 
-              # it's looping b/c we are an instance binding iheriting from a class binding
-              # and when we create a new instance binding, it is also inheriting from a class binding
-              # so we never stop creating new nested bindings b/c each attempt to finish inheritance creates a new one
-              # We are inheriting as a nested instance binding
               child_instance = binding_instance.class::InstanceBinding.new( binding_instance, instance )
             
             when ::Perspective::Bindings::Container::ObjectInstance
@@ -128,4 +125,14 @@ module ::Perspective::Bindings::ObjectAndBindingInstance
 
 	attr_hash  :«binding_aliases»
 
+  #################################
+  #  «autobind_value_to_binding»  #
+  #################################
+  
+  attr_value :«autobind_value_to_binding» do |parent_binding, parent_instance|
+    
+    parent_binding ? «binding»( parent_binding.«name» ) : nil
+
+  end
+  
 end

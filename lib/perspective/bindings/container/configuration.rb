@@ -29,5 +29,15 @@ module ::Perspective::Bindings::Container::Configuration
 		return super || «local_aliases_to_bindings».has_key?( binding_name )
 		
 	end
-	
+
+  ######################
+  #  autobinds_value?  #
+  ######################
+  
+  def autobinds_value?
+    
+    return «autobind_value_to_binding» ? true : false
+    
+  end
+  	
 end

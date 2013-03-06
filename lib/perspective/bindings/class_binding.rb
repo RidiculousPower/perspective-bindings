@@ -66,7 +66,7 @@ module ::Perspective::Bindings::ClassBinding
   
     if ::Perspective::Bindings::ProhibitedNames.has_key?( binding_name.to_sym )
       raise ::ArgumentError, 'Cannot declare :' + binding_name.to_s + ' as a binding - ' +
-                             'prohibited for verbosity, since resulting errors are often not ' + 
+                             'prohibited since resulting errors are often not ' + 
                              'self-explanatory and therefore very difficult to debug.'
     end
   

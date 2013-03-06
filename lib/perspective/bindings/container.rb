@@ -8,9 +8,7 @@ module ::Perspective::Bindings::Container
   
 	include ::Perspective::Bindings::Container::ObjectInstance
 
-  cluster = cluster( :perspective )
-  
-  cluster.before_include_or_extend.
+  cluster( :perspective ).before_include_or_extend.
   cascade_to( :class, :module ).extend( ::Perspective::Bindings::Container::SingletonInstance ).
   cascade_to( :class ).extend( ::Perspective::Bindings::Container::ClassInstance ).
   cascade do |instance|

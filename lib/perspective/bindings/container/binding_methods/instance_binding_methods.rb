@@ -37,8 +37,8 @@ class ::Perspective::Bindings::Container::BindingMethods::InstanceBindingMethods
   
     super
 
-    define_local_alias_to_binding_value_getter( binding_alias, binding_name )
-    define_local_alias_to_binding_value_setter( binding_alias, binding_name )
+    define_local_alias_to_binding_value_getter( binding_alias, binding_instance )
+    define_local_alias_to_binding_value_setter( binding_alias, binding_instance )
   
   end
   
@@ -59,8 +59,12 @@ class ::Perspective::Bindings::Container::BindingMethods::InstanceBindingMethods
       binding = «bindings»[ binding_name ]
       
       # if we have a container return it
-      if binding.«container»
-        value = binding
+      if binding.respond_to?( :«container» ) and container = binding.«container»
+        if autobind_binding = container.«autobind_value_to_binding» and container.«bindings».size == 1
+          value = autobind_binding.«value»
+        else
+          value = binding
+        end
       else
         # otherwise return whatever is stored in value
         value = binding.«value»
@@ -84,7 +88,17 @@ class ::Perspective::Bindings::Container::BindingMethods::InstanceBindingMethods
     
     define_method( binding_name.write_accessor_name ) do |value|
 
-      return «bindings»[ binding_name ].«value» = value
+      binding = «bindings»[ binding_name ]
+      
+      # if we have a container that knows how to autobind a value, do so
+      if binding.respond_to?( :«container» ) and container = binding.«container» and container.autobinds_value? 
+        container.«autobind_value»( value )
+      else
+        # otherwise store value in self
+        binding.«value» = value
+      end
+
+      return value
       
     end
     

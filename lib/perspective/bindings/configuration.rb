@@ -39,4 +39,23 @@ module ::Perspective::Bindings::Configuration
 		
 	end
 
+  ##################################
+  #  «autobind_value_to_binding»=  #
+  ##################################
+  
+  def «autobind_value_to_binding»=( binding_or_binding_name )
+
+    set_value = nil
+
+    case binding_or_binding_name
+      when ::Symbol, ::String
+        set_value = «binding»( binding_or_binding_name )
+      else
+        set_value = binding_or_binding_name
+    end
+
+    return super( set_value )
+    
+  end
+
 end
