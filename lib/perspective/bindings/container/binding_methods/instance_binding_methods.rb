@@ -60,7 +60,9 @@ class ::Perspective::Bindings::Container::BindingMethods::InstanceBindingMethods
       
       # if we have a container return it
       if binding.respond_to?( :«container» ) and container = binding.«container»
-        if autobind_binding = container.«autobind_value_to_binding» and container.«bindings».size == 1
+        if ! binding.permits_multiple?                              and
+           autobind_binding = container.«autobind_value_to_binding» and 
+           container.«bindings».size == 1
           value = autobind_binding.«value»
         else
           value = binding
