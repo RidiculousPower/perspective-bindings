@@ -279,10 +279,10 @@ shared_examples_for :«route_with_name» do
     root_instance.a.b.«route_with_name».should == [ :a, :b ]
   end
   it 'nested binding A_B_C will return :a, :b, :c' do
-    root_instance.a.b.c.«route_with_name».should == [ :a, :b, :c ]
+    root_instance.a.b.•c.«route_with_name».should == [ :a, :b, :c ]
   end
   it 'nested binding A_B_C_content will return :a, :b, :c, :content' do
-    root_instance.a.b.c.•content.«route_with_name».should == [ :a, :b, :c, :content ]
+    root_instance.a.b.•c.•content.«route_with_name».should == [ :a, :b, :c, :content ]
   end
 end
 

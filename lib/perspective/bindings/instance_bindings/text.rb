@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::BindingDefinitions::Float
+module ::Perspective::Bindings::InstanceBindings::Text
 
   ##############################
   #  binding_value_valid?  #
@@ -9,15 +9,19 @@ module ::Perspective::Bindings::BindingDefinitions::Float
   def binding_value_valid?( binding_value )
     
     binding_value_valid = false
-    
-    if binding_value.is_a?( ::Float )
+
+    case binding_value
       
-      binding_value_valid = true
+      when ::String, ::Symbol
+
+        binding_value_valid = true
       
-    elsif defined?( super )
-      
-      binding_value_valid = super
-      
+      else
+
+        if defined?( super )
+          binding_value_valid = super
+        end
+
     end
     
     return binding_value_valid

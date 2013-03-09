@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::BindingDefinitions::Complex
+module ::Perspective::Bindings::InstanceBindings::Module
 
   ##############################
   #  binding_value_valid?  #
@@ -10,7 +10,7 @@ module ::Perspective::Bindings::BindingDefinitions::Complex
     
     binding_value_valid = false
     
-    if binding_value.is_a?( ::Complex )
+    if binding_value.is_a?( ::Module ) and ! binding_value.is_a?( ::Class )
       
       binding_value_valid = true
       
@@ -23,5 +23,5 @@ module ::Perspective::Bindings::BindingDefinitions::Complex
     return binding_value_valid
     
   end
-  
+
 end

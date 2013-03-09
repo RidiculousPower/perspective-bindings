@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::BindingDefinitions::Rational
+module ::Perspective::Bindings::InstanceBindings::Integer
 
   ##############################
   #  binding_value_valid?  #
@@ -10,7 +10,7 @@ module ::Perspective::Bindings::BindingDefinitions::Rational
     
     binding_value_valid = false
     
-    if binding_value.is_a?( ::Rational )
+    if binding_value.is_a?( ::Integer )
       
       binding_value_valid = true
       

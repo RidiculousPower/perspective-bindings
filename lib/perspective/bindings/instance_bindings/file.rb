@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::BindingDefinitions::File
+module ::Perspective::Bindings::InstanceBindings::File
 
   ##############################
   #  binding_value_valid?  #

@@ -98,7 +98,7 @@ shared_examples_for :base_instance_binding do
       end
     end
     context 'with permitted value module' do
-      let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Complex }
+      let( :permitted_value_module ) { ::Perspective::Bindings::InstanceBindings::Complex }
       before :each do
         topclass_instance_binding.extend( permitted_value_module )
         subclass_instance_binding.extend( permitted_value_module )
@@ -155,7 +155,7 @@ shared_examples_for :base_instance_binding do
       end
     end
     context 'if binding_value_valid? is true' do
-      let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Complex }
+      let( :permitted_value_module ) { ::Perspective::Bindings::InstanceBindings::Complex }
       before :all do
         topclass_instance_binding.extend( permitted_value_module )
         subclass_instance_binding.extend( permitted_value_module )
@@ -198,7 +198,7 @@ shared_examples_for :base_instance_binding do
 	########
 
   context '#==' do
-    let( :permitted_value_module ) { ::Perspective::Bindings::BindingDefinitions::Text }
+    let( :permitted_value_module ) { ::Perspective::Bindings::InstanceBindings::Text }
     let( :value ) { 'some value' }
     before :all do
       topclass_instance_binding.extend( permitted_value_module ).«value» = value

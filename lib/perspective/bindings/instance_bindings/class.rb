@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::BindingDefinitions::URI
-  
+module ::Perspective::Bindings::InstanceBindings::Class
+
   ##############################
   #  binding_value_valid?  #
   ##############################
@@ -10,21 +10,7 @@ module ::Perspective::Bindings::BindingDefinitions::URI
     
     binding_value_valid = false
     
-    if binding_value.is_a?( ::String )
-      
-      begin
-
-        if URI.parse( binding_value )
-          binding_value_valid = true
-        end
-      
-      rescue ::URI::InvalidURIError
-
-        # if URI is invalid we get here before binding_value_valid is set true
-
-      end
-      
-    elsif binding_value.is_a?( ::URI )
+    if binding_value.is_a?( ::Class )
       
       binding_value_valid = true
       
@@ -37,5 +23,5 @@ module ::Perspective::Bindings::BindingDefinitions::URI
     return binding_value_valid
     
   end
-
+  
 end

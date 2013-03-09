@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::BindingDefinitions::Module
+module ::Perspective::Bindings::InstanceBindings::Float
 
   ##############################
   #  binding_value_valid?  #
@@ -10,7 +10,7 @@ module ::Perspective::Bindings::BindingDefinitions::Module
     
     binding_value_valid = false
     
-    if binding_value.is_a?( ::Module ) and ! binding_value.is_a?( ::Class )
+    if binding_value.is_a?( ::Float )
       
       binding_value_valid = true
       

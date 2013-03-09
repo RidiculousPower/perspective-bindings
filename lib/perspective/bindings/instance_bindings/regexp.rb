@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::BindingDefinitions::Text
+module ::Perspective::Bindings::InstanceBindings::Regexp
 
   ##############################
   #  binding_value_valid?  #
@@ -9,19 +9,15 @@ module ::Perspective::Bindings::BindingDefinitions::Text
   def binding_value_valid?( binding_value )
     
     binding_value_valid = false
-
-    case binding_value
+    
+    if binding_value.is_a?( ::Regexp )
       
-      when ::String, ::Symbol
-
-        binding_value_valid = true
+      binding_value_valid = true
       
-      else
-
-        if defined?( super )
-          binding_value_valid = super
-        end
-
+    elsif defined?( super )
+      
+      binding_value_valid = super
+      
     end
     
     return binding_value_valid

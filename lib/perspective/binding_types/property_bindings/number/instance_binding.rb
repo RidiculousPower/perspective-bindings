@@ -2,6 +2,6 @@
 
 class ::Perspective::BindingTypes::PropertyBindings::NumberProperty::InstanceBinding
   
-  include ::Perspective::Bindings::BindingDefinitions::Number
+  include ::Perspective::Bindings::InstanceBindings::Number
   
 end

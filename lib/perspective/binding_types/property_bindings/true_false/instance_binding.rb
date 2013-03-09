@@ -2,6 +2,6 @@
 
 class ::Perspective::BindingTypes::PropertyBindings::TrueFalseProperty::InstanceBinding
   
-  include ::Perspective::Bindings::BindingDefinitions::TrueFalse
+  include ::Perspective::Bindings::InstanceBindings::TrueFalse
   
 end

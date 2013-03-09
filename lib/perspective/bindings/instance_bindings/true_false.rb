@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::BindingDefinitions::Class
+module ::Perspective::Bindings::InstanceBindings::TrueFalse
 
   ##############################
   #  binding_value_valid?  #
@@ -10,7 +10,7 @@ module ::Perspective::Bindings::BindingDefinitions::Class
     
     binding_value_valid = false
     
-    if binding_value.is_a?( ::Class )
+    if binding_value.is_a?( ::TrueClass ) or binding_value.is_a?( ::FalseClass )
       
       binding_value_valid = true
       
@@ -23,5 +23,5 @@ module ::Perspective::Bindings::BindingDefinitions::Class
     return binding_value_valid
     
   end
-  
+
 end

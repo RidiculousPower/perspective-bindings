@@ -5,6 +5,7 @@ module ::Perspective::Bindings
   extend ::Perspective::Bindings::Container::Context
 
   RouteDelimiter = '::'
+  RouteDelimiterLength = RouteDelimiter.length
 
   ContextPrintPrefix = ':'
   

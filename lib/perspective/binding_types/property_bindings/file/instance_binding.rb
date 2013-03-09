@@ -2,6 +2,6 @@
 
 class ::Perspective::BindingTypes::PropertyBindings::FileProperty::InstanceBinding
   
-  include ::Perspective::Bindings::BindingDefinitions::File
+  include ::Perspective::Bindings::InstanceBindings::File
   
 end

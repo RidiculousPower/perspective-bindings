@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 
 require_relative '../../../support/named_class_and_module.rb'
-require_relative '../../../helpers/binding_definitions.rb'
+require_relative '../../../helpers/instance_bindings.rb'
 
 def setup_binding_definition_tests
 

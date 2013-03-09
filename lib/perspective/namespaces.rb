@@ -3,7 +3,7 @@
 module ::Perspective::Bindings
   module Configuration
   end
-  module BindingDefinitions
+  module InstanceBindings
   end
   class BindingTypeContainer < ::Module
     class BindingBase < ::Module
