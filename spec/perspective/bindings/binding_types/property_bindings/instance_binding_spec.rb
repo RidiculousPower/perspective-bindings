@@ -8,7 +8,7 @@ require_relative '../../binding_base/instance_binding.rb'
 
 describe ::Perspective::BindingTypes::PropertyBindings::InstanceBinding do
 
-  before :all do
+  before :each do
     # test with a generic binding we create
     ::Perspective::BindingTypes::PropertyBindings.define_binding_type( :instance_binding_test_binding )
   end

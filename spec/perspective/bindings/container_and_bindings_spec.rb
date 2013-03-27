@@ -9,6 +9,38 @@ describe ::Perspective::Bindings::Container do
 
   let( :bindings_module ) { ::Perspective::Bindings::Container }
   
-  it_behaves_like :container_and_bindings
+  let( :top_singleton_instance ) { class_instance }
+  let( :sub_singleton_instance ) { subclass }
+
+  let( :binding_name ) { topclass_instance_binding_A.«name» }
+
+  let( :topclass_bound_container_class ) { class_instance }
+  let( :subclass_bound_container_class ) { subclass }
+
+  let( :topclass_bound_container_instance ) { instance_of_class }
+  let( :topclass_nested_container_instance_A ) { instance_of_class.a.«container» }
+  let( :topclass_nested_container_instance_B ) { instance_of_class.a.b.«container» }
+
+  let( :subclass_bound_container_instance ) { instance_of_subclass }
+  let( :subclass_nested_container_instance_A ) { instance_of_subclass.a.«container» }
+  let( :subclass_nested_container_instance_B ) { instance_of_subclass.a.b.«container» }
+
+  let( :topclass_class_binding ) { topclass_class_binding_A }
+
+  let( :topclass_instance_binding ) { topclass_instance_binding_A }
+  let( :subclass_instance_binding ) { subclass_instance_binding_A }
+
+  let( :topclass_instance_binding_A ) { instance_of_class.a }
+  let( :topclass_instance_binding_A_B ) { instance_of_class.a.b }
+  let( :topclass_instance_binding_A_B_C ) { instance_of_class.a.b.•c }
+
+  let( :subclass_instance_binding_A ) { instance_of_subclass.a }
+  let( :subclass_instance_binding_A_B ) { instance_of_subclass.a.b }
+  let( :subclass_instance_binding_A_B_C ) { instance_of_subclass.a.b.•c }
+
+  it_behaves_like :base_instance_binding
+#  it_behaves_like :container_instance_binding
+ 
+#  it_behaves_like :container_and_bindings
 
 end

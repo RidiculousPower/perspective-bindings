@@ -78,7 +78,7 @@ def setup_container_and_bindings_tests
   let( :class_instance ) do
     _sub_module_instance = sub_module_instance
     class_instance = ::Class.new 
-    class_instance.name( :SingletonInstance )
+    class_instance.name( :ClassInstance )
     class_instance.class_eval do
       include _sub_module_instance
     end

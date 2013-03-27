@@ -20,11 +20,17 @@ module ::Perspective::Bindings::Container::ClassInstance
   #
   def new( *args, & block )
 
+    instance_class = self
+        
     return allocate.instance_eval do
+
+      ::Module::Cluster.evaluate_cluster_stack( :before_instance, self, instance_class, args, & block )
 
       «initialize_bindings»
       initialize( *args, & block )
-      initialize_instance
+      «initialize_instance»
+
+      ::Module::Cluster.evaluate_cluster_stack( :after_instance, self, instance_class, args, & block )
 
       return self
 
@@ -41,19 +47,21 @@ module ::Perspective::Bindings::Container::ClassInstance
   #   registered before initialization occurs.
   #
   def new_nested_instance( parent_binding_instance, *args, & block )
-    
-    class_instance = self
-    
+        
+    instance_class = self
+        
     return allocate.instance_eval do
 
-      @«parent_binding» = parent_binding_instance
-      @«bound_container» = parent_binding_instance
-      
-      ::CascadingConfiguration.replace_parent( self, class_instance, parent_binding_instance )
+      ::Module::Cluster.evaluate_cluster_stack( :before_instance, self, instance_class, args, & block )
+
+      @«parent_binding» = @«bound_container» = parent_binding_instance      
+      ::CascadingConfiguration.replace_parent( self, instance_class, parent_binding_instance )
 
       «initialize_bindings»
       initialize( *args, & block )
-      initialize_instance
+      «initialize_instance»
+      
+      ::Module::Cluster.evaluate_cluster_stack( :after_instance, self, instance_class, args, & block )
       
       return self
 

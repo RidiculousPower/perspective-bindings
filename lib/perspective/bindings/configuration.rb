@@ -2,6 +2,8 @@
 
 module ::Perspective::Bindings::Configuration
 
+  include ::CascadingConfiguration::Value
+  
   ######################
   #  «parent_binding»  #
   ######################
@@ -34,11 +36,19 @@ module ::Perspective::Bindings::Configuration
   # 
 	def has_binding?( binding_name )
 		
-		return «bindings».has_key?( binding_name )        || 
+		return «bindings».has_key?( binding_name )  || 
 		       «binding_aliases».has_key?( binding_name )
 		
 	end
 
+  #################################
+  #  «autobind_value_to_binding»  #
+  #################################
+  
+  attr_instance_value :«autobind_value_to_binding» do |parent_binding, parent_instance|
+    parent_binding ? «binding»( parent_binding.«name» ) : nil
+  end
+  
   ##################################
   #  «autobind_value_to_binding»=  #
   ##################################

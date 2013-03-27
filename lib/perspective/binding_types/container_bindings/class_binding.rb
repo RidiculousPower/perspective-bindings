@@ -35,7 +35,7 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
         «validate_container_class»( self.«container_class» = container_class )
         # if we have a parent binding then it has already registered the container class as a parent
         # and we have already registered it as our parent, so we don't want to replace it
-        ::CascadingConfiguration.register_parent( self, container_class )
+        ::CascadingConfiguration.register_parent( self, container_class, :singleton_to_instance )
       end
     end
   

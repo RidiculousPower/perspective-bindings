@@ -437,7 +437,6 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
         index = index_or_binding_name
         
         container = «container»( index )
-
         if autobind_binding = container.«autobind_value_to_binding» and container.«bindings».size == 1
           return_value = autobind_binding.«value»
         else

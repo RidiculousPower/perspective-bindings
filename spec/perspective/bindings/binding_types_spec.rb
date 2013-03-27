@@ -84,7 +84,7 @@ describe ::Perspective::BindingTypes do
     end
     context 'when container exists' do
       let( :container ) { ::Perspective::BindingTypes.define_container_type( container_type_name ) }
-      before :all do
+      before :each do
         container
       end
       it 'will return container for name' do

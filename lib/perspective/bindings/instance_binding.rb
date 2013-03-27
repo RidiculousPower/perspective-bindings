@@ -27,6 +27,39 @@ module ::Perspective::Bindings::InstanceBinding
 
   end
   
+  ################
+  #  «bindings»  #
+  ################
+  
+  attr_instance_hash  :«bindings» do
+	  
+	  #======================#
+	  #  child_pre_set_hook  #
+	  #======================#
+
+	  def child_pre_set_hook( binding_name, binding_instance, parent_hash )
+      
+      child_instance = nil
+      
+      case parent_instance = parent_hash.configuration_instance
+        
+        when ::Perspective::Bindings::ClassBinding
+
+          child_instance = binding_instance.class::InstanceBinding.new( binding_instance, configuration_instance )
+        
+        when ::Perspective::Bindings::Container::ObjectInstance
+        
+          # inheriting from an object instance assigned to this instance binding as its container
+          child_instance = binding_instance
+          
+      end
+
+      return child_instance
+
+    end
+    
+  end
+	
   ###################
   #  «root_string»  #
   ###################

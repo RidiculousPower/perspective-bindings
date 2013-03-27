@@ -8,12 +8,14 @@ module ::Perspective::Bindings::Container::ObjectInstance
   include ::Perspective::Bindings::Container::ObjectAndBindingInstance
 
   include ::Perspective::Bindings::Container::SingletonAndObjectInstance
+
+  include ::CascadingConfiguration::Hash
   
-  #########################
-  #  initialize_instance  #
-  #########################
+  ###########################
+  #  «initialize_instance»  #
+  ###########################
   
-  def initialize_instance
+  def «initialize_instance»
 
     «configure_containers»
     
@@ -53,6 +55,54 @@ module ::Perspective::Bindings::Container::ObjectInstance
       this_binding.«configure_container» if this_binding.respond_to?( :«configure_container» )
     end
 
+  end
+
+  ################
+  #  «bindings»  #
+  ################
+
+	attr_instance_hash  :«bindings» do
+	  
+	  #======================#
+	  #  child_pre_set_hook  #
+	  #======================#
+
+	  def child_pre_set_hook( binding_name, binding_instance, parent_hash )
+
+      child_instance = nil
+
+      case parent_instance = parent_hash.configuration_instance
+        
+        when ::Perspective::Bindings::Container::SingletonInstance
+
+          # We are inheriting as a root container instance.
+          # We need instance bindings corresponding to the declared class bindings
+          child_instance = binding_instance.class::InstanceBinding.new( binding_instance, configuration_instance )
+        
+        when ::Perspective::Bindings::InstanceBinding
+
+          if parent_instance.permits_multiple? and 
+             parent_instance.«container»( nil, false ) != ( instance = configuration_instance )
+            # We were created by an instance binding as a multiple container (> index 0).
+            #
+            # We need new instance bindings or we end up with the same binding instances as the
+            # first container for this instance binding.
+            child_instance = binding_instance.class::InstanceBinding.new( binding_instance.«parent_binding», 
+                                                                          instance )
+          else
+            # We were created by an instance binding.
+            #
+            # We want the same instance bindings we attached to the instance binding that
+            # this container is attached to.
+            child_instance = binding_instance
+          end
+
+      end
+
+      return child_instance
+
+    end
+    
   end
 
   ##############

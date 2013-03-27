@@ -133,7 +133,7 @@ describe ::Perspective::Bindings::BindingTypeContainer::TypesController do
     let( :child_binding_type_name ) { :child_binding_type }
     let( :child_without_subclassing_binding_type_name ) { :child_without_subclassing_binding_type }
     context 'when parent' do
-      before :all do
+      before :each do
         parent_types.define_binding_type( parent_binding_type_name )
       end
       it 'will have binding type module' do
@@ -148,7 +148,7 @@ describe ::Perspective::Bindings::BindingTypeContainer::TypesController do
       end
     end
     context 'when child' do
-      before :all do
+      before :each do
         child_types.define_binding_type( child_binding_type_name )
       end
       it 'will have binding type module' do
@@ -156,7 +156,7 @@ describe ::Perspective::Bindings::BindingTypeContainer::TypesController do
       end
     end
     context 'when child without subclassing' do
-      before :all do
+      before :each do
         child_without_subclassing_types.define_binding_type( child_without_subclassing_binding_type_name )
       end
       it 'will have binding type module' do
@@ -172,7 +172,7 @@ describe ::Perspective::Bindings::BindingTypeContainer::TypesController do
   context '#alias_binding_type' do
     let( :binding_type_name ) { :parent_binding_type }
     let( :alias_binding_type_name ) { :alias_binding_type }
-    before :all do
+    before :each do
       parent_types.define_binding_type( binding_type_name )
       parent_types.alias_binding_type( alias_binding_type_name, binding_type_name )
     end

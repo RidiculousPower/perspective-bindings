@@ -187,8 +187,11 @@ shared_examples_for :container_instance_binding do
         end
       end
       context 'when multiple are permitted' do
-        it 'will return «container» or autobind value' do
-          instance_of_multiple_container_class.•multiple_binding[ 0 ].should be instance_of_multiple_container_class.•multiple_binding.«value»
+        before :each do
+          instance_of_multiple_container_class.•multiple_binding.«container»( 0 ).«autobind_value_to_binding».«value» = :autobind_binding_value
+        end
+        it 'will return «container» # or autobind value' do
+          instance_of_multiple_container_class.•multiple_binding[ 0 ].should be :autobind_binding_value
         end
       end
     end
@@ -267,8 +270,8 @@ shared_examples_for :container_instance_binding do
       it 'will set the corresponding container for index > 1' do
         new_container_instance = nested_class_A_B.new
         instance_of_multiple_container_class.•multiple_binding.«set_container»( 2, new_container_instance )
-        instance_of_multiple_container_class.•multiple_binding[ 1 ].should be instance_of_multiple_container_class.•multiple_binding.«container»( 9 )
-        instance_of_multiple_container_class.•multiple_binding[ 2 ].should be new_container_instance
+        instance_of_multiple_container_class.•multiple_binding.«container»( 1 ).should be_a multiple_container_class.•multiple_binding.«container_class»
+        instance_of_multiple_container_class.•multiple_binding.«container»( 2 ).should be new_container_instance
       end
       it 'will set the corresponding container for index < 0' do
         new_container_instance = nested_class_A_B.new
@@ -306,7 +309,7 @@ shared_examples_for :container_instance_binding do
     context 'when multiple are permitted' do
       it 'will be equivalent to «container»= for index 0' do
         instance_of_multiple_container_class.•multiple_binding[ 0 ] = :value
-        instance_of_multiple_container_class.multiple_binding.should be :value
+        instance_of_multiple_container_class.multiple_binding.«container»( 0 ).«autobind_value_to_binding».«value».should be :value
       end
       it 'will set the corresponding container for index == 1' do
         instance_of_multiple_container_class.•multiple_binding[ 1 ] = :value

@@ -15,9 +15,7 @@ module ::Perspective::Bindings::Container
     # Any time we are included in or cascade to a class we need to create our BindingMethods
     # module, which holds the methods for our bindings. This is necessary to make the bindings
     # portable, so that they can be inserted in bindings as well as containers.
-    unless controller = ::CascadingConfiguration.instance_controller( instance )
-      controller = ::CascadingConfiguration.create_instance_controller( instance )
-    end    
+    controller = ::CascadingConfiguration.create_instance_controller( instance )
     controller.create_singleton_support( :class_binding_methods, self::BindingMethods::ClassBindingMethods )
     controller.create_instance_support( :instance_binding_methods, self::BindingMethods::InstanceBindingMethods )
   end

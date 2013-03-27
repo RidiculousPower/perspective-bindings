@@ -7,6 +7,7 @@ module ::Perspective::Bindings::ClassBinding
   
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Array::Unique
+  include ::CascadingConfiguration::Hash
 
   extend ::Perspective::Bindings::IncludeExtend
 
@@ -55,6 +56,24 @@ module ::Perspective::Bindings::ClassBinding
 
     self.«route_string» = route_string = ::Perspective::Bindings.context_string( route_with_name )
     self.«route_print_string» = ::Perspective::Bindings.context_print_string( @«root», route_string )
+    
+  end
+
+  ################
+  #  «bindings»  #
+  ################
+
+	attr_instance_hash  :«bindings» do
+	  
+	  #======================#
+	  #  child_pre_set_hook  #
+	  #======================#
+
+	  def child_pre_set_hook( binding_name, binding_instance, parent_hash )
+
+      return binding_instance.class::ClassBinding.new( configuration_instance, binding_instance )
+
+    end
     
   end
 

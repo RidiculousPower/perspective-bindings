@@ -7,6 +7,26 @@ module ::Perspective::Bindings::Container::SingletonInstance
   include ::Perspective::BindingTypes::ContainerBindings
   include ::Perspective::Bindings::Container::Configuration
   include ::Perspective::Bindings::Container::SingletonAndObjectInstance
+  
+  include ::CascadingConfiguration::Hash
+  
+  ################
+  #  «bindings»  #
+  ################
+
+	attr_instance_hash  :«bindings» do
+
+	  #======================#
+	  #  child_pre_set_hook  #
+	  #======================#
+
+	  def child_pre_set_hook( binding_name, binding_instance, parent_hash )
+
+      return binding_instance.class.new( configuration_instance, binding_instance )
+
+    end
+    
+  end
 
   ############
   #  «name»  #
