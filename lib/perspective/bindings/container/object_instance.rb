@@ -239,6 +239,8 @@ module ::Perspective::Bindings::Container::ObjectInstance
         found_a_binding = «autobind_binding»( data_object )
       when ::Hash
         found_a_binding = «autobind_hash»( data_object )
+      when ::Array
+        found_a_binding = «autobind_array»( data_object )
       else
         found_a_binding = «autobind_object»( data_object )
     end
@@ -326,7 +328,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
       end    
     end
     
-    found_a_binding = «autobind_content»( data_object ) unless found_a_binding
+    found_a_binding = «autobind_value»( data_object, false ) unless found_a_binding
     
     return found_a_binding
     
@@ -355,8 +357,10 @@ module ::Perspective::Bindings::Container::ObjectInstance
   #  «autobind_value»  #
   ######################
   
-  def «autobind_value»( value )
-
+  def «autobind_value»( value, ensure_autobind = true )
+    
+    autobound = false
+    
     if autobind_binding = «autobind_value_to_binding»
       if sub_autobinding = autobind_binding.«autobind_value_to_binding»
         autobind_binding.«autobind_value»( value )
@@ -364,11 +368,15 @@ module ::Perspective::Bindings::Container::ObjectInstance
         autobind_binding.«value» = value
       end
     else
-      raise ::ArgumentError, 'Cannot autobind value - no binding set for :«autobind_value_to_binding» ' << 
-                             '(generally set through :attr_autobind).'
+      if ensure_autobind
+        raise ::ArgumentError, 'Cannot autobind value - no binding set for :«autobind_value_to_binding» ' << 
+                               '(generally set through :attr_autobind).'
+      else
+        autobound = true
+      end
     end
     
-    return self
+    return ensure_autobind ? self : autobound
     
   end
   

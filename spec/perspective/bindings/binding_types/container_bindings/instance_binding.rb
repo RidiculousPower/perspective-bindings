@@ -39,10 +39,13 @@ shared_examples_for :container_instance_binding do
   ##################
   
   context '#«container»=' do
+    after :each do
+      ::CascadingConfiguration.unregister_parent( subclass_instance_binding_A_B_C, topclass_nested_container_instance_A )
+    end
     it 'will store container, initializing self with container as parent (reverse the norm)' do
       subclass_instance_binding_A_B_C.«container» = topclass_nested_container_instance_A
       subclass_instance_binding_A_B_C.«container».should be topclass_nested_container_instance_A
-      CascadingConfiguration.configuration( subclass_instance_binding_A_B_C, :«bindings» ).is_parent?( topclass_nested_container_instance_A ).should be true
+      subclass_instance_binding_A_B_C.•«bindings».is_parent?( topclass_nested_container_instance_A ).should be true
     end
   end
   
@@ -101,11 +104,11 @@ shared_examples_for :container_instance_binding do
   context '#«ensure_container_count»' do
     context 'does not permit multiple' do
       it 'will do nothing if count == 1' do
-        instance_of_class.a.«ensure_container_count»( 1 )
+        instance_of_class.•a.«ensure_container_count»( 1 )
         instance_of_class.a.instance_variable_get( :@«containers» ).should be nil
       end
       it 'will raise ArgumentError if count > 1' do
-        ::Proc.new { instance_of_class.a.«ensure_container_count»( 2 ) }.should raise_error( ::ArgumentError )
+        ::Proc.new { instance_of_class.•a.«ensure_container_count»( 2 ) }.should raise_error( ::ArgumentError )
       end
     end
     context 'no container class' do
@@ -183,7 +186,7 @@ shared_examples_for :container_instance_binding do
     context 'when index == 0' do
       context 'when multiple are not permitted' do
         it 'will return «container» or autobind value' do
-          instance_of_class.a[ 0 ].should be instance_of_class.a.«container»
+          instance_of_class.a[ 0 ].should be instance_of_class.•a.«container»
         end
       end
       context 'when multiple are permitted' do
@@ -198,7 +201,7 @@ shared_examples_for :container_instance_binding do
     context 'when index is negative' do
       context 'when multiple are not permitted' do
         it 'will return «container» or autobind value' do
-          instance_of_class.a[ -1 ].should be instance_of_class.a.«container»
+          instance_of_class.a[ -1 ].should be instance_of_class.•a.«container»
         end
       end
       context 'when multiple are permitted' do
@@ -239,21 +242,21 @@ shared_examples_for :container_instance_binding do
     context 'when multiple are not permitted' do
       it 'will be equivalent to «container»= for index 0' do
         new_container_instance = nested_class_A_B.new
-        instance_of_class.a.«set_container»( 0, new_container_instance )
-        instance_of_class.a.«container».should be new_container_instance
+        instance_of_class.•a.«set_container»( 0, new_container_instance )
+        instance_of_class.•a.«container».should be new_container_instance
       end
       it 'will be equivalent to «container»= for index -1' do
         new_container_instance = nested_class_A_B.new
-        instance_of_class.a.«set_container»( -1, new_container_instance )
-        instance_of_class.a.«container».should be new_container_instance
+        instance_of_class.•a.«set_container»( -1, new_container_instance )
+        instance_of_class.•a.«container».should be new_container_instance
       end
       it 'will raise ArgumentError for index > 0' do
         new_container_instance = nested_class_A_B.new
-        ::Proc.new { instance_of_class.a.«set_container»( 1, new_container_instance ) }.should raise_error( ::ArgumentError )
+        ::Proc.new { instance_of_class.•a.«set_container»( 1, new_container_instance ) }.should raise_error( ::ArgumentError )
       end
       it 'will raise ArgumentError for index < -1' do
         new_container_instance = nested_class_A_B.new
-        ::Proc.new { instance_of_class.a.«set_container»( -2, new_container_instance ) }.should raise_error( ::IndexError )
+        ::Proc.new { instance_of_class.•a.«set_container»( -2, new_container_instance ) }.should raise_error( ::IndexError )
       end
     end
     context 'when multiple are permitted' do
@@ -337,7 +340,7 @@ shared_examples_for :container_instance_binding do
   context '#each' do
     context 'when multiple are not permitted' do
       it 'will iterate' do
-        instance_of_class.a.collect { |container| container }.should == [ instance_of_class.a.«container» ]
+        instance_of_class.a.collect { |container| container }.should == [ instance_of_class.•a.«container» ]
       end
     end
     context 'when multiple are permitted' do

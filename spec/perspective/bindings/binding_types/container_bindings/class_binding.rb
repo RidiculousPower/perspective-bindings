@@ -56,10 +56,10 @@ shared_examples_for :container_class_binding do
         topclass_class_binding_A.is_a?( nested_container_class_A::Controller::ClassBindingMethods ).should be true
       end
       it 'top binding will have container class as parent' do
-        ::CascadingConfiguration.configuration( topclass_class_binding_A, :«bindings» ).is_parent?( nested_container_class_A ).should be true
+        topclass_class_binding_A.•«bindings».is_parent?( nested_container_class_A ).should be true
       end
       it 'sub binding will have parent binding as parent' do
-        ::CascadingConfiguration.configuration( subclass_class_binding_A, :«bindings» ).is_parent?( topclass_class_binding_A ).should be true
+        subclass_class_binding_A.•«bindings».is_parent?( topclass_class_binding_A ).should be true
       end
     end
   end

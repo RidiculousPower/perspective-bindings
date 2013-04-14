@@ -6,89 +6,148 @@ require_relative '../../../support/named_class_and_module.rb'
 #  setup_container_and_bindings_tests  #
 ########################################
 
-def setup_container_and_bindings_tests
+def setup_block_actions
   
-  let( :nested_class_A ) do
-    _nested_class_A_B = nested_class_A_B
-    _topclass_binding_A_B_action = topclass_binding_A_B_action
-    nested_class_A = ::Class.new
-    nested_class_A.name( :NestedClass_A )
-    _bindings_module = bindings_module
-    nested_class_A.class_eval do
-      include _bindings_module
-      attr_text :b, _nested_class_A_B, & _topclass_binding_A_B_action
-    end
-    nested_class_A
-  end
-  let( :nested_class_A_B ) do
-    _nested_class_A_B_C = nested_class_A_B_C
-    _topclass_binding_A_B_C_action = topclass_binding_A_B_C_action
-    nested_class_A_B = ::Class.new
-    nested_class_A_B.name( :NestedClass_A_B )
-    _bindings_module = bindings_module
-    nested_class_A_B.class_eval do
-      include _bindings_module
-      attr_text :c, _nested_class_A_B_C, & _topclass_binding_A_B_C_action
-    end
-    nested_class_A_B
-  end
-  let( :nested_class_A_B_C ) do
-    nested_class_A_B_C = ::Class.new
-    nested_class_A_B_C.name( :NestedClass_A_B_C )
-    _bindings_module = bindings_module
-    nested_class_A_B_C.class_eval do
-      include _bindings_module
-      attr_text :content
-      attr_autobind :content
-    end
-    nested_class_A_B_C
+  top_block_state_A_B_C = ::BlockState.new
+  top_block_state_A_B   = ::BlockState.new
+  top_block_state_A     = ::BlockState.new
+  sub_block_state_A_B_C = ::BlockState.new
+  sub_block_state_A_B   = ::BlockState.new
+  sub_block_state_A     = ::BlockState.new
+
+  top_action_A_B_C = ::Proc.new { top_block_state_A_B_C.block_ran! }
+  top_action_A_B   = ::Proc.new { top_block_state_A_B.block_ran! }
+  top_action_A     = ::Proc.new { top_block_state_A.block_ran! }
+  sub_action_A_B_C = ::Proc.new { sub_block_state_A_B_C.block_ran! }
+  sub_action_A_B   = ::Proc.new { sub_block_state_A_B.block_ran! }
+  sub_action_A     = ::Proc.new { sub_block_state_A.block_ran! }
+  
+  let( :topclass_binding_A_block_state ) { top_block_state_A }
+  let( :topclass_binding_A_B_block_state ) { top_block_state_A_B }
+  let( :topclass_binding_A_B_C_block_state ) { top_block_state_A_B_C }
+  let( :subclass_binding_A_block_state ) { sub_block_state_A }
+  let( :subclass_binding_A_B_block_state ) { sub_block_state_A_B }
+  let( :subclass_binding_A_B_C_block_state ) { sub_block_state_A_B_C }
+  
+  let( :topclass_binding_A_action ) { top_action_A }
+  let( :topclass_binding_A_B_action ) { top_action_A_B }
+  let( :topclass_binding_A_B_C_action ) { top_action_A_B_C }
+  let( :subclass_binding_A_action ) { sub_action_A }
+  let( :subclass_binding_A_B_action ) { sub_action_A_B }
+  let( :subclass_binding_A_B_C_action ) { sub_action_A }
+  
+  return top_block_state_A_B_C, top_block_state_A_B, top_block_state_A,
+         sub_block_state_A_B_C, sub_block_state_A_B, sub_block_state_A,
+         top_action_A_B_C,      top_action_A_B,      top_action_A,
+         sub_action_A_B_C,      sub_action_A_B,      sub_action_A
+         
+end
+
+def setup_container_and_bindings_tests( bindings_module, test_container = nil )
+
+  top_block_state_A_B_C, top_block_state_A_B, top_block_state_A,
+  sub_block_state_A_B_C, sub_block_state_A_B, sub_block_state_A,
+  top_action_A_B_C,      top_action_A_B,      top_action_A,
+  sub_action_A_B_C,      sub_action_A_B,      sub_action_A = setup_block_actions
+  
+  unless test_container
+    test_container = ::Module.new
+    bindings_module.const_set( :Test, test_container )
   end
 
-  let( :module_instance ) do
-    _nested_class_A = nested_class_A
-    _topclass_binding_A_action = topclass_binding_A_action
-    module_instance = ::Module.new
-    module_instance.name( :ModuleInstance )
-    _bindings_module = bindings_module
-    module_instance.module_eval do
-      include _bindings_module
-      attr_text :a, _nested_class_A, & _topclass_binding_A_action
-      attr_alias :a_alias, :a
+  nested_class_A_B_C = ::Class.new
+  nested_class_A_B = ::Class.new
+  nested_class_A = ::Class.new
+  module_instance = ::Module.new
+  sub_module_instance = ::Module.new
+  class_instance = ::Class.new
+  subclass = ::Class.new( class_instance )
+  
+  multiple_container_class_instance = ::Class.new
+
+  data_object_class = ::Class.new
+  data_object_A_class = ::Class.new
+  data_object_B_class = ::Class.new
+  
+  test_container.class_eval do
+
+    const_set( :NestedClassA, nested_class_A )
+    const_set( :NestedClassA_B, nested_class_A_B )
+    const_set( :NestedClassA_B_C, nested_class_A_B_C )
+    const_set( :ModuleInstance, module_instance )
+    const_set( :SubModuleInstance, sub_module_instance )
+    const_set( :ClassInstance, class_instance )
+    const_set( :Subclass, subclass )
+
+    const_set( :MultipleContainerClass, multiple_container_class_instance )
+
+    const_set( :DataObject, data_object_class )
+    const_set( :DataObjectA, data_object_A_class )
+    const_set( :DataObjectB, data_object_B_class )
+
+  end
+
+  test_container::NestedClassA_B_C.class_eval do
+    include bindings_module
+    attr_text :content
+    attr_autobind :content
+  end
+  test_container::NestedClassA_B.class_eval do
+    include bindings_module
+    attr_text :c, nested_class_A_B_C, & top_action_A_B_C
+  end
+  test_container::NestedClassA.class_eval do
+    include bindings_module
+    attr_text :b, nested_class_A_B, & top_action_A_B
+  end
+
+  test_container::ModuleInstance.module_eval do
+    include bindings_module
+    attr_text :a, nested_class_A, & top_action_A
+    attr_alias :a_alias, :a
+  end
+  test_container::SubModuleInstance.module_eval do
+    include module_instance
+    attr_binding :binding_one, :binding_two
+    attr_text :content
+    attr_autobind :content
+    a.configure( & sub_action_A )
+    a.b.configure( & sub_action_A_B )
+    a.b.c.configure( & sub_action_A_B_C )
+  end
+  test_container::ClassInstance.module_eval { include sub_module_instance }
+
+  test_container::MultipleContainerClass.module_eval do
+    include bindings_module
+    attr_texts :multiple_binding, nested_class_A_B_C
+  end
+
+  test_container::DataObject.module_eval do
+    attr_accessor :content, :binding_one, :binding_two, :a
+    define_method( :initialize ) do
+      @a = data_object_A_class.new
     end
-    module_instance
   end
-  let( :sub_module_instance ) do
-    _module_instance = module_instance
-    sub_module_instance = ::Module.new 
-    sub_module_instance.name( :SubModuleInstance )
-    _subclass_binding_A_action = subclass_binding_A_action
-    _subclass_binding_A_B_action = subclass_binding_A_B_action
-    _subclass_binding_A_B_C_action = subclass_binding_A_B_C_action
-    sub_module_instance.module_eval do
-      include _module_instance
-      attr_binding :binding_one, :binding_two
-      attr_text :content
-      attr_autobind :content
-      a.configure( & _subclass_binding_A_action )
-      a.b.configure( & _subclass_binding_A_B_action )
-      a.b.c.configure( & _subclass_binding_A_B_C_action )
+  test_container::DataObjectA.module_eval do
+    attr_accessor :b
+    define_method( :initialize ) do
+      @b = data_object_B_class.new
     end
-    sub_module_instance
   end
-  let( :class_instance ) do
-    _sub_module_instance = sub_module_instance
-    class_instance = ::Class.new 
-    class_instance.name( :ClassInstance )
-    class_instance.class_eval do
-      include _sub_module_instance
-    end
-    class_instance
+  test_container::DataObjectB.module_eval do
+    attr_accessor :c
   end
-  let( :subclass ) do
-    subclass = ::Class.new( class_instance )
-    subclass.name( :SubclassInstance )
-    subclass
-  end
+  
+  let( :nested_class_A ) { test_container::NestedClassA }
+  let( :nested_class_A_B ) { test_container::NestedClassA_B }
+  let( :nested_class_A_B_C ) { test_container::NestedClassA_B_C }
+
+  let( :module_instance ) { test_container::ModuleInstance }
+  let( :sub_module_instance ) { test_container::SubModuleInstance }
+  let( :class_instance ) { test_container::ClassInstance }
+  let( :subclass ) { test_container::Subclass }
+
+  let( :multiple_container_class ) { test_container::MultipleContainerClass }
 
   let( :instance_of_class ) do
     object = class_instance.new
@@ -114,27 +173,13 @@ def setup_container_and_bindings_tests
   end
   let( :instance_of_multiple_container_class ) { multiple_container_class.new }
 
-  let( :topclass_binding_A_block_state ) { ::BlockState.new }
-  let( :topclass_binding_A_B_block_state ) { ::BlockState.new }
-  let( :topclass_binding_A_B_C_block_state ) { ::BlockState.new }
-  let( :subclass_binding_A_block_state ) { ::BlockState.new }
-  let( :subclass_binding_A_B_block_state ) { ::BlockState.new }
-  let( :subclass_binding_A_B_C_block_state ) { ::BlockState.new }
-  
-  let( :topclass_binding_A_action ) { _block_state = topclass_binding_A_block_state ; _block_state.block = ::Proc.new { _block_state.block_ran! } }
-  let( :topclass_binding_A_B_action ) { _block_state = topclass_binding_A_B_block_state ; _block_state.block = ::Proc.new { _block_state.block_ran! } }
-  let( :topclass_binding_A_B_C_action ) { _block_state = topclass_binding_A_B_C_block_state ; _block_state.block = ::Proc.new { _block_state.block_ran! } }
-  let( :subclass_binding_A_action ) { _block_state = subclass_binding_A_block_state ; _block_state.block = ::Proc.new { _block_state.block_ran! } }
-  let( :subclass_binding_A_B_action ) { _block_state = subclass_binding_A_B_block_state ; _block_state.block = ::Proc.new { _block_state.block_ran! } }
-  let( :subclass_binding_A_B_C_action ) { _block_state = subclass_binding_A_B_C_block_state ; _block_state.block = ::Proc.new { _block_state.block_ran! } }
-
   let( :topclass_configuration_proc ) { topclass_binding_A_action }
   let( :subclass_configuration_proc ) { subclass_binding_A_action }
 
   let( :binding_name ) { topclass_class_binding_A.«name» }
   
   let( :topclass_bound_container ) { topclass_bound_container_class }
-  let( :subclass_bound_container ) { subclass_bound_container }
+  let( :subclass_bound_container ) { subclass_bound_container_class }
 
   let( :topclass_bound_container_class ) { top_singleton_instance }
   let( :subclass_bound_container_class ) { sub_singleton_instance }
@@ -158,86 +203,47 @@ def setup_container_and_bindings_tests
   let( :subclass_class_binding_A_B ) { sub_singleton_instance.a.b }
   let( :subclass_class_binding_A_B_C ) { sub_singleton_instance.a.b.c }
   
-  let( :data_binding ) { data_container.a.b.c }
+  data_container = class_instance.new
+  data_container.content = :content_value
+  data_container.binding_one = :binding_one_value
+  data_container.binding_two = :binding_two_value
+  data_container.a.b.c = :c_content_value
+  let( :data_container ) { data_container }
+  let( :data_binding ) { data_container.a.b.•c }
   
-  let( :data_container ) do
-    data_container = class_instance.new
-    data_container.content = :content_value
-    data_container.binding_one = :binding_one_value
-    data_container.binding_two = :binding_two_value
-    data_container.a.b.c.content = :c_content_value
-    data_container
-  end
+  data_hash = { :binding_one => :binding_one_value,
+                :binding_two => :binding_two_value,
+                :content => :content_value,
+                :a => { :b => { :c => :c_content_value } } }
+  let( :data_hash ) { data_hash }
+
   
-  let( :data_hash ) do
-    { :binding_one => :binding_one_value,
-      :binding_two => :binding_two_value,
-      :content => :content_value,
-      :a => { :b => { :c => :c_content_value } } }
-  end
+  let( :data_object_class ) { data_object_class }
+  let( :data_object_A_class ) { data_object_A_class }
+  let( :data_object_B_class ) { data_object_B_class }
+
+  data_object = data_object_class.new
+  data_object.binding_one = :binding_one_value
+  data_object.binding_two = :binding_two_value
+  data_object.content = :content_value
+  data_object.a.b.c = :c_content_value
+  let( :data_object ) { data_object }
+
+  data_object2 = data_object_class.new
+  data_object2.binding_one = :binding_one_value2
+  data_object2.binding_two = :binding_two_value2
+  data_object2.content = :content_value2
+  data_object2.a.b.c = :c_content_value2
+  let( :data_object2 ) { data_object2 }
+
+  data_object3 = data_object_class.new
+  data_object3.binding_one = :binding_one_value3
+  data_object3.binding_two = :binding_two_value3
+  data_object3.content = :content_value3
+  data_object3.a.b.c = :c_content_value3
+  let( :data_object3 ) { data_object3 }
   
-  let( :data_object ) do
-    data_object = data_object_class.new
-    data_object.binding_one = :binding_one_value
-    data_object.binding_two = :binding_two_value
-    data_object.content = :content_value
-    data_object.a.b.c = :c_content_value
-    data_object
-  end
-
-  let( :data_object2 ) do
-    data_object2 = data_object_class.new
-    data_object2.binding_one = :binding_one_value2
-    data_object2.binding_two = :binding_two_value2
-    data_object2.content = :content_value2
-    data_object2.a.b.c = :c_content_value2
-    data_object2
-  end
-
-  let( :data_object3 ) do
-    data_object3 = data_object_class.new
-    data_object3.binding_one = :binding_one_value3
-    data_object3.binding_two = :binding_two_value3
-    data_object3.content = :content_value3
-    data_object3.a.b.c = :c_content_value3
-    data_object3
-  end
+  multiple_data_objects = [ data_object.a.b.c, data_object2.a.b.c, data_object3.a.b.c ]
+  let( :multiple_data_objects ) { multiple_data_objects }
   
-  let( :data_object_class ) do
-    data_object_class = ::Class.new
-    data_object_class.name( :DataObject )
-    _data_object_a_class = data_object_a_class
-    data_object_class.module_eval do
-      attr_accessor :content, :binding_one, :binding_two, :a
-      define_method( :initialize ) do
-        @a = _data_object_a_class.new
-      end
-    end
-    data_object_class
-  end
-
-  let( :data_object_a_class ) do
-    data_object_a_class = ::Class.new
-    data_object_a_class.name( :DataObject_A )
-    _data_object_b_class = data_object_b_class
-    data_object_a_class.module_eval do
-      attr_accessor :b
-      define_method( :initialize ) do
-        @b = _data_object_b_class.new
-      end
-    end
-    data_object_a_class
-  end
-
-  let( :data_object_b_class ) do
-    data_object_b_class = ::Class.new
-    data_object_b_class.name( :DataObject_B )
-    data_object_b_class.module_eval do
-      attr_accessor :c
-    end
-    data_object_b_class
-  end
-
-  let( :multiple_data_objects ) { [ data_object.a.b.c, data_object2.a.b.c, data_object3.a.b.c ] }
-
 end
