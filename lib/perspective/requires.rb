@@ -23,7 +23,7 @@ files = [
   'bindings/configuration/singleton_and_class_binding_instance',
   'bindings/configuration',
 
-  'bindings/binding_base',
+  'bindings/binding',
   'bindings/class_binding',
   'bindings/instance_binding',
   

@@ -71,9 +71,9 @@ def setup_container_and_bindings_tests( bindings_module, test_container = nil )
   
   test_container.class_eval do
 
-    const_set( :NestedClassA, nested_class_A )
-    const_set( :NestedClassA_B, nested_class_A_B )
-    const_set( :NestedClassA_B_C, nested_class_A_B_C )
+    const_set( :NestedClass_A, nested_class_A )
+    const_set( :NestedClass_A_B, nested_class_A_B )
+    const_set( :NestedClass_A_B_C, nested_class_A_B_C )
     const_set( :ModuleInstance, module_instance )
     const_set( :SubModuleInstance, sub_module_instance )
     const_set( :ClassInstance, class_instance )
@@ -87,16 +87,16 @@ def setup_container_and_bindings_tests( bindings_module, test_container = nil )
 
   end
 
-  test_container::NestedClassA_B_C.class_eval do
+  test_container::NestedClass_A_B_C.class_eval do
     include bindings_module
     attr_text :content
     attr_autobind :content
   end
-  test_container::NestedClassA_B.class_eval do
+  test_container::NestedClass_A_B.class_eval do
     include bindings_module
     attr_text :c, nested_class_A_B_C, & top_action_A_B_C
   end
-  test_container::NestedClassA.class_eval do
+  test_container::NestedClass_A.class_eval do
     include bindings_module
     attr_text :b, nested_class_A_B, & top_action_A_B
   end
@@ -138,9 +138,9 @@ def setup_container_and_bindings_tests( bindings_module, test_container = nil )
     attr_accessor :c
   end
   
-  let( :nested_class_A ) { test_container::NestedClassA }
-  let( :nested_class_A_B ) { test_container::NestedClassA_B }
-  let( :nested_class_A_B_C ) { test_container::NestedClassA_B_C }
+  let( :nested_class_A ) { test_container::NestedClass_A }
+  let( :nested_class_A_B ) { test_container::NestedClass_A_B }
+  let( :nested_class_A_B_C ) { test_container::NestedClass_A_B_C }
 
   let( :module_instance ) { test_container::ModuleInstance }
   let( :sub_module_instance ) { test_container::SubModuleInstance }

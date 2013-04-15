@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::BindingBase
+module ::Perspective::Bindings::Binding
 
   include ::Perspective::Bindings::Configuration
   include ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
