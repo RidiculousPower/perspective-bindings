@@ -22,7 +22,7 @@ module ::Perspective::Bindings::Container::SingletonInstance
 
 	  def child_pre_set_hook( binding_name, binding_instance, parent_hash )
 
-      return binding_instance.class.new( configuration_instance, binding_instance )
+      return binding_instance.class.new_inheriting_binding( configuration_instance, binding_instance )
 
     end
     

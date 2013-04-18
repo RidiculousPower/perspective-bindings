@@ -28,6 +28,10 @@ def setup_base_class_binding_tests
   let( :subclass_block_action ) { _block_state = subclass_block_state ; _block_state.block = ::Proc.new { _block_state.block_ran! } }
   
   let( :topclass_class_binding ) { class_binding_class.new( topclass_bound_container_class, binding_name, & topclass_configuration_proc ) }
-  let( :subclass_class_binding ) { class_binding_class.new( subclass_bound_container_class, topclass_class_binding, & subclass_configuration_proc ) }
+  let( :subclass_class_binding ) do
+    subclass_class_binding = class_binding_class.new_inheriting_binding( subclass_bound_container_class, topclass_class_binding )
+    subclass_class_binding.configure( & subclass_configuration_proc )
+    subclass_class_binding
+  end
   
 end

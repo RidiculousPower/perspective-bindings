@@ -122,12 +122,8 @@ module ::Perspective::Bindings::InstanceBinding
       
       when ::Perspective::Bindings::InstanceBinding
 
-        if ::Perspective::Bindings::ReferenceBinding === self
-          @«value» = object
-        else
-          @«value» = object.«value»
-        end
-      
+        @«value» = ::Perspective::Bindings::ReferenceBinding === self ? object : @«value» = object.«value»
+
       else
 
         unless binding_value_valid?( object )

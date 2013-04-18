@@ -459,19 +459,12 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
     container_instance = nil
     
-    case index
+    container_instance = case index
       when 0
-        container_instance = «container»
+        «container»
       when -1
-        if permits_multiple?
-          if @«containers»
-            container_instance = @«containers»[ index ]
-          else
-            container_instance = «container»
-          end
-        else
-          container_instance = self.«container»
-        end
+        permits_multiple? ? @«containers» ? @«containers»[ index ] : «container»
+                          : self.«container»
       else
         if index < 0
           if ! @«containers»

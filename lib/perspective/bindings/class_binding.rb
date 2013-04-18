@@ -15,29 +15,55 @@ module ::Perspective::Bindings::ClassBinding
   #  initialize  #
   ################
 
-  ###
-  # 
-  # @overload new( bound_container, binding_name, & configuration_proc )
-  # @overload new( bound_container, ancestor_binding )
-  #
-  def initialize( bound_container, *args, & configuration_proc )
+  def initialize( bound_container, binding_name, *args, & configuration_proc )
 
-    @«root» = ( @«bound_container» = bound_container ).«root»
-
-    case binding_name_or_parent = args[ 0 ]
-      # binding_name
-      when ::Symbol, ::String
-        «validate_binding_name»( binding_name = binding_name_or_parent )
-        self.«name» = binding_name
-      # ancestor binding
-      else
-        ::CascadingConfiguration.register_parent( self, @«parent_binding» = binding_name_or_parent )
-    end
-
-    «initialize_route»
-
+    super
+    
     «configure»( & configuration_proc ) if block_given?
 
+  end
+
+  ###############################
+  #  initialize«common_values»  #
+  ###############################
+
+  def initialize«common_values»( bound_container )
+    
+    @«bound_container» = bound_container
+    @«root» = bound_container.«root»
+    
+  end
+
+  ####################################
+  #  initialize«new_between_common»  #
+  ####################################
+
+  def initialize«new_between_common»( binding_name )
+    
+    «validate_binding_name»( binding_name )
+    
+    self.«name» = binding_name
+    
+  end
+
+  ###########################################
+  #  initialize«inheriting_between_common»  #
+  ###########################################
+
+  def initialize«inheriting_between_common»( bound_container, ancestor_binding )
+    
+    ::CascadingConfiguration.register_parent( self, @«parent_binding» = ancestor_binding )
+    
+  end
+  
+  #################################
+  #  initialize«common_finalize»  #
+  #################################
+
+  def initialize«common_finalize»
+    
+    «initialize_route»
+    
   end
   
   ########################
@@ -56,7 +82,7 @@ module ::Perspective::Bindings::ClassBinding
 
     self.«route_string» = route_string = ::Perspective::Bindings.context_string( route_with_name )
     self.«route_print_string» = ::Perspective::Bindings.context_print_string( @«root», route_string )
-    
+
   end
 
   ################
@@ -71,7 +97,7 @@ module ::Perspective::Bindings::ClassBinding
 
 	  def child_pre_set_hook( binding_name, binding_instance, parent_hash )
 
-      return binding_instance.class::ClassBinding.new( configuration_instance, binding_instance )
+      return binding_instance.class::ClassBinding.new_inheriting_binding( configuration_instance, binding_instance )
 
     end
     

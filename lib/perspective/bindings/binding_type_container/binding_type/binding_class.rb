@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 
 class ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingClass
-    
+  
   #######################
   #  self.new_subclass  #
   #######################
@@ -17,5 +17,5 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingClass
   #############################
   
   singleton_attr_reader :parent_type_module
-  
+    
 end

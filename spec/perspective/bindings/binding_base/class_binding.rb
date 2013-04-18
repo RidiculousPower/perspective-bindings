@@ -54,7 +54,7 @@ shared_examples_for :base_class_binding do
     it 'topclass binding has proc' do
       topclass_class_binding.«configuration_procs».should == topclass_class_binding_configuration_procs
     end
-    it 'subclass binding has topclass proc plus additional proc' do
+    it 'subclass binding has topclass proc' do
       subclass_class_binding.«configuration_procs».should == subclass_class_binding_configuration_procs
     end
   end

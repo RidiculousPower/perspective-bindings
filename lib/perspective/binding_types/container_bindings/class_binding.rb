@@ -6,33 +6,42 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   include ::Perspective::Bindings::Container::Configuration
   include ::Perspective::Bindings::Container::ObjectAndBindingInstance
   
-  ################
-  #  initialize  #
-  ################
-  
-  ###
-  # 
-  # @overload new( bound_container, binding_name, container_class = nil, & configuration_proc )
-  # @overload new( bound_container, ancestor_binding )
-  #
-  def initialize( bound_container, *args, & configuration_proc )
+  ####################################
+  #  initialize«new_between_common»  #
+  ####################################
 
-    super( bound_container, *args, & configuration_proc )
+  def initialize«new_between_common»( binding_name, container_class = nil )
+    
+    super( binding_name )
+    
+    if container_class
+      «validate_container_class»( container_class )
+      self.«container_class» = container_class
+    end
+    
+  end
 
-    «initialize_for_container_class»( container_class = args[ 1 ] )
+  #################################
+  #  initialize«common_finalize»  #
+  #################################
+
+  def initialize«common_finalize»
+    
+    super
+
+    initialize«container_class_support»
     
   end
   
-  ######################################
-  #  «initialize_for_container_class»  #
-  ######################################
+  #########################################
+  #  initialize«container_class_support»  #
+  #########################################
   
-  def «initialize_for_container_class»( container_class )
-  
-    if container_class or container_class = «container_class»
+  def initialize«container_class_support»
+
+    if container_class = «container_class»
       extend( container_class::Controller::ClassBindingMethods )
-      unless @«parent_binding»
-        «validate_container_class»( self.«container_class» = container_class )
+      unless ::CascadingConfiguration.is_parent?( self, container_class )
         # if we have a parent binding then it has already registered the container class as a parent
         # and we have already registered it as our parent, so we don't want to replace it
         ::CascadingConfiguration.register_parent( self, container_class, :singleton_to_instance )
@@ -94,7 +103,7 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   #   Assumes that both bindings share a common root.
   #
   def «nested_route»( nested_in_container )
-    
+
     nested_route = nil
     
     # our route: <root>-route-to-binding

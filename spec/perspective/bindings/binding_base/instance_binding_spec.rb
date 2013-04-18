@@ -10,7 +10,7 @@ describe ::Perspective::Bindings::InstanceBinding do
 
     setup_instance_binding_tests
 
-    let( :class_binding_class ) { ::Class.new { include( ::Perspective::Bindings::ClassBinding ) } }
+    let( :class_binding_class ) { ::Class.new( ::Perspective::Bindings::BindingTypeContainer::BindingType::ClassBindingClass ) { include( ::Perspective::Bindings::ClassBinding ) } }
     let( :instance_binding_class ) { ::Class.new { include( ::Perspective::Bindings::InstanceBinding ) } }
 
   end

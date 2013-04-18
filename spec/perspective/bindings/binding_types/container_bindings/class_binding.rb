@@ -32,10 +32,10 @@ shared_examples_for :container_class_binding do
   end
 
   ######################################
-  #  «initialize_for_container_class»  #
+  #  initialize«container_class_support»  #
   ######################################
 
-  context '#«initialize_for_container_class»' do
+  context '#initialize«container_class_support»' do
     context 'container does not respond to :«bindings»' do
       let( :mock_container_class ) do
         ::Class.new do
