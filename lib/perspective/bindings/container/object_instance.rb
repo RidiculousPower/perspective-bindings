@@ -39,7 +39,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
   
   def «initialize_bindings»
 
-    «bindings».each do |this_binding_name, this_binding|
+    «bindings».each do |this_name, this_binding|
       this_binding.«initialize_bindings» if this_binding.respond_to?( :«initialize_bindings» )
 	  end
   	  
@@ -51,9 +51,17 @@ module ::Perspective::Bindings::Container::ObjectInstance
   
   def «configure_containers»
 
-    «bindings».each do |this_binding_name, this_binding|
-      this_binding.«configure_container» if this_binding.respond_to?( :«configure_container» )
-    end
+    «bindings».each { |this_name, this_binding| «configure_container_for_binding»( this_binding ) }
+
+  end
+
+  #######################################
+  #  «configure_container_for_binding»  #
+  #######################################
+  
+  def «configure_container_for_binding»( binding_instance )
+
+    binding_instance.«configure_container» if binding_instance.respond_to?( :«configure_container» )
 
   end
 
@@ -221,6 +229,16 @@ module ::Perspective::Bindings::Container::ObjectInstance
   #######################
   
   alias_method  :route_with_name, :«route_with_name»
+
+  ###########################
+  #  view_rendering_empty?  #
+  ###########################
+
+  def view_rendering_empty?
+    
+    return @«view_rendering_empty» ||= false
+    
+  end
 
   ################
   #  «autobind»  #
