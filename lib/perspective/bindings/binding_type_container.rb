@@ -200,17 +200,20 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
       binding_type_instance = types_controller.binding_types[ binding_type_name ]
       new_class_bindings = types_controller.new_class_bindings( binding_type_instance, self, *args, & block )
 
-      return new_class_bindings.each do |this_new_class_binding|
-        this_new_binding_name = this_new_class_binding.«name»
-        «bindings»[ this_new_binding_name ] = this_new_class_binding
-        self::Controller::ClassBindingMethods.define_binding( this_new_binding_name )
-        self::Controller::InstanceBindingMethods.define_binding( this_new_binding_name )
+      if ::Array === new_class_bindings
+        new_class_bindings.each do |this_new_class_binding|
+          types_controller.enable_class_binding( self, this_new_class_binding )
+        end
+      else
+        types_controller.enable_class_binding( self, new_class_bindings )
       end
+      
+      return new_class_bindings
     
     end
     
   end
-
+  
   ##################################
   #  define_multiple_binding_type  #
   ##################################

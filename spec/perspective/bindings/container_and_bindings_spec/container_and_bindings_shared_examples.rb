@@ -69,15 +69,8 @@ end
 
 shared_examples_for :«configure» do
   let( :configuration_proc ) { ::Proc.new { :configuration_method } }
-  before :each do
-    puts 'CONFIGURING: ' << instance.to_s
-    $blah = true
-    instance.«configure»( & configuration_proc )
-    $blah = false
-  end
-  after :each do
-    instance.«configuration_procs».delete( configuration_proc )
-  end
+  before( :each ) { instance.«configure»( & configuration_proc ) }
+  after( :each ) { instance.«configuration_procs».delete( configuration_proc ) }
   it 'will add proc to configuration procs to be run at initialization of container instance' do
     instance.«configuration_procs».last.should be configuration_proc
   end

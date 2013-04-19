@@ -92,4 +92,10 @@ module ::Perspective::BindingTypes::PropertyBindings
   
   define_binding_type( :URI_property )
 
+  #######################
+  #  attr_nil_property  #
+  #######################
+  
+  define_binding_type( :nil_property )
+
 end

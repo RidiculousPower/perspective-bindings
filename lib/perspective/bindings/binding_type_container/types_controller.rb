@@ -176,4 +176,23 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
     
   end
 
+  ###############################
+  #  self.enable_class_binding  #
+  ###############################
+  
+  ###
+  # 
+  #
+  def self.enable_class_binding( bound_to_container, binding_instance )
+    
+    binding_name = binding_instance.«name»
+    bound_to_container.«bindings»[ binding_name ] = binding_instance
+    
+    bound_to_container::Controller::ClassBindingMethods.define_binding( binding_name )
+    bound_to_container::Controller::InstanceBindingMethods.define_binding( binding_name )
+    
+    return binding_instance
+    
+  end
+
 end
