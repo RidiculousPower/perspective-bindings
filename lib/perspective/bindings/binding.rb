@@ -99,4 +99,23 @@ module ::Perspective::Bindings::Binding
   
   end
   
+  ##############
+  #  «value»   #
+  #  «value»=  #
+  ##############
+  
+  attr_configuration  :«value»
+
+  ###########
+  #  value  #
+  ###########
+
+  self::Controller.alias_module_and_instance_methods  :value, :«value»
+
+  ############
+  #  value=  #
+  ############
+
+  self::Controller.alias_module_and_instance_methods  :value=, :«value»=
+
 end

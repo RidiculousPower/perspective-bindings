@@ -100,18 +100,6 @@ module ::Perspective::Bindings::InstanceBinding
     
   end
 
-  #############
-  #  «value»  #
-  #############
-  
-  attr_reader  :«value»
-
-  ###########
-  #  value  #
-  ###########
-
-  alias_method  :value, :«value»
-
   ##############
   #  «value»=  #
   ##############
@@ -122,7 +110,7 @@ module ::Perspective::Bindings::InstanceBinding
       
       when ::Perspective::Bindings::InstanceBinding
 
-        @«value» = ::Perspective::Bindings::ReferenceBinding === self ? object : @«value» = object.«value»
+        super( ::Perspective::Bindings::ReferenceBinding === self ? object : object.«value» )
 
       else
 
@@ -131,7 +119,7 @@ module ::Perspective::Bindings::InstanceBinding
                   'Invalid value ' <<  object.inspect + ' assigned to binding :' << «name».to_s + '.'
         end
 
-        @«value» = object
+        super( object )
         
     end    
 

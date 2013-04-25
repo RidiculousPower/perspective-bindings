@@ -37,7 +37,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
       # so that we can store without any overloaded effects.
       «store_initialized_container_instance»( container_instance )
       # if we have a value, autobind it to new container
-      «autobind»( @«value» )
+      «autobind»( «value» )
     end
     
     return container_instance
@@ -150,7 +150,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
       ::CascadingConfiguration.replace_parent( self, @«parent_binding», container_instance )
       
       # if we have a value, autobind it to new container
-      «autobind»( @«value» )
+      «autobind»( «value» )
       
     end
     
@@ -284,7 +284,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
         
     case data_object
       when nil
-        @«value» = nil
+        self.«value» = nil
       when ::Array
         «autobind_array»( data_object )
       when ::Hash
