@@ -7,10 +7,10 @@ shared_examples_for :container_instance_binding do
   it_behaves_like :base_instance_binding
   
   #######################################
-  #  «initialize_container_from_class»  #
+  #  initialize«container_from_class»  #
   #######################################
   
-  context '#«initialize_container_from_class»' do
+  context '#initialize«container_from_class»' do
     it 'will be extended with container instance binding methods' do
       topclass_class_binding_A.«container_class»::Controller::InstanceBindingMethods.should === topclass_instance_binding_A
     end

@@ -20,52 +20,52 @@ module ::Perspective::Bindings::Container::ClassInstance
   #
   def new( *args, & block )
 
-    instance_class = self
+    instance = allocate
+    ::Module::Cluster.evaluate_cluster_stack( :before_instance, instance, self, args, & block )
+    instance.initialize«container_instance»
+    ::Module::Cluster.evaluate_cluster_stack( :after_instance, instance, self, args, & block )
         
-    return allocate.instance_eval do
-
-      ::Module::Cluster.evaluate_cluster_stack( :before_instance, self, instance_class, args, & block )
-
-      «initialize_bindings»
-      initialize( *args, & block )
-      «initialize_instance»
-
-      ::Module::Cluster.evaluate_cluster_stack( :after_instance, self, instance_class, args, & block )
-
-      return self
-
-    end
+    return instance
     
   end
 
-  #########################
-  #  new_nested_instance  #
-  #########################
+  ##########################
+  #  new«nested_instance»  #
+  ##########################
   
   ###
   # When we have a nested object instance we need to ensure that parent configurations are
   #   registered before initialization occurs.
   #
-  def new_nested_instance( parent_binding_instance, *args, & block )
+  def new«nested_instance»( parent_binding_instance, *args, & block )
         
-    instance_class = self
+    instance = allocate
+    ::CascadingConfiguration.share_configurations( instance, parent_binding_instance )
+    ::Module::Cluster.evaluate_cluster_stack( :before_instance, instance, self, args, & block )
+    instance.initialize«nested_instance»( parent_binding_instance, *args, & block )
+    ::Module::Cluster.evaluate_cluster_stack( :after_instance, instance, self, args, & block )
+    
+    return instance
+    
+  end
+
+  ######################################
+  #  new«multiple_container_instance»  #
+  ######################################
+  
+  ###
+  # When we have a nested object instance we need to ensure that parent configurations are
+  #   registered before initialization occurs.
+  #
+  def new«multiple_container_instance»( parent_binding_instance, *args, & block )
         
-    return allocate.instance_eval do
-
-      ::Module::Cluster.evaluate_cluster_stack( :before_instance, self, instance_class, args, & block )
-
-      @«parent_binding» = @«bound_container» = parent_binding_instance      
-      ::CascadingConfiguration.replace_parent( self, instance_class, parent_binding_instance )
-
-      «initialize_bindings»
-      initialize( *args, & block )
-      «initialize_instance»
-      
-      ::Module::Cluster.evaluate_cluster_stack( :after_instance, self, instance_class, args, & block )
-      
-      return self
-
-    end
+    instance = allocate
+    ::CascadingConfiguration.replace_parent( instance, self, parent_binding_instance )
+    ::Module::Cluster.evaluate_cluster_stack( :before_instance, instance, self, args, & block )
+    instance.initialize«nested_instance»( parent_binding_instance, *args, & block )
+    ::Module::Cluster.evaluate_cluster_stack( :after_instance, instance, self, args, & block )
+    
+    return instance
     
   end
 

@@ -12,9 +12,9 @@ describe ::Perspective::Bindings::BindingTypeContainer::TypesController do
   let( :child_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( child_type_container_name, parent_type_container ) }
   let( :child_without_subclassing_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( child_without_subclassing_type_container_name, parent_type_container, false ) }
 
-  let( :parent_types ) { ::Perspective::Bindings::BindingTypeContainer::TypesController.new( parent_type_container ) }
-  let( :child_types ) { ::Perspective::Bindings::BindingTypeContainer::TypesController.new( child_type_container, parent_types ) }
-  let( :child_without_subclassing_types ) { ::Perspective::Bindings::BindingTypeContainer::TypesController.new( child_without_subclassing_type_container, parent_types, false ) }
+  let( :parent_types ) { ::Perspective::Bindings::BindingTypeContainer::Typesself::Controller.new( parent_type_container ) }
+  let( :child_types ) { ::Perspective::Bindings::BindingTypeContainer::Typesself::Controller.new( child_type_container, parent_types ) }
+  let( :child_without_subclassing_types ) { ::Perspective::Bindings::BindingTypeContainer::Typesself::Controller.new( child_without_subclassing_type_container, parent_types, false ) }
 
   #############################
   #  parent_types_controller  #

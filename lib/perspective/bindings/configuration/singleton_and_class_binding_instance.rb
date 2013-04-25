@@ -14,7 +14,7 @@ module ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance
   #  configuration_procs  #
   #########################
 
-  Controller.alias_instance_method( :configuration_procs, :«configuration_procs» )
+  self::Controller.alias_instance_method( :configuration_procs, :«configuration_procs» )
 
   #################
   #  «configure»  #

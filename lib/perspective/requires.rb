@@ -6,7 +6,7 @@ require 'accessor_utilities'
 require 'reraise'
 require 'singleton_attr'
 
-files = [
+[
   
   '../../lib_ext/module',
   '../../lib_ext/class',
@@ -102,8 +102,4 @@ files = [
 
   'bindings/reference_binding'
   
-]
-
-files.each do |this_file|
-  require_relative( this_file << '.rb' )
-end
+].each { |this_file| require_relative( this_file << '.rb' ) }

@@ -11,36 +11,49 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
   include ::CascadingConfiguration::Hash
   
-  ###########################
-  #  «initialize_instance»  #
-  ###########################
+  ####################################
+  #  initialize«container_instance»  #
+  ####################################
   
-  def «initialize_instance»
+  def initialize«container_instance»( *args, & block )
 
+    initialize«bindings»
+    initialize( *args, & block )
     «configure_containers»
     
     return self
     
   end
 
+  #################################
+  #  initialize«nested_instance»  #
+  #################################
+
+  def initialize«nested_instance»( parent_binding_instance, *args, & block )
+
+    @«parent_binding» = @«bound_container» = parent_binding_instance      
+    initialize«container_instance»( *args, & block )
+    
+  end
+  
   ##########################
-  #  initialize_for_index  #
+  #  initialize«for_index»  #
   ##########################
   
-  def initialize_for_index( index )
+  def initialize«for_index»( index )
     
     # nothing to do - implemented to permit overriding
     
   end
 
   ###########################
-  #  «initialize_bindings»  #
+  #  initialize«bindings»  #
   ###########################
   
-  def «initialize_bindings»
+  def initialize«bindings»
 
     «bindings».each do |this_name, this_binding|
-      this_binding.«initialize_bindings» if this_binding.respond_to?( :«initialize_bindings» )
+      this_binding.initialize«bindings» if this_binding.respond_to?( :initialize«bindings» )
 	  end
   	  
   end
@@ -95,8 +108,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
             #
             # We need new instance bindings or we end up with the same binding instances as the
             # first container for this instance binding.
-            child_instance = binding_instance.class::InstanceBinding.new( binding_instance.«parent_binding», 
-                                                                          instance )
+            child_instance = binding_instance.class::InstanceBinding.new( binding_instance.«parent_binding», instance )
           else
             # We were created by an instance binding.
             #

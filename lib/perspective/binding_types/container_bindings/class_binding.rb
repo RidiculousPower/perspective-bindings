@@ -86,13 +86,13 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   #  container_class  #
   #####################
 
-  Controller.alias_module_and_instance_methods( :container_class, :«container_class» )
+  self::Controller.alias_module_and_instance_methods( :container_class, :«container_class» )
 
   ######################
   #  container_class=  #
   ######################
 
-  Controller.alias_module_and_instance_methods( :container_class=, :«container_class»= )
+  self::Controller.alias_module_and_instance_methods( :container_class=, :«container_class»= )
   
   ####################
   #  «nested_route»  # 

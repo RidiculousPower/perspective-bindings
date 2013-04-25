@@ -16,23 +16,23 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
         
     super
     
-    «initialize_container_from_class»
+    initialize«container_from_class»
 
   end
   
-  #######################################
-  #  «initialize_container_from_class»  #
-  #######################################
+  ######################################
+  #  initialize«container_from_class»  #
+  ######################################
   
-  def «initialize_container_from_class»( container_class = @«parent_binding».«container_class» )
+  def initialize«container_from_class»( container_class = @«parent_binding».«container_class» )
     
     container_instance = nil
     
     if container_class
       extend( container_class::Controller::InstanceBindingMethods )
-      container_instance = container_class.new_nested_instance( self )
+      container_instance = container_class.new«nested_instance»( self )
       # if we could have multiple then we initialize for the first index
-      container_instance.initialize_for_index( 0 ) if permits_multiple?
+      container_instance.initialize«for_index»( 0 ) if permits_multiple?
       # :«store_initialized_container_instance» is used instead of :«container»= 
       # so that we can store without any overloaded effects.
       «store_initialized_container_instance»( container_instance )
@@ -44,15 +44,15 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
   end
   
-  ###########################
-  #  «initialize_bindings»  #
-  ###########################
+  ##########################
+  #  initialize«bindings»  #
+  ##########################
   
-  def «initialize_bindings»
+  def initialize«bindings»
     
     «container»
     «bindings».each do |this_binding_name, this_binding|
-      this_binding.«initialize_bindings» if this_binding.respond_to?( :«initialize_bindings» )
+      this_binding.initialize«bindings» if this_binding.respond_to?( :initialize«bindings» )
     end
     
   end
@@ -112,7 +112,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
 
       unless ! initialize_container or container_instance = super()
         if container_class = @«parent_binding».«container_class»
-          container_instance = «initialize_container_from_class»
+          container_instance = initialize«container_from_class»
         end
       end
 
@@ -236,10 +236,10 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
     @«containers» ||= [ «container» ]
     
-    new_container_instance = container_class.new_nested_instance( self )
+    new_container_instance = container_class.new«multiple_container_instance»( self )
     index = @«containers».size
     @«containers».push( new_container_instance )
-    new_container_instance.initialize_for_index( index )
+    new_container_instance.initialize«for_index»( index )
 
     return new_container_instance
     
@@ -434,14 +434,11 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
 
       else
         
-        index = index_or_binding_name
+        container = «container»( index = index_or_binding_name )
+        autobind_binding = container.«autobind_value_to_binding»
+        can_autobind_to_single_container = ( autobind_binding and container.«bindings».size == 1 )
         
-        container = «container»( index )
-        if autobind_binding = container.«autobind_value_to_binding» and container.«bindings».size == 1
-          return_value = autobind_binding.«value»
-        else
-          return_value = container
-        end
+        return_value = can_autobind_to_single_container ? autobind_binding.«value» : container
 
     end
         
@@ -463,15 +460,15 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
       when 0
         «container»
       when -1
-        permits_multiple? ? @«containers» ? @«containers»[ index ] : «container»
+        permits_multiple? ? @«containers» ? @«containers»[ index ] 
+                                          : «container»
                           : self.«container»
       else
         if index < 0
           if ! @«containers»
             raise IndexError, 'index ' << index.to_s << ' too small for array; minimum: -1'
           elsif -@«containers».size < index
-            raise IndexError, 'index ' << index.to_s << ' too small for array; minimum: ' << 
-                              (-@«containers».size).to_s
+            raise IndexError, 'index ' << index.to_s << ' too small for array; minimum: ' << (-@«containers».size).to_s
           end
         end
         container_instance = @«containers»[ index ]

@@ -16,7 +16,7 @@ def setup_container_class_binding_tests
       include ::CascadingConfiguration::Array
       def initialize( *args )
       end
-      alias_singleton_method( :new_nested_instance, :new )
+      alias_singleton_method( :new«nested_instance», :new )
       class_binding_methods = ::Module.new.name( :ClassBindingMethods )
       self::Controller.const_set( :ClassBindingMethods, class_binding_methods )
       instance_binding_methods = ::Module.new.name( :ClassBindingMethods )
@@ -29,7 +29,7 @@ def setup_container_class_binding_tests
       def called_autobind?
         return @called_autobind
       end
-      def initialize_for_index( *args )
+      def initialize«for_index»( *args )
       end
     end
   end

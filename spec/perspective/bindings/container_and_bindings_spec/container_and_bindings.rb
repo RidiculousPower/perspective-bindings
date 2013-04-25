@@ -152,28 +152,28 @@ shared_examples_for :container_and_bindings do
     end
     
     #########################
-    #  new_nested_instance  #
+    #  new«nested_instance»  #
     #########################
     
-    context '::new_nested_instance' do
+    context '::new«nested_instance»' do
       context 'module' do
-        it 'does not respond to ::new_nested_instance' do
-          module_instance.respond_to?( :new_nested_instance ).should be false
+        it 'does not respond to ::new«nested_instance»' do
+          module_instance.respond_to?( :new«nested_instance» ).should be false
         end
       end
       context 'sub module' do
-        it 'does not respond to ::new_nested_instance' do
-          sub_module_instance.respond_to?( :new_nested_instance ).should be false
+        it 'does not respond to ::new«nested_instance»' do
+          sub_module_instance.respond_to?( :new«nested_instance» ).should be false
         end
       end
       context 'class' do
         it 'is owned by Perspective::Bindings::Container::SingletonInstance' do
-          class_instance.method( :new_nested_instance ).owner.should be ::Perspective::Bindings::Container::ClassInstance
+          class_instance.method( :new«nested_instance» ).owner.should be ::Perspective::Bindings::Container::ClassInstance
         end
       end
       context 'subclass' do
         it 'is owned by Perspective::Bindings::Container::SingletonInstance' do
-          subclass.method( :new_nested_instance ).owner.should be ::Perspective::Bindings::Container::ClassInstance
+          subclass.method( :new«nested_instance» ).owner.should be ::Perspective::Bindings::Container::ClassInstance
         end
       end
     end

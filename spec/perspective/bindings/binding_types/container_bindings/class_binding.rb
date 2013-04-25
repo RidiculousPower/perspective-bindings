@@ -13,7 +13,7 @@ shared_examples_for :container_class_binding do
       let( :mock_container_class ) do
         ::Class.new do
           include ::CascadingConfiguration::Setting
-          alias_singleton_method( :new_nested_instance, :new )
+          alias_singleton_method( :new«nested_instance», :new )
           class_binding_methods = ::Module.new.name( :ClassBindingMethods )
           self::Controller.const_set( :ClassBindingMethods, class_binding_methods )
           instance_binding_methods = ::Module.new.name( :ClassBindingMethods )
@@ -40,7 +40,7 @@ shared_examples_for :container_class_binding do
       let( :mock_container_class ) do
         ::Class.new do
           include ::CascadingConfiguration::Setting
-          alias_singleton_method( :new_nested_instance, :new )
+          alias_singleton_method( :new«nested_instance», :new )
           class_binding_methods = ::Module.new.name( :ClassBindingMethods )
           self::Controller.const_set( :ClassBindingMethods, class_binding_methods )
           instance_binding_methods = ::Module.new.name( :ClassBindingMethods )
