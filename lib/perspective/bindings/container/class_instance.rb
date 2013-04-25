@@ -22,7 +22,7 @@ module ::Perspective::Bindings::Container::ClassInstance
 
     instance = allocate
     ::Module::Cluster.evaluate_cluster_stack( :before_instance, instance, self, args, & block )
-    instance.initialize«container_instance»
+    instance.initialize«container_instance»( *args, & block )
     ::Module::Cluster.evaluate_cluster_stack( :after_instance, instance, self, args, & block )
         
     return instance
