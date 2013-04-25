@@ -78,34 +78,6 @@ class ::Perspective::Bindings::Container::BindingMethods::InstanceBindingMethods
     
   end
 
-  #################################
-  #  define_binding_value_setter  #
-  #################################
-  
-  def define_binding_value_setter( binding_name )
-    
-    #=================#
-    #  binding_name=  #
-    #=================#
-    
-    define_method( binding_name.write_accessor_name ) do |value|
-
-      binding = «bindings»[ binding_name ]
-      
-      # if we have a container that knows how to autobind a value, do so
-      if binding.respond_to?( :«container» ) and container = binding.«container» and container.autobinds_value? 
-        container.«autobind_value»( value )
-      else
-        # otherwise store value in self
-        binding.«value» = value
-      end
-
-      return value
-      
-    end
-    
-  end
-
   #######################################
   #  define_binding_alias_value_getter  #
   #######################################
@@ -117,20 +89,6 @@ class ::Perspective::Bindings::Container::BindingMethods::InstanceBindingMethods
     #======================#
     
     alias_method( binding_alias.accessor_name, binding_name.accessor_name )
-    
-  end
-
-  #######################################
-  #  define_binding_alias_value_setter  #
-  #######################################
-  
-  def define_binding_alias_value_setter( binding_alias, binding_name )
-    
-    #=======================#
-    #  binding_alias_name=  #
-    #=======================#
-    
-    alias_method( binding_alias.write_accessor_name, binding_name.write_accessor_name )
     
   end
 
@@ -152,22 +110,4 @@ class ::Perspective::Bindings::Container::BindingMethods::InstanceBindingMethods
     
   end
 
-  ################################################
-  #  define_local_alias_to_binding_value_setter  #
-  ################################################
-
-  def define_local_alias_to_binding_value_setter( binding_alias, binding_instance )
-    
-    #===============================#
-    #  local_alias_to_binding_name  #
-    #===============================#
-
-    define_method( binding_alias.write_accessor_name ) do |value|
-
-      return «local_aliases_to_bindings»[ binding_alias ].«value» = value
-      
-    end
-    
-  end
-  
 end
