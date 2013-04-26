@@ -2,18 +2,13 @@
 
 class ::Perspective::Bindings::BindingTypeContainer::BindingType::BindingClass
   
-  ########################
-  #  self.new«subclass»  #
-  ########################
+  #######################
+  #  self.new_subclass  #
+  #######################
   
-  def self.new«subclass»( parent_type_module = nil, *modules )
+  def self.new_subclass( parent_type_module, *modules )
     
-    return ::Class.new( self ) do
-      if @parent_type_module = parent_type_module
-        include( @parent_type_module )
-      end
-      include( *modules ) unless modules.empty?
-    end
+    return ::Class.new( self ) { include( @parent_type_module = parent_type_module, *modules ) }
     
   end
   

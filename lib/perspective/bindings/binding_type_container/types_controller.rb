@@ -17,26 +17,17 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
       
       @type_container = type_container
       @subclass_existing_bindings = subclass_existing_bindings
-      
+    
       @class_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::ClassBinding.new( self )
       @instance_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::InstanceBinding.new( self )
     
       if @parent_types_controller = parent_types_controller
-        @class_binding_class = @parent_types_controller.class_binding_class.new«subclass»
-        @instance_binding_class = @parent_types_controller.instance_binding_class.new«subclass»
         @class_binding_base.module_eval    { include parent_types_controller.class_binding_base }
         @instance_binding_base.module_eval { include parent_types_controller.instance_binding_base }
       else
-        @class_binding_class = ::Perspective::Bindings::BindingTypeContainer::BindingType::
-                                 ClassBindingClass.new«subclass»
-        @instance_binding_class = ::Perspective::Bindings::BindingTypeContainer::BindingType::
-                                    InstanceBindingClass.new«subclass»
         @class_binding_base.module_eval    { include ::Perspective::Bindings::ClassBinding }
         @instance_binding_base.module_eval { include ::Perspective::Bindings::InstanceBinding }
       end
-
-      self.const_set( :ClassBindingClass, @class_binding_class )
-      self.const_set( :InstanceBindingClass, @instance_binding_class )
       
       module_eval( & module_block ) if block_given?
       
@@ -63,18 +54,6 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
   #####################################
   
   singleton_attr_reader :subclass_existing_bindings
-
-  ##############################
-  #  self.class_binding_class  #
-  ##############################
-
-  singleton_attr_reader :class_binding_class
-
-  #################################
-  #  self.instance_binding_class  #
-  #################################
-
-  singleton_attr_reader :instance_binding_class
 
   #############################
   #  self.class_binding_base  #
@@ -104,7 +83,6 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
       
       instance = configuration_instance
       
-      # don't subclass bindings from parents of parent - only bindings that parent owns
       if instance.subclass_existing_bindings and 
          parent_binding_type_instance.types_controller == parent_hash.configuration_instance
         

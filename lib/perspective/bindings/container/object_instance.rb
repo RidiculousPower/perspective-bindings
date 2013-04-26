@@ -142,7 +142,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
   def «name»
     
     name = nil
-
+    
     if @«parent_binding»
       name = @«parent_binding».«name»
     else

@@ -22,12 +22,18 @@ module ::Perspective::BindingTypes
     # We permit define to be called multiple times, so we check to see if 
     # we have already created our BindingTypeContainer instance for container_type.
     if type_container = type_container( container_type, false )
-      type_container.module_eval( & definition_block ) if block_given?
+      
+      if block_given?
+        type_container.module_eval( & definition_block )
+      end
+
     else
+
       type_container = create_container_type( container_type,
                                               parent_container_or_type,
                                               subclass_existing_bindings,
                                               & definition_block )
+      
     end
         
     
