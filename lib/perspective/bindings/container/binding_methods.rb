@@ -39,12 +39,7 @@ class ::Perspective::Bindings::Container::BindingMethods <
   
   def binding_getter_method_name( binding_name )
     
-    case binding_name
-      when ::String
-        binding_name = binding_name.dup
-      when ::Symbol
-        binding_name = binding_name.to_s
-    end
+    binding_name = binding_name.to_s if ::Symbol === binding_name
     
     return '•' << binding_name
 

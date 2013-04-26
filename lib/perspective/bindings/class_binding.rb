@@ -41,9 +41,9 @@ module ::Perspective::Bindings::ClassBinding
   def initialize«new_between_common»( binding_name )
     
     «validate_binding_name»( binding_name )
-    
+
     self.«name» = binding_name
-    
+
   end
 
   ###########################################
