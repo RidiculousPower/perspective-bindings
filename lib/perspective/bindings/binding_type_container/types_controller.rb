@@ -11,29 +11,36 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
   #  self.new  #
   ##############
   
-  def self.new( type_container, parent_types_controller = nil, subclass_existing_bindings = true, & module_block )
+  def self.new( type_container, parent_types_controller = nil, subclass_parent_bindings = true, & module_block )
     
-    return ::Class.new( parent_types_controller || self ) do
-      
-      @type_container = type_container
-      @subclass_existing_bindings = subclass_existing_bindings
+    return ::Class.new( parent_types_controller || self ) { initialize( type_container,
+                                                                        parent_types_controller,
+                                                                        subclass_parent_bindings,
+                                                                        & module_block ) }
     
-      @class_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::ClassBinding.new( self )
-      @instance_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::InstanceBinding.new( self )
-    
-      if @parent_types_controller = parent_types_controller
-        @class_binding_base.module_eval    { include parent_types_controller.class_binding_base }
-        @instance_binding_base.module_eval { include parent_types_controller.instance_binding_base }
-      else
-        @class_binding_base.module_eval    { include ::Perspective::Bindings::ClassBinding }
-        @instance_binding_base.module_eval { include ::Perspective::Bindings::InstanceBinding }
-      end
-      
-      module_eval( & module_block ) if block_given?
-      
-      self
-      
+  end
+
+  #####################
+  #  self.initialize  #
+  #####################
+
+  def self.initialize( type_container, parent_types_controller = nil, subclass_parent_bindings = true, & module_block )
+
+    @type_container = type_container
+    @subclass_parent_bindings = subclass_parent_bindings
+  
+    @class_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::ClassBinding.new( self )
+    @instance_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::InstanceBinding.new( self )
+  
+    if @parent_types_controller = parent_types_controller
+      @class_binding_base.module_eval    { include parent_types_controller.class_binding_base }
+      @instance_binding_base.module_eval { include parent_types_controller.instance_binding_base }
+    else
+      @class_binding_base.module_eval    { include ::Perspective::Bindings::ClassBinding }
+      @instance_binding_base.module_eval { include ::Perspective::Bindings::InstanceBinding }
     end
+    
+    module_eval( & module_block ) if block_given?
     
   end
 
@@ -50,10 +57,10 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
   singleton_attr_reader :parent_types_controller
   
   #####################################
-  #  self.subclass_existing_bindings  #
+  #  self.subclass_parent_bindings  #
   #####################################
   
-  singleton_attr_reader :subclass_existing_bindings
+  singleton_attr_reader :subclass_parent_bindings
 
   #############################
   #  self.class_binding_base  #
@@ -83,7 +90,8 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
       
       instance = configuration_instance
       
-      if instance.subclass_existing_bindings and 
+      # don't subclass bindings from parents of parent - only bindings that parent owns
+      if instance.subclass_parent_bindings and 
          parent_binding_type_instance.types_controller == parent_hash.configuration_instance
         
         child_instance = parent_binding_type_instance.class.new( instance, 
