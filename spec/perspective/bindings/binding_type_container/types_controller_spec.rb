@@ -6,15 +6,12 @@ describe ::Perspective::Bindings::BindingTypeContainer::TypesController do
 
   let( :parent_type_container_name ) { :parent_type_container }
   let( :child_type_container_name ) { :child_type_container }
-  let( :child_without_subclassing_type_container_name ) { :child_type_container }
 
   let( :parent_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( parent_type_container_name ) }
   let( :child_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( child_type_container_name, parent_type_container ) }
-  let( :child_without_subclassing_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( child_without_subclassing_type_container_name, parent_type_container, false ) }
 
-  let( :parent_types ) { ::Perspective::Bindings::BindingTypeContainer::Typesself::Controller.new( parent_type_container ) }
-  let( :child_types ) { ::Perspective::Bindings::BindingTypeContainer::Typesself::Controller.new( child_type_container, parent_types ) }
-  let( :child_without_subclassing_types ) { ::Perspective::Bindings::BindingTypeContainer::Typesself::Controller.new( child_without_subclassing_type_container, parent_types, false ) }
+  let( :parent_types ) { parent_type_container.types_controller }
+  let( :child_types ) { child_type_container.types_controller }
 
   #############################
   #  parent_types_controller  #
@@ -34,38 +31,8 @@ describe ::Perspective::Bindings::BindingTypeContainer::TypesController do
         child_types.ancestors.include?( parent_types ).should be true
       end
     end
-    context 'when child without subclassing' do
-      it 'will return parent' do
-        child_without_subclassing_types.parent_types_controller.should be parent_types
-      end
-      it 'should include types from parent_type_container' do
-        child_without_subclassing_types.ancestors.include?( parent_types ).should be true
-      end
-    end
   end
   
-  ################################
-  #  subclass_existing_bindings  #
-  ################################
-  
-  context '#subclass_existing_bindings' do
-    context 'when parent' do
-      it 'will return whether it should subclass bindings from its parent when they are inherited' do
-        parent_types.subclass_existing_bindings.should be true
-      end
-    end
-    context 'when child' do
-      it 'will return whether it should subclass bindings from its parent when they are inherited' do
-        child_types.subclass_existing_bindings.should be true
-      end
-    end
-    context 'when child without subclassing' do
-      it 'will return whether it should subclass bindings from its parent when they are inherited' do
-        child_without_subclassing_types.subclass_existing_bindings.should be false
-      end
-    end
-  end
-
   ########################
   #  class_binding_base  #
   ########################
@@ -139,12 +106,8 @@ describe ::Perspective::Bindings::BindingTypeContainer::TypesController do
       it 'will have binding type module' do
         parent_types.binding_types[ parent_binding_type_name ].should be_a ::Perspective::Bindings::BindingTypeContainer::BindingType
       end
-      it 'child will also have its own subclass of the type' do
-        child_types.binding_types[ parent_binding_type_name ].ancestors.include?( parent_types.binding_types[ parent_binding_type_name ] ).should be true
-      end
-      it 'child without subclassing will have the same type' do
-        child_without_subclassing_types.binding_types[ parent_binding_type_name ].should be_a ::Perspective::Bindings::BindingTypeContainer::BindingType
-        child_without_subclassing_types.binding_types[ parent_binding_type_name ].should be parent_types.binding_types[ parent_binding_type_name ]
+      it 'child will not have its own subclass of the type unless it defines it explicitly' do
+        child_types.binding_types[ parent_binding_type_name ].should be nil
       end
     end
     context 'when child' do
@@ -153,14 +116,6 @@ describe ::Perspective::Bindings::BindingTypeContainer::TypesController do
       end
       it 'will have binding type module' do
         child_types.binding_types[ child_binding_type_name ].should be_a ::Perspective::Bindings::BindingTypeContainer::BindingType
-      end
-    end
-    context 'when child without subclassing' do
-      before :each do
-        child_without_subclassing_types.define_binding_type( child_without_subclassing_binding_type_name )
-      end
-      it 'will have binding type module' do
-        child_without_subclassing_types.binding_types[ child_without_subclassing_binding_type_name ].should be_a ::Perspective::Bindings::BindingTypeContainer::BindingType
       end
     end
   end
@@ -175,15 +130,13 @@ describe ::Perspective::Bindings::BindingTypeContainer::TypesController do
     before :each do
       parent_types.define_binding_type( binding_type_name )
       parent_types.alias_binding_type( alias_binding_type_name, binding_type_name )
+      child_types.define_binding_type( binding_type_name )
     end
     it 'will have binding type module' do
       parent_types.binding_aliases[ alias_binding_type_name ].should be binding_type_name
     end
     it 'child will also have its own subclass of the type' do
       child_types.binding_aliases[ alias_binding_type_name ].should be binding_type_name
-    end
-    it 'child without subclassing will have the same type' do
-      child_without_subclassing_types.binding_aliases[ alias_binding_type_name ].should be binding_type_name
     end
   end
 

@@ -18,20 +18,9 @@ describe ::Perspective::BindingTypes do
       child.should be_a ::Perspective::Bindings::BindingTypeContainer
       child_without_subclassing.should be_a ::Perspective::Bindings::BindingTypeContainer
     end
-    it 'a child will inherit bindings' do
+    it 'a child will not inherit bindings unless explicitly defined' do
       parent.binding_types.each do |this_binding_type_name, this_binding_type|
-        child.binding_types.has_key?( this_binding_type_name ).should be true
-      end
-    end
-    it 'a child that subclasses bindings will have its own instances subclassing the parent instances' do
-      parent.binding_types.each do |this_binding_type_name, this_binding_type|
-        child.binding_types[ this_binding_type_name ].ancestors.include?( this_binding_type ).should be true
-        child.binding_types[ this_binding_type_name ].should_not be parent.binding_types[ this_binding_type_name ]
-      end
-    end
-    it 'a child that does not subclass will inherit the same instances from its parent' do
-      parent.binding_types.each do |this_binding_type_name, this_binding_type|
-        child_without_subclassing.binding_types[ this_binding_type_name ].should be this_binding_type
+        child.binding_types.has_key?( this_binding_type_name ).should be false
       end
     end
   end
@@ -46,7 +35,7 @@ describe ::Perspective::BindingTypes do
     let( :child_without_subclassing_name ) { :create_child_without_subclassing }
     let( :parent ) { ::Perspective::BindingTypes.create_container_type( container_type_name, & block ) }
     let( :child ) { ::Perspective::BindingTypes.create_container_type( child_container_type_name, parent ) }
-    let( :child_without_subclassing ) { ::Perspective::BindingTypes.create_container_type( child_without_subclassing_name, parent, false ) }
+    let( :child_without_subclassing ) { ::Perspective::BindingTypes.create_container_type( child_without_subclassing_name, parent ) }
     it_behaves_like :container_creation
   end
   
@@ -60,7 +49,7 @@ describe ::Perspective::BindingTypes do
     let( :child_without_subclassing_name ) { :define_child_without_subclassing }
     let( :parent ) { ::Perspective::BindingTypes.define_container_type( container_type_name, & block ) }
     let( :child ) { ::Perspective::BindingTypes.define_container_type( child_container_type_name, parent ) }
-    let( :child_without_subclassing ) { ::Perspective::BindingTypes.define_container_type( child_without_subclassing_name, parent, false ) }
+    let( :child_without_subclassing ) { ::Perspective::BindingTypes.define_container_type( child_without_subclassing_name, parent ) }
     it_behaves_like :container_creation
   end
   

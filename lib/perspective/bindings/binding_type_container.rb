@@ -10,22 +10,25 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   #  initialize  #
   ################
   
-  def initialize( type_container_name, parent_container = nil, subclass_existing_bindings = true, & module_block )
+  def initialize( type_container_name, parent_container = nil, & module_block )
     
     @type_container_name = type_container_name
     
-    parent_type_controller = parent_container ? parent_container.types : nil
-    parent_types_controller_class = parent_container ? parent_container.types : self.class::TypesController
-    @types = parent_types_controller_class.new( self, parent_type_controller, subclass_existing_bindings )
-    
-    const_set( :TypesController, @types )
-    
-    const_set( :ClassBinding, @types.class_binding_base )
-    const_set( :InstanceBinding, @types.instance_binding_base )
-    
+    parent_type_controller = nil
+    parent_types_controller_class = nil
+    if parent_container
+      parent_type_controller = parent_container.types_controller
+      parent_types_controller_class = parent_container.types_controller 
+    else
+      parent_types_controller_class = self.class::TypesController
+    end
+    @types_controller = parent_types_controller_class.new( self, parent_type_controller )
+
     include parent_container if @parent_container = parent_container
 
-    @types.binding_types.load_parent_state
+    const_set( :TypesController, @types_controller )    
+    const_set( :ClassBinding, @types_controller.class_binding_base )
+    const_set( :InstanceBinding, @types_controller.instance_binding_base )
 
     super( & module_block )
 
@@ -37,11 +40,11 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   
   attr_reader :parent_container
 
-  ###########
-  #  types  #
-  ###########
+  ######################
+  #  types_controller  #
+  ######################
   
-  attr_reader :types
+  attr_reader :types_controller
   
   #########################
   #  type_container_name  #
@@ -53,13 +56,13 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   #  binding_types  #
   ###################
 
-  def_delegator :@types, :binding_types
+  def_delegator :@types_controller, :binding_types
 
   #####################
   #  binding_aliases  #
   #####################
 
-  def_delegator :@types, :binding_aliases
+  def_delegator :@types_controller, :binding_aliases
 
   #########################
   #  define_binding_type  #
@@ -67,7 +70,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   
   def define_binding_type( binding_type_name, ancestor_type = nil )
 
-    new_binding_type = @types.define_binding_type( binding_type_name, ancestor_type )
+    new_binding_type = @types_controller.define_binding_type( binding_type_name, ancestor_type )
 
     binding_type_name = binding_type_name.to_s
     binding_type_constant_name = binding_type_name.to_camel_case
@@ -90,7 +93,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     alias_name = alias_name.to_sym
     binding_type_name = binding_type_name.to_sym
     
-    @types.alias_binding_type( alias_name, binding_type_name )
+    @types_controller.alias_binding_type( alias_name, binding_type_name )
     
     aliased_type_instance = binding_types[ binding_type_name ]
     binding_alias_constant_name = alias_name.to_s.to_camel_case
@@ -187,7 +190,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     
     method_name = single_binding_method_name( binding_method_name )
 
-    types_controller = @types
+    types_controller = @types_controller
 
     binding_type_name = binding_type_name.to_sym
     

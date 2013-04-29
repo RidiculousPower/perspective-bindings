@@ -12,7 +12,7 @@ describe ::Perspective::Bindings::BindingTypeContainer do
   let( :child_without_subclassing_type_container_name ) { :child_type_container }
   let( :parent_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( parent_type_container_name ) }
   let( :child_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( child_type_container_name, parent_type_container ) }
-  let( :child_without_subclassing_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( child_without_subclassing_type_container_name, parent_type_container, false ) }
+  let( :child_without_subclassing_type_container ) { ::Perspective::Bindings::BindingTypeContainer.new( child_without_subclassing_type_container_name, parent_type_container ) }
   
   ##################################################################################################
   #    private #####################################################################################
@@ -279,7 +279,7 @@ describe ::Perspective::Bindings::BindingTypeContainer do
           return @«root_string» ||= '<root:' << to_s << '>'
         end
       end
-      new_bindings = parent_type_container.types.new_class_bindings( binding_type, bound_container, :some_name, :some_other_name, :another_name )
+      new_bindings = parent_type_container.types_controller.new_class_bindings( binding_type, bound_container, :some_name, :some_other_name, :another_name )
       new_bindings.each do |this_binding|
         this_binding.is_a?( ::Perspective::Bindings::ClassBinding ).should be true
         this_binding.is_a?( parent_type_container::SomeType ).should be true

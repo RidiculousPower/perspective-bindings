@@ -35,6 +35,9 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
       include @parent_type
       class_binding_class = @parent_type.class_binding_class
       instance_binding_class = @parent_type.instance_binding_class
+      if aliases = @parent_type.aliases
+        @aliases = ::Array::Compositing.new( aliases, self )
+      end
     else
       class_binding_class = ::Perspective::Bindings::BindingTypeContainer::BindingType::ClassBindingClass
       instance_binding_class = ::Perspective::Bindings::BindingTypeContainer::BindingType::InstanceBindingClass
@@ -46,6 +49,25 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
     const_set( :ClassBinding,    @class_binding_class )
     const_set( :InstanceBinding, @instance_binding_class )
             
+  end
+
+  #############
+  #  aliases  #
+  #############
+  
+  attr_reader :aliases
+
+  ###################
+  #  declare_alias  #
+  ###################
+  
+  def declare_alias( alias_name )
+    
+    @aliases ||= ::Array::Compositing.new( nil, self )
+    @aliases.push( alias_name )
+
+    return self
+    
   end
 
   ###############
