@@ -10,28 +10,29 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
   #  initialize  #
   ################
   
-  def initialize( type_container_name, parent_container = nil, & module_block )
+  def initialize( type_container_name, parent_container = nil, subclass_all_parent_bindings = false, & module_block )
     
     @type_container_name = type_container_name
     
     parent_type_controller = nil
     parent_types_controller_class = nil
-    if parent_container
-      parent_type_controller = parent_container.types_controller
-      parent_types_controller_class = parent_container.types_controller 
+    if @parent_container = parent_container
+      parent_type_controller = @parent_container.types_controller
+      @types_controller = parent_type_controller.new( self, parent_type_controller )
+      include @parent_container
+      if subclass_all_parent_bindings
+        @parent_container.binding_types.each { |this_name, this_binding_type| define_binding_type( this_name ) }
+      end
     else
-      parent_types_controller_class = self.class::TypesController
+      @types_controller = self.class::TypesController.new( self )
     end
-    @types_controller = parent_types_controller_class.new( self, parent_type_controller )
-
-    include parent_container if @parent_container = parent_container
 
     const_set( :TypesController, @types_controller )    
     const_set( :ClassBinding, @types_controller.class_binding_base )
     const_set( :InstanceBinding, @types_controller.instance_binding_base )
 
     super( & module_block )
-
+    
   end
 
   ######################
@@ -117,10 +118,6 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     define_required_multiple_binding_type( binding_method_name, binding_type_name )
     
   end
-
-  ##################################################################################################
-      private ######################################################################################
-  ##################################################################################################
 
   ################################
   #  single_binding_method_name  #

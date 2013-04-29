@@ -14,14 +14,20 @@ module ::Perspective::BindingTypes
   ###
   # Open container type for definition, creating if necessary.
   #
-  def self.define_container_type( container_type, parent_container_or_type = nil, & definition_block )
+  def self.define_container_type( container_type, 
+                                  parent_container_or_type = nil, 
+                                  subclass_all_parent_bindings = false, 
+                                  & definition_block )
     
     # We permit define to be called multiple times, so we check to see if 
     # we have already created our BindingTypeContainer instance for container_type.
     if type_container = type_container( container_type, false )
       type_container.module_eval( & definition_block ) if block_given?
     else
-      type_container = create_container_type( container_type, parent_container_or_type, & definition_block )
+      type_container = create_container_type( container_type, 
+                                              parent_container_or_type, 
+                                              subclass_all_parent_bindings,
+                                              & definition_block )
     end
     
     return type_container
@@ -36,7 +42,10 @@ module ::Perspective::BindingTypes
   # Create type container with arbitrary name ("container type") to hold binding types 
   #   belonging to container type.
   #
-  def self.create_container_type( container_type, parent_container_or_type = nil, & definition_block )
+  def self.create_container_type( container_type, 
+                                  parent_container_or_type = nil, 
+                                  subclass_all_parent_bindings = false, 
+                                  & definition_block )
     
     case parent_container_or_type
   
@@ -55,6 +64,7 @@ module ::Perspective::BindingTypes
 
     type_container = ::Perspective::Bindings::BindingTypeContainer.new( container_type, 
                                                                         parent_container_or_type,
+                                                                        subclass_all_parent_bindings, 
                                                                         & definition_block )
     
     
