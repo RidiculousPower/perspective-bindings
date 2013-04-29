@@ -265,10 +265,10 @@ describe ::Perspective::Bindings::BindingTypeContainer do
   end
 
   ########################
-  #  new_class_bindings  #
+  #  new«class_bindings»  #
   ########################
 
-  context '#new_class_bindings' do
+  context '#new«class_bindings»' do
     it 'creates new class bindings for a container, a list of names, and an optional block' do
       binding_type = parent_type_container.define_binding_type( :some_type )
       bound_container = ::Module.new do
@@ -279,7 +279,7 @@ describe ::Perspective::Bindings::BindingTypeContainer do
           return @«root_string» ||= '<root:' << to_s << '>'
         end
       end
-      new_bindings = parent_type_container.types_controller.new_class_bindings( binding_type, bound_container, :some_name, :some_other_name, :another_name )
+      new_bindings = parent_type_container.types_controller.new«class_bindings»( binding_type, bound_container, :some_name, :some_other_name, :another_name )
       new_bindings.each do |this_binding|
         this_binding.is_a?( ::Perspective::Bindings::ClassBinding ).should be true
         this_binding.is_a?( parent_type_container::SomeType ).should be true

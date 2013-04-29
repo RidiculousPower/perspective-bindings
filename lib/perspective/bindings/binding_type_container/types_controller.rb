@@ -161,7 +161,7 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
   end
 
   #############################
-  #  self.new_class_bindings  #
+  #  self.new«class_bindings»  #
   #############################
   
   ###
@@ -169,7 +169,7 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
   #
   # 
   #
-  def self.new_class_bindings( binding_type, bound_to_container, *binding_names, & configuration_proc )
+  def self.new«class_bindings»( binding_type, bound_to_container, *binding_names, & configuration_proc )
 
     return binding_names.collect do |this_binding_name|
       binding_type.class_binding_class.new( bound_to_container, this_binding_name, & configuration_proc )

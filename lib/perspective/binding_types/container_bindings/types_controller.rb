@@ -3,13 +3,13 @@
 class ::Perspective::BindingTypes::ContainerBindings::TypesController
 
   #############################
-  #  self.new_class_bindings  #
+  #  self.new«class_bindings»  #
   #############################
   
   ###
   # Can be overridden in BindingType modules.
   #
-  def self.new_class_bindings( binding_type, bound_to_container, *binding_descriptors, & configuration_proc )
+  def self.new«class_bindings»( binding_type, bound_to_container, *binding_descriptors, & configuration_proc )
 
     class_binding_class = binding_type.class_binding_class
 

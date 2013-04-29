@@ -83,12 +83,12 @@ describe ::Perspective::BindingTypes::ContainerBindings::TypesController do
   end
 
   ##########################
-  #  ::new_class_bindings  #
+  #  ::new«class_bindings»  #
   ##########################
   
-  context '::new_class_bindings' do
+  context '::new«class_bindings»' do
     it 'creates new class bindings for a container, a list of names, and an optional block' do
-      new_bindings = types_controller.new_class_bindings( binding_type, bound_container, :some_name, :some_other_name, :another_name )
+      new_bindings = types_controller.new«class_bindings»( binding_type, bound_container, :some_name, :some_other_name, :another_name )
       new_bindings.each do |this_binding|
         this_binding.is_a?( ::Perspective::Bindings::ClassBinding ).should be true
         this_binding.is_a?( ::Perspective::BindingTypes::ContainerBindings::ClassBinding ).should be true

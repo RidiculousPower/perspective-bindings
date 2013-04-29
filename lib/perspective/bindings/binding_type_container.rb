@@ -198,7 +198,7 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     define_method( method_name ) do |*args, & block|
 
       binding_type_instance = types_controller.binding_types[ binding_type_name ]
-      new_class_bindings = types_controller.new_class_bindings( binding_type_instance, self, *args, & block )
+      new_class_bindings = types_controller.new«class_bindings»( binding_type_instance, self, *args, & block )
 
       if ::Array === new_class_bindings
         new_class_bindings.each do |this_new_class_binding|
