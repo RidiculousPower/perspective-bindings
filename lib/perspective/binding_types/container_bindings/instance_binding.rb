@@ -258,7 +258,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     if container_count > 1
       
       unless permits_multiple?
-        raise ::ArgumentError, "Multiple not permitted for " << container.to_s << '.' 
+        raise ::ArgumentError, 'Multiple not permitted for ' << container.to_s << '.' 
       end
     
       case container_count

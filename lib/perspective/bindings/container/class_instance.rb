@@ -60,7 +60,7 @@ module ::Perspective::Bindings::Container::ClassInstance
   def new«multiple_container_instance»( parent_binding_instance, *args, & block )
         
     instance = allocate
-    ::CascadingConfiguration.replace_parent( instance, self, parent_binding_instance )
+#    ::CascadingConfiguration.replace_parent( instance, self, parent_binding_instance )
     ::Module::Cluster.evaluate_cluster_stack( :before_instance, instance, self, args, & block )
     instance.initialize«nested_instance»( parent_binding_instance, *args, & block )
     ::Module::Cluster.evaluate_cluster_stack( :after_instance, instance, self, args, & block )
