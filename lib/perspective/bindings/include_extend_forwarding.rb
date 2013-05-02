@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::IncludeExtend
+module ::Perspective::Bindings::IncludeExtendForwarding
     
   ###################
   #  self.included  #
@@ -10,7 +10,7 @@ module ::Perspective::Bindings::IncludeExtend
 
     module_or_class_instance.module_eval do
 
-      include( ::Perspective::Bindings::IncludeExtend::InitializeInstances )
+      include( ::Perspective::Bindings::IncludeExtendForwarding::InitializeInstances )
 
     end
     

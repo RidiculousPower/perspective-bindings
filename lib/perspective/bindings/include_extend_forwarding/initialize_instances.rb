@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 
-module ::Perspective::Bindings::IncludeExtend::InitializeInstances
+module ::Perspective::Bindings::IncludeExtendForwarding::InitializeInstances
   
   ################
   #  initialize  #

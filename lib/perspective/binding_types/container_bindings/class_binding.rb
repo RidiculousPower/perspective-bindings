@@ -37,9 +37,9 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   #  initialize«container_class_support»  #
   #########################################
   
-  def initialize«container_class_support»
+  def initialize«container_class_support»( container_class = «container_class» )
 
-    if container_class = «container_class»
+    if container_class
       extend( container_class::Controller::ClassBindingMethods )
       unless ::CascadingConfiguration.is_parent?( self, container_class )
         # if we have a parent binding then it has already registered the container class as a parent
@@ -58,8 +58,8 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
     	  
 		unless container_class.respond_to?( :«bindings» )
   		raise ::Perspective::Bindings::Exception::ContainerClassLacksBindings,
-  		        'Class ' + container_class.to_s + ' was declared as a container class, ' +
-  		        'but does not respond to :' + :«bindings».to_s + '.'
+  		        'Class ' << container_class.to_s << ' was declared as a container class, ' <<
+  		        'but does not respond to :«bindings».'
 	  end
     
   end
@@ -77,6 +77,8 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
   def «container_class»=( container_class )
     
     «validate_container_class»( container_class )
+
+    initialize«container_class_support»( container_class )
     
     return super
     
@@ -118,9 +120,7 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
       route_from_root = «route»
       route_from_root_size = route_from_root.size
       remaining_route_size = route_from_root_size - slice_size
-      if remaining_route_size > 0
-        nested_route = «route».slice( slice_size, remaining_route_size )
-      end
+      nested_route = «route».slice( slice_size, remaining_route_size ) if remaining_route_size > 0
     end
     
     return nested_route

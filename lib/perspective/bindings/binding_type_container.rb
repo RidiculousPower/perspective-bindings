@@ -28,6 +28,8 @@ class ::Perspective::Bindings::BindingTypeContainer < ::Module
     end
 
     const_set( :TypesController, @types_controller )    
+    const_set( :ClassBindingClassAndBinding, @types_controller.class_binding_class_and_binding_base )
+    const_set( :ClassBindingClass, @types_controller.class_binding_class_base )
     const_set( :ClassBinding, @types_controller.class_binding_base )
     const_set( :InstanceBinding, @types_controller.instance_binding_base )
 

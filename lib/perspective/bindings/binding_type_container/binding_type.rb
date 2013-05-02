@@ -11,7 +11,7 @@
 #
 class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
 
-  include ::Perspective::Bindings::IncludeExtend
+  include ::Perspective::Bindings::IncludeExtendForwarding
 
   ################
   #  initialize  #
@@ -44,6 +44,7 @@ class ::Perspective::Bindings::BindingTypeContainer::BindingType < ::Module
     end
 
     @class_binding_class = class_binding_class.new«subclass»( self, @types_controller.class_binding_base )
+    @class_binding_base.extend( @types_controller.class_binding_class_base )
     @instance_binding_class = instance_binding_class.new«subclass»( self, @types_controller.instance_binding_base )
     
     const_set( :ClassBinding,    @class_binding_class )

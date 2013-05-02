@@ -9,7 +9,7 @@ module ::Perspective::Bindings::ClassBinding
   include ::CascadingConfiguration::Array::Unique
   include ::CascadingConfiguration::Hash
 
-  extend ::Perspective::Bindings::IncludeExtend
+  extend ::Perspective::Bindings::IncludeExtendForwarding
 
   ################
   #  initialize  #

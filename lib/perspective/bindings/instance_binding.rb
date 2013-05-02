@@ -7,7 +7,7 @@ module ::Perspective::Bindings::InstanceBinding
   include ::CascadingConfiguration::Setting
   include ::CascadingConfiguration::Hash  
 
-  extend ::Perspective::Bindings::IncludeExtend
+  extend ::Perspective::Bindings::IncludeExtendForwarding
 
   ################
   #  initialize  #

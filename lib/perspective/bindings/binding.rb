@@ -7,7 +7,7 @@ module ::Perspective::Bindings::Binding
 
   include ::CascadingConfiguration::Setting
   
-  extend ::Perspective::Bindings::IncludeExtend
+  extend ::Perspective::Bindings::IncludeExtendForwarding
   
   #######################
   #  «bound_container»  #

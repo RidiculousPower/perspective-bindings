@@ -25,16 +25,32 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
 
     @type_container = type_container
     
-    @class_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::ClassBinding.new( self )
-    @instance_binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase::InstanceBinding.new( self )
-  
+    binding_base = ::Perspective::Bindings::BindingTypeContainer::BindingBase
+    @class_binding_base = binding_base::ClassBinding.new( self )
+    @class_binding_class_base = binding_base::ClassBindingClass.new( self )
+    @class_binding_class_and_binding_base = binding_base::ClassBindingClassAndBinding.new( self )
+    @instance_binding_base = binding_base::InstanceBinding.new( self )
+
+    parent_class_binding_base = nil
+    parent_instance_binding_base = nil
     if @parent_types_controller = parent_types_controller
-      @class_binding_base.module_eval    { include parent_types_controller.class_binding_base }
-      @instance_binding_base.module_eval { include parent_types_controller.instance_binding_base }
+      parent_class_binding_base = parent_types_controller.class_binding_base
+      parent_instance_binding_base = parent_types_controller.instance_binding_base
+      parent_class_binding_class_and_binding_base = parent_types_controller.class_binding_class_and_binding_base
+      @class_binding_class_base.module_eval { include parent_types_controller.class_binding_class_base }
+      @class_binding_class_and_binding_base.module_eval { include parent_class_binding_class_and_binding_base }
     else
-      @class_binding_base.module_eval    { include ::Perspective::Bindings::ClassBinding }
-      @instance_binding_base.module_eval { include ::Perspective::Bindings::InstanceBinding }
+      parent_class_binding_base = ::Perspective::Bindings::ClassBinding
+      parent_instance_binding_base = ::Perspective::Bindings::InstanceBinding
     end
+
+    class_binding_class_and_binding_base = @class_binding_class_and_binding_base
+    @class_binding_class_base.module_eval { include class_binding_class_and_binding_base }
+    @class_binding_base.module_eval do
+      include parent_class_binding_base
+      include class_binding_class_and_binding_base
+    end
+    @instance_binding_base.module_eval { include parent_instance_binding_base }
     
     @binding_types = { }
     
@@ -59,6 +75,18 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
   #############################
 
   singleton_attr_reader :class_binding_base
+
+  ###################################
+  #  self.class_binding_class_base  #
+  ###################################
+
+  singleton_attr_reader :class_binding_class_base
+
+  ###############################################
+  #  self.class_binding_class_and_binding_base  #
+  ###############################################
+
+  singleton_attr_reader :class_binding_class_and_binding_base
 
   ################################
   #  self.instance_binding_base  #

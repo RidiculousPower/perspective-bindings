@@ -5,7 +5,7 @@
 #
 class ::Perspective::Bindings::BindingTypeContainer::BindingBase < ::Module
 
-  include ::Perspective::Bindings::IncludeExtend
+  include ::Perspective::Bindings::IncludeExtendForwarding
 
   ################
   #  initialize  #

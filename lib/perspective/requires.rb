@@ -12,8 +12,8 @@ require 'singleton_attr'
   '../../lib_ext/class',
   '../../lib_ext/object',
   
-  'bindings/include_extend',
-  'bindings/include_extend/initialize_instances',
+  'bindings/include_extend_forwarding',
+  'bindings/include_extend_forwarding/initialize_instances',
   
   'bindings/container/context',
 
@@ -27,9 +27,12 @@ require 'singleton_attr'
   'bindings/class_binding',
   'bindings/instance_binding',
   
-  'bindings/binding_type_container/binding_base/class_binding',
-  'bindings/binding_type_container/binding_base/instance_binding',
   'bindings/binding_type_container/binding_base',
+  'bindings/binding_type_container/binding_base/class_binding',
+  'bindings/binding_type_container/binding_base/class_binding_class',
+  'bindings/binding_type_container/binding_base/class_binding_class_and_binding',
+  'bindings/binding_type_container/binding_base/instance_binding',
+
   'bindings/binding_type_container/binding_type/binding_class',
   'bindings/binding_type_container/binding_type/class_binding_class',
   'bindings/binding_type_container/binding_type/instance_binding_class',
@@ -56,6 +59,8 @@ require 'singleton_attr'
   'binding_types/property',
   'binding_types/property_bindings',
   'binding_types/property_bindings/class_binding',
+  'binding_types/property_bindings/class_binding_class',
+  'binding_types/property_bindings/class_binding_class_and_binding',
   'binding_types/property_bindings/instance_binding',
   'binding_types/property_bindings/binding/instance_binding',
   'binding_types/property_bindings/class/instance_binding',
@@ -79,6 +84,8 @@ require 'singleton_attr'
   'binding_types/container_bindings',
   'binding_types/container_bindings/types_controller',
   'binding_types/container_bindings/class_binding',
+  'binding_types/container_bindings/class_binding_class',
+  'binding_types/container_bindings/class_binding_class_and_binding',
   'binding_types/container_bindings/instance_binding',
   
   'bindings/container/binding_methods',
