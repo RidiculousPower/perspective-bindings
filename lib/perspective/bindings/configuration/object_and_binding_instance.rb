@@ -2,9 +2,9 @@
 
 module ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
 
-  include ::CascadingConfiguration::Setting,
-          ::CascadingConfiguration::Hash,
-          ::CascadingConfiguration::Array::Unique
+  extend ::CascadingConfiguration::Setting,
+         ::CascadingConfiguration::Hash,
+         ::CascadingConfiguration::Array::Unique
 
   #######################
   #  «binding_aliases»  #

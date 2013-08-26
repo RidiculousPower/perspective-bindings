@@ -12,12 +12,12 @@ shared_examples_for :container_class_binding do
     context 'container does not respond to :«bindings»' do
       let( :mock_container_class ) do
         ::Class.new do
-          include ::CascadingConfiguration::Setting
+          extend ::CascadingConfiguration::Setting
           alias_singleton_method( :new«nested_instance», :new )
           class_binding_methods = ::Module.new.name( :ClassBindingMethods )
-          self::Controller.const_set( :ClassBindingMethods, class_binding_methods )
+          const_set( :ClassBindingMethods, class_binding_methods )
           instance_binding_methods = ::Module.new.name( :ClassBindingMethods )
-          self::Controller.const_set( :InstanceBindingMethods, instance_binding_methods )
+          const_set( :InstanceBindingMethods, instance_binding_methods )
         end
        end
       it 'will raise Perspective::Bindings::Exception::ContainerClassLacksBindings' do
@@ -31,20 +31,20 @@ shared_examples_for :container_class_binding do
     end
   end
 
-  ######################################
+  #########################################
   #  initialize«container_class_support»  #
-  ######################################
+  #########################################
 
   context '#initialize«container_class_support»' do
     context 'container does not respond to :«bindings»' do
       let( :mock_container_class ) do
         ::Class.new do
-          include ::CascadingConfiguration::Setting
+          extend ::CascadingConfiguration::Setting
           alias_singleton_method( :new«nested_instance», :new )
           class_binding_methods = ::Module.new.name( :ClassBindingMethods )
-          self::Controller.const_set( :ClassBindingMethods, class_binding_methods )
+          const_set( :ClassBindingMethods, class_binding_methods )
           instance_binding_methods = ::Module.new.name( :ClassBindingMethods )
-          self::Controller.const_set( :InstanceBindingMethods, instance_binding_methods )
+          const_set( :InstanceBindingMethods, instance_binding_methods )
         end
        end
       it 'will raise Perspective::Bindings::Exception::ContainerClassLacksBindings' do
@@ -53,7 +53,7 @@ shared_examples_for :container_class_binding do
     end
     context 'container validates' do
       it 'will be extended by container class binding methods' do
-        topclass_class_binding_A.is_a?( nested_container_class_A::Controller::ClassBindingMethods ).should be true
+        topclass_class_binding_A.is_a?( nested_container_class_A::ClassBindingMethods ).should be true
       end
       it 'top binding will have container class as parent' do
         topclass_class_binding_A.•«bindings».is_parent?( nested_container_class_A ).should be true

@@ -21,9 +21,7 @@ module ::Perspective::Bindings::Container::ClassInstance
   def new( *args, & block )
 
     instance = allocate
-    ::Module::Cluster.evaluate_cluster_stack( :before_instance, instance, self, args, & block )
     instance.initialize«container_instance»( *args, & block )
-    ::Module::Cluster.evaluate_cluster_stack( :after_instance, instance, self, args, & block )
         
     return instance
     
@@ -38,12 +36,10 @@ module ::Perspective::Bindings::Container::ClassInstance
   #   registered before initialization occurs.
   #
   def new«nested_instance»( parent_binding_instance, *args, & block )
-        
+    
     instance = allocate
     ::CascadingConfiguration.share_configurations( instance, parent_binding_instance )
-    ::Module::Cluster.evaluate_cluster_stack( :before_instance, instance, self, args, & block )
     instance.initialize«nested_instance»( parent_binding_instance, *args, & block )
-    ::Module::Cluster.evaluate_cluster_stack( :after_instance, instance, self, args, & block )
     
     return instance
     
@@ -57,12 +53,13 @@ module ::Perspective::Bindings::Container::ClassInstance
   # When we have a nested object instance we need to ensure that parent configurations are
   #   registered before initialization occurs.
   #
-  def new«multiple_container_instance»( parent_binding_instance, *args, & block )
+  def new«multiple_container_instance»( parent_binding_instance, index, *args, & block )
+    
+    # subset of nested instance
         
     instance = allocate
-    ::Module::Cluster.evaluate_cluster_stack( :before_instance, instance, self, args, & block )
     instance.initialize«nested_instance»( parent_binding_instance, *args, & block )
-    ::Module::Cluster.evaluate_cluster_stack( :after_instance, instance, self, args, & block )
+    instance.initialize«for_index»( index )
     
     return instance
     

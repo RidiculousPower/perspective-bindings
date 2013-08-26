@@ -217,8 +217,8 @@ class ::Perspective::Bindings::BindingTypeContainer::TypesController
     binding_name = binding_instance.«name»
     bound_to_container.«bindings»[ binding_name ] = binding_instance
     
-    bound_to_container::Controller::ClassBindingMethods.define_binding( binding_name )
-    bound_to_container::Controller::InstanceBindingMethods.define_binding( binding_name )
+    bound_to_container::ClassBindingMethods.define_binding( binding_name )
+    bound_to_container::InstanceBindingMethods.define_binding( binding_name )
     
     return binding_instance
     

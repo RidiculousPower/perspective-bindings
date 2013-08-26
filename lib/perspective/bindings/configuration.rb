@@ -2,7 +2,7 @@
 
 module ::Perspective::Bindings::Configuration
 
-  include ::CascadingConfiguration::Value
+  extend ::CascadingConfiguration::Value
   
   ######################
   #  «parent_binding»  #

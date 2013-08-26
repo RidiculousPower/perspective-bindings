@@ -11,16 +11,16 @@ def setup_container_class_binding_tests
     ::Class.new do
       include( _mock_container_module )
       extend( _mock_container_module )
-      include ::CascadingConfiguration::Setting
-      include ::CascadingConfiguration::Hash
-      include ::CascadingConfiguration::Array
+      extend ::CascadingConfiguration::Setting
+      extend ::CascadingConfiguration::Hash
+      extend ::CascadingConfiguration::Array
       def initialize( *args )
       end
       alias_singleton_method( :new«nested_instance», :new )
       class_binding_methods = ::Module.new.name( :ClassBindingMethods )
-      self::Controller.const_set( :ClassBindingMethods, class_binding_methods )
+      const_set( :ClassBindingMethods, class_binding_methods )
       instance_binding_methods = ::Module.new.name( :ClassBindingMethods )
-      self::Controller.const_set( :InstanceBindingMethods, instance_binding_methods )
+      const_set( :InstanceBindingMethods, instance_binding_methods )
       attr_hash :«bindings», :«binding_aliases»
       attr_configuration :«name», :«route», :«route_with_name», :«route_string», :«route_print_string», :permits_multiple?, :required?
       def «autobind»( *args )

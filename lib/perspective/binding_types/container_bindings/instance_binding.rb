@@ -2,7 +2,7 @@
 
 module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
   
-  include ::CascadingConfiguration::Setting
+  extend ::CascadingConfiguration::Setting
   include ::Perspective::Bindings::Container::Configuration
   include ::Perspective::Bindings::Container::ObjectAndBindingInstance
   
@@ -29,7 +29,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     container_instance = nil
     
     if container_class
-      extend( container_class::Controller::InstanceBindingMethods )
+      extend( container_class::InstanceBindingMethods )
       container_instance = container_class.new«nested_instance»( self )
       # if we could have multiple then we initialize for the first index
       container_instance.initialize«for_index»( 0 ) if permits_multiple?
@@ -138,7 +138,7 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
 
     if container_instance
 
-      extend( container_instance.class::Controller::InstanceBindingMethods )
+      extend( container_instance.class::InstanceBindingMethods )
     
       # Normal inheritance when container class is defined on class binding is
       # Class Instance => Class Binding => Instance Binding => Container Instance.
@@ -236,10 +236,8 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
     
     @«containers» ||= [ «container» ]
     
-    new_container_instance = container_class.new«multiple_container_instance»( self )
-    index = @«containers».size
+    new_container_instance = container_class.new«multiple_container_instance»( self, @«containers».size + 1 )
     @«containers».push( new_container_instance )
-    new_container_instance.initialize«for_index»( index )
 
     return new_container_instance
     

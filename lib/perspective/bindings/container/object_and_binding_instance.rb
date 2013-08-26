@@ -2,7 +2,7 @@
 
 module ::Perspective::Bindings::Container::ObjectAndBindingInstance
 
-  include ::CascadingConfiguration::Hash
+  extend ::CascadingConfiguration::Hash
   
   #################################
   #  «local_aliases_to_bindings»  #

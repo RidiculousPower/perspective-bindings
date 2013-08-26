@@ -9,7 +9,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
 
   include ::Perspective::Bindings::Container::SingletonAndObjectInstance
 
-  include ::CascadingConfiguration::Hash
+  extend ::CascadingConfiguration::Hash
   
   ####################################
   #  initialize«container_instance»  #
@@ -18,7 +18,7 @@ module ::Perspective::Bindings::Container::ObjectInstance
   def initialize«container_instance»( *args, & block )
 
     initialize«bindings»
-    initialize( *args, & block )
+    initialize_chain( *args, & block )
     «configure_containers»
     
     return self
@@ -36,9 +36,9 @@ module ::Perspective::Bindings::Container::ObjectInstance
     
   end
   
-  ##########################
+  ###########################
   #  initialize«for_index»  #
-  ##########################
+  ###########################
   
   def initialize«for_index»( index )
     

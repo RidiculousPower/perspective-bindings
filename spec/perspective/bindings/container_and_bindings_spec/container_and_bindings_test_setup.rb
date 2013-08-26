@@ -55,13 +55,13 @@ def setup_container_and_bindings_tests( bindings_module, test_container = nil )
     bindings_module.const_set( :Test, test_container )
   end
 
-  nested_class_A_B_C = ::Class.new
-  nested_class_A_B = ::Class.new
-  nested_class_A = ::Class.new
-  module_instance = ::Module.new
-  sub_module_instance = ::Module.new
-  class_instance = ::Class.new
-  subclass = ::Class.new( class_instance )
+  nested_class_A_B_C = ::Class.new.name( :NestedClass_A_B_C )
+  nested_class_A_B = ::Class.new.name( :NestedClass_A_B )
+  nested_class_A = ::Class.new.name( :NestedClass_A )
+  module_instance = ::Module.new.name( :ModuleInstance )
+  sub_module_instance = ::Module.new.name( :SubModuleInstance )
+  class_instance = ::Class.new.name( :ClassInstance )
+  subclass = ::Class.new( class_instance ).name( :Subclass )
   
   multiple_container_class_instance = ::Class.new
 

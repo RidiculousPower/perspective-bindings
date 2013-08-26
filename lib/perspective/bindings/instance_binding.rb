@@ -4,8 +4,8 @@ module ::Perspective::Bindings::InstanceBinding
   
   include ::Perspective::Bindings::Binding
   
-  include ::CascadingConfiguration::Setting
-  include ::CascadingConfiguration::Hash  
+  extend ::CascadingConfiguration::Setting
+  extend ::CascadingConfiguration::Hash  
 
   extend ::Perspective::Bindings::IncludeExtendForwarding
 

@@ -8,7 +8,7 @@ module ::Perspective::Bindings::Container::SingletonInstance
   include ::Perspective::Bindings::Container::Configuration
   include ::Perspective::Bindings::Container::SingletonAndObjectInstance
   
-  include ::CascadingConfiguration::Hash
+  extend ::CascadingConfiguration::Hash
   
   ################
   #  «bindings»  #
@@ -153,15 +153,10 @@ module ::Perspective::Bindings::Container::SingletonInstance
 	def «create_binding_alias»( binding_alias, existing_reference )
 
     case existing_reference
-      
       when ::Symbol, ::String
-              
         «create_name_alias»( binding_alias, existing_reference )
-                
       else
-
         «create_local_alias_to_binding»( binding_alias, existing_reference )
-        
     end
     
   end
@@ -182,8 +177,8 @@ module ::Perspective::Bindings::Container::SingletonInstance
 	  
     «binding_aliases»[ binding_alias ] = existing_binding_name
 
-		self::Controller::ClassBindingMethods.define_binding_alias( binding_alias, existing_binding_name )
-    self::Controller::InstanceBindingMethods.define_binding_alias( binding_alias, existing_binding_name )
+		self::ClassBindingMethods.define_binding_alias( binding_alias, existing_binding_name )
+    self::InstanceBindingMethods.define_binding_alias( binding_alias, existing_binding_name )
     
   end
 
@@ -195,8 +190,8 @@ module ::Perspective::Bindings::Container::SingletonInstance
 
     «local_aliases_to_bindings»[ binding_alias ] = binding_instance
 
-		self::Controller::ClassBindingMethods.define_local_alias_to_binding( binding_alias, binding_instance )
-    self::Controller::InstanceBindingMethods.define_local_alias_to_binding( binding_alias, binding_instance )
+		self::ClassBindingMethods.define_local_alias_to_binding( binding_alias, binding_instance )
+    self::InstanceBindingMethods.define_local_alias_to_binding( binding_alias, binding_instance )
 
   end
 

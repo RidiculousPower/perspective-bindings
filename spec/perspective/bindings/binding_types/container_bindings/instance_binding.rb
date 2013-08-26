@@ -12,7 +12,7 @@ shared_examples_for :container_instance_binding do
   
   context '#initialize«container_from_class»' do
     it 'will be extended with container instance binding methods' do
-      topclass_class_binding_A.«container_class»::Controller::InstanceBindingMethods.should === topclass_instance_binding_A
+      topclass_class_binding_A.«container_class»::InstanceBindingMethods.should === topclass_instance_binding_A
     end
     it 'will create and store instance of container' do
       topclass_class_binding_A.«container_class».should === topclass_instance_binding_A.«container»

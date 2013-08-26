@@ -5,7 +5,7 @@ module ::Perspective::Bindings::Binding
   include ::Perspective::Bindings::Configuration
   include ::Perspective::Bindings::Configuration::ObjectAndBindingInstance
 
-  include ::CascadingConfiguration::Setting
+  extend ::CascadingConfiguration::Setting
   
   extend ::Perspective::Bindings::IncludeExtendForwarding
   
@@ -109,13 +109,15 @@ module ::Perspective::Bindings::Binding
   ###########
   #  value  #
   ###########
-
-  self::Controller.alias_module_and_instance_methods  :value, :«value»
+  
+  alias_method :value, :«value»
+#  self::Controller.alias_module_and_instance_methods  :value, :«value»
 
   ############
   #  value=  #
   ############
 
-  self::Controller.alias_module_and_instance_methods  :value=, :«value»=
+  alias_method :value=, :«value»=
+#  self::Controller.alias_module_and_instance_methods  :value=, :«value»=
 
 end

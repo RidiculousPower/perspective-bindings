@@ -5,9 +5,9 @@ module ::Perspective::Bindings::ClassBinding
   include ::Perspective::Bindings::Binding
   include ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance
   
-  include ::CascadingConfiguration::Setting
-  include ::CascadingConfiguration::Array::Unique
-  include ::CascadingConfiguration::Hash
+  extend ::CascadingConfiguration::Setting
+  extend ::CascadingConfiguration::Array::Unique
+  extend ::CascadingConfiguration::Hash
 
   extend ::Perspective::Bindings::IncludeExtendForwarding
 

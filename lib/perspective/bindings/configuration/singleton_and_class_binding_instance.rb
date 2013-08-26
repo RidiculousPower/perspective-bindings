@@ -2,7 +2,7 @@
 
 module ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance
 
-  include ::CascadingConfiguration::Array::Unique
+  extend ::CascadingConfiguration::Array::Unique
   
   ###########################
   #  «configuration_procs»  #
@@ -14,7 +14,7 @@ module ::Perspective::Bindings::Configuration::SingletonAndClassBindingInstance
   #  configuration_procs  #
   #########################
 
-  self::Controller.alias_instance_method( :configuration_procs, :«configuration_procs» )
+  alias_method :configuration_procs, :«configuration_procs»
 
   #################
   #  «configure»  #

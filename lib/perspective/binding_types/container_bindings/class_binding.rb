@@ -2,7 +2,6 @@
 
 module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
 
-  include ::CascadingConfiguration::Setting
   include ::Perspective::Bindings::Container::Configuration
   include ::Perspective::Bindings::Container::ObjectAndBindingInstance
   
@@ -32,70 +31,7 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBinding
     initialize«container_class_support»
     
   end
-  
-  #########################################
-  #  initialize«container_class_support»  #
-  #########################################
-  
-  def initialize«container_class_support»( container_class = «container_class» )
 
-    if container_class
-      extend( container_class::Controller::ClassBindingMethods )
-      unless ::CascadingConfiguration.is_parent?( self, container_class )
-        # if we have a parent binding then it has already registered the container class as a parent
-        # and we have already registered it as our parent, so we don't want to replace it
-        ::CascadingConfiguration.register_parent( self, container_class, :singleton_to_instance )
-      end
-    end
-  
-  end
-
-  ################################
-  #  «validate_container_class»  #
-  ################################
-
-  def «validate_container_class»( container_class )
-    	  
-		unless container_class.respond_to?( :«bindings» )
-  		raise ::Perspective::Bindings::Exception::ContainerClassLacksBindings,
-  		        'Class ' << container_class.to_s << ' was declared as a container class, ' <<
-  		        'but does not respond to :«bindings».'
-	  end
-    
-  end
-
-  #######################
-  #  «container_class»  # 
-  #######################
-
-  attr_configuration  :«container_class»
-
-  ########################
-  #  «container_class»=  #
-  ########################
-
-  def «container_class»=( container_class )
-    
-    «validate_container_class»( container_class )
-
-    initialize«container_class_support»( container_class )
-    
-    return super
-    
-  end
-
-  #####################
-  #  container_class  #
-  #####################
-
-  self::Controller.alias_module_and_instance_methods( :container_class, :«container_class» )
-
-  ######################
-  #  container_class=  #
-  ######################
-
-  self::Controller.alias_module_and_instance_methods( :container_class=, :«container_class»= )
-  
   ####################
   #  «nested_route»  # 
   ####################

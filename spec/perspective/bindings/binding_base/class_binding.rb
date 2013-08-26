@@ -75,7 +75,7 @@ shared_examples_for :base_class_binding do
       topclass_class_binding.«configuration_procs».delete( another_configure_block )
       topclass_class_binding.«configuration_procs».should == topclass_class_binding_configuration_procs
       subclass_class_binding.«configuration_procs».should == subclass_class_binding_configuration_procs
-#      subclass_class_binding.«configuration_procs».delete( another_configure_block )
+      subclass_class_binding.«configuration_procs».delete( another_configure_block )
     end
     it 'subclass can configure its own procs in addition' do
       subclass_class_binding.«configuration_procs».should == subclass_class_binding_configuration_procs

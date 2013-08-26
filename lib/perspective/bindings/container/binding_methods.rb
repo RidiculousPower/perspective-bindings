@@ -1,7 +1,8 @@
 # -*- encoding : utf-8 -*-
 
-class ::Perspective::Bindings::Container::BindingMethods <
-      ::CascadingConfiguration::InstanceController::SupportModule
+class ::Perspective::Bindings::Container::BindingMethods < ::Module
+  
+  # FIX - we were using CC's support module, but we got rid of that - dig it up and use?
 
   ####################
   #  define_binding  #
