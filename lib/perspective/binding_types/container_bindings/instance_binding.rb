@@ -234,9 +234,10 @@ module ::Perspective::BindingTypes::ContainerBindings::InstanceBinding
 
   def «create_additional_container»( container_class = @«parent_binding».«container_class» )
     
+    index = @«containers» ? @«containers».size + 1 : 1
     @«containers» ||= [ «container» ]
     
-    new_container_instance = container_class.new«multiple_container_instance»( self, @«containers».size + 1 )
+    new_container_instance = container_class.new«multiple_container_instance»( self, index )
     @«containers».push( new_container_instance )
 
     return new_container_instance

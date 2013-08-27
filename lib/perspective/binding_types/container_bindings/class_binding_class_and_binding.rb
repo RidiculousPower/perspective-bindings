@@ -3,6 +3,7 @@
 module ::Perspective::BindingTypes::ContainerBindings::ClassBindingClassAndBinding
 
   extend ::CascadingConfiguration::Setting
+  extend ::Module::Cluster
 
   ################################
   #  «validate_container_class»  #
@@ -62,5 +63,5 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBindingClassAndBindi
   ######################
 
   alias_method( :container_class=, :«container_class»= )
-
+  
 end
