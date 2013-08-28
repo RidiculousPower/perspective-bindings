@@ -19,19 +19,6 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBindingClassAndBindi
     
   end
 
-  #########################################
-  #  initialize«container_class_support»  #
-  #########################################
-  
-  def initialize«container_class_support»( container_class = «container_class» )
-
-    if container_class
-      extend( container_class::ClassBindingMethods )
-      ::CascadingConfiguration.register_singleton_to_instance( self, container_class )
-    end
-  
-  end
-
   #######################
   #  «container_class»  # 
   #######################
@@ -45,7 +32,6 @@ module ::Perspective::BindingTypes::ContainerBindings::ClassBindingClassAndBindi
   def «container_class»=( container_class )
     
     «validate_container_class»( container_class )
-
     initialize«container_class_support»( container_class )
     
     return super

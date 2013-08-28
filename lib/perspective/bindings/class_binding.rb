@@ -40,8 +40,7 @@ module ::Perspective::Bindings::ClassBinding
 
   def initialize«new_between_common»( binding_name )
     
-    «validate_binding_name»( binding_name )
-    
+    «validate_binding_name»( binding_name )    
     self.«name» = binding_name
     
   end
@@ -89,7 +88,7 @@ module ::Perspective::Bindings::ClassBinding
   #  «bindings»  #
   ################
 
-	attr_instance_hash  :«bindings» do
+	attr_hash  :«bindings» do
 	  
 	  #======================#
 	  #  child_pre_set_hook  #

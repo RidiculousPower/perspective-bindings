@@ -15,11 +15,21 @@ module ::Perspective::Bindings::Container
     # Any time we are included in or cascade to a class we need to create our BindingMethods
     # module, which holds the methods for our bindings. This is necessary to make the bindings
     # portable, so that they can be inserted in bindings as well as containers.
-    class_binding_methods_module    = self::BindingMethods::ClassBindingMethods.new
-    instance_binding_methods_module = self::BindingMethods::InstanceBindingMethods.new
-    class_or_module.const_set( :ClassBindingMethods, class_binding_methods_module )
-    class_or_module.const_set( :InstanceBindingMethods, instance_binding_methods_module )
-
+    
+    if class_or_module.const_defined?( :ClassBindingMethods )
+      class_binding_methods_module = class_or_module::ClassBindingMethods
+    else
+      class_binding_methods_module    = self::BindingMethods::ClassBindingMethods.new
+      class_or_module.const_set( :ClassBindingMethods, class_binding_methods_module )
+    end
+    
+    if class_or_module.const_defined?( :InstanceBindingMethods )
+      instance_binding_methods_module = class_or_module::InstanceBindingMethods
+    else
+      instance_binding_methods_module = self::BindingMethods::InstanceBindingMethods.new
+      class_or_module.const_set( :InstanceBindingMethods, instance_binding_methods_module )
+    end
+    
     if const_defined?( :ClassBindingMethods )
       super_class_binding_methods     = self::ClassBindingMethods
       class_binding_methods_module.module_eval { include super_class_binding_methods }
