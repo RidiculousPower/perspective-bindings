@@ -120,4 +120,31 @@ module ::Perspective::Bindings::Binding
   alias_method :value=, :«value»=
 #  self::Controller.alias_module_and_instance_methods  :value=, :«value»=
 
+  ###########################
+  #  «keep_passed_binding»  #
+  ###########################
+
+  attr_configuration  :«keep_passed_binding»
+  self.«keep_passed_binding» = false
+
+  ############################
+  #  «keep_passed_binding»!  #
+  ############################
+
+  def «keep_passed_binding»!
+  
+    self.«keep_passed_binding» = true
+  
+  end
+
+  ###################################
+  #  «do_not_keep_passed_binding»!  #
+  ###################################
+
+  def «do_not_keep_passed_binding»!
+  
+    self.«keep_passed_binding» = false
+  
+  end
+
 end

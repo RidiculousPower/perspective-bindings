@@ -99,7 +99,7 @@ module ::Perspective::Bindings::InstanceBinding
     return binding_value_valid
     
   end
-
+  
   ##############
   #  «value»=  #
   ##############
@@ -109,8 +109,8 @@ module ::Perspective::Bindings::InstanceBinding
     case object
       
       when ::Perspective::Bindings::InstanceBinding
-
-        super( ::Perspective::Bindings::ReferenceBinding === self ? object : object.«value» )
+        
+        «keep_passed_binding» ? super : self.«value» = object.«value»
 
       else
 

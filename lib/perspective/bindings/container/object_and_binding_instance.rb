@@ -22,7 +22,7 @@ module ::Perspective::Bindings::Container::ObjectAndBindingInstance
       # The inherited binding instance we want already exists in «bindings» for instance C.
       # We need the nested route for A in B, which will allow us to get A in C.
       
-      binding_route = binding_instance.«nested_route»( instance )
+      binding_route = binding_instance.«nested_route»( instance = configuration_instance )
 
       return ::Perspective::Bindings.aliased_binding_in_context( instance, 
                                                                  binding_route,

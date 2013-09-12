@@ -105,8 +105,6 @@ require 'singleton_attr'
   'bindings/exception/binding_order_empty',
   'bindings/exception/no_binding_error',
   'bindings/exception/container_class_lacks_bindings',
-  'bindings/exception/autobind_failed',
+  'bindings/exception/autobind_failed'
 
-  'bindings/reference_binding'
-  
 ].each { |this_file| require_relative( this_file << '.rb' ) }
